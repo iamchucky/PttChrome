@@ -66,7 +66,6 @@ function TelnetCore(listener) {
   //AutoLogin - end
 
   this.socket = null;
-  this.asciitable = lib.asciiTable;
 }
 
 TelnetCore.prototype={

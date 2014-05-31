@@ -74,116 +74,7 @@ var COMP_TYPES = [FONT_FACE,IDLE_STR,ESCAPE_STR,TERM_TYPE,
 				  LOGIN,PASSWORD_PROMPT,PASSWORD,
 				  POST_LOGIN, BG_DATA];
 
- /*
-  BOOL_TYPES = ['ask','AutoDbcsDetection', H_ALIGN_CENTER,
-                   V_ALIGN_CENTER,'LineFeed','LoadUrlInBG',
-                   DETECT_LINK,USE_MOUSE_BROWSING,MOUSE_BROWSING_HIGH_LIGHT,
-                   MOUSE_BROWSING_HAND_POINTER,USE_MOUSE_BROWSING_EX,MOUSE_BROWSING_SEND_ENTER,
-                   'EPAutoPlay','EPLoop','EPAutoUseHQ',
-                   'EPCopyUrlButton','EPWhenDropLink','HokeyForCopy',
-                   'HokeyForPaste', HOKEY_FOR_SELECT_ALL,'HokeyForMouseBrowsing',
-                   HOKEY_FOR_DOWNLOAD_POST,'UseKeyWordTrack','DeleteSpaceWhenCopy',
-                   'EmbeddedPlayerMenu','MouseBrowseMenu','OpenAllLinkMenu',
-                   'CopyHtmlMenu','ScreenKeyboardMenu','SavePageMenu',
-                   'KeyWordTrackMenu','HideBookMarkLinkMenu','HideSendLinkMenu',
-                   'HideBookMarkPageMenu','HideSendPageMenu','DelayPasteMenu',
-                   'HideViewInfoMenu','UseHttpContextMenu','DownloadPostMenu',
-                   'FileIoMenu','PreviewPictureMenu','NotifyWhenBackbround',
-                   'NotifyBySound','NotifyByMessage','HideInputBuffer',
-                   'DropToPaste','EnablePicturePreview','CtrlPicturePreview',
-                   'PicturePreviewInfo','ClearCopiedSel',HOKEY_FOR_BG_DISPLAY,
-                   'SwitchBgDisplayMenu','Hokey2ForPaste',DISPLAY_BORDER,
-                   'EasyReadingMenu',HOKEY_FOR_EASY_READING,'SaveAfterDownload',
-                   'EasyReadingWithImg','EasyReadingWithVideo','PushThreadMenu',
-                   'NotifyShowContent'];
-  */
-  /*
-  INT_TYPES = ['ScreenType',HIGHLIGHT_BG,'bbsbox.width',
-                   'bbsbox.height',ENTER_TYPE,'FontSize',
-                   'AntiIdle.seconds','FGBGcolor','LineWrap',
-                   'ReconnectTime','EmbeddedPlayerSize',HOTKEY_CTRL_W,'HotkeyCtrlB',HOTKEY_CTRL_L,
-                   'ScreenKeyboardAlpha','InputBufferSizeType','DefineInputBufferSize',
-                   'PicturePreviewHeight','DownloadLineDelay',HOTKEY_DOWNLOAD_TYPE,
-                   MIDDLE_BTN_FUNCTION,'BackgroundType','BackgroundBrightness',
-                   MOUSE_WHEEL_FUNC1,MOUSE_WHEEL_FUNC2,MOUSE_WHEEL_FUNC3,
-                   BORDER_COLOR,'PushThreadLineLength'];
-  */
-/*
-  COMP_TYPES = ['AntiIdle.string','Escape.string',TERM_TYPE,
-                   'Charset','FontFace.string',
-                   'PreLoginPrompt','LoginPrompt','PasswdPrompt',
-                   'PreLogin',
-                   'PostLogin','BackgroundImageMD5'];
-  */
-var BBS_DEFAULT_SETTINGS = {
-	'LineFeed' : true,
-	'DropToPaste' : false,
-	'LoadUrlInBG' : false,
-	'ReconnectTime' : 0,
-	'FGBGcolor' :  0,
-	'Charset' : 'locale',
-	'preloginprompt' : '',
-	'loginprompt' : '',
-	'passwordprompt' : '',
-	'prelogin' : '',
-	'postlogin' : '',
-	'login' : '',
-	'passwd' : '',
-	'EmbeddedPlayerSize' :  0,
-	'EPAutoPlay' : false,
-	'EPLoop' : false,
-	'EPAutoUseHQ' : false,
-	'EPCopyUrlButton' : false,
-	'EPWhenDropLink' :  true,
-	'HotkeyCtrlB' :  1,
-	'HokeyForCopy' :  true,
-	'HokeyForPaste' :  true,
-	'Hokey2ForPaste' :  false,
-	'SavePageMenu' : true,
-	'EmbeddedPlayerMenu' :  true,
-	'PreviewPictureMenu' : false,
-	'MouseBrowseMenu' : false,
-	'SwitchBgDisplayMenu' : false,
-	'OpenAllLinkMenu' :  false,
-	'CopyHtmlMenu' : false,
-	'ScreenKeyboardMenu' : true,
-	'KeyWordTrackMenu' : false,
-	'DelayPasteMenu' :  false,
-	'EasyReadingMenu' : false,
-	'DownloadPostMenu' :  false,
-	'FileIoMenu' : false,
-	'PushThreadMenu' :  false,
-	'HideBookMarkLinkMenu' :  true,
-	'HideSendLinkMenu' : true,
-	'HideBookMarkPageMenu' :  true,
-	'HideSendPageMenu' :  true,
-	'HideViewInfoMenu' :  true,
-	'ScreenKeyboardAlpha' :  15,
-	'UseHttpContextMenu' :  true,
-	'NotifyWhenBackbround' :  false,
-	'NotifyBySound' : false,
-	'NotifyByMessage' :  true,
-	'NotifyShowContent' :  false,
-	'HideInputBuffer' :  false,
-	'InputBufferSizeType' :  1,
-	'DefineInputBufferSize' :  12,
-	'EnablePicturePreview' :  false,
-	'CtrlPicturePreview' :  false,
-	'PicturePreviewHeight' :  150,
-	'PicturePreviewInfo' :  false,
-	'SaveAfterDownload' :  true,
-	'EasyReadingWithImg' :  false,
-	'EasyReadingWithVideo' :  false,
-	'UseKeyWordTrack' :  false,
-	'DeleteSpaceWhenCopy' :  true,
-	'DownloadLineDelay' :  600,
-	'ClearCopiedSel' :  false,
-	'BackgroundType' :  0,
-	'BackgroundImageMD5' :  '',
-	'BackgroundBrightness' :  50,
-	'PushThreadLineLength' :  54,
-	'FontFitWindowWidth' :  false
-};
+var BBS_DEFAULT_SETTINGS = {};
 
 BBS_DEFAULT_SETTINGS[CLOSE_QUERY] = 0;
 BBS_DEFAULT_SETTINGS[BBS_SIZE] = 0;
@@ -234,44 +125,10 @@ BBS_DEFAULT_SETTINGS[BG_BRIGHTNESS] = 50;
 BBS_DEFAULT_SETTINGS[BG_DATA] = "";
 BBS_DEFAULT_SETTINGS[FONT_FIT_WINDOW_WIDTH] = '0';
 
-var BBS_VERSION_INFO = {
-	'Version' :  '0.0.1',
-	'option.SiteAddrList' :""
-};
-var DEFAULT_NAME = "default";
-var SITES_LIST_NAME = "SITES_LIST_NAME";
-
 // DUMP_TYPE
 var DUMP_TYPE_LOG 	= 0;
 var DUMP_TYPE_WARN 	= 1;
 var DUMP_TYPE_ERROR = 2;
-
-
-function GetNameKey(site, key) {
-	return site + "." + key;
-}
-function GetSiteLocalStorage(site, key) {
-  if (site == DEFAULT_NAME) {
-    return BBS_DEFAULT_SETTINGS[key];
-  }
-	var name_key = GetNameKey(site, key);
-	//dumpLog(DUMP_TYPE_LOG, "GetSiteLocalStorage -- " + name_key + " : " + localStorage[name_key]);
-	return chrome.storage.local[name_key];
-}
-function SetSiteLocalStorage(site, key, value) {
-	var name_key = GetNameKey(site, key);
-	//dumpLog(DUMP_TYPE_LOG, "SetSiteLocalStorage -- " + name_key + " : " + value);
-	chrome.storage.local[name_key] = value;
-}
-
-function GetLocalStorage(key) {
-	//dumpLog(DUMP_TYPE_LOG, "GetLocalStorage -- " + key + " : " + localStorage[key]);
-	return chrome.storage.local[key];
-}
-function SetLocalStorage(key, value) {
-	//dumpLog(DUMP_TYPE_LOG, "SetLocalStorage -- " + key + " : " + value);
-	chrome.storage.local[key] = value;
-}
 
 function setTimer(repeat, func, timelimit) {
   if(repeat) {

@@ -53,11 +53,6 @@ pttchrome.App = function() {
   this.telnetCore = new TelnetCore(this);
   this.view = new TermView(24);
   this.buf = new TermBuf(80, 24);
-  /*
-  this.playerMgr=new PlayerMgr();
-  this.picViewerMgr=new PicViewerMgr();
-  this.symbolinput=new SymbolInput();
-  */
   this.buf.setView(this.view);
   //this.buf.severNotifyStr=this.getLM('messageNotify');
   //this.buf.PTTZSTR1=this.getLM('PTTZArea1');
@@ -89,8 +84,6 @@ pttchrome.App = function() {
   /*
   this.btnCloseSymbolInput = document.getElementById('btnCloseSymbolInput');
 
-  this.asciitable = lib.asciiTable;
-  this.ctrlTable = lib.ctrlTable;
   this.mouseLeftButtonDown = false;
   //this.mouseRightButtonDown = false;
   */
@@ -271,7 +264,7 @@ pttchrome.App.prototype.reloadSetting = function() {
 
 pttchrome.App.prototype.connect = function(url) {
   dumpLog(DUMP_TYPE_LOG, "connect to " + url);
-  this.pref = new BBSFoxPref(this, url);
+  this.pref = new PttChromePref(this, url);
   document.title = this.pref.sitename;
   var splits = url.split(/:/g);
   var port = 23;
@@ -702,16 +695,6 @@ pttchrome.App.prototype.overlayCommandListener = function (e) {
           if (this.picViewerMgr)
             this.picViewerMgr.openPicture(param);
           break;
-        case "doDownloadPost":
-          var param = elm.getAttribute("DownloadColor");
-          elm.removeAttribute("DownloadColor");
-          if (param == '0')
-            this.downloadPost(false,false,false);
-          else if(param == '1')
-            this.downloadPost(true,false,false);
-          else// if(param=='2')
-            this.downloadPost(true,true,false);
-          break;
         case "doLoadFile":
           this.buf.loadFile();
           break;
@@ -720,9 +703,6 @@ pttchrome.App.prototype.overlayCommandListener = function (e) {
           break;
         case "checkPrefExist":
           this.doSiteSettingCheck(250);
-          break;
-        case "easyReading":
-          this.downloadPost(true,true,true);
           break;
         case "pushThread":
           this.doPushThread();
@@ -1733,12 +1713,6 @@ pttchrome.App.prototype.key_press = function(e) {
     } else if (e.ctrlKey && !e.altKey && !e.shiftKey 
         && (e.charCode == 100 || e.charCode == 68) 
         && this.view.hokeyForDownloadPost) { //^D , do download post
-      //if (this.view.hotkeyDownloadType == 0)
-      //  this.downloadPost(false,false,false);
-      //if (this.view.hotkeyDownloadType == 1)
-      //  this.downloadPost(true,false,false);
-      //else
-      //  this.downloadPost(true,true,false);
       e.preventDefault();
       e.stopPropagation();
     } else if (e.ctrlKey && !e.altKey && !e.shiftKey 
@@ -1750,7 +1724,6 @@ pttchrome.App.prototype.key_press = function(e) {
     } else if (e.ctrlKey && !e.altKey && !e.shiftKey 
         && (e.charCode == 103 || e.charCode == 71) 
         && this.view.hokeyForEasyReading) { //^G , easy reading mode
-      //this.downloadPost(true,true,true);
       e.preventDefault();
       e.stopPropagation();
     } else if (e.ctrlKey && !e.altKey && !e.shiftKey 
@@ -1769,204 +1742,6 @@ pttchrome.App.prototype.key_press = function(e) {
   } else {
     if (window.getSelection().isCollapsed)
       this.setInputAreaFocus();
-  }
-};
-
-pttchrome.App.prototype.downloadPost = function(iscolor, htmlmode, newtab) {
-  var anciCmp = false;
-  var finished = false;
-  var percentage = -1;
-  for (var col = 0; col < this.buf.cols; ++col) {
-    if (this.buf.lines[this.buf.rows-1][col].ch == '%') {
-      percentage = col;
-      break;
-    }
-  }
-  var initial = (!this.post_text || !this.post_text.length);
-  if (initial) { // initialize
-    this.post_text = new Array();
-    this.post_html = new Array();
-    if (htmlmode) {
-      this.view.doBlink = false;
-      this.view.blinkOn = true;
-      this.view.update();
-      for (var row = 0; row < this.buf.rows-1; ++row)
-        this.post_html.push('<span class="BBSLine">'+this.view.BBSROW[row].innerHTML+'</span><br>');
-    }
-    for (var row = 0; row < this.buf.rows-1; ++row)
-      this.post_text.push(this.buf.getText(row, 0, this.buf.cols, true, true));
-    if (this.downpostcounter) {
-      this.downpostcounter.cancel();
-      this.downpostcounter = null;
-    }
-    var _this = this;
-    this.downpostcounter = setTimer(true, function() {
-      _this.downloadPost(iscolor, htmlmode, newtab);
-    }, this.buf.downloadLineDelay);
-  }
-  // mark for finishing download
-  if (percentage < 3 || 
-      (this.buf.lines[this.buf.rows-1][percentage-3].ch == '1' 
-       && this.buf.lines[this.buf.rows-1][percentage-2].ch == '0')) {
-    finished = true;
-    this.downpostcounter.cancel();
-    this.downpostcounter = null;
-  }
-  if (initial && !finished) { // start scrolling
-    //this.telnetCore.send(this.view.cursorAppMode?'\x1bOB':'\x1b[B');
-    this.buf.downPostChanged = false;
-    this.telnetCore.send('\x1b[B');
-    return;
-  } else if (initial); // finished, exit this conditional block
-  else if (this.buf.cur_y < this.buf.rows-1 
-      || this.buf.cur_x <= percentage || !this.buf.downPostChanged)
-    return; // Wait for the new line to be received in full
-  else {
-    // modification for PTT
-    // i is kept after this loop as the number of the repeated lines
-    var buflen = this.post_text.length;
-    var bufstr = this.post_text[buflen-1];
-    if (!anciCmp) 
-      bufstr = bufstr.replace(/\x1b\[[0-9;]*m/g, '');
-    for (var i = 1; i <= this.buf.rows-2; ++i) {
-        if (!anciCmp 
-            && this.post_text[buflen-1-i].replace(/\x1b\[[0-9;]*m/g, '') != bufstr) 
-          break;
-        if (anciCmp && this.post_text[buflen-1-i] != bufstr) 
-          break;
-    }
-    // find how many lines are needed to be appended
-    var k = this.buf.rows - 1;
-    for (var j = this.buf.rows-i-2; j >= 1; --j) {
-        if (htmlmode)
-          this.post_html.splice(buflen, 0, '<span class="BBSLine">' + 
-              this.view.BBSROW[k-1].innerHTML+'</span><br>');
-        this.post_text.splice(buflen, 0, this.buf.getText(--k, 0, this.buf.cols, true, true));
-        var thisline = this.buf.getText(j, 0, this.buf.cols, true, true);
-        var preline = this.buf.getText(j-1, 0, this.buf.cols, true, true);
-        if (!anciCmp) {
-            thisline = thisline.replace(/\x1b\[[0-9;]*m/g, '');
-            preline = preline.replace(/\x1b\[[0-9;]*m/g, '');
-        }
-        if (thisline.indexOf(bufstr) >= 0 && preline.indexOf(bufstr) < 0) break;
-    }
-    // detection failed, guess how many lines were scrolled unreliably
-    if (j <= 0) {
-      for (var l = 0; l < this.buf.rows-1; ++l) {
-        if (!anciCmp 
-            && this.buf.getText(l, 0, this.buf.cols, true, true).replace(/\x1b\[[0-9;]*m/g, '') != bufstr) break;
-        if (anciCmp && this.buf.getText(l, 0, this.buf.cols, true, true) != bufstr) break;
-      }
-      if (this.buf.rows-i-2 > 0) l += this.buf.rows-i-2; // unchecked
-      while (--k >= 0) {
-        var thisline = this.buf.getText(k, 0, this.buf.cols, true, true);
-        var thisline2 = '<span class="BBSLine">'+this.view.BBSROW[k].innerHTML+'</span><br>';
-        if (++l >= this.buf.rows) 
-          break;
-
-        if (htmlmode)
-          this.post_html.splice(buflen, 0, thisline2);
-        this.post_text.splice(buflen, 0, thisline);
-      }
-    }
-    if (!finished) {
-      //this.telnetCore.send(this.view.cursorAppMode?'\x1bOB':'\x1b[B');
-      this.buf.downPostChanged = false;
-      this.telnetCore.send('\x1b[B');
-    }
-  }
-  if (finished) { // finish download
-    if(htmlmode) {
-      var selstr = '';
-      var selstr2 = '';
-      var fontFace = this.view.fontFace
-      if (fontFace == "")
-        fontFace = "MingLiu";
-      selstr = '<?xml version="1.0" encoding="UTF-8"?><html><head><title></title><style type="text/css">';
-      selstr += '.main {font-family: ';
-      selstr += fontFace;
-      selstr += ';font-size: ';
-      selstr += this.view.chh;
-      selstr += 'px;background-color: #000000;line-height: 100%; margin: 0px;textAlign:'
-      selstr += this.view.mainDisplay.style.textAlign;
-      selstr += ';width:';
-      selstr += this.view.mainDisplay.style.width;
-      //selstr += ';}body{color:white;background-color: #000000;margin:0px;}a,a:link,a:visited,a:active,a:hover{border-bottom: 1px solid #FF6600;text-decoration:none;}.BBSLine{display:inline;color:#C0C0C0;white-space: pre;}#BBSWindow{position:relative;}';
-      //selstr += ';}body{color:white;background-color: #000000;margin:0px;}.BBSLine{display:inline;color:#C0C0C0;white-space: pre;}#BBSWindow{position:relative;}';
-      selstr += ';}body{color:white;background-color: #000000;margin:0px;}';
-      if (!this.view.easyReadingWithImg)
-        selstr += 'a,a:link,a:visited,a:active,a:hover{border-bottom: 1px solid #FF6600;text-decoration:none;}';
-      selstr += '.BBSLine{display:inline;color:#C0C0C0;white-space: pre;}#BBSWindow{position:relative;}';
-      for (var i = 0; i < 16; ++i)
-        for (var j = 0; j < 16; ++j)
-          selstr +='.q'+i+'b'+j+'{color:'+ termColors[i] + (j!=0?(';background-color:'+termColors[j]):'') + ';}';
-
-      for (var i = 0; i < 16; ++i)
-        for (var j = 0; j < 16; ++j) {
-          selstr +='.q'+i+'q'+j+'{color:'+ termColors[j] +';position:relative;}';
-          selstr +='.q'+i+'q'+j+':after{content:attr(t);position:absolute;left:0px;color:'+termColors[i]+';width:50%;text-shadow:'+termColors[i]+' 0 0 0px,'+termColors[i]+' 0 0 0px,'+termColors[i]+' 0 0 0px,'+termColors[i]+' 0 0 0px,'+termColors[i]+' 0 0 0px;overflow:hidden;}';
-        }
-
-      for (var i = 0; i < 16; ++i)
-        for (var j = 0; j < 16; ++j)
-          selstr +='.b'+i+'b'+j+'{background:-moz-linear-gradient(left,'+termColors[i]+' 50%,'+termColors[j]+' 50%);}';
-
-      for (var i = 0; i < 16; ++i)
-        selstr +='.q'+i+'{color:'+termColors[i]+';}';
-
-      for (var i = 1; i < 16; ++i)
-        selstr +='.b'+i+'{background-color:'+termColors[i]+';}';
-
-      //selstr += '</style></head><body><div id="BBSWindow"><div id="main" class="main">';
-      selstr += '</style>';
-      if (this.view.easyReadingWithImg)
-        selstr += '<script>function insertImg() {var allLinks = document.getElementsByTagName("a");for (var i = 0; i < allLinks.length; i++){var url = allLinks[i].getAttribute("href");var hrel = allLinks[i].getAttribute("rel");if(hrel && hrel.toLowerCase()=="p" && url.toLowerCase().indexOf("http://photo.xuite.net/")<0 && url.toLowerCase().indexOf("http://simplest-image-hosting.net/")<0 && url.toLowerCase().indexOf("http://screensnapr.com/")<0){var br = document.createElement("BR");allLinks[i].appendChild(br);var img = document.createElement("img");allLinks[i].appendChild(img);img.setAttribute("src", url);}}}</script>';
-      selstr += '</head><body';
-      if (this.view.easyReadingWithImg)
-        selstr += ' onload="insertImg()"';
-      selstr += '><div id="BBSWindow"><div id="main" class="main">';
-      selstr2 +='</div></div></body></html>';
-      this.view.doBlink = true;
-      var post_html = selstr + this.post_html.join('') + selstr2;
-      if (newtab) {
-        var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
-        var filetmp = Components.classes["@mozilla.org/file/directory_service;1"].getService(Components.interfaces.nsIProperties).get("TmpD", Components.interfaces.nsIFile);
-        filetmp.append('easyreading.htm');
-        filetmp.createUnique(Components.interfaces.nsIFile.NORMAL_FILE_TYPE, 0666);
-        var ostream = Components.classes["@mozilla.org/network/file-output-stream;1"].createInstance(Components.interfaces.nsIFileOutputStream);
-        ostream.init(filetmp, -1, -1, 0);
-        var converter = Components.classes["@mozilla.org/intl/converter-output-stream;1"].createInstance(Components.interfaces.nsIConverterOutputStream);
-        converter.init(ostream, "UTF-8", 0, 0);
-        converter.writeString(post_html);
-        converter.flush();
-        converter.close();
-        var tempURI = ios.newFileURI(filetmp).spec;
-        try {
-          var win = Components.classes["@mozilla.org/appshell/window-mediator;1"].getService(Components.interfaces.nsIWindowMediator).getMostRecentWindow("navigator:browser");
-          if (win)
-            win.gBrowser.loadOneTab(tempURI, null, 'UTF-8', null, true, false);
-          else
-            window.open(tempURI);
-        } catch(e) {
-        }
-        this.tempFiles.push(filetmp);
-        //filetmp.remove(true);
-      } else {
-        this.doCopy(post_html);
-      }
-    } else {
-      var post_text;
-      if (iscolor) 
-        post_text = this.post_text.join('\r\n');
-      else  
-        post_text = this.post_text.join('\r\n').replace(/\x1b\[[0-9;]*m/g, '');
-      this.doCopy(post_text);
-    }
-    this.post_text = new Array();
-    this.post_html = new Array();
-    this.view.showAlertMessage(document.title, this.getLM('alert_down_finish'));
-    if (this.buf.saveAfterDownload && !(htmlmode && newtab))
-      this.buf.saveFile();
   }
 };
 
