@@ -1,0 +1,385 @@
+﻿<!DOCTYPE html>
+<!-- Modified from http://torqueo.net/files/html5-tabs/ -->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>BBSFox Options</title>
+	<link rel="stylesheet" type="text/css" href="css/site.css" />
+	<script type="text/javascript" src="js/predefined_config.js"></script>
+    <script type="text/javascript" src="js/options_gc.js"></script>
+</head>
+
+<body>
+  <!-- HTML5 TABS CODE -->
+  <div>
+  <article class="tabs" style="width:900px;height:500px;">
+    <section class="active">
+      <header id="options_preferences"></header>
+        <div tabtype="maintab">
+          <table>
+            <tr>
+              <td valign="top">
+                <div id="siteListEx" tabtype="listview">
+                  <div tabtype="listheaderrow">
+                    <div tabtype="rowcells">
+                      <div tabtype="colheader" style="left:0;"><label id="options_siteName"></label></div>
+                      <div tabtype="colheader" style="left:126px;"><label id="options_siteAddress"></label></div>
+                    </div>
+                  </div>
+                  <div tabtype="listcellrow" id="defaultsiterow" site="default">
+                    <div tabtype="rowcells">
+                      <div tabtype="rowcell" style="left:0;" site="default"><label id="options_defaultSite"></label></div>
+                      <div tabtype="rowcell" style="left:126px;" site="default"><label id="options_defaultAddress"></label></div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <button id="option.btnaddsite"><label id="options_btn_addsite"></label></button>
+                  <button id="option.btndelsite" disabled="true"><label id="options_btn_delsite"></label></button>
+                </div>
+              </td>
+              <td valign="top">
+                <label style="display:none;" id="options_siteprefnote"></label>
+                <div style="width:510px;" id="options_siteprefpanel">
+                  <article class="tabs">
+                    <section class="active">
+                      <header id="options_display"></header>
+                      <div tabtype="subtab">
+                        <fieldset>
+                          <legend><label id="options_fontSizeMode"></label></legend>
+
+                          <input type="radio" name="viewsize" id="option.bbssize" value="0" checked="checked"/>
+                          <label for="option.bbssize" id="options_bbssize"></label><input type="checkbox" id="option.fontfitwindowwidth" /><label for="option.fontfitwindowwidth" id="options_fontfitwindowwidth"></label><br>
+
+                          <input type="radio" name="viewsize" id="option.bbssize1" value="1"/>
+                          <label for="option.bbssize1" id="options_fixsize"></label><label id="options_fixsize_viewsize"></label><input type="number" id="option.viewwidth" min='0' max='1920' step='1' value='960'/><label>x</label><input type="number" id="option.viewheight" min='0' max='1080' step='1' value='576'/><br>
+
+                          <input type="radio" name="viewsize" id="option.bbssize2" value="2"/>
+                          <label for="option.bbssize2" id="options_fixfont"></label><label id="options_fixfont_fontsize"></label><input type="number" id="option.viewfontsize"  min='4' max='100' step='1' value='16'/>
+
+                        </fieldset>
+                        <fieldset>
+                          <legend><label id="options_alignment"></label></legend>
+                          <input type="checkbox" id="option.haligncenter" checked="checked"/>
+                          <label for="option.haligncenter" id="options_haligncenter"></label>
+                          <input type="checkbox" id="option.valigncenter" checked="checked"/>
+                          <label for="option.valigncenter" id="options_valigncenter"></label>
+                        </fieldset>
+                        <fieldset>
+                          <legend><label id="options_border"></label></legend>
+                          <input type="checkbox" id="option.displayborder" checked="checked"/>
+                          <label for="option.displayborder" id="options_displayBorder"></label>
+                          <label for="option.colorpicker" id="options_borderColor"></label>
+                          <select id="option.bordercolor" type="select-one" name="bordercolor" class="colorpicker">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                          </select>
+                        </fieldset>
+                        <fieldset>
+                          <legend><label id="options_background"></label></legend>
+                          <label for="option.backgroundtype" id="options_backgroundType"></label>
+                          <select id="option.backgroundtype">
+                            <option value="0" id="options_bgpurecolor"></option>
+                            <option value="1" id="options_bgrepeatimage"></option>
+                            <option value="2" id="options_bgcenterimage"></option>
+                            <option value="3" id="options_bgfillimage"></option>
+                            <option value="4" id="options_bgstretchimage"></option>
+                          </select><br>
+                          <label for="option.btnselectbgfile" id="options_setBgImage"></label><button id='option.btnselectbgfile'>...</button><input type="text" id="option.backgrounddata" size="5" hidden="true"/>
+                          <label for="option.backgroundBrightness" id="options_bgBrightness"></label>
+                          <input type="number" id="option.backgroundbrightness" size="2" min="4" max="100" step="1"/>
+                        </fieldset>
+                        <fieldset>
+                          <legend><label id="options_characterDisplay"></label></legend>
+                          <label for="option.charset" id="options_encoding"></label>
+                          <select id="option.charset" disabled="true">
+                            <option value="big5">big5</option>
+                            <option value="gb2312">gb2312</option>
+                            <option value="utf-8">utf-8</option>
+                          </select><br>
+                          <input type="checkbox" id="option.dbcsdetect" checked="checked" /><label for="option.dbcsdetect" id="options_dbcsdetect"></label><br>
+                          <input type="checkbox" id="option.linefeed" checked="checked" disabled="true"/><label for="option.linefeed" id="options_linefeed"></label><br>
+                          <label for="option.linewrap" id="options_linewrap"></label>
+                          <input type="text" id="option.linewrap" size="2" disabled="true"/>
+                          <label for="option.linewrap" id="options_linewrap2"></label><br>
+                          <label for="option.fontface" id="options_fontface"></label>
+                          <input type="text" id="option.fontface" size="20"/>
+                        </fieldset>
+                      </div>
+                    </section>
+                    <section>
+                      <header id="options_site"></header>
+                      <div tabtype="subtab">
+                        <fieldset>
+                          <legend><label id="options_siteSetting"></label></legend>
+                          <input type="checkbox" id="option.closequery" checked="checked" /><label for="option.closequery" id="options_closequery"></label><br>
+                          <label for="option.idletime" id="options_idletime"></label><input type="number" id="option.idletime"  min='0' max='999' step='1' value='0'/><label for="option.idlestr" id="options_idlestr"></label><input type="text" id="option.idlestr" size="4"/><label for="option.idlestr" id="options_idlehint"></label><br>
+                          <label for="option.escapestr" id="options_escapestr"></label>
+                          <select id="option.escapestr">
+                            <option value="^[">^[</option>
+                            <option value="^[^[">^[^[</option>
+                            <option value="^C^H^H">^C^H^H</option>
+                            <option value="^U">^U</option>
+                          </select>
+                          <label for="option.escapestr" id="options_escapestr2"></label><br>
+                          <label for="option.entertype" id="options_entertype"></label>
+                          <select id="option.entertype">
+                            <option value="0">CR</option>
+                            <option value="1">CRLF</option>
+                          </select><br>
+                          <label for="option.termtype" id="options_termtype"></label>
+                          <select id="option.termtype">
+                            <option value="VT100">VT100</option>
+                          </select><br>
+                        </fieldset>
+                        <fieldset>
+                          <legend><label id="options_autoLogin"></label></legend>
+                          <label for="option.preloginprompt" id="options_preloginprompt"></label><input type="text" id="option.preloginprompt" size="16"/><label for="option.prelogin" id="options_prelogin"></label><input type="text" id="option.prelogin" size="16"/><br>
+                          <label for="option.loginprompt" id="options_loginprompt"></label><input type="text" id="option.loginprompt" size="16"/><label for="option.login" id="options_login"></label><input type="text" id="option.login" size="16"/><br>
+                          <label for="option.passwordprompt" id="options_passwordprompt"></label><input type="text" id="option.passwordprompt" size="16"/><label for="option.passwd" id="options_passwd"></label><input type="password" id="option.passwd" size="16"/><br>
+                          <label for="option.postlogin" id="options_postlogin"></label><input type="text" id="option.postlogin" size="16"/><br>
+                        </fieldset>
+                      </div>
+                    </section>
+                    <section>
+                      <header id="options_mouse"></header>
+                      <div tabtype="subtab">
+                        <fieldset>
+                          <legend><label id="options_mouseWheel"></label></legend>
+                          <label for="option.mousewheelfunc1" id="options_scroll"></label>
+                          <select id="option.mousewheelfunc1">
+                            <option value="0" id="options_scrollNone"></option>
+                            <option value="1" id="options_scrollUpDown"></option>
+                            <option value="2" id="options_scrollPageSwitch"></option>
+                            <option value="4" id="options_scrollHomeEnd"></option>
+                            <option value="3" id="options_scrollSameThread"></option>
+                          </select><br>
+                          <label for="option.mousewheelfunc2" id="options_scrollAndLeftBtn"></label>
+                          <select id="option.mousewheelfunc2">
+                            <option value="0" id="options_scrollNone2_"></option>
+                            <option value="1" id="options_scrollUpDown2_"></option>
+                            <option value="2" id="options_scrollPageSwitch2_"></option>
+                            <option value="4" id="options_scrollHomeEnd2_"></option>
+                            <option value="3" id="options_scrollSameThread2_"></option>
+                          </select><br>
+                          <label for="option.mousewheelfunc3" id="options_scrollAndRightBtn"></label>
+                          <select id="option.mousewheelfunc3">
+                            <option value="0" id="options_scrollNone3_"></option>
+                            <option value="1" id="options_scrollUpDown3_"></option>
+                            <option value="2" id="options_scrollPageSwitch3_"></option>
+                            <option value="4" id="options_scrollHomeEnd3_"></option>
+                            <option value="3" id="options_scrollSameThread3_"></option>
+                          </select><br>
+                        </fieldset>
+                        <fieldset>
+                          <legend><label id="options_mouseBrowsing"></label></legend>
+                          <input type="checkbox" id="option.usemousebrowsing" checked="checked" /><label for="option.usemousebrowsing" id="options_usemousebrowsing"></label><br>
+                          <input type="checkbox" id="option.usemousebrowsingex" checked="checked" /><label for="option.usemousebrowsingex" id="options_usemousebrowsingex"></label><br>
+                          <input type="checkbox" id="option.mousebrowsesendenter" checked="checked" /><label for="option.mousebrowsesendenter" id="options_mousebrowsesendenter"></label><br>
+                          <input type="checkbox" id="option.mousebrowsinghighlight" checked="checked" /><label for="option.mousebrowsinghighlight" id="options_mousebrowsinghighlight"></label>
+                          <label for="option.highlightbg" id="options_highlightColor"></label>
+                          <select id="option.highlightbg" type="select-one" name="highlightbg" class="colorpicker">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                          </select><br>
+                          <input type="checkbox" id="option.mousebrowsinghandpointer" checked="checked" /><label for="option.mousebrowsinghandpointer" id="options_mousebrowsinghandpointer"></label>
+                        </fieldset>
+                        <fieldset>
+                          <legend><label id="options_mouseOther"></label></legend>
+                          <label for="option.middlebuttonfunction" id="options_middlebuttonfunction"></label>
+                          <select id="option.middlebuttonfunction">
+                            <option value="0" id="options_middlebuttonNoAction"></option>
+                            <option value="1" id="options_middlebuttonSendEnter"></option>
+                            <option value="3" id="options_middlebuttonSendEnd"></option>
+                            <option value="4" id="options_middlebuttonSendSpace"></option>
+                            <option value="2" id="options_middlebuttonSendLeftArrow"></option>
+                            <option value="5" id="options_middlebuttonCopy"></option>
+                            <option value="6" id="options_middlebuttonPaste"></option>
+                            <option value="7" id="options_middlebuttonCopyPaste"></option>                         
+                          </select><br>
+                          <input type="checkbox" id="option.loadurlinbg" checked="checked" disabled="true"/><label for="option.loadurlinbg" id="options_loadurlinbg"></label><br>
+                          <input type="checkbox" id="option.droptopaste" checked="checked" disabled="true"/><label for="option.droptopaste" id="options_droptopaste"></label><br>
+                          <input type="checkbox" id="option.clearcopiedsel" checked="checked" disabled="true"/><label for="option.clearcopiedsel" id="options_clearcopiedsel"></label><br>
+                          <input type="checkbox" id="option.detectlink" checked="checked" /><label for="option.detectlink" id="options_detectlink"></label><br>
+                        </fieldset>
+                      </div>
+                    </section>
+                    <section>
+                      <header id="options_hotkeys"></header>
+                      <div tabtype="subtab">
+                          <div style='display:none;'>
+                          <label for="option.hotkeyctrlw" id="options_hotkeyctrlw"></label>
+                          <select id="option.hotkeyctrlw">
+                            <option value="0" id="options_ctrlW_default"></option>
+                            <option value="1" id="options_ctrlW_bbs"></option>
+                          </select><br>
+                          </div>
+                          <label for="option.hotkeyctrll" id="options_hotkeyctrll"></label>
+                          <select id="option.hotkeyctrll">
+                            <option value="0" id="options_ctrlL_default"></option>
+                            <option value="1" id="options_ctrlL_bbs"></option>
+                          </select><br>
+                          <input type="checkbox" id="option.hokeyforselectall" checked="checked"/><label for="option.hokeyforselectall" id="options_hokeyforselectall"></label><br>
+                          <input type="checkbox" id="option.hokeyfrmousebrowsing" checked="checked"/><label for="option.hokeyfrmousebrowsing" id="options_hokeyfrmousebrowsing"></label><br>
+                          <div style='display:none;'><input type="checkbox" id="option.hokeyforbgdisplay" checked="checked"/><label for="option.hokeyforbgdisplay" id="options_hokeyforbgdisplay"></label><br></div>
+                          <div style='display:none;'><input type="checkbox" id="option.hokeyforeasyreading" checked="checked"/><label for="option.hokeyforeasyreading" id="options_hokeyforeasyreading"></label><br></div>
+                          <div style='display:none;'><input type="checkbox" id="option.hokeyfordownloadpost" checked="checked"/><label for="option.hokeyfordownloadpost" id="options_hokeyfordownloadpost"></label>
+                          <select id="option.hotkeydownloadtype">
+                            <option value="0" id="options_hotkeydownloadtext"></option>
+                            <option value="1" id="options_hotkeydownloadcolor"></option>
+                            <option value="2" id="options_hotkeydownloadhtml"></option>
+                          </select></div>
+                      </div>
+                    </section>
+                    <section>
+                      <header id="options_contextmenu"></header>
+                      <div tabtype="subtab">
+                        <input type="checkbox" id="option.embeddedplayermenu" checked="checked"/><label for="option.embeddedplayermenu" id="options_embeddedplayermenu"></label><br>
+                        <input type="checkbox" id="option.previewpicturemenu" checked="checked"/><label for="option.previewpicturemenu" id="options_previewpicturemenu"></label><br>
+                        <input type="checkbox" id="option.mousebrowsemenu" checked="checked"/><label for="option.mousebrowsemenu" id="options_mousebrowsemenu"></label><br>
+                        <input type="checkbox" id="option.openalllinkmenu" checked="checked"/><label for="option.openalllinkmenu" id="options_openalllinkmenu"></label><br>
+                        <input type="checkbox" id="option.screenkeyboardmenu" checked="checked"/><label for="option.screenkeyboardmenu" id="options_screenkeyboardmenu"></label><br>
+                        <input type="checkbox" id="option.pushthreadmenu" checked="checked"/><label for="option.pushthreadmenu" id="options_pushthreadmenu"></label><br>
+                      </div>
+                    </section>
+                    <section>
+                      <header id="options_embeddedPlayer"></header>
+                      <div tabtype="subtab">
+                        <fieldset>
+                          <legend><label id="options_embeddedPlayerSize"></label></legend>
+
+                          <input type="radio" name="embeddedplayer" id="option.embeddedplayer" value="0" checked="checked"/>
+                          <label for="option.embeddedplayer">425x344(4:3)</label><br>
+
+                          <input type="radio" name="embeddedplayer" id="option.embeddedplayer1" value="1"/>
+                          <label for="option.embeddedplayer1">480x385(4:3)</label><br>
+
+                          <input type="radio" name="embeddedplayer" id="option.embeddedplayer2" value="2"/>
+                          <label for="option.embeddedplayer2">640x505(4:3)</label><br>
+
+                          <input type="radio" name="embeddedplayer" id="option.embeddedplayer3" value="3"/>
+                          <label for="option.embeddedplayer3">960x745(4:3)</label><br>
+
+                          <input type="radio" name="embeddedplayer" id="option.embeddedplayer4" value="4"/>
+                          <label for="option.embeddedplayer4">560x340(16:9)</label><br>
+
+                          <input type="radio" name="embeddedplayer" id="option.embeddedplayer5" value="5"/>
+                          <label for="option.embeddedplayer5">640x385(16:9)</label><br>
+
+                          <input type="radio" name="embeddedplayer" id="option.embeddedplayer6" value="6"/>
+                          <label for="option.embeddedplayer6">853x505(16:9)</label><br>
+
+                          <input type="radio" name="embeddedplayer" id="option.embeddedplayer7" value="7"/>
+                          <label for="option.embeddedplayer7">1280x745(16:9)</label><br>
+
+                        </fieldset>
+
+                        <input type="checkbox" id="option.epautoplay" checked="checked"/><label for="option.epautoplay" id="options_epautoplay"></label><br>
+                        <input type="checkbox" id="option.eploop" checked="checked"/><label for="option.eploop" id="options_eploop"></label><br>
+                        <input type="checkbox" id="option.ephtml5" checked="checked"/><label for="option.ephtml5" id="options_ephtml5"></label><br>
+                        <input type="checkbox" id="option.epautousehq" checked="checked"/><label for="option.epautousehq" id="options_epautousehq"></label><br>
+                        <input type="checkbox" id="option.epcopyurlbutton" checked="checked"/><label for="option.epcopyurlbutton" id="options_epcopyurlbutton"></label><br>
+                        <input type="checkbox" id="option.epwhendroplink" checked="checked"/><label for="option.epwhendroplink" id="options_epwhendroplink"></label><br>
+
+                      </div>
+                    </section>
+                    <section>
+                      <header id="options_picturePreview"></header>
+                      <div tabtype="subtab">
+                        <input type="checkbox" id="option.enablepicturepreview" checked="checked"/><label for="option.enablepicturepreview" id="options_enablepicturepreview"></label>
+                        <input type="checkbox" id="option.ctrlpicturepreview" checked="checked"/><label for="option.ctrlpicturepreview" id="options_ctrlpicturepreview"></label><br>
+                        <input type="checkbox" id="option.picturepreviewinfo" checked="checked"/><label for="option.picturepreviewinfo" id="options_picturepreviewinfo"></label><br>
+                        <label for="option.picturepreviewheight" id="options_picturepreviewheight" ></label><input type="number" id="option.picturepreviewheight" min='0' max='1920' step='1' value='0'/><label for="option.picturepreviewheight" id="options_picturepreviewheight2"></label><br>
+                      </div>
+                    </section>
+                    <section>
+                      <header id="options_misc"></header>
+                      <div tabtype="subtab">
+                        <label for="option.ScreenKeyboardAlpha" id="options_ScreenKeyboardAlpha"></label><input type="number" id="option.ScreenKeyboardAlpha"  min='0' max='100' step='1' value='0'/><label for="option.ScreenKeyboardAlpha" id="options_ScreenKeyboardAlpha2"></label><br>
+                        <label for="option.PushThreadLineLength" id="options_PushThreadLineLength"></label><input type="number" id="option.PushThreadLineLength" min='46' max='60' step='1' value='46'/><br>
+                        <label for="option.DownloadLineDelay" id="options_DownloadLineDelay"></label><input type="number" id="option.DownloadLineDelay" min='0' max='999' step='1' value='600'/><label for="option.DownloadLineDelay" id="options_DownloadLineDelay2"></label><br>
+                        <input type="checkbox" id="option.EasyReadingWithImg" checked="checked"/><label for="option.EasyReadingWithImg" id="options_EasyReadingWithImg"></label>
+                        <input type="checkbox" id="option.EasyReadingWithVideo" checked="checked"/><label for="option.EasyReadingWithVideo" id="options_EasyReadingWithVideo"></label><br>
+                        <input type="checkbox" id="option.DeleteSpaceWhenCopy" checked="checked"/><label for="option.DeleteSpaceWhenCopy" id="options_DeleteSpaceWhenCopy"></label><br>
+                        <fieldset>
+                          <legend><label id="options_inputBuffer"></label></legend>
+                          <input type="checkbox" id="option.HideInputBuffer" checked="checked"/><label for="option.HideInputBuffer" id="options_hideInputBuffer"></label><br>
+                          <label id="options_inputBufferSizeType"></label><br>
+                          <input type="radio" name="InputBufferSizeType" id="option.InputBufferSizeType" value="1" checked="checked"/>
+                          <label for="option.InputBufferSizeType" id="options_InputBufferSizeByFont"></label><br>
+                          <input type="radio" name="InputBufferSizeType" id="option.InputBufferSizeType1" value="0"/>
+                          <label for="option.InputBufferSizeType1" id="options_InputBufferSizeFixed"></label>
+                          <label for="option.DefineInputBufferSize" id="options_InputBufferSizeSet"></label><input type="number" id="option.DefineInputBufferSize" min='0' max='999' step='1' value='0'/>
+                        </fieldset>
+                      </div>
+                    </section>
+                  </article>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </section>
+      <section>
+        <header id="options_about"></header>
+        <div tabtype="maintab">
+		      <a href="https://bitbucket.org/bbsfox/bbsfox-for-google-chrome/" target="_blank"><label id="options_projectHome" style="cursor:pointer;"></label></a><br>
+		      <br>
+        	<label id="options_developer"></label><br>
+        	<a href="mailto:ettoolong@hotmail.com">ettoolong@hotmail.com</a><br>
+        	<a href="mailto:rswa000@gmail.com">rswa000@gmail.com</a><br>
+        	<a href="mailto:yangchuck@gmail.com">yangchuck@gmail.com</a><br>
+		      <br>    
+		      <a href="https://bitbucket.org/bbsfox/bbsfox-for-google-chrome/issues?status=new&status=open" target="_blank"><label id="options_bugReport" style="cursor:pointer;"></label></a><br>
+        </div>
+      </section>
+    </article>
+    <button id='option.btnsave'><label id="options_btn_save"></label></button>
+  </div>
+  <div id="option.mask" style="display:none;position:absolute;left:0px;top:0px;z-index:9;width:0px;height:0px;background:#000000;opacity: 0.75;"></div>
+  <div id="addsite.window" style="display:none;padding: 10px;position:absolute;left:100px;top:100px;z-index:10;border-radius:5px;width:250px;height:100px;background:#c0c0FF;border:1px solid #000000;">
+    <label for="addsite.name" id="options_addsite_name"></label><input type="text" id="addsite.name" size="20" spellcheck="false"/><br>
+    <label for="addsite.addr" id="options_addsite_addr"></label><input type="text" id="addsite.addr" size="20" spellcheck="false"/><br>
+    <input type="checkbox" id="addsite.usedefault" checked="checked"/><label for="addsite.usedefault" id="options_addsite_usedefault"></label><br>
+    <div align="right">
+	  <button id="addsite.btnok" disabled="true"><label id="options_btn_Ok"></label></button>
+	  <button id="addsite.btncancel"><label id="options_btn_Cancel"></label></button></div>
+  </div>
+  <div id="delsite.window" style="display:none;padding: 10px;position:absolute;left:100px;top:100px;z-index:10;border-radius:5px;width:300px;height:60px;background:#c0c0FF;border:1px solid #000000;">
+    <label id="delsite.ask"></label>
+    <div align="center">
+	  <button id="delsite.btnok"><label id="options_btn_Ok2_"></label></button>
+	  <button id="delsite.btncancel"><label id="options_btn_Cancel2_"></label></button></div>
+  </div>
+    <!-- /HTML5 TABS CODE -->
+</body>
+</html>
+

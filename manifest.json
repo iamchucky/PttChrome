@@ -1,0 +1,36 @@
+{
+  "manifest_version": 2,
+  "name": "PttChrome",
+  "version": "0.0.1",
+
+  "description": "PttChrome provides telnet connections to ptt.cc.",
+  "icons": {
+    "16": "icon_16.png",
+    "128": "icon_128.png"
+  },
+
+  "default_locale": "en_US",
+
+  "minimum_chrome_version": "24.0",
+  "app": {
+    "background": {
+      "scripts": ["launch.js"]
+    }
+  },
+
+  "permissions": [
+    "clipboardRead",
+    "clipboardWrite",
+    "contextMenus",
+    "notifications",
+    "unlimitedStorage",
+    {"socket": [
+      "tcp-connect:*:*"
+    ]},
+    {"fileSystem": [
+      "retainEntries",
+      "directory"
+    ]},
+    "storage"
+  ]
+}
