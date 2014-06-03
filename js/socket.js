@@ -20,8 +20,6 @@ lib.Socket = function(spec) {
   // Socket.
   this.socketId = null;
   this.isConnected = false;
-
-  this.periodicInterval = null;
 };
 
 lib.Socket.prototype.connect = function() {
@@ -33,7 +31,6 @@ lib.Socket.prototype.send = function(arrayBuffer) {
 };
 
 lib.Socket.prototype.disconnect = function() {
-  clearInterval(this.periodicInterval);
   chrome.socket.disconnect(this.socketId);
   chrome.socket.destroy(this.socketId);
   this.isConnected = false;
@@ -53,7 +50,7 @@ lib.Socket.prototype._onCreate = function(createInfo) {
 
 lib.Socket.prototype._onConnectComplete = function(resultCode) {
   // Start polling for reads.
-  this.periodicInterval = setInterval(this._periodicallyRead.bind(this), 30);
+  this._periodicallyRead();
   if (this.callbacks.connect) {
     //console.log('connect complete');
     this.callbacks.connect(this.tabid);
@@ -71,9 +68,11 @@ lib.Socket.prototype._onDataRead = function(readInfo) {
   if (readInfo.resultCode > 0 && this.callbacks.recv) {
     var str = String.fromCharCode.apply(null, new Uint8Array(readInfo.data));
     this.callbacks.recv(str);
+    setTimeout(this._periodicallyRead.bind(this), 10);
   } else if (readInfo.resultCode == -15) {
     //socket is closed
     console.log('socket is closed');
+    this.disconnect();
     this.callbacks.disconnect();
   } else {
     // other errors
@@ -89,6 +88,8 @@ lib.Socket.prototype._onWriteComplete = function(writeInfo) {
     }
   } else if (writeInfo.bytesWritten == -15) {
     // socket is closed
+    console.log('socket is closed');
+    this.disconnect();
     this.callbacks.disconnect();
   } else {
     // other errors
