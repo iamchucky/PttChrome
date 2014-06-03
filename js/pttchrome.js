@@ -258,10 +258,6 @@ pttchrome.App = function() {
   */
 };
 
-pttchrome.App.prototype.reloadSetting = function() {
-  this.pref.reloadSetting();
-};
-
 pttchrome.App.prototype.connect = function(url) {
   dumpLog(DUMP_TYPE_LOG, "connect to " + url);
   this.pref = new PttChromePref(this, url);
@@ -739,19 +735,19 @@ pttchrome.App.prototype.clearHighlight = function() {
 pttchrome.App.prototype.onPrefChange = function(pref, name) {
   try {
     //var CiStr = Components.interfaces.nsISupportsString;
-    //dumpLog(DUMP_TYPE_LOG, "onPrefChange " + name + ":" + pref.getPrefValue(name));
+    //dumpLog(DUMP_TYPE_LOG, "onPrefChange " + name + ":" + pref.get(name));
     switch (name) {
-    case MOUSE_WHEEL_FUNC1:
-      this.CmdHandler.setAttribute(MOUSE_WHEEL_FUNC1, pref.getPrefValue(name));
+    case 'MOUSE_WHEEL_FUNC1':
+      this.CmdHandler.setAttribute(MOUSE_WHEEL_FUNC1, pref.get(name));
       break;
-    case MOUSE_WHEEL_FUNC2:
-      this.CmdHandler.setAttribute(MOUSE_WHEEL_FUNC2, pref.getPrefValue(name));
+    case 'MOUSE_WHEEL_FUNC2':
+      this.CmdHandler.setAttribute(MOUSE_WHEEL_FUNC2, pref.get(name));
       break;
-    case MOUSE_WHEEL_FUNC3:
-      this.CmdHandler.setAttribute(MOUSE_WHEEL_FUNC3, pref.getPrefValue(name));
+    case 'MOUSE_WHEEL_FUNC3':
+      this.CmdHandler.setAttribute(MOUSE_WHEEL_FUNC3, pref.get(name));
       break;
-    case USE_MOUSE_BROWSING:
-      if (pref.getPrefValue(name)) {
+    case 'USE_MOUSE_BROWSING':
+      if (pref.get(name)) {
         this.CmdHandler.setAttribute(USE_MOUSE_BROWSING, '1');
         this.buf.useMouseBrowsing = true;
       } else {
@@ -771,108 +767,58 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
       this.view.redraw(true);
       this.view.updateCursorPos();
       break;
-    case MOUSE_BROWSING_HIGH_LIGHT:
-      this.buf.highlightCursor = pref.getPrefValue(name);
+    case 'MOUSE_BROWSING_HIGHLIGHT':
+      this.buf.highlightCursor = pref.get(name);
       this.view.redraw(true);
       this.view.updateCursorPos();
       break;
-    case HIGHLIGHT_BG:
-      this.view.highlightBG = pref.getPrefValue(name);
+    case 'HIGHLIGHT_BG':
+      this.view.highlightBG = pref.get(name);
       if (this.view.highlightBG > 15 || this.view.highlightBG < 0)
         this.view.highlightBG = 2;
       //this.buf.highlightCursor=branch.getBoolPref(name);
       //this.view.redraw(true);
       //this.view.updateCursorPos();
       break;
-    case MOUSE_BROWSING_HAND_POINTER:
-      this.buf.handPointerCursor = pref.getPrefValue(name);
+    case 'MOUSE_BROWSING_HANDPOINTER':
+      this.buf.handPointerCursor = pref.get(name);
       break;
-    case USE_MOUSE_BROWSING_EX:
-      this.buf.useMouseBrowsingEx = pref.getPrefValue(name);
+    case 'USE_MOUSE_BROWSING_EX':
+      this.buf.useMouseBrowsingEx = pref.get(name);
       //this.view.redraw(true);
       //this.view.updateCursorPos();
       break;
-    case MOUSE_BROWSING_SEND_ENTER:
-      this.view.useMouseBrowseSendEnter = pref.getPrefValue(name);
+    case 'MOUSE_BROWSING_SEND_ENTER':
+      this.view.useMouseBrowseSendEnter = pref.get(name);
       break;
-    case MIDDLE_BTN_FUNCTION:
-      this.view.middleButtonFunction = pref.getPrefValue(name);
+    case 'MIDDLE_BTN_FUNCTION':
+      this.view.middleButtonFunction = pref.get(name);
       break;
-    case "DropToPaste":
-      this.view.dropToPaste = branch.getBoolPref(name);
+    case 'TERM_TYPE':
+      this.telnetCore.termType = pref.get(name);
       break;
-    case TERM_TYPE:
-      this.telnetCore.termType = pref.getPrefValue(name);
-      break;
-    case BBS_SIZE:
-    case FONT_FIT_WINDOW_WIDTH:
-      this.view.screenType = pref.getPrefValue(name);
+    case 'BBS_SIZE':
+    case 'FONT_FIT_WINDOW_WIDTH':
+      this.view.screenType = pref.get(name);
       if (this.view.screenType == 0) {
         this.view.bbsWidth = 0;
         this.view.bbsHeight = 0;
-        this.view.fontFitWindowWidth = pref.getPrefValue(FONT_FIT_WINDOW_WIDTH);
+        this.view.fontFitWindowWidth = pref.get('FONT_FIT_WINDOW_WIDTH');
       } else if (this.view.screenType == 1) {
-        this.view.bbsWidth = pref.getPrefValue(VIEW_WIDTH);
-        this.view.bbsHeight = pref.getPrefValue(VIEW_HEIGHT);
+        this.view.bbsWidth = pref.get('VIEW_WIDTH');
+        this.view.bbsHeight = pref.get('VIEW_HEIGHT');
         this.view.fontFitWindowWidth = false;
       } else {
         this.view.bbsWidth = 0;
         this.view.bbsHeight = 0;
-        this.view.bbsFontSize = pref.getPrefValue(VIEW_FONT_SIZE);
+        this.view.bbsFontSize = pref.get('VIEW_FONT_SIZE');
         this.view.fontFitWindowWidth = false;
       }
       this.view.fontResize();
       this.view.updateCursorPos();
       break;
-    case "FontSize":
-      if (this.view.screenType == 0) {
-        this.view.bbsWidth = 0;
-        this.view.bbsHeight = 0;
-      } else if (this.view.screenType == 1) {
-        this.view.bbsWidth = branch.getIntPref('bbsbox.width');
-        this.view.bbsHeight = branch.getIntPref('bbsbox.height');
-      } else {
-        this.view.bbsWidth = 0;
-        this.view.bbsHeight = 0;
-        this.view.bbsFontSize = branch.getIntPref('FontSize');
-        this.view.fontResize();
-        this.view.updateCursorPos();
-      }
-      break;
-    case "bbsbox.width":
-    case "bbsbox.height":
-      if (this.view.screenType == 0) {
-        this.view.bbsWidth = 0;
-        this.view.bbsHeight = 0;
-      } else if (this.view.screenType == 1) {
-        this.view.bbsWidth = branch.getIntPref('bbsbox.width');
-        this.view.bbsHeight = branch.getIntPref('bbsbox.height');
-        this.view.fontResize();
-        this.view.updateCursorPos();
-      } else {
-        this.view.bbsWidth = 0;
-        this.view.bbsHeight = 0;
-        this.view.bbsFontSize = branch.getIntPref('FontSize');
-      }
-      break;
-    case "LoadUrlInBG":
-      this.loadURLInBG = branch.getBoolPref(name);
-      var allLinks = document.getElementsByTagName('a');
-      for (var i = 0; i < allLinks.length; i++) {
-        if (this.loadURLInBG) //this is only for developer testing
-          allLinks[i].setAttribute('onclick', "bbsfox.bgtab(event, this);" );
-        else
-          allLinks[i].removeAttribute('onclick');
-      }
-      break;
-    case "LineWrap":
-      this.telnetCore.lineWrap = branch.getIntPref(name);
-      break;
-    case "LineFeed":
-      this.buf.disableLinefeed = !branch.getBoolPref(name);
-      break;
-    case H_ALIGN_CENTER:
-      this.view.horizontalAlignCenter = pref.getPrefValue(name);
+    case 'H_ALIGN_CENTER':
+      this.view.horizontalAlignCenter = pref.get(name);
       if (this.view.horizontalAlignCenter) {
         this.view.BBSWin.setAttribute("align", "center");
         this.view.mainDisplay.style.transformOrigin = 'center';
@@ -881,23 +827,23 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
         this.view.mainDisplay.style.transformOrigin = 'left';
       }
       break;
-    case V_ALIGN_CENTER:
-      this.view.verticalAlignCenter = pref.getPrefValue(name);
+    case 'V_ALIGN_CENTER':
+      this.view.verticalAlignCenter = pref.get(name);
       this.view.fontResize();
       break;
-    case FONT_FACE:
-      this.view.fontFace = pref.getPrefValue(name);
+    case 'FONT_FACE':
+      this.view.fontFace = pref.get(name);
       if (!this.view.fontFace) 
         this.view.fontFace='monospace';
       this.view.mainDisplay.style.fontFamily = this.view.fontFace;
       document.getElementById('cursor').style.fontFamily = this.view.fontFace;
       break;
-    case ESCAPE_STR:
-      var str = pref.getPrefValue(name);
+    case 'ESCAPE_STR':
+      var str = pref.get(name);
       this.telnetCore.EscChar = this.buf.parseText(str);
       break;
-    case ENTER_TYPE:
-      switch (pref.getPrefValue(name)) {
+    case 'ENTER_TYPE':
+      switch (pref.get(name)) {
       case '1':
         this.view.EnterChar = '\r\n';
         break;
@@ -907,33 +853,17 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
         break;
       }
       break;
-    case "ClearCopiedSel":
-      this.clearCopiedSel=branch.getBoolPref(name);
+    case 'DBCS_DETECT':
+      this.view.dbcsDetect = pref.get(name);
       break;
-    case "Charset":
-      //var charset=branch.getComplexValue(name, CiStr).data;
-      if (charset == 'locale') {
-        charset = 'big5';
-      }
-      if (charset=='UTF-8' && (this.isPTT(document.location.hostname))) {
-        this.buf.forceFullWidth = true;
-      } else {
-        this.buf.forceFullWidth = false;
-      }
-      this.view.charset = charset;
-      this.view.redraw(true);
-      break;
-    case DBCS_DETECT:
-      this.view.dbcsDetect = pref.getPrefValue(name);
-      break;
-    case CLOSE_QUERY:
-      if (pref.getPrefValue(name))
+    case 'CLOSE_QUERY':
+      if (pref.get(name))
         this.regExitAlert();
       else
         this.unregExitAlert();
       break;
-    case DETECT_LINK:
-      this.view.useHyperLink = pref.getPrefValue(name);
+    case 'DETECT_LINK':
+      this.view.useHyperLink = pref.get(name);
       if (this.view.useHyperLink) {
         //this.previewLink = prefs.getBoolPref('HyperLink.PreviewLink');
         //this.previewWithCtrl = prefs.getBoolPref('HyperLink.PreviewWithCtrl');
@@ -945,305 +875,85 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
       }
       this.view.redraw(true);
       break;
-    case IDLE_STR:
-      this.antiIdleStr = pref.getPrefValue(name);
+    case 'IDLE_STR':
+      this.antiIdleStr = pref.get(name);
       break;
-    case IDLE_TIME:
-      this.antiIdleTime = pref.getPrefValue(name) * 1000;
+    case 'IDLE_TIME':
+      this.antiIdleTime = pref.get(name) * 1000;
       //this.telnetCore.send();
       break;
-    case HOTKEY_CTRL_W:
-      this.view.hotkeyCtrlW = pref.getPrefValue(name);
+    case 'HOTKEY_CTRL_W':
+      this.view.hotkeyCtrlW = pref.get(name);
       break;
-    case "HotkeyCtrlB":
-      this.view.hotkeyCtrlB = branch.getIntPref(name);
+    case 'HOTKEY_CTRL_L':
+      this.view.hotkeyCtrlL = pref.get(name);
       break;
-    case HOTKEY_CTRL_L:
-      this.view.hotkeyCtrlL = pref.getPrefValue(name);
+    case 'HOTKEY_FOR_SELECT_ALL':
+      this.view.hokeyForSelectAll = pref.get(name);
       break;
-    case "HokeyForCopy":
-      this.view.hokeyForCopy = branch.getBoolPref(name);
-      break;
-    case "HokeyForPaste":
-      this.view.hokeyForPaste = branch.getBoolPref(name);
-      break;
-    case "Hokey2ForPaste":
-      this.view.hokey2ForPaste = branch.getBoolPref(name);
-      break;
-    case HOKEY_FOR_SELECT_ALL:
-      this.view.hokeyForSelectAll = pref.getPrefValue(name);
-      break;
-    case HOKEY_FR_MOUSE_BROWSING:
-      if (pref.getPrefValue(name))
+    case 'HOTKEY_FOR_MOUSE_BROWSING':
+      if (pref.get(name))
         this.CmdHandler.setAttribute("HokeyForMouseBrowsing", '1');
       else
         this.CmdHandler.setAttribute("HokeyForMouseBrowsing", '0');
       break;
-    case HOKEY_FOR_EASY_READING:
-      this.view.hokeyForEasyReading = pref.getPrefValue(name);
+    case 'HOTKEY_FOR_EASY_READING':
+      this.view.hokeyForEasyReading = pref.get(name);
       break;
-    case HOKEY_FOR_DOWNLOAD_POST:
-      this.view.hokeyForDownloadPost = pref.getPrefValue(name);
+    case 'HOTKEY_FOR_DOWNLOAD_POST':
+      this.view.hokeyForDownloadPost = pref.get(name);
       break;
-    case HOTKEY_DOWNLOAD_TYPE:
-      this.view.hotkeyDownloadType = pref.getPrefValue(name);
+    case 'HOTKEY_DOWNLOAD_TYPE':
+      this.view.hotkeyDownloadType = pref.get(name);
       break;
-    case "SavePageMenu":
-      if (branch.getBoolPref(name))
-        this.CmdHandler.setAttribute("SavePageMenu", '1');
-      else
-        this.CmdHandler.setAttribute("SavePageMenu", '0');
-      break;
-    case "EmbeddedPlayerMenu":
-      if (branch.getBoolPref(name))
-        this.CmdHandler.setAttribute("EmbeddedPlayerMenu", '1');
-      else
-        this.CmdHandler.setAttribute("EmbeddedPlayerMenu", '0');
-      break;
-    case "PreviewPictureMenu":
-      if (branch.getBoolPref(name))
-        this.CmdHandler.setAttribute("PreviewPictureMenu", '1');
-      else
-        this.CmdHandler.setAttribute("PreviewPictureMenu", '0');
-      break;
-    case "ScreenKeyboardMenu":
-      if (branch.getBoolPref(name))
-        this.CmdHandler.setAttribute("ScreenKeyboardMenu", '1');
-      else
-        this.CmdHandler.setAttribute("ScreenKeyboardMenu", '0');
-      break;
-    case "OpenAllLinkMenu":
-      if (branch.getBoolPref(name))
-        this.CmdHandler.setAttribute("OpenAllLinkMenu", '1');
-      else
-        this.CmdHandler.setAttribute("OpenAllLinkMenu", '0');
-      break;
-    case "MouseBrowseMenu":
-      if (branch.getBoolPref(name))
-        this.CmdHandler.setAttribute("MouseBrowseMenu", '1');
-      else
-        this.CmdHandler.setAttribute("MouseBrowseMenu", '0');
-      break;
-    case "CopyHtmlMenu":
-      if (branch.getBoolPref(name))
-        this.CmdHandler.setAttribute("CopyHtmlMenu", '1');
-      else
-        this.CmdHandler.setAttribute("CopyHtmlMenu", '0');
-      break;
-    case "KeyWordTrackMenu":
-      if (branch.getBoolPref(name))
-        this.CmdHandler.setAttribute("KeyWordTrackMenu", '1');
-      else
-        this.CmdHandler.setAttribute("KeyWordTrackMenu", '0');
-      break;
-    case "DelayPasteMenu":
-      if (branch.getBoolPref(name))
-        this.CmdHandler.setAttribute("DelayPasteMenu", '1');
-      else
-        this.CmdHandler.setAttribute("DelayPasteMenu", '0');
-      break;
-    case "DownloadPostMenu":
-      if (branch.getBoolPref(name))
-        this.CmdHandler.setAttribute("DownloadPostMenu", '1');
-      else
-        this.CmdHandler.setAttribute("DownloadPostMenu", '0');
-      break;
-    case "EasyReadingMenu":
-      if (branch.getBoolPref(name))
-        this.CmdHandler.setAttribute("EasyReadingMenu", '1');
-      else
-        this.CmdHandler.setAttribute("EasyReadingMenu", '0');
-      break;
-    case "PushThreadMenu":
-      if (branch.getBoolPref(name) && (this.isPTT(document.location.hostname)) )
-        this.CmdHandler.setAttribute("PushThreadMenu", '1');
-      else
-        this.CmdHandler.setAttribute("PushThreadMenu", '0');
-      break;
-    case "FileIoMenu":
-      if (branch.getBoolPref(name))
-        this.CmdHandler.setAttribute("FileIoMenu", '1');
-      else
-        this.CmdHandler.setAttribute("FileIoMenu", '0');
-      break;
-    case "DownloadLineDelay":
-      this.buf.downloadLineDelay = branch.getIntPref(name);
-      break;
-    case "SaveAfterDownload":
-      this.buf.saveAfterDownload = branch.getBoolPref(name);
-      break;
-    case "EasyReadingWithImg":
-      this.view.easyReadingWithImg = branch.getBoolPref(name);
-      break;
-    case "ScreenKeyboardAlpha":
-      if (this.symbolinput)
-        this.symbolinput.setWindowAlpha(branch.getIntPref(name));
-      break;
-    case "EmbeddedPlayerSize":
-      if (this.playerMgr)
-        this.playerMgr.setDefaultWindowSize(branch.getIntPref(name));
-      break;
-    case "EPAutoPlay":
-      if (this.playerMgr)
-        this.playerMgr.epAutoPlay = branch.getBoolPref(name);
-      break;
-    case "EPLoop":
-      if (this.playerMgr)
-        this.playerMgr.epLoop = branch.getBoolPref(name);
-      break;
-    case "EPAutoUseHQ":
-      if (this.playerMgr)
-        this.playerMgr.epAutoUseHQ = branch.getBoolPref(name);
-      break;
-    case "EPCopyUrlButton":
-      if (this.playerMgr) {
-        this.playerMgr.epCopyUrlButton = branch.getBoolPref(name);
-        this.playerMgr.setAllEmbededPlayerUrlBtn(this.playerMgr.epCopyUrlButton);
-      }
-      break;
-    case "EPWhenDropLink":
-      if (this.playerMgr)
-        this.playerMgr.epWhenDropLink = branch.getBoolPref(name);
-      break;
-    case "UseHttpContextMenu":
-      if (branch.getBoolPref(name))
-        this.CmdHandler.setAttribute("webContextMenu", '1');
-      else
-        this.CmdHandler.setAttribute("webContextMenu", '0');
-      break;
-    case "NotifyWhenBackbround":
-      this.buf.notifyWhenBackbround = branch.getBoolPref(name);
-      break;
-    case "NotifyBySound":
-      this.buf.notifyBySound = branch.getBoolPref(name);
-      break;
-    case "NotifyByMessage":
-      this.buf.notifyByMessage = branch.getBoolPref(name);
-      break;
-    case "HideBookMarkLinkMenu":
-      if (branch.getBoolPref(name))
-        this.CmdHandler.setAttribute("hideBookMarkLink", '1');
-      else
-        this.CmdHandler.setAttribute("hideBookMarkLink", '0');
-      break;
-    case "HideSendLinkMenu":
-      if (branch.getBoolPref(name))
-        this.CmdHandler.setAttribute("hideSendLink", '1');
-      else
-        this.CmdHandler.setAttribute("hideSendLink", '0');
-      break;
-    case "HideBookMarkPageMenu":
-      if (branch.getBoolPref(name))
-        this.CmdHandler.setAttribute("hideBookMarkPage", '1');
-      else
-        this.CmdHandler.setAttribute("hideBookMarkPage", '0');
-      break;
-    case "HideSendPageMenu":
-      if (branch.getBoolPref(name))
-        this.CmdHandler.setAttribute("hideSendPage", '1');
-      else
-        this.CmdHandler.setAttribute("hideSendPage", '0');
-      break;
-    case "HideViewInfoMenu":
-      if (branch.getBoolPref(name))
-        this.CmdHandler.setAttribute("hideViewInfo", '1');
-      else
-        this.CmdHandler.setAttribute("hideViewInfo", '0');
-      break;
-    case "HideInputBuffer":
-      this.view.hideInputBuffer = branch.getBoolPref(name);
-      if (!this.view.hideInputBuffer) {
-        this.DocInputArea.style.border = 'none';
-        this.DocInputArea.style.width =  '200px';
-        this.DocInputArea.style.height = '24px';
-        this.DocInputArea.style.top =    '0px';
-        this.DocInputArea.style.left =   '-10000px';
-      }
-      break;
-    case "InputBufferSizeType":
-      this.view.inputBufferSizeType = branch.getIntPref(name);
-      break;
-    case "DefineInputBufferSize":
-      this.view.defineInputBufferSize = branch.getIntPref(name);
-      break;
-    case "UseKeyWordTrack":
-      if (branch.getBoolPref(name)) {
-        this.CmdHandler.setAttribute("useKeyWordTrack", '1');
-        this.view.useKeyWordTrack = true;
-      } else {
-        this.CmdHandler.setAttribute("useKeyWordTrack", '0');
-        this.view.useKeyWordTrack = false;
-      }
-      this.view.redraw(true);
-      this.view.updateCursorPos();
-      break;
-    case "DeleteSpaceWhenCopy":
-      this.deleteSpaceWhenCopy = branch.getBoolPref(name);
-      break;
-    case "PushThreadLineLength":
-      this.pushThreadLineLength = branch.getIntPref(name);
-      break;
-    case "EnablePicturePreview":
-      this.view.enablePicturePreview = branch.getBoolPref(name);
-      break;
-    case "CtrlPicturePreview":
-      this.view.ctrlPicturePreview = branch.getBoolPref(name);
-      break;
-    case "PicturePreviewInfo":
-      this.view.picturePreviewInfo = branch.getBoolPref(name);
-      break;
-    case "PicturePreviewHeight":
-      this.view.picturePreviewHeight = branch.getIntPref(name);
-      this.CmdHandler.setAttribute('LastPicAddr', '0');
-      break;
-    case "preloginprompt":
-      var str = pref.getPrefValue(name);
+    case 'PRE_LOGIN_PROMPT':
+      var str = pref.get(name);
       this.telnetCore.loginPrompt[0] = this.buf.parseText(str);
       break;
-    case "loginprompt":
-      var str = pref.getPrefValue(name);
+    case 'LOGIN_PROMPT':
+      var str = pref.get(name);
       this.telnetCore.loginPrompt[1] = this.buf.parseText(str);
       break;
-    case "passwordprompt":
-      var str = pref.getPrefValue(name);
+    case 'PASSWORD_PROMPT':
+      var str = pref.get(name);
       this.telnetCore.loginPrompt[2] = this.buf.parseText(str);
       break;
-    case "prelogin":
-      var str = pref.getPrefValue(name);
+    case 'PRE_LOGIN':
+      var str = pref.get(name);
       this.telnetCore.loginStr[0] = this.buf.parseText(str);
       break;
-    case "postlogin":
-      var str = pref.getPrefValue(name);
+    case 'POST_LOGIN':
+      var str = pref.get(name);
       this.telnetCore.loginStr[3] = this.buf.parseText(str);
       break;
-    case "login":
-      var str = pref.getPrefValue(name);
+    case 'LOGIN':
+      var str = pref.get(name);
       this.telnetCore.loginStr[1] = this.buf.parseText(str);
       break;
-    case "passwd":
-      var str = pref.getPrefValue(name);
+    case 'PASSWORD':
+      var str = pref.get(name);
       this.telnetCore.loginStr[2] = this.buf.parseText(str);
       break;
 //
-    case DISPLAY_BORDER:
-    case BORDER_COLOR:
-      var borderColor = pref.getPrefValue(BORDER_COLOR);
-      if (pref.getPrefValue(DISPLAY_BORDER))
+    case 'DISPLAY_BORDER':
+    case 'BORDER_COLOR':
+      var borderColor = pref.get('BORDER_COLOR');
+      if (pref.get('DISPLAY_BORDER'))
         this.view.mainDisplay.style.border = '1px solid ' + termColors[borderColor];
       else
         this.view.mainDisplay.style.border = '0px';
       break;
-    case "backgroundbrightness":
-      var brightness = pref.getPrefValue(name);
+    case 'BG_BRIGHTNESS':
+      var brightness = pref.get(name);
       if (brightness == 100)// no alpha
         this.BBSBg.style.opacity = '1';
       else
         this.BBSBg.style.opacity = '0.' + (brightness);
       break;
-    case "backgroundtype":
-    case "backgrounddata":
-      var bt = pref.getPrefValue("backgroundtype");
-      var str = pref.getPrefValue("backgrounddata");//branch.getComplexValue('BackgroundImageMD5', CiStr).data;
+    case 'BG_TYPE':
+    case 'BG_DATA':
+      var bt = pref.get('BG_TYPE');
+      var str = pref.get('BG_DATA');//branch.getComplexValue('BackgroundImageMD5', CiStr).data;
       if (bt != 0 && str != '') {
         try {
           this.BBSBg.style.backgroundImage = 'url('+str+')';
@@ -1294,14 +1004,10 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
       }
       break;
 //
-    case HOKEY_FOR_BG_DISPLAY:
-      this.view.hokeyForBgDisplay = pref.getPrefValue(name);
+    case 'HOKEY_FOR_BG_DISPLAY':
+      this.view.hokeyForBgDisplay = pref.get(name);
       break;
-    case "SwitchBgDisplayMenu":
-      if (branch.getBoolPref(name))
-        this.CmdHandler.setAttribute("SwitchBgDisplayMenu", '1');
-      else
-        this.CmdHandler.setAttribute("SwitchBgDisplayMenu", '0');
+    default:
       break;
     }
   } catch(e) {

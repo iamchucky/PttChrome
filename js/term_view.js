@@ -800,7 +800,7 @@ TermView.prototype={
                 break;
                 */
             case 116: //F5
-                this.bbscore.reloadSetting();
+                this.bbscore.pref.reloadPreference();
                 e.preventDefault();
                 e.stopPropagation();
                 break;
