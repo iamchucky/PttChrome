@@ -115,20 +115,14 @@ TelnetCore.prototype={
     this.socket = new lib.Socket({
       host: this.host,
       port: this.port,
-      onConnect: this.onStartRequest,
-      onDisconnect: this.onStopRequest,
+      onConnect: this.onStartRequest.bind(this),
+      onDisconnect: this.onStopRequest.bind(this),
       onReceive: this.ins.read,
       onSent: null
     });
     this.socket.connect();
   },
 
-  close: function() {
-    if(!this.socket)
-      return;
-    this.socket.disconnect();
-    this.socket = null;
-  },
   // data listener
   onStartRequest: function(){
     if(this.listener)
@@ -136,7 +130,10 @@ TelnetCore.prototype={
   },
 
   onStopRequest: function(){
-    this.close();
+    if(this.socket) {
+      this.socket.disconnect();
+      this.socket = null;
+    }
     if(this.listener)
       this.listener.onClose();
   },

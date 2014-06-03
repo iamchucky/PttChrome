@@ -275,9 +275,9 @@ pttchrome.App.prototype.connect = function(url) {
   this.telnetCore.connect(url, port);
 };
 
-pttchrome.App.prototype.close = function() {
+pttchrome.App.prototype.disconnect = function() {
   this.telnetCore.listener = null;
-  this.telnetCore.close();
+  this.telnetCore.disconnect();
 
   this.view.blinkTimeout.cancel();
 

@@ -13,9 +13,12 @@ chrome.app.runtime.onLaunched.addListener(function() {
     }
   }, function(appWindow) {
     appWindow.onClosed.addListener(function() {
-      var id = appWindow.contentWindow.pttchrome.app.telnetCore.socket.socketId;
-      if (id) {
-        chrome.socket.disconnect(id);
+      var so = appWindow.contentWindow.pttchrome.app.telnetCore.socket;
+      if (so) {
+        var id = so.socketId;
+        if (id) {
+          chrome.socket.disconnect(id);
+        }
       }
     });
   });
