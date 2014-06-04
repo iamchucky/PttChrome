@@ -988,7 +988,7 @@ TermView.prototype={
       else
         origin = [this.firstGrid.offsetLeft, this.firstGrid.offsetTop];
       var realX = origin[0] + (cx) * this.chw * this.scaleX;
-      var realY = origin[1] + (cy) * this.chh +1 + parseInt(this.mainDisplay.style.marginTop, 10);
+      var realY = origin[1] + (cy) * this.chh +1;
       return [realX, realY];
     },
 
