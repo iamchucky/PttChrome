@@ -260,8 +260,8 @@ pttchrome.App = function() {
 
 pttchrome.App.prototype.connect = function(url) {
   dumpLog(DUMP_TYPE_LOG, "connect to " + url);
-  this.pref = new PttChromePref(this, url);
-  document.title = this.pref.sitename;
+  this.pref = new PttChromePref(this);
+  document.title = url;
   var splits = url.split(/:/g);
   var port = 23;
   if(splits.length == 1)

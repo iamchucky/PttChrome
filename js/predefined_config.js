@@ -1,11 +1,4 @@
-﻿// COMMON
-var SITE_NAME   = 'sitename';
-var USE_DEFAULT = 'usedefault';
-
-// BOOL_TYPES
-var USE_MOUSE_BROWSING 	  = 'usemousebrowsing';
-
-// INT_TYPES
+﻿var USE_MOUSE_BROWSING 	  = 'usemousebrowsing';
 var MOUSE_WHEEL_FUNC1			= 'mousewheelfunc1';
 var MOUSE_WHEEL_FUNC2			= 'mousewheelfunc2';
 var MOUSE_WHEEL_FUNC3			= 'mousewheelfunc3';

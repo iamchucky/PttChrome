@@ -1,11 +1,6 @@
-function PttChromePref(app, siteaddr) {
-    this.sitename = 'ptt.cc';
-
+function PttChromePref(app) {
     this.values = null;
-    this.siteaddr = siteaddr;
     this.app = app;
-		
-    this.usedefault = true;
 	
 	  this.reloadPreference();
 }
@@ -13,8 +8,17 @@ function PttChromePref(app, siteaddr) {
 PttChromePref.prototype = {
 
   reloadPreference: function() {
-    this.loadPrefFromStorage();
-    this.updatePrefToApp();
+    var self = this;
+    this.getStorage(null, function(items) {
+      var itemsEmpty = (Object.keys(items).length === 0);
+      if (itemsEmpty) {
+        items = DEFAULT_PREFS;
+        console.log('pref: first time, load default to sync storage');
+        self.setStorage(items);
+      }
+      self.values = items;
+      self.updatePrefToApp();
+    });
   },
 
   updatePrefToApp: function() {
@@ -23,35 +27,35 @@ PttChromePref.prototype = {
     }
   },
 
+  resetPreference: function() {
+    this.clearStorage();
+    this.reloadPreference();
+  },
+
   get: function(prefName) {
     console.log(prefName + " = " + this.values[prefName]);
     return this.values[prefName];
   },
 
-  loadPrefFromStorage: function() {
-    this.values = this.getStorage();
+  set: function(prefName, value) {
+    this.values[prefName] = value;
   },
 
-  getStorage: function(key) {
-    if (key == null) {
-      return DEFAULT_PREFS;
-    } else {
-      return DEFAULT_PREFS[key];
-    }
-
-    //return chrome.storage.sync.get(key);
+  getStorage: function(key, callback) {
+    chrome.storage.sync.get(key, callback);
   },
 
-  flushPrefToStorage: function() {
-  },
-
-  setPreference: function(key) {
-    this.setStorage(key, this.values[key]);
-  },
-
-  setStorage: function(key, value) {
-    chrome.storage.sync.set({'key': key, 'value': value}, function() {
+  setStorage: function(items) {
+    chrome.storage.sync.set(items, function() {
       console.log('preference saved');
+    });
+  },
+
+  clearStorage: function() {
+    chrome.storage.sync.clear(function() {
+      var err = chrome.runtime.lastError;
+      if (err)
+        console.log(err);
     });
   }
 
