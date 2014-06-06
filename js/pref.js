@@ -62,6 +62,7 @@ PttChromePref.prototype = {
       self.setStorage(self.values);
       self.updatePrefToApp();
       self.modalShown = false;
+      self.app.setInputAreaFocus();
     });
   },
 
