@@ -13,16 +13,7 @@ function TermView(rowCount) {
     this.inputBufferSizeType=0;
     this.defineInputBufferSize=12;
     this.hideInputBuffer=false;
-    this.hokeyForCopy=true;
-    this.hokeyForPaste=true;
-    this.hokey2ForPaste=true;
-    this.hokeyForSelectAll=true;
-    this.hotkeyCtrlW=1;
-    this.hotkeyCtrlB=1;
-    this.hotkeyCtrlL=1;
-    this.hokeyForDownloadPost=false;
-    this.hokeyForBgDisplay=false;
-    this.hokeyForEasyReading=false;
+    this.hotkeyForSelectAll=false;
     this.useKeyWordTrack=false;
     this.highlightBG = 2;
     this.charset='big5';
@@ -31,14 +22,13 @@ function TermView(rowCount) {
     this.ctrlPicturePreview = false;
     this.picturePreviewInfo = false;
     this.middleButtonFunction = 0;
-    //this.useMiddleButtonSendEnter = false;
     //this.shadowHighLight = false;
     //this.highlightFG = 7;
     this.DisplayBackground=false;
     this.BackgroundMD5='';
     this.fontFitWindowWidth=false;
-    this.verticalAlignCenter=false;
-    this.horizontalAlignCenter=false;
+    this.verticalAlignCenter=true;
+    this.horizontalAlignCenter=true;
     this.easyReadingWithImg=false;
     //new pref - end
 
@@ -67,7 +57,6 @@ function TermView(rowCount) {
     this.bbsCursor = document.getElementById('cursor');
     this.trackKeyWordList = document.getElementById('TrackKeyWordList');
     this.BBSWin = document.getElementById('BBSWindow');
-    this.BBSBg = document.getElementById('BBSBackgroundImage');
     this.TempPast = document.getElementById('TempPast');
     this.pictureWindow = document.getElementById('PictureWindow');
     this.picturePreview = document.getElementById('PicturePreview');
@@ -79,10 +68,6 @@ function TermView(rowCount) {
     this.tempPicX=0;;
     this.tempPicY=0;
     this.scaleX=1;
-
-    //this.fontFace = 'MingLiu';
-    //this.mainDisplay.style.fontFamily = this.fontFace;
-    //document.getElementById('cursor').style.fontFamily = this.fontFace;
 
     /*
     var appInfo = Components.classes["@mozilla.org/xre/app-info;1"].getService(Components.interfaces.nsIXULAppInfo);
@@ -102,6 +87,8 @@ function TermView(rowCount) {
     this.firstGrid = this.BBSROW[0];
     this.BBSWin.appendChild(mainDiv);
     this.mainDisplay = mainDiv;
+    this.mainDisplay.style.border = '0px';
+    this.setFontFace('MingLiu,monospace');
 
     this.findBar = null;
 
@@ -216,6 +203,12 @@ TermView.prototype={
         }
         */
         //this.loadSymbolInput();
+    },
+
+    setFontFace: function(fontFace) {
+      this.fontFace = fontFace;
+      this.mainDisplay.style.fontFamily = this.fontFace;
+      document.getElementById('cursor').style.fontFamily = this.fontFace;
     },
 
     update: function() {
@@ -396,7 +389,6 @@ TermView.prototype={
 
         var cols=this.buf.cols;
         var rows=this.buf.rows;
-        var useHyperLink = this.useHyperLink;
         //var useKeyWordTrack = this.bbscore.useKeyWordTrack;
         //var ctx = this.ctx;
         var lineChangeds=this.buf.lineChangeds;
@@ -837,27 +829,6 @@ TermView.prototype={
             else if(e.keyCode >= 219 && e.keyCode <= 221) // [ \ ]
                 var charCode = e.keyCode - 192;
         } else if(!e.ctrlKey && e.altKey && !e.shiftKey) {
-          /*
-          if(charCode==71 && this.hokeyForEasyReading) //g
-          {
-            this.bbscore.downloadPost(true,true,true);
-            e.preventDefault();
-            e.stopPropagation();
-            return;
-          }
-          else if(e.keyCode==68 && this.hokeyForDownloadPost) //d
-          {
-            if(this.hotkeyDownloadType==0)
-              this.bbscore.downloadPost(false,false,false);
-            if(this.hotkeyDownloadType==1)
-              this.bbscore.downloadPost(true,false,false);
-            else
-              this.bbscore.downloadPost(true,true,false);
-            e.preventDefault();
-            e.stopPropagation();
-            return;
-          }
-          */
         } else if(e.ctrlKey && !e.altKey && e.shiftKey) {
             switch(e.keyCode) {
             case 50: // @
@@ -881,13 +852,13 @@ TermView.prototype={
         if(charCode) {
           var sendCode = true;
           var preventDefault = true;
-          if(charCode==1 && this.hokeyForSelectAll) //select all
+          if(charCode==1 && this.hotkeyForSelectAll) //select all
           {
             this.bbscore.doSelectAll();
             sendCode = false;
             //return;
           }
-          else if(charCode==3 && this.hokeyForBgDisplay) //copy
+          else if(charCode==3) //copy
           {
             if(!window.getSelection().isCollapsed) //no anything be select
               return;
@@ -896,15 +867,7 @@ TermView.prototype={
           {
             sendCode = false;
           }
-          else if(charCode==13 && this.bbscore.CmdHandler.getAttribute("HokeyForMouseBrowsing")=='1') //switch mouse browsing
-          {
-            this.bbscore.switchMouseBrowsing();
-            return;
-          }
-          else if(charCode==12 && this.hotkeyCtrlL==0) //ctrl l
-          {
-            return;
-          }
+
           if(sendCode)
             conn.send( String.fromCharCode(charCode) );
           if(preventDefault)
@@ -1118,8 +1081,6 @@ TermView.prototype={
 
       this.BBSWin.style.height = document.documentElement.clientHeight +'px';
       this.BBSWin.style.width = document.documentElement.clientWidth +'px';
-      this.BBSBg.style.height = this.BBSWin.style.height;
-      this.BBSBg.style.width = this.BBSWin.style.width;
 
       if(this.screenType==0 || this.screenType==1)
       {

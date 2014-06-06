@@ -34,6 +34,12 @@
   "menu_sitepref": {
     "message": "站台設定"
   },
+  "menu_pref": {
+    "message": "設定"
+  },
+  "menu_toggleMouseBrowsing": {
+    "message": "切換滑鼠瀏覽"
+  },
   "options_preferences": {
     "message": "設定"
   },
@@ -151,16 +157,13 @@
   "options_siteSetting": {
     "message": "站台設定"
   },
-  "options_closequery": {
+  "options_closeQuery": {
     "message": "關閉BBS頁面時若還在連線中要詢問"
   },
-  "options_idletime": {
-    "message": "若閒置"
+  "options_antiIdleTime": {
+    "message": "防閒置間隔(秒)"
   },
-  "options_idlestr": {
-    "message": "秒後送出下列字串"
-  },
-  "options_idlehint": {
+  "options_antiIdleHint": {
     "message": "(0=關閉不用)"
   },
   "options_escapestr": {

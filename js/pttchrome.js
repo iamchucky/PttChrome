@@ -5,26 +5,18 @@ var pttchrome = {};
 pttchrome.App = function() {
 
   this.CmdHandler = document.getElementById('cmdHandler');
-  this.CmdHandler.setAttribute(USE_MOUSE_BROWSING, '1');
-  this.CmdHandler.setAttribute('doDOMMouseScroll', '0');
+  this.CmdHandler.setAttribute('useMouseBrowsing', '1');
   //this.CmdHandler.setAttribute('useMouseUpDown', '0');
   //this.CmdHandler.setAttribute('useMouseSwitchPage', '0');
   //this.CmdHandler.setAttribute("useMouseReadThread", '0');
-  this.CmdHandler.setAttribute(MOUSE_WHEEL_FUNC1, '1');
-  this.CmdHandler.setAttribute(MOUSE_WHEEL_FUNC2, '2');
-  this.CmdHandler.setAttribute(MOUSE_WHEEL_FUNC3, '0');
   this.CmdHandler.setAttribute('useTextDragAndDrop', '0');
-  this.CmdHandler.setAttribute("HokeyForMouseBrowsing", '0');
-  this.CmdHandler.setAttribute("EnableBackground", '1');
   this.CmdHandler.setAttribute('webContextMenu', '1');
   this.CmdHandler.setAttribute('SavePageMenu', '1');
   this.CmdHandler.setAttribute('EmbeddedPlayerMenu', '1');
   this.CmdHandler.setAttribute('PreviewPictureMenu', '0');
-  this.CmdHandler.setAttribute('EasyReadingMenu', '0');
   this.CmdHandler.setAttribute('PushThreadMenu', '0');
   this.CmdHandler.setAttribute('OpenAllLinkMenu', '0');
   this.CmdHandler.setAttribute("MouseBrowseMenu", '0');
-  this.CmdHandler.setAttribute("SwitchBgDisplayMenu", '0');
   this.CmdHandler.setAttribute('FileIoMenu', '0');
   this.CmdHandler.setAttribute('DownloadPostMenu', '0');
   this.CmdHandler.setAttribute('ScreenKeyboardMenu', '1');
@@ -68,19 +60,23 @@ pttchrome.App = function() {
   this.prefListener=null;
   this.isDefaultPref=true;
   */
-  this.antiIdleStr = '';
+  this.antiIdleStr = '^[[A^[[B';
   this.antiIdleTime = 0;
   this.deleteSpaceWhenCopy = true;
   this.loadURLInBG = false;
   this.clearCopiedSel = true;
   //new pref - end
-  this.unusedTime = 0;
+  this.idleTime = 0;
   this.connectTime = 0;
   this.connectState = 0;
 
   this.DocInputArea = document.getElementById('t');
   this.BBSWin = document.getElementById('BBSWindow');
-  this.BBSBg = document.getElementById('BBSBackgroundImage');
+
+  // horizontally center bbs window
+  this.BBSWin.setAttribute("align", "center");
+  this.view.mainDisplay.style.transformOrigin = 'center';
+
   /*
   this.btnCloseSymbolInput = document.getElementById('btnCloseSymbolInput');
 
@@ -101,7 +97,6 @@ pttchrome.App = function() {
   this.settingCheckTimer = null;
   this.inputAreaFocusTimer = null;
   //this.xmlhttp = null;
-  //this.doDOMMouseScroll = false;
   this.post_text = new Array();
   this.post_html = new Array();
   this.tempFiles = [];
@@ -184,26 +179,10 @@ pttchrome.App = function() {
   };
   document.addEventListener('mouseover', mouseover, false);
 
-  var mousescroll = {
-    app: this,
-    handleEvent: function(e) {
-      this.app.mouse_scroll(e);
-    }
-  };
-  addEventListener('mousewheel', mousescroll, true);
-
   this.menuHandler = {};
   chrome.contextMenus.onClicked.addListener(function(onClickData, tab) {
     pttchrome.app.menuHandler[onClickData.menuItemId]();
   });
-
-  var contextmenu = {
-    app: this,
-    handleEvent: function(e) {
-      this.app.context_menu(e);
-    }
-  };
-  window.addEventListener('contextmenu', contextmenu, false);
 
   /*
   var mousedragstart = {
@@ -248,6 +227,7 @@ pttchrome.App = function() {
   //window.addEventListener('keydown', keypress, true);
 
   this.view.fontResize();
+  this.view.updateCursorPos();
   this.dblclickTimer=null;
   this.mouseDownTimer=null;
   this.mbTimer=null;
@@ -270,7 +250,7 @@ pttchrome.App.prototype.connect = function(url) {
   else if(splits.length == 2)
   {
     url = splits[0];
-    port = splits[1];
+    port = parseInt(splits[1]);
   }
   this.telnetCore.connect(url, port);
 };
@@ -289,7 +269,7 @@ pttchrome.App.prototype.onConnect = function() {
   dumpLog(DUMP_TYPE_LOG, "pttchrome onConnect");
   this.connectState = 1;
   this.updateTabIcon('connect');
-  this.unusedTime = 0;
+  this.idleTime = 0;
   var _this = this;
   this.timerOnsec = setTimer(true, function() {
     _this.antiIdle();
@@ -306,14 +286,14 @@ pttchrome.App.prototype.onClose = function() {
   this.unregExitAlert();
 
   this.connectState = 2;
-  this.unusedTime = 0;
+  this.idleTime = 0;
 
   this.updateTabIcon('disconnect');
   this.timerOnsec.cancel();
 };
 
 pttchrome.App.prototype.resetUnusedTime = function() {
-  this.unusedTime = 0;
+  this.idleTime = 0;
 };
 
 pttchrome.App.prototype.sendData = function(str) {
@@ -372,6 +352,8 @@ pttchrome.App.prototype.setInputAreaFocus = function() {
 };
 
 pttchrome.App.prototype.doPaste = function() {
+  if (this.pref && this.pref.modalShown)
+    return;
   this.pasting = true;
   this.setInputAreaFocus();
   document.execCommand("paste", false, null);
@@ -383,12 +365,16 @@ pttchrome.App.prototype.doSelectAll = function() {
   window.getSelection().selectAllChildren(this.view.mainDisplay);
 };
 
+pttchrome.App.prototype.doPreferences = function() {
+  $('#prefModal').modal('show');
+};
+
 pttchrome.App.prototype.switchMouseBrowsing = function() {
-  if (this.CmdHandler.getAttribute(USE_MOUSE_BROWSING)=='1') {
-    this.CmdHandler.setAttribute(USE_MOUSE_BROWSING, '0');
+  if (this.CmdHandler.getAttribute('useMouseBrowsing')=='1') {
+    this.CmdHandler.setAttribute('useMouseBrowsing', '0');
     this.buf.useMouseBrowsing=false;
   } else {
-    this.CmdHandler.setAttribute(USE_MOUSE_BROWSING, '1');
+    this.CmdHandler.setAttribute('useMouseBrowsing', '1');
     this.buf.useMouseBrowsing=true;
   }
 
@@ -409,12 +395,12 @@ pttchrome.App.prototype.switchMouseBrowsing = function() {
 };
 
 pttchrome.App.prototype.antiIdle = function() {
-  if (this.antiIdleTime && this.unusedTime > this.antiIdleTime) {
+  if (this.antiIdleTime && this.idleTime > this.antiIdleTime) {
     if (this.antiIdleStr!='' && this.connectState==1)
       this.telnetCore.send(this.antiIdleStr);
   } else {
     if (this.connectState==1)
-      this.unusedTime+=1000;
+      this.idleTime+=1000;
   }
 
   if (this.DelayPasteBuffer != '' && this.DelayPasteIndex!=-1 
@@ -659,9 +645,6 @@ pttchrome.App.prototype.overlayCommandListener = function (e) {
         case "switchMouseBrowsing":
           this.switchMouseBrowsing();
           break;
-        case "switchBgDisplay":
-          this.switchBgDisplay();
-          break;
         case "checkFireGestureKey":
           if (this.cancelDownloadAndPaste())
             return;
@@ -737,23 +720,11 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
     //var CiStr = Components.interfaces.nsISupportsString;
     //dumpLog(DUMP_TYPE_LOG, "onPrefChange " + name + ":" + pref.get(name));
     switch (name) {
-    case 'MOUSE_WHEEL_FUNC1':
-      this.CmdHandler.setAttribute(MOUSE_WHEEL_FUNC1, pref.get(name));
-      break;
-    case 'MOUSE_WHEEL_FUNC2':
-      this.CmdHandler.setAttribute(MOUSE_WHEEL_FUNC2, pref.get(name));
-      break;
-    case 'MOUSE_WHEEL_FUNC3':
-      this.CmdHandler.setAttribute(MOUSE_WHEEL_FUNC3, pref.get(name));
-      break;
-    case 'USE_MOUSE_BROWSING':
-      if (pref.get(name)) {
-        this.CmdHandler.setAttribute(USE_MOUSE_BROWSING, '1');
-        this.buf.useMouseBrowsing = true;
-      } else {
-        this.CmdHandler.setAttribute(USE_MOUSE_BROWSING, '0');
-        this.buf.useMouseBrowsing = false;
-      }
+    case 'useMouseBrowsing':
+      var useMouseBrowsing = pref.get(name);
+      this.CmdHandler.setAttribute('useMouseBrowsing', useMouseBrowsing?'1':'0');
+      this.buf.useMouseBrowsing = useMouseBrowsing;
+
       if (!this.buf.useMouseBrowsing) {
         this.buf.BBSWin.style.cursor = 'auto';
         this.buf.clearHighlight();
@@ -767,245 +738,28 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
       this.view.redraw(true);
       this.view.updateCursorPos();
       break;
-    case 'MOUSE_BROWSING_HIGHLIGHT':
+    case 'mouseBrowsingHighlight':
       this.buf.highlightCursor = pref.get(name);
       this.view.redraw(true);
       this.view.updateCursorPos();
       break;
-    case 'HIGHLIGHT_BG':
-      this.view.highlightBG = pref.get(name);
-      if (this.view.highlightBG > 15 || this.view.highlightBG < 0)
-        this.view.highlightBG = 2;
-      //this.buf.highlightCursor=branch.getBoolPref(name);
-      //this.view.redraw(true);
-      //this.view.updateCursorPos();
-      break;
-    case 'MOUSE_BROWSING_HANDPOINTER':
-      this.buf.handPointerCursor = pref.get(name);
-      break;
-    case 'USE_MOUSE_BROWSING_EX':
-      this.buf.useMouseBrowsingEx = pref.get(name);
-      //this.view.redraw(true);
-      //this.view.updateCursorPos();
-      break;
-    case 'MOUSE_BROWSING_SEND_ENTER':
-      this.view.useMouseBrowseSendEnter = pref.get(name);
-      break;
-    case 'MIDDLE_BTN_FUNCTION':
-      this.view.middleButtonFunction = pref.get(name);
-      break;
-    case 'TERM_TYPE':
-      this.telnetCore.termType = pref.get(name);
-      break;
-    case 'BBS_SIZE':
-    case 'FONT_FIT_WINDOW_WIDTH':
-      this.view.screenType = pref.get(name);
-      if (this.view.screenType == 0) {
-        this.view.bbsWidth = 0;
-        this.view.bbsHeight = 0;
-        this.view.fontFitWindowWidth = pref.get('FONT_FIT_WINDOW_WIDTH');
-      } else if (this.view.screenType == 1) {
-        this.view.bbsWidth = pref.get('VIEW_WIDTH');
-        this.view.bbsHeight = pref.get('VIEW_HEIGHT');
-        this.view.fontFitWindowWidth = false;
-      } else {
-        this.view.bbsWidth = 0;
-        this.view.bbsHeight = 0;
-        this.view.bbsFontSize = pref.get('VIEW_FONT_SIZE');
-        this.view.fontFitWindowWidth = false;
-      }
-      this.view.fontResize();
-      this.view.updateCursorPos();
-      break;
-    case 'H_ALIGN_CENTER':
-      this.view.horizontalAlignCenter = pref.get(name);
-      if (this.view.horizontalAlignCenter) {
-        this.view.BBSWin.setAttribute("align", "center");
-        this.view.mainDisplay.style.transformOrigin = 'center';
-      } else {
-        this.view.BBSWin.setAttribute("align", "left");
-        this.view.mainDisplay.style.transformOrigin = 'left';
-      }
-      break;
-    case 'V_ALIGN_CENTER':
-      this.view.verticalAlignCenter = pref.get(name);
-      this.view.fontResize();
-      break;
-    case 'FONT_FACE':
-      this.view.fontFace = pref.get(name);
-      if (!this.view.fontFace) 
-        this.view.fontFace='monospace';
-      this.view.mainDisplay.style.fontFamily = this.view.fontFace;
-      document.getElementById('cursor').style.fontFamily = this.view.fontFace;
-      break;
-    case 'ESCAPE_STR':
-      var str = pref.get(name);
-      this.telnetCore.EscChar = this.buf.parseText(str);
-      break;
-    case 'ENTER_TYPE':
-      switch (pref.get(name)) {
-      case '1':
-        this.view.EnterChar = '\r\n';
-        break;
-      case '0':
-      default:
-        this.view.EnterChar = '\r';
-        break;
-      }
-      break;
-    case 'DBCS_DETECT':
-      this.view.dbcsDetect = pref.get(name);
-      break;
-    case 'CLOSE_QUERY':
+    case 'closeQuery':
       if (pref.get(name))
         this.regExitAlert();
       else
         this.unregExitAlert();
       break;
-    case 'DETECT_LINK':
-      this.view.useHyperLink = pref.get(name);
-      if (this.view.useHyperLink) {
-        //this.previewLink = prefs.getBoolPref('HyperLink.PreviewLink');
-        //this.previewWithCtrl = prefs.getBoolPref('HyperLink.PreviewWithCtrl');
-        //this.previerWindowHeight = prefs.getIntPref('HyperLink.PrevierWindowHeight');
-      } else {
-        //this.previewLink = false;
-        //this.previewWithCtrl = false;
-        //this.previerWindowHeight = 150;
-      }
-      this.view.redraw(true);
-      break;
-    case 'IDLE_STR':
-      this.antiIdleStr = pref.get(name);
-      break;
-    case 'IDLE_TIME':
+    case 'antiIdleTime':
       this.antiIdleTime = pref.get(name) * 1000;
-      //this.telnetCore.send();
       break;
-    case 'HOTKEY_CTRL_W':
-      this.view.hotkeyCtrlW = pref.get(name);
+    case 'dbcsDetect':
+      this.view.dbcsDetect = pref.get(name);
       break;
-    case 'HOTKEY_CTRL_L':
-      this.view.hotkeyCtrlL = pref.get(name);
-      break;
-    case 'HOTKEY_FOR_SELECT_ALL':
-      this.view.hokeyForSelectAll = pref.get(name);
-      break;
-    case 'HOTKEY_FOR_MOUSE_BROWSING':
-      if (pref.get(name))
-        this.CmdHandler.setAttribute("HokeyForMouseBrowsing", '1');
-      else
-        this.CmdHandler.setAttribute("HokeyForMouseBrowsing", '0');
-      break;
-    case 'HOTKEY_FOR_EASY_READING':
-      this.view.hokeyForEasyReading = pref.get(name);
-      break;
-    case 'HOTKEY_FOR_DOWNLOAD_POST':
-      this.view.hokeyForDownloadPost = pref.get(name);
-      break;
-    case 'HOTKEY_DOWNLOAD_TYPE':
-      this.view.hotkeyDownloadType = pref.get(name);
-      break;
-    case 'PRE_LOGIN_PROMPT':
-      var str = pref.get(name);
-      this.telnetCore.loginPrompt[0] = this.buf.parseText(str);
-      break;
-    case 'LOGIN_PROMPT':
-      var str = pref.get(name);
-      this.telnetCore.loginPrompt[1] = this.buf.parseText(str);
-      break;
-    case 'PASSWORD_PROMPT':
-      var str = pref.get(name);
-      this.telnetCore.loginPrompt[2] = this.buf.parseText(str);
-      break;
-    case 'PRE_LOGIN':
-      var str = pref.get(name);
-      this.telnetCore.loginStr[0] = this.buf.parseText(str);
-      break;
-    case 'POST_LOGIN':
-      var str = pref.get(name);
-      this.telnetCore.loginStr[3] = this.buf.parseText(str);
-      break;
-    case 'LOGIN':
-      var str = pref.get(name);
-      this.telnetCore.loginStr[1] = this.buf.parseText(str);
-      break;
-    case 'PASSWORD':
-      var str = pref.get(name);
-      this.telnetCore.loginStr[2] = this.buf.parseText(str);
-      break;
-//
-    case 'DISPLAY_BORDER':
-    case 'BORDER_COLOR':
-      var borderColor = pref.get('BORDER_COLOR');
-      if (pref.get('DISPLAY_BORDER'))
-        this.view.mainDisplay.style.border = '1px solid ' + termColors[borderColor];
-      else
-        this.view.mainDisplay.style.border = '0px';
-      break;
-    case 'BG_BRIGHTNESS':
-      var brightness = pref.get(name);
-      if (brightness == 100)// no alpha
-        this.BBSBg.style.opacity = '1';
-      else
-        this.BBSBg.style.opacity = '0.' + (brightness);
-      break;
-    case 'BG_TYPE':
-    case 'BG_DATA':
-      var bt = pref.get('BG_TYPE');
-      var str = pref.get('BG_DATA');//branch.getComplexValue('BackgroundImageMD5', CiStr).data;
-      if (bt != 0 && str != '') {
-        try {
-          this.BBSBg.style.backgroundImage = 'url('+str+')';
-
-          if (bt == 4) {
-            if(this.FXVersion >= 4.0) //for firefox 4
-              this.BBSBg.style.backgroundSize = '100% 100%';
-            else
-              this.BBSBg.style.MozBackgroundSize = '100% 100%';
-            this.BBSBg.style.backgroundPosition = 'left top';
-            this.BBSBg.style.backgroundRepeat = 'no-repeat';
-          } else if (bt == 3) {
-            if (this.FXVersion >= 4.0) //for firefox 4
-              this.BBSBg.style.backgroundSize = 'cover';
-            else
-              this.BBSBg.style.MozBackgroundSize = 'cover';
-            this.BBSBg.style.backgroundPosition = 'left top';
-            this.BBSBg.style.backgroundRepeat = 'no-repeat';
-          } else if (bt == 2) {
-            if (this.FXVersion >= 4.0) //for firefox 4
-              this.BBSBg.style.backgroundSize = 'auto auto';
-            else
-              this.BBSBg.style.MozBackgroundSize = 'auto auto';
-            this.BBSBg.style.backgroundPosition = 'center center';
-            this.BBSBg.style.backgroundRepeat = 'no-repeat';
-          } else if (bt == 1) {
-            if (this.FXVersion >= 4.0) //for firefox 4
-              this.BBSBg.style.backgroundSize = 'auto auto';
-            else
-              this.BBSBg.style.MozBackgroundSize = 'auto auto';
-            this.BBSBg.style.backgroundPosition = 'center center';
-            this.BBSBg.style.backgroundRepeat = 'repeat';
-          }
-        } catch(ex) {
-          bt = 0;
-        }
-        //try to load picture, if load fail, set bt = 0;
-      }
-      if (bt == 0) {
-        this.BBSBg.style.display = 'none';
-        this.CmdHandler.setAttribute("EnableBackground", '0');
-        this.view.DisplayBackground = true;
-        this.view.BackgroundMD5 = '';
-      } else {
-        this.BBSBg.style.display = 'block';
-        this.CmdHandler.setAttribute("EnableBackground", '1');
-        this.view.DisplayBackground = true;
-      }
-      break;
-//
-    case 'HOKEY_FOR_BG_DISPLAY':
-      this.view.hokeyForBgDisplay = pref.get(name);
+    case 'fontFace':
+      var fontFace = pref.get(name);
+      if (!fontFace) 
+        fontFace='monospace';
+      this.view.setFontFace(fontFace);
       break;
     default:
       break;
@@ -1046,6 +800,8 @@ pttchrome.App.prototype.cancelDownloadAndPaste = function() {
 };
 
 pttchrome.App.prototype.mouse_click = function(e) {
+  if (this.pref && this.pref.modalShown)
+    return;
   var skipMouseClick = (this.CmdHandler.getAttribute('SkipMouseClick') == '1');
   this.CmdHandler.setAttribute('SkipMouseClick','0');
   if (this.cancelDownloadAndPaste())
@@ -1099,6 +855,8 @@ pttchrome.App.prototype.mouse_down_init = function(e) {
 };
 
 pttchrome.App.prototype.mouse_down = function(e) {
+  if (this.pref && this.pref.modalShown)
+    return;
   //0=left button, 1=middle button, 2=right button
   if (e.button == 0) {
     if (this.buf.useMouseBrowsing) {
@@ -1124,18 +882,6 @@ pttchrome.App.prototype.mouse_down = function(e) {
     // Press left key for 1 sec
     this.cancelMouseDownTimer();
     //this.mouseDownTimeout = false;
-    if (window.getSelection().isCollapsed && this.buf.useMouseBrowsing 
-        && this.view.useMouseBrowseSendEnter && onbbsarea) {
-
-      var _this = this;
-      this.mouseDownTimer = setTimer(false, function() {
-        clearTimeout(_this.mouseDownTimer);
-        if (_this.mouseLeftButtonDown && window.getSelection().isCollapsed)
-          _this.telnetCore.send(_this.view.EnterChar);
-        _this.mouseDownTimer = null;
-        _this.CmdHandler.setAttribute('SkipMouseClick','1');
-      }, 1000);
-    }
   } else if(e.button == 2) {
     this.mouseRightButtonDown = true;
     //create context menu
@@ -1144,6 +890,8 @@ pttchrome.App.prototype.mouse_down = function(e) {
 };
 
 pttchrome.App.prototype.mouse_up = function(e) {
+  if (this.pref && this.pref.modalShown)
+    return;
   //0=left button, 1=middle button, 2=right button
   if (e.button == 0) {
     this.cancelMouseDownTimer();
@@ -1185,6 +933,8 @@ pttchrome.App.prototype.mouse_up = function(e) {
   this.focusTimer = setTimer(false, function() {
     clearTimeout(_this.focusTimer);
     _this.focusTimer = null;
+    if (this.pref && this.pref.modalShown)
+      return;
     if (window.getSelection().isCollapsed)
       _this.setInputAreaFocus();
   }, 10);
@@ -1287,168 +1037,23 @@ pttchrome.App.prototype.mouse_move = function(e) {
 };
 
 pttchrome.App.prototype.mouse_over = function(e) {
+  if (this.pref && this.pref.modalShown)
+    return;
   if(window.getSelection().isCollapsed && !this.mouseLeftButtonDown)
     this.setInputAreaFocus();
 };
 
-pttchrome.App.prototype.mouse_scroll = function(e) {
-  var cmdhandler = this.CmdHandler;
-  //if(!cmdhandler)
-  //  return;
-
-  var mouseWheelFunc1 = cmdhandler.getAttribute(MOUSE_WHEEL_FUNC1);//useMouseUpDown
-  var mouseWheelFunc2 = cmdhandler.getAttribute(MOUSE_WHEEL_FUNC2);//useMouseSwitchPage
-  var mouseWheelFunc3 = cmdhandler.getAttribute(MOUSE_WHEEL_FUNC3);//useMouseReadThread
-
-  var useMouseWheelFunc1 = (mouseWheelFunc1 != '0');
-  var useMouseWheelFunc2 = (mouseWheelFunc2 != '0');
-  var useMouseWheelFunc3 = (mouseWheelFunc3 != '0');
-  if (useMouseWheelFunc1 || useMouseWheelFunc2 || useMouseWheelFunc3) {
-    //var curApp = this.view.cursorAppMode;
-    if (e.wheelDelta > 0) {
-      if(this.mouseRightButtonDown) {
-        if(useMouseWheelFunc2) {
-          if(mouseWheelFunc2 == '1')
-            this.setBBSCmd('doArrowUp', cmdhandler);
-          else if(mouseWheelFunc2 == '2')
-            this.setBBSCmd('doPageUp', cmdhandler);
-          else if(mouseWheelFunc2 == '3')
-            this.setBBSCmd('prevousThread', cmdhandler);
-          e.stopPropagation();
-          e.preventDefault();
-        }
-      } else if (this.mouseLeftButtonDown) {
-        if (useMouseWheelFunc3) {
-          if (mouseWheelFunc3 == '1')
-            this.setBBSCmd('doArrowUp', cmdhandler);
-          else if (mouseWheelFunc3 == '2')
-            this.setBBSCmd('doPageUp', cmdhandler);
-          else if (mouseWheelFunc3 == '3')
-            this.setBBSCmd('prevousThread', cmdhandler);
-          this.setBBSCmd('cancelHoldMouse', cmdhandler);
-          e.stopPropagation();
-          e.preventDefault();
-        }
-      } else if (useMouseWheelFunc1) {
-        if (mouseWheelFunc1 == '1')
-          this.setBBSCmd('doArrowUp', cmdhandler);
-        else if (mouseWheelFunc1 == '2')
-          this.setBBSCmd('doPageUp', cmdhandler);
-        else if (mouseWheelFunc1 == '3')
-          this.setBBSCmd('prevousThread', cmdhandler);
-        e.stopPropagation();
-        e.preventDefault();
-      }
-    } else {
-      if (this.mouseRightButtonDown) {
-        if (useMouseWheelFunc2) {
-          if (mouseWheelFunc2 == '1')
-            this.setBBSCmd('doArrowDown', cmdhandler);
-          else if (mouseWheelFunc2 == '2')
-            this.setBBSCmd('doPageDown', cmdhandler);
-          else if (mouseWheelFunc2 == '3')
-            this.setBBSCmd('nextThread', cmdhandler);
-          e.stopPropagation();
-          e.preventDefault();
-        }
-      } else if (this.mouseLeftButtonDown) {
-        if (useMouseWheelFunc3) {
-          if (mouseWheelFunc3 == '1')
-            this.setBBSCmd('doArrowDown', cmdhandler);
-          else if (mouseWheelFunc3 == '2')
-            this.setBBSCmd('doPageDown', cmdhandler);
-          else if (mouseWheelFunc3 == '3')
-            this.setBBSCmd('nextThread', cmdhandler);
-          this.setBBSCmd('cancelHoldMouse', cmdhandler);
-          e.stopPropagation();
-          e.preventDefault();
-        }
-      } else if (useMouseWheelFunc1) {
-        if (mouseWheelFunc1 == '1')
-          this.setBBSCmd('doArrowDown', cmdhandler);
-        else if (mouseWheelFunc1 == '2')
-          this.setBBSCmd('doPageDown', cmdhandler);
-        else if (mouseWheelFunc1 == '3')
-          this.setBBSCmd('nextThread', cmdhandler);
-        e.stopPropagation();
-        e.preventDefault();
-      }
-    }
-    if (this.mouseRightButtonDown && useMouseWheelFunc2) //prevent context menu popup
-      cmdhandler.setAttribute('doDOMMouseScroll','1');
-    if (this.mouseLeftButtonDown && useMouseWheelFunc3) {
-      if (cmdhandler.getAttribute(USE_MOUSE_BROWSING) == '1') {
-        cmdhandler.setAttribute('SkipMouseClick','1');
-      }
-    }
-  }
-};
-
-pttchrome.App.prototype.context_menu = function(e) {
-  var cmdhandler = this.CmdHandler;
-  var mouseWheelFunc2 = (cmdhandler.getAttribute(MOUSE_WHEEL_FUNC2) != '0');
-  if (mouseWheelFunc2) {
-    var doDOMMouseScroll = (cmdhandler.getAttribute('doDOMMouseScroll') == '1');
-    if (doDOMMouseScroll) {
-      e.stopPropagation();
-      e.preventDefault();
-      cmdhandler.setAttribute('doDOMMouseScroll','0');
-    } else {
-    }
-  } else {
-  }
-};
-
 pttchrome.App.prototype.key_press = function(e) {
+  if (this.pref && this.pref.modalShown)
+    return;
   if (this.cancelDownloadAndPaste()) {
     e.preventDefault();
     e.stopPropagation();
     return;
   }
 
-  if (e.charCode) {
-    // Control characters
-    if (e.ctrlKey && !e.altKey && !e.shiftKey 
-        && (e.charCode == 99 || e.charCode == 67) 
-        && !window.getSelection().isCollapsed
-        && this.view.hokeyForCopy) { //^C , do copy
-      //this.doCopySelect();
-      e.preventDefault();
-      e.stopPropagation();
-      return;
-    } else if (e.ctrlKey && !e.altKey && !e.shiftKey 
-        && (e.charCode == 100 || e.charCode == 68) 
-        && this.view.hokeyForDownloadPost) { //^D , do download post
-      e.preventDefault();
-      e.stopPropagation();
-    } else if (e.ctrlKey && !e.altKey && !e.shiftKey 
-        && (e.charCode == 101 || e.charCode == 69) 
-        && this.view.hokeyForBgDisplay) { //^E , switch background display
-      //this.switchBgDisplay();
-      e.preventDefault();
-      e.stopPropagation();
-    } else if (e.ctrlKey && !e.altKey && !e.shiftKey 
-        && (e.charCode == 103 || e.charCode == 71) 
-        && this.view.hokeyForEasyReading) { //^G , easy reading mode
-      e.preventDefault();
-      e.stopPropagation();
-    } else if (e.ctrlKey && !e.altKey && !e.shiftKey 
-        && e.charCode == 46) { //Alt + ^+, do add Track word
-      //this.doAddTrack();
-      e.preventDefault();
-      e.stopPropagation();
-    } else if (e.ctrlKey && !e.altKey && !e.shiftKey 
-        && e.charCode == 44) { //Alt + ^-, do del Track word
-      //this.doDelTrack();
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    if (window.getSelection().isCollapsed)
-      this.setInputAreaFocus();
-  } else {
-    if (window.getSelection().isCollapsed)
-      this.setInputAreaFocus();
-  }
+  if (window.getSelection().isCollapsed)
+    this.setInputAreaFocus();
 };
 
 pttchrome.App.prototype.window_beforeunload = function(e) {
@@ -1508,4 +1113,10 @@ pttchrome.App.prototype.resetMenuItems = function() {
   var popup_selectAll = this.createMenu(msg("menu_selAll"), function() {
       pttchrome.app.doSelectAll();
   }, null, 'selectall');
+  var popup_pref = this.createMenu(msg("menu_toggleMouseBrowsing"), function() {
+      pttchrome.app.switchMouseBrowsing();
+  }, null, 'toggleMouseBrowsing');
+  var popup_pref = this.createMenu(msg("menu_pref"), function() {
+      pttchrome.app.doPreferences();
+  }, null, 'pref');
 };

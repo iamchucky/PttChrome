@@ -9,8 +9,10 @@ chrome.app.runtime.onLaunched.addListener(function() {
   	id: "mainwin",
     bounds: {
       width: 880,
-      height: 480
-    }
+      height: 530
+    },
+    minWidth: 880,
+    minHeight: 530
   }, function(appWindow) {
     appWindow.onClosed.addListener(function() {
       var so = appWindow.contentWindow.pttchrome.app.telnetCore.socket;

@@ -1,11 +1,69 @@
 function PttChromePref(app) {
-    this.values = null;
-    this.app = app;
-	
-	  this.reloadPreference();
+  this.values = null;
+  this.app = app;
+  this.modalShown = false;
+
+  this.reloadPreference();
 }
 
 PttChromePref.prototype = {
+
+  populatePreferencesToUi: function() {
+    var outerDiv = $('<div></div>');
+    for (var i in this.values) {
+      var val = this.values[i];
+      switch(typeof(val)) {
+        case 'number':
+          outerDiv.append(
+              $('<div class="form-group"><label>'+i18n('options_'+i)+'</label>'+
+                  '<input id="opt_'+i+'" type="text" class="form-control" data-type="num" value="'+val+'">'+
+                '</div>'));
+          break;
+        case 'string':
+          outerDiv.append(
+              $('<div class="form-group"><label>'+i18n('options_'+i)+'</label>'+
+                  '<input id="opt_'+i+'" type="text" class="form-control" data-type="str" value="'+val+'">'+
+                '</div>'));
+          break;
+        case 'boolean':
+          outerDiv.append(
+              $('<div class="checkbox"><label>'+
+                  '<input id="opt_'+i+'" type="checkbox" data-type="bool" '+(val?'checked':'')+'>'+i18n('options_'+i)+
+                '</label></div>'));
+          break;
+        default:
+          break;
+      }
+    }
+    $('#prefModal .modal-body').append(outerDiv);
+
+    var self = this;
+    $('#prefModal').on('shown.bs.modal', function(e) {
+      self.modalShown = true;
+    });
+    $('#prefModal').on('hidden.bs.modal', function(e) {
+      for (var i in self.values) {
+        var elem = $('#opt_'+i);
+        var type = elem.attr('data-type');
+        switch(type) {
+          case 'num':
+            self.values[i] = parseInt(elem.val());
+            break;
+          case 'str':
+            self.values[i] = elem.val();
+            break;
+          case 'bool':
+            self.values[i] = elem.prop('checked');
+            break;
+          default:
+            break;
+        }
+      }
+      self.setStorage(self.values);
+      self.updatePrefToApp();
+      self.modalShown = false;
+    });
+  },
 
   reloadPreference: function() {
     var self = this;
@@ -18,6 +76,7 @@ PttChromePref.prototype = {
       }
       self.values = items;
       self.updatePrefToApp();
+      self.populatePreferencesToUi();
     });
   },
 

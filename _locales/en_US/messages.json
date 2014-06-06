@@ -34,6 +34,12 @@
   "menu_sitepref": {
     "message": "Site Preferences"
   },
+  "menu_pref": {
+    "message": "Preferences"
+  },
+  "menu_toggleMouseBrowsing": {
+    "message": "Toggle Mouse Browsing"
+  },
   "options_preferences": {
     "message": "Preferences"
   },
@@ -151,16 +157,13 @@
   "options_siteSetting": {
     "message": "Site setting"
   },
-  "options_closequery": {
+  "options_closeQuery": {
     "message": "Ask before closing connecting BBS"
   },
-  "options_idletime": {
-    "message": "After idling"
+  "options_antiIdleTime": {
+    "message": "Anti-idle interval (sec)"
   },
-  "options_idlestr": {
-    "message": "seconds sends"
-  },
-  "options_idlehint": {
+  "options_antiIdleHint": {
     "message": "(0 sec = disabled)"
   },
   "options_escapestr": {

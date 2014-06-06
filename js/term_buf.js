@@ -159,7 +159,6 @@ function TermBuf(cols, rows) {
     this.highlightCursor = true;
     this.handPointerCursor = true;
     this.useMouseBrowsing = true;
-    this.useMouseBrowsingEx = true;
     this.useMouseBrowsingPtt = ((document.location.hostname == 'ptt.cc')||(document.location.hostname == 'bbs.ptt.cc')||(document.location.hostname == 'ptt.twbbs.org'));
     //this.scrollingTop=0;
     //this.scrollingBottom=23;
@@ -1152,7 +1151,7 @@ TermBuf.prototype={
         }
       }
 
-      if ( this.useMouseBrowsing )
+      if ( this.useMouseBrowsing && this.view.bbscore.pref && !this.view.bbscore.pref.modalShown )
       {
         switch( this.PageState )
         {
@@ -1265,43 +1264,28 @@ TermBuf.prototype={
           }
           else if ( trow==1 || trow==2 )
           {
-            if(this.useMouseBrowsingEx)
-            {
-              if ( tcol <2 )//[
-                this.mouseCursor = 8;
-              else if ( tcol >75 )//]
-                this.mouseCursor = 9;
-              else
-                this.mouseCursor = 2;
-            }
+            if ( tcol <2 )//[
+              this.mouseCursor = 8;
+            else if ( tcol >75 )//]
+              this.mouseCursor = 9;
             else
               this.mouseCursor = 2;
           }
           else if ( trow==0 )
           {
-            if(this.useMouseBrowsingEx)
-            {
-              if ( tcol <2 )//=
-                this.mouseCursor = 10;
-              else if ( tcol >75 )//]
-                this.mouseCursor = 9;
-              else
-                this.mouseCursor = 4;
-            }
+            if ( tcol <2 )//=
+              this.mouseCursor = 10;
+            else if ( tcol >75 )//]
+              this.mouseCursor = 9;
             else
               this.mouseCursor = 4;
           }
           else// if ( trow == 23)
           {
-            if(this.useMouseBrowsingEx)
-            {
-              if ( tcol <2 )
-                this.mouseCursor = 12;
-              else if ( tcol >75 )
-                this.mouseCursor = 13;
-              else
-                this.mouseCursor = 5;
-            }
+            if ( tcol <2 )
+              this.mouseCursor = 12;
+            else if ( tcol >75 )
+              this.mouseCursor = 13;
             else
               this.mouseCursor = 5;
           }
@@ -1309,59 +1293,34 @@ TermBuf.prototype={
         case 3: //READING
           if ( trow == 23)
           {
-            if(this.useMouseBrowsingEx)
-            {
-              if ( tcol <2 )//]
-                this.mouseCursor = 12;
-              else if ( tcol >75 )
-                this.mouseCursor = 14;
-              else
-                this.mouseCursor = 5;
-            }
+            if ( tcol <2 )//]
+              this.mouseCursor = 12;
+            else if ( tcol >75 )
+              this.mouseCursor = 14;
             else
               this.mouseCursor = 5;
           }
           else if ( trow == 0)
           {
-            if(this.useMouseBrowsingEx)
-            {
-              if(tcol<2)//=
-                this.mouseCursor = 10;
-              else if ( tcol >75 )//]
-                this.mouseCursor = 9;
-              else if ( tcol<7 )
-                this.mouseCursor = 1;
-              else
-                this.mouseCursor = 2;
-            }
+            if(tcol<2)//=
+              this.mouseCursor = 10;
+            else if ( tcol >75 )//]
+              this.mouseCursor = 9;
+            else if ( tcol<7 )
+              this.mouseCursor = 1;
             else
-            {
-              if ( tcol<7 )
-                this.mouseCursor = 1;
-              else
-                this.mouseCursor = 2;
-            }
+              this.mouseCursor = 2;
           }
           else if ( trow == 1 || trow == 2)
           {
-            if(this.useMouseBrowsingEx)
-            {
-              if(tcol<2)//[
-                this.mouseCursor = 8;
-              else if ( tcol >75 )//]
-                this.mouseCursor = 9;
-              else if ( tcol<7 )
-                this.mouseCursor = 1;
-              else
-                this.mouseCursor = 2;
-            }
+            if(tcol<2)//[
+              this.mouseCursor = 8;
+            else if ( tcol >75 )//]
+              this.mouseCursor = 9;
+            else if ( tcol<7 )
+              this.mouseCursor = 1;
             else
-            {
-              if ( tcol<7 )
-                this.mouseCursor = 1;
-              else
-                this.mouseCursor = 2;
-            }
+              this.mouseCursor = 2;
           }
           else if ( tcol<7 )
             this.mouseCursor = 1;

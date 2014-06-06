@@ -3,9 +3,13 @@
   <head>
 	<title>PttChrome</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css" />
     <link rel="stylesheet" type="text/css" href="css/main.css" />
     <link rel="stylesheet" type="text/css" href="css/color.css" />
     
+    <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/predefined_config.js"></script>
     <script type="text/javascript" src="js/pref.js"></script>
     <script type="text/javascript" src="js/socket.js"></script>
@@ -22,7 +26,6 @@
   </head>
 
   <body>
-    <div id='BBSBackgroundImage' style="z-index:0;position:absolute;left:0px;top:0px;"></div>
     <div id='BBSWindow'>
       <input id="t" type="text" style="border: none; width: 200px; height: 24px; position:absolute; left:-10000px; top:0px; z-index:2;resize: none;" autofocus/>
       <div id="cursor" class="terminal_display">_</div>
@@ -33,5 +36,16 @@
       </select>
     </div>
     <div id="flashcontent" style="width:1px; height:1px; left:-10000px; top:-10000px;position: absolute;overflow: hidden;"></div>
+
+    <!--Preferences Modal-->
+    <div id="prefModal" class="modal fade" style="color:black;overflow-y:auto">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
