@@ -2,61 +2,74 @@ function PttChromePref(app) {
   this.values = null;
   this.app = app;
   this.modalShown = false;
+  this.shouldResetToDefault = false;
 
   this.reloadPreference();
 }
 
 PttChromePref.prototype = {
 
-  populatePreferencesToUi: function() {
-    var outerDiv = $('<div></div>');
+  updatePreferencesToUi: function() {
+    for (var i in PREFS_CATEGORIES) {
+      var cat = PREFS_CATEGORIES[i];
+      $('#opt_'+cat).text(i18n('options_'+cat));
+    }
     for (var i in this.values) {
+      $('#opt_'+i).empty();
       var val = this.values[i];
       switch(typeof(val)) {
         case 'number':
-          outerDiv.append(
-              $('<div class="form-group"><label>'+i18n('options_'+i)+'</label>'+
-                  '<input id="opt_'+i+'" type="text" class="form-control" data-type="num" value="'+val+'">'+
-                '</div>'));
-          break;
         case 'string':
-          outerDiv.append(
-              $('<div class="form-group"><label>'+i18n('options_'+i)+'</label>'+
-                  '<input id="opt_'+i+'" type="text" class="form-control" data-type="str" value="'+val+'">'+
-                '</div>'));
+          $('#opt_'+i).html(
+            '<label style="font-weight:normal;">'+i18n('options_'+i)+'</label>'+
+            '<input type="text" class="form-control" value="'+val+'">');
           break;
         case 'boolean':
-          outerDiv.append(
-              $('<div class="checkbox"><label>'+
-                  '<input id="opt_'+i+'" type="checkbox" data-type="bool" '+(val?'checked':'')+'>'+i18n('options_'+i)+
-                '</label></div>'));
+          $('#opt_'+i).html(
+            '<label><input type="checkbox" '+(val?'checked':'')+'>'+i18n('options_'+i)+'</label>');
           break;
         default:
           break;
       }
     }
-    $('#prefModal .modal-body').append(outerDiv);
+  },
 
+  populatePreferencesToUi: function() {
     var self = this;
+    $('#opt_reset').text(i18n('options_reset'));
+    $('#opt_reset').click(function() {
+      $('#prefModal').modal('hide');
+      self.shouldResetToDefault = true;
+    });
+
+    this.updatePreferencesToUi();
+
     $('#prefModal').on('shown.bs.modal', function(e) {
       self.modalShown = true;
     });
     $('#prefModal').on('hidden.bs.modal', function(e) {
-      for (var i in self.values) {
-        var elem = $('#opt_'+i);
-        var type = elem.attr('data-type');
-        switch(type) {
-          case 'num':
-            self.values[i] = parseInt(elem.val());
-            break;
-          case 'str':
-            self.values[i] = elem.val();
-            break;
-          case 'bool':
-            self.values[i] = elem.prop('checked');
-            break;
-          default:
-            break;
+      if (self.shouldResetToDefault) {
+        self.clearStorage();
+        self.values = JSON.parse(JSON.stringify(DEFAULT_PREFS));
+        self.updatePreferencesToUi();
+        self.shouldResetToDefault = false;
+      } else {
+        for (var i in self.values) {
+          var elem = $('#opt_'+i+' input');
+          var type = typeof(self.values[i]);
+          switch(type) {
+            case 'number':
+              self.values[i] = parseInt(elem.val());
+              break;
+            case 'string':
+              self.values[i] = elem.val();
+              break;
+            case 'boolean':
+              self.values[i] = elem.prop('checked');
+              break;
+            default:
+              break;
+          }
         }
       }
       self.setStorage(self.values);
@@ -71,7 +84,7 @@ PttChromePref.prototype = {
     this.getStorage(null, function(items) {
       var itemsEmpty = (Object.keys(items).length === 0);
       if (itemsEmpty) {
-        items = DEFAULT_PREFS;
+        items = JSON.parse(JSON.stringify(DEFAULT_PREFS));
         console.log('pref: first time, load default to sync storage');
         self.setStorage(items);
       }

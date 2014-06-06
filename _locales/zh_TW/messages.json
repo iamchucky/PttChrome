@@ -43,6 +43,12 @@
   "options_preferences": {
     "message": "設定"
   },
+  "options_general": {
+    "message": "一般"
+  },
+  "options_reset": {
+    "message": "設回預設值"
+  },
   "options_siteName": {
     "message": "站台名稱"
   },
@@ -234,6 +240,9 @@
   },
   "options_mouseBrowsing": {
     "message": "滑鼠瀏覽"
+  },
+  "options_appearance": {
+    "message": "介面"
   },
   "options_usemousebrowsing": {
     "message": "使用滑鼠瀏覽"

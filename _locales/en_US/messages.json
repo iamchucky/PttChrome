@@ -43,6 +43,12 @@
   "options_preferences": {
     "message": "Preferences"
   },
+  "options_general": {
+    "message": "General"
+  },
+  "options_reset": {
+    "message": "Reset to default"
+  },
   "options_siteName": {
     "message": "Site name"
   },
@@ -234,6 +240,9 @@
   },
   "options_mouseBrowsing": {
     "message": "Mouse browsing"
+  },
+  "options_appearance": {
+    "message": "Appearance"
   },
   "options_usemousebrowsing": {
     "message": "Enable mouse browsing"

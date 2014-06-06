@@ -1,8 +1,10 @@
-﻿var DEFAULT_PREFS = {
+﻿var PREFS_CATEGORIES = ['general', 'mouseBrowsing', 'appearance'];
+var DEFAULT_PREFS = {
 
   // general
   //closeQuery    : false,
-  dbcsDetect    : false,
+  //dbcsDetect    : false,
+  antiIdleTime  : 0,
 
   // mouse browsing
   useMouseBrowsing  : false,
@@ -10,8 +12,6 @@
 
   // displays
   fontFace      : 'MingLiu,monospace',
-
-  antiIdleTime  : 0,
 
 };
 
