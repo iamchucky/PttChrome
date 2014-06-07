@@ -18,7 +18,6 @@ pttchrome.App = function() {
   this.CmdHandler.setAttribute('OpenAllLinkMenu', '0');
   this.CmdHandler.setAttribute("MouseBrowseMenu", '0');
   this.CmdHandler.setAttribute('FileIoMenu', '0');
-  this.CmdHandler.setAttribute('DownloadPostMenu', '0');
   this.CmdHandler.setAttribute('ScreenKeyboardMenu', '1');
   this.CmdHandler.setAttribute('ScreenKeyboardOpened', '0');
   this.CmdHandler.setAttribute('DragingWindow', '0');
@@ -27,7 +26,6 @@ pttchrome.App = function() {
   this.CmdHandler.setAttribute('haveLink','0');
   //this.CmdHandler.setAttribute('onLink','0');
   //this.CmdHandler.setAttribute('onPicLink','0');
-  this.CmdHandler.setAttribute('mouseOnPicWindow','0');
   this.CmdHandler.setAttribute('draging','0');
   this.CmdHandler.setAttribute('textSelected','0');
   this.CmdHandler.setAttribute('dragType','');
@@ -53,189 +51,63 @@ pttchrome.App = function() {
   this.view.setConn(this.telnetCore);
   this.view.setCore(this);
   this.parser = new lib.AnsiParser(this.buf);
-  /*
-  var appInfo = Components.classes["@mozilla.org/xre/app-info;1"].getService(Components.interfaces.nsIXULAppInfo);
-  this.FXVersion = parseFloat(appInfo.version);
+
   //new pref - start
-  this.prefListener=null;
-  this.isDefaultPref=true;
-  */
   this.antiIdleStr = '^[[A^[[B';
   this.antiIdleTime = 0;
-  this.deleteSpaceWhenCopy = true;
-  this.loadURLInBG = false;
-  this.clearCopiedSel = true;
-  //new pref - end
   this.idleTime = 0;
-  this.connectTime = 0;
+  //new pref - end
   this.connectState = 0;
 
-  this.DocInputArea = document.getElementById('t');
+  this.inputArea = document.getElementById('t');
   this.BBSWin = document.getElementById('BBSWindow');
 
   // horizontally center bbs window
   this.BBSWin.setAttribute("align", "center");
   this.view.mainDisplay.style.transformOrigin = 'center';
 
-  /*
-  this.btnCloseSymbolInput = document.getElementById('btnCloseSymbolInput');
-
   this.mouseLeftButtonDown = false;
-  //this.mouseRightButtonDown = false;
-  */
-  this.DelayPasteBuffer = '';
-  this.DelayPasteIndex = -1;
-  this.DelayPasteNotify = true;
+  this.mouseRightButtonDown = false;
 
-  this.LastMouseDownX = 0;
-  this.LastMouseDownY = 0;
-  //this.CanExecMouseDown = true;
-  this.DragText = false;
-
-  this.focusTimer = null;
-  this.tabUpdateTimer = null;
-  this.settingCheckTimer = null;
   this.inputAreaFocusTimer = null;
-  //this.xmlhttp = null;
-  this.post_text = new Array();
-  this.post_html = new Array();
-  this.tempFiles = [];
-  this.downpostcounter = null;
   this.alertBeforeUnload = false;
-  this.pushThreadLineLength = 70;
-  this.pushTextTemp = '';
 
-  /*
-  this.tab_Select = {
-      view: this,
-      handleEvent: function(e) {
-          this.view.focusTab(e);
-      }
-  };
-  this.gBrowser.tabContainer.addEventListener("TabSelect", this.tab_Select, false);
+  var self = this;
+  this.CmdHandler.addEventListener("OverlayCommand", function(e) {
+    self.overlayCommandListener(e);
+  }, false);
 
-  this.tab_AttrModified = {
-      view: this,
-      handleEvent: function(e) {
-          this.view.tabAttrModified(e);
-      }
-  };
-  if(this.FXVersion >= 4.0) //for firefox 4
-    this.gBrowser.tabContainer.addEventListener("TabAttrModified", this.tab_AttrModified, false);
-  */
-  var cmd_Listener = {
-    app: this,
-    handleEvent: function(e) {
-      this.app.overlayCommandListener(e);
-    }
-  };
-  this.CmdHandler.addEventListener("OverlayCommand", cmd_Listener, false);
+  window.addEventListener('click', function(e) {
+    self.mouse_click(e);
+  }, false);
 
-  var mouseclick = {
-    app: this,
-    handleEvent: function(e) {
-      this.app.mouse_click(e);
-    }
-  };
-  window.addEventListener('click', mouseclick, false);
+  window.addEventListener('mousedown', function(e) {
+    self.mouse_down(e);
+  }, false);
 
-  var mousedowninit = {
-    app: this,
-    handleEvent: function(e) {
-      this.app.mouse_down_init(e);
-    }
-  };
-  window.addEventListener('mousedown', mousedowninit, true);
+  window.addEventListener('mouseup', function(e) {
+    self.mouse_up(e);
+  }, false);
 
-  var mousedown = {
-    app: this,
-    handleEvent: function(e) {
-      this.app.mouse_down(e);
-    }
-  };
-  window.addEventListener('mousedown', mousedown, false);
+  document.addEventListener('mousemove', function(e) {
+    self.mouse_move(e);
+  }, false);
 
-  var mouseup = {
-    app: this,
-    handleEvent: function(e) {
-      this.app.mouse_up(e);
-    }
-  };
-  window.addEventListener('mouseup', mouseup, false);
-
-  var mousemove = {
-    app: this,
-    handleEvent: function(e) {
-      this.app.mouse_move(e);
-    }
-  };
-  document.addEventListener('mousemove', mousemove, false);
-
-  var mouseover = {
-    app: this,
-    handleEvent: function(e) {
-      this.app.mouse_over(e);
-    }
-  };
-  document.addEventListener('mouseover', mouseover, false);
+  document.addEventListener('mouseover', function(e) {
+    self.mouse_over(e);
+  }, false);
 
   this.menuHandler = {};
   chrome.contextMenus.onClicked.addListener(function(onClickData, tab) {
     pttchrome.app.menuHandler[onClickData.menuItemId]();
   });
 
-  /*
-  var mousedragstart = {
-    view: this,
-    handleEvent: function(e) {
-      this.view.DragText=true;
-    }
-  };
-  document.addEventListener ('dragstart', mousedragstart, false);
-
-  var mousedragover = {
-    view: this,
-    handleEvent: function(e) {
-      this.view.mouse_dragover(e);
-    }
-  };
-  document.addEventListener ('dragover', mousedragover, false);
-
-  var mousedrop = {
-    view: this,
-    handleEvent: function(e) {
-      this.view.mouse_dragdrop(e);
-    }
-  };
-  document.addEventListener ('drop', mousedrop, false);
-
-  var mousedragend = {
-    view: this,
-    handleEvent: function(e) {
-      this.view.DragText=false;
-    }
-  };
-  document.addEventListener ('dragend', mousedragend, false);
-  */
-  var keypress = {
-    app: this,
-    handleEvent: function(e) {
-      this.app.key_press(e);
-    }
-  };
-  addEventListener('keypress', keypress, true);
-  addEventListener('keydown', keypress, true);
-
   this.view.fontResize();
   this.view.updateCursorPos();
   this.dblclickTimer=null;
-  this.mouseDownTimer=null;
   this.mbTimer=null;
+  this.timerEverySec=null;
 
-  /*
-  window.controllers.insertControllerAt(0, this.documentControllers);            // to override default commands for window
-  this.DocInputArea.controllers.insertControllerAt(0, this.documentControllers); // to override default commands for inputbox
-  */
 };
 
 pttchrome.App.prototype.connect = function(url) {
@@ -244,11 +116,7 @@ pttchrome.App.prototype.connect = function(url) {
   document.title = url;
   var splits = url.split(/:/g);
   var port = 23;
-  if(splits.length == 1)
-  {
-  }
-  else if(splits.length == 2)
-  {
+  if (splits.length == 2) {
     url = splits[0];
     port = parseInt(splits[1]);
   }
@@ -261,7 +129,6 @@ pttchrome.App.prototype.disconnect = function() {
 
   this.view.blinkTimeout.cancel();
 
-  this.cancelMouseDownTimer();
   this.cancelMbTimer();
 };
 
@@ -271,7 +138,7 @@ pttchrome.App.prototype.onConnect = function() {
   this.updateTabIcon('connect');
   this.idleTime = 0;
   var _this = this;
-  this.timerOnsec = setTimer(true, function() {
+  this.timerEverySec = setTimer(true, function() {
     _this.antiIdle();
   }, 1000);
 };
@@ -289,11 +156,7 @@ pttchrome.App.prototype.onClose = function() {
   this.idleTime = 0;
 
   this.updateTabIcon('disconnect');
-  this.timerOnsec.cancel();
-};
-
-pttchrome.App.prototype.resetUnusedTime = function() {
-  this.idleTime = 0;
+  this.timerEverySec.cancel();
 };
 
 pttchrome.App.prototype.sendData = function(str) {
@@ -339,16 +202,9 @@ pttchrome.App.prototype.setDblclickTimer = function() {
   }, 350);
 };
 
-pttchrome.App.prototype.cancelMouseDownTimer = function() {
-  if(this.mouseDownTimer) {
-    this.mouseDownTimer.cancel();
-    this.mouseDownTimer = null;
-  }
-};
-
 pttchrome.App.prototype.setInputAreaFocus = function() {
   //this.DocInputArea.disabled="";
-  this.DocInputArea.focus();
+  this.inputArea.focus();
 };
 
 pttchrome.App.prototype.doPaste = function() {
@@ -401,20 +257,6 @@ pttchrome.App.prototype.antiIdle = function() {
   } else {
     if (this.connectState==1)
       this.idleTime+=1000;
-  }
-
-  if (this.DelayPasteBuffer != '' && this.DelayPasteIndex!=-1 
-      && this.DelayPasteIndex < this.DelayPasteBuffer.length ) {
-
-    var s = this.DelayPasteBuffer.substr(this.DelayPasteIndex, 1);
-    this.DelayPasteIndex++;
-    this.sendData(s);
-    if (this.DelayPasteIndex == this.DelayPasteBuffer.length) {
-      this.DelayPasteBuffer = '';
-      this.DelayPasteIndex = -1;
-      if (this.DelayPasteNotify)
-        this.view.showAlertMessage(document.title, this.getLM('delayPasteFinish'));
-    }
   }
 };
 
@@ -472,8 +314,6 @@ pttchrome.App.prototype.clientToPos = function(cX, cY) {
 };
 
 pttchrome.App.prototype.onMouse_click = function (cX, cY) {
-  if (this.cancelDownloadAndPaste())
-    return;
   switch (this.buf.mouseCursor) {
     case 1:
       this.telnetCore.send('\x1b[D');  //Arrow Left
@@ -550,49 +390,32 @@ pttchrome.App.prototype.onMouse_click = function (cX, cY) {
 
 pttchrome.App.prototype.overlayCommandListener = function (e) {
   var elm = e.target;
-  var cmd = elm.getAttribute("bbsfoxCommand");
+  var cmd = elm.getAttribute("pttChromeCommand");
   dumpLog(DUMP_TYPE_LOG, cmd);
   if (elm) {
     if (elm.id == 'cmdHandler') {
       switch (cmd) {
         case "doArrowUp":
-          if (this.cancelDownloadAndPaste())
-            return;
           this.telnetCore.send('\x1b[A');
           break;
         case "doArrowDown":
-          if (this.cancelDownloadAndPaste())
-            return;
           this.telnetCore.send('\x1b[B');
           break;
         case "doPageUp":
-          if (this.cancelDownloadAndPaste())
-            return;
           this.telnetCore.send('\x1b[5~');
           break;
         case "doPageDown":
-          if (this.cancelDownloadAndPaste())
-            return;
           this.telnetCore.send('\x1b[6~');
           break;
-        case "cancelHoldMouse":
-          this.cancelMouseDownTimer();
-          break;
         case "prevousThread":
-          if (this.cancelDownloadAndPaste())
-            return;
           this.buf.SetPageState();
           if (this.buf.PageState==2 || this.buf.PageState==3 || this.buf.PageState==4) {
-            this.cancelMouseDownTimer();
             this.telnetCore.send('[');
           }
           break;
         case "nextThread":
-          if (this.cancelDownloadAndPaste())
-            return;
           this.buf.SetPageState();
           if (this.buf.PageState==2 || this.buf.PageState==3 || this.buf.PageState==4) {
-            this.cancelMouseDownTimer();
             this.telnetCore.send(']');
           }
           break;
@@ -633,9 +456,6 @@ pttchrome.App.prototype.overlayCommandListener = function (e) {
         case "doPaste":
           this.doPaste();
           break;
-        case "doDelayPasteText":
-          this.doDelayPasteText();
-          break;
         case "doOpenAllLink":
           this.doOpenAllLink();
           break;
@@ -644,11 +464,6 @@ pttchrome.App.prototype.overlayCommandListener = function (e) {
         //  break;
         case "switchMouseBrowsing":
           this.switchMouseBrowsing();
-          break;
-        case "checkFireGestureKey":
-          if (this.cancelDownloadAndPaste())
-            return;
-          this.checkFireGestureKey();
           break;
         case "openYoutubeWindow":
           var param = elm.getAttribute("YoutubeURL");
@@ -697,7 +512,7 @@ pttchrome.App.prototype.overlayCommandListener = function (e) {
           break;
       }
     }
-    elm.removeAttribute("bbsfoxCommand");
+    elm.removeAttribute("pttChromeCommand");
   }
 };
 
@@ -778,34 +593,11 @@ pttchrome.App.prototype.checkClass = function(cn) {
           || cn.indexOf("nonspan") >= 0 );
 };
 
-pttchrome.App.prototype.cancelDownloadAndPaste = function() {
-  var rtn = false;
-  if (this.DelayPasteBuffer != '' || this.DelayPasteIndex != -1)
-  {
-    this.DelayPasteBuffer = '';
-    this.DelayPasteIndex = -1;
-    //this.view.showAlertMessage(document.title, this.getLM('delayPasteStop'));
-    rtn = true;
-  }
-  if (this.downpostcounter) {
-    //this.downpostcounter.cancel();
-    this.downpostcounter = null;
-    this.post_text = new Array();
-    this.post_html = new Array();
-    this.view.doBlink = true;
-    //this.view.showAlertMessage(document.title, this.getLM('alert_down_terminate'));
-    rtn = true;
-  }
-  return rtn;
-};
-
 pttchrome.App.prototype.mouse_click = function(e) {
   if (this.pref && this.pref.modalShown)
     return;
   var skipMouseClick = (this.CmdHandler.getAttribute('SkipMouseClick') == '1');
   this.CmdHandler.setAttribute('SkipMouseClick','0');
-  if (this.cancelDownloadAndPaste())
-    return;
 
   if (e.button == 2) { //right button
   } else if (e.button == 0) { //left button
@@ -850,10 +642,6 @@ pttchrome.App.prototype.mouse_click = function(e) {
   }
 };
 
-pttchrome.App.prototype.mouse_down_init = function(e) {
-  this.CmdHandler.setAttribute('mouseOnPicWindow', '0');
-};
-
 pttchrome.App.prototype.mouse_down = function(e) {
   if (this.pref && this.pref.modalShown)
     return;
@@ -879,9 +667,6 @@ pttchrome.App.prototype.mouse_down = function(e) {
     if (e.target.tagName)
       if (e.target.tagName.indexOf("menuitem") >= 0 )
         onbbsarea = false;
-    // Press left key for 1 sec
-    this.cancelMouseDownTimer();
-    //this.mouseDownTimeout = false;
   } else if(e.button == 2) {
     this.mouseRightButtonDown = true;
     //create context menu
@@ -894,7 +679,6 @@ pttchrome.App.prototype.mouse_up = function(e) {
     return;
   //0=left button, 1=middle button, 2=right button
   if (e.button == 0) {
-    this.cancelMouseDownTimer();
     this.setMbTimer();
     //this.CmdHandler.setAttribute('MouseLeftButtonDown', '0');
     this.mouseLeftButtonDown = false;
@@ -930,16 +714,14 @@ pttchrome.App.prototype.mouse_up = function(e) {
     e.preventDefault();
   }
   var _this = this;
-  this.focusTimer = setTimer(false, function() {
-    clearTimeout(_this.focusTimer);
-    _this.focusTimer = null;
+  this.inputAreaFocusTimer = setTimer(false, function() {
+    clearTimeout(_this.inputAreaFocusTimer);
+    _this.inputAreaFocusTimer = null;
     if (this.pref && this.pref.modalShown)
       return;
     if (window.getSelection().isCollapsed)
       _this.setInputAreaFocus();
   }, 10);
-  //if (e.button == 2)
-  //  this.checkFireGestureKey();
 };
 
 pttchrome.App.prototype.mouse_move = function(e) {
@@ -1043,19 +825,6 @@ pttchrome.App.prototype.mouse_over = function(e) {
     this.setInputAreaFocus();
 };
 
-pttchrome.App.prototype.key_press = function(e) {
-  if (this.pref && this.pref.modalShown)
-    return;
-  if (this.cancelDownloadAndPaste()) {
-    e.preventDefault();
-    e.stopPropagation();
-    return;
-  }
-
-  if (window.getSelection().isCollapsed)
-    this.setInputAreaFocus();
-};
-
 pttchrome.App.prototype.window_beforeunload = function(e) {
   //e.returnValue = confirm('Are you sure you want to leave '+document.title+'?');
   e.returnValue = true;
@@ -1083,7 +852,7 @@ pttchrome.App.prototype.setBBSCmd = function(cmd, cmdhandler) {
     cmdhandler = this.getCmdHandler();
 
   if (cmdhandler && "createEvent" in doc) {
-    cmdhandler.setAttribute('bbsfoxCommand', cmd);
+    cmdhandler.setAttribute('pttChromeCommand', cmd);
     var evt = doc.createEvent("Events");
     evt.initEvent("OverlayCommand", false, false);
     cmdhandler.dispatchEvent(evt);

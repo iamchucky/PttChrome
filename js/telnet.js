@@ -214,7 +214,7 @@ TelnetCore.prototype.onDataAvailable = function(str, count) {
 TelnetCore.prototype.send = function(str) {
   if (str) {
     if (this.listener && this.write) {
-      this.listener.resetUnusedTime();
+      this.listener.idleTime = 0;
       this.write(str, str.length);
     }
   }

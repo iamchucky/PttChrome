@@ -118,7 +118,11 @@ function TermView(rowCount) {
             //this.view.bbscore.setInputAreaFocus();
             if(e.keyCode > 15 && e.keyCode < 19)
               return; // Shift Ctrl Alt (19)
+            if (this.view.bbscore.pref && this.view.bbscore.pref.modalShown)
+              return;
             this.view.onkeyPress(e);
+            if (window.getSelection().isCollapsed)
+              this.view.bbscore.setInputAreaFocus();
         }
     };
     //addEventListener('keypress', key_press, true);
@@ -147,8 +151,10 @@ function TermView(rowCount) {
       this.BBSROW[row].innerHTML = tmp.join('');
     //init view - end
 
-    var _this=this;
-    this.blinkTimeout = setTimer(true, function(){_this.onBlink();}, 1000);
+    var _this = this;
+    this.blinkTimeout = setTimer(true, function() {
+      _this.onBlink();
+    }, 1000);
 }
 
 
@@ -220,12 +226,6 @@ TermView.prototype={
         return ' rel="w"';
       else
         return ' rel="p"';
-    },
-
-    bglink: function (){
-      if(this.bbscore.loadURLInBG)
-        return ' onclick="bbsfox.bgtab(event, this);"';
-      return '';
     },
 
     createTwoColorWord: function (ch, ch2, char1, char2, fg, fg2, bg, bg2, panding){
@@ -353,7 +353,7 @@ TermView.prototype={
       var s1 = '';
       var s2 = '';
       if(ch.isStartOfURL() && useHyperLink)
-        s0 = '<a class="y" href="' +ch.getFullURL() + '"' + this.prePicRel( ch.getFullURL()) + ' target="_blank"'+ this.bglink()+ '><span link="true" class="q'+deffg+'b'+defbg+'">';
+        s0 = '<a class="y" href="' +ch.getFullURL() + '"' + this.prePicRel( ch.getFullURL()) + ' target="_blank"><span link="true" class="q'+deffg+'b'+defbg+'">';
       if(ch.isEndOfURL() && useHyperLink)
         s2 = '</span></a>';
       if(bg==defbg && (fg == deffg || char1 <= ' ') && !ch.isBlink() )
@@ -690,13 +690,6 @@ TermView.prototype={
     },
 
     onkeyPress: function(e) {
-        if(this.bbscore.DelayPasteBuffer != '' || this.bbscore.DelayPasteIndex != -1)
-        {
-          this.bbscore.DelayPasteBuffer = '';
-          this.bbscore.DelayPasteIndex = -1;
-          //this.showAlertMessage(document.location.hostname, this.bbscore.getLM('delayPasteStop'));
-          return;
-        }
         // dump('onKeyPress:'+e.charCode + ', '+e.keyCode+'\n');
         var conn = this.conn;
 
