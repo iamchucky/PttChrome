@@ -223,8 +223,8 @@ pttchrome.App = function() {
       this.app.key_press(e);
     }
   };
-  //window.addEventListener('keypress', keypress, true);
-  //window.addEventListener('keydown', keypress, true);
+  addEventListener('keypress', keypress, true);
+  addEventListener('keydown', keypress, true);
 
   this.view.fontResize();
   this.view.updateCursorPos();
