@@ -94,54 +94,37 @@ function TermView(rowCount) {
 
     //this.delayLoadCounter = 0;
 
-    var composition_start ={
-        view: this,
-        handleEvent: function(e) {
-            this.view.onCompositionStart(e);
-            this.view.bbscore.setInputAreaFocus();
-        }
-    };
-    this.input.addEventListener('compositionstart', composition_start, false);
+    var self = this;
+    this.input.addEventListener('compositionstart', function(e) {
+      self.onCompositionStart(e);
+      self.bbscore.setInputAreaFocus();
+    }, false);
 
-    var composition_end ={
-        view: this,
-        handleEvent: function(e) {
-            this.view.onCompositionEnd(e);
-            this.view.bbscore.setInputAreaFocus();
-        }
-    };
-    this.input.addEventListener('compositionend', composition_end, false);
+    this.input.addEventListener('compositionend', function(e) {
+      self.onCompositionEnd(e);
+      self.bbscore.setInputAreaFocus();
+    }, false);
 
-    var key_press={
-        view: this,
-        handleEvent: function(e) {
-            //this.view.bbscore.setInputAreaFocus();
-            if(e.keyCode > 15 && e.keyCode < 19)
-              return; // Shift Ctrl Alt (19)
-            if (this.view.bbscore.pref && this.view.bbscore.pref.modalShown)
-              return;
-            this.view.onkeyPress(e);
-            if (window.getSelection().isCollapsed)
-              this.view.bbscore.setInputAreaFocus();
-        }
-    };
     //addEventListener('keypress', key_press, true);
-    addEventListener('keydown', key_press, false);
+    addEventListener('keydown', function(e) {
+      //self.bbscore.setInputAreaFocus();
+      if(e.keyCode > 15 && e.keyCode < 19)
+        return; // Shift Ctrl Alt (19)
+      if (self.bbscore.pref && self.bbscore.pref.modalShown)
+        return;
+      self.onkeyPress(e);
+      if (window.getSelection().isCollapsed)
+        self.bbscore.setInputAreaFocus();
+    }, false);
 
-    var text_input ={
-        view: this,
-        handleEvent: function(e) {
-            if(this.view.isComposition)
-            {
-                return;
-            }
-            if(e.target.value) {
-                this.view.onTextInput(e.target.value);
-            }
-            e.target.value='';
-        }
-    };
-    this.input.addEventListener('input', text_input, false);
+    this.input.addEventListener('input', function(e) {
+      if (self.isComposition)
+        return;
+      if (e.target.value) {
+        self.onTextInput(e.target.value);
+      }
+      e.target.value='';
+    }, false);
 
     //init view - start
     var tmp = [];
@@ -151,14 +134,13 @@ function TermView(rowCount) {
       this.BBSROW[row].innerHTML = tmp.join('');
     //init view - end
 
-    var _this = this;
     this.blinkTimeout = setTimer(true, function() {
-      _this.onBlink();
+      self.onBlink();
     }, 1000);
 }
 
 
-TermView.prototype={
+TermView.prototype = {
 
     conv: {
         convertStringToUTF8: function(str, charset, skipCheck) {
