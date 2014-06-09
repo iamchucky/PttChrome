@@ -43,6 +43,9 @@
   "menu_toggleMouseBrowsing": {
     "message": "切換滑鼠瀏覽"
   },
+  "menu_fullscreen": {
+    "message": "全螢幕"
+  },
   "options_autologin": {
     "message": "自動登入"
   },
