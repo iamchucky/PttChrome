@@ -40,6 +40,18 @@
   "menu_toggleMouseBrowsing": {
     "message": "Toggle Mouse Browsing"
   },
+  "options_autologin": {
+    "message": "Auto login"
+  },
+  "autologin_username": {
+    "message": "Username"
+  },
+  "autologin_password": {
+    "message": "Password"
+  },
+  "autologin_warning": {
+    "message": "Login info is not encrypted, DO NOT use on a public machine"
+  },
   "options_preferences": {
     "message": "Preferences"
   },

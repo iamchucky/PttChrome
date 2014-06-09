@@ -112,15 +112,17 @@ pttchrome.App = function() {
 
 pttchrome.App.prototype.connect = function(url) {
   dumpLog(DUMP_TYPE_LOG, "connect to " + url);
-  this.pref = new PttChromePref(this);
-  document.title = url;
-  var splits = url.split(/:/g);
-  var port = 23;
-  if (splits.length == 2) {
-    url = splits[0];
-    port = parseInt(splits[1]);
-  }
-  this.telnetCore.connect(url, port);
+  var self = this;
+  this.pref = new PttChromePref(this, function() {
+    document.title = url;
+    var splits = url.split(/:/g);
+    var port = 23;
+    if (splits.length == 2) {
+      url = splits[0];
+      port = parseInt(splits[1]);
+    }
+    self.telnetCore.connect(url, port);
+  });
 };
 
 pttchrome.App.prototype.disconnect = function() {
@@ -875,17 +877,18 @@ pttchrome.App.prototype.createMenu = function(title, func, parentId, id) {
 
 pttchrome.App.prototype.resetMenuItems = function() {
   chrome.contextMenus.removeAll();
+  this.menuHandler = {};
   // create the contentMenu item
-  var popup_paste = this.createMenu(msg("menu_paste"), function() {
+  var popup_paste = this.createMenu(i18n("menu_paste"), function() {
       pttchrome.app.doPaste();
   }, null, 'paste');
-  var popup_selectAll = this.createMenu(msg("menu_selAll"), function() {
+  var popup_selectAll = this.createMenu(i18n("menu_selAll"), function() {
       pttchrome.app.doSelectAll();
   }, null, 'selectall');
-  var popup_pref = this.createMenu(msg("menu_toggleMouseBrowsing"), function() {
+  var popup_pref = this.createMenu(i18n("menu_toggleMouseBrowsing"), function() {
       pttchrome.app.switchMouseBrowsing();
   }, null, 'toggleMouseBrowsing');
-  var popup_pref = this.createMenu(msg("menu_pref"), function() {
+  var popup_pref = this.createMenu(i18n("menu_pref"), function() {
       pttchrome.app.doPreferences();
   }, null, 'pref');
 };
