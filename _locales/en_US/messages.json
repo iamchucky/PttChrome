@@ -22,6 +22,9 @@
   "menu_search": {
     "message": "Search"
   },
+  "menu_searchGoogle": {
+    "message": "Search Google for '%s'"
+  },
   "menu_fileio": {
     "message": "File I/O"
   },
@@ -38,7 +41,10 @@
     "message": "Preferences"
   },
   "menu_toggleMouseBrowsing": {
-    "message": "Toggle Mouse Browsing"
+    "message": "Toggle mouse browsing"
+  },
+  "menu_fullscreen": {
+    "message": "Fullscreen"
   },
   "options_autologin": {
     "message": "Auto login"

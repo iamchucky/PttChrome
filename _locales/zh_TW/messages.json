@@ -22,6 +22,9 @@
   "menu_search": {
     "message": "搜尋"
   },
+  "menu_searchGoogle": {
+    "message": "在 Google 上搜尋'%s'"
+  },
   "menu_fileio": {
     "message": "檔案讀寫"
   },

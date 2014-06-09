@@ -209,6 +209,11 @@ pttchrome.App.prototype.setInputAreaFocus = function() {
   this.inputArea.focus();
 };
 
+pttchrome.App.prototype.doSearchGoogle = function() {
+  var searchTerm = window.getSelection().toString();
+  window.open('http://google.com/search?q='+searchTerm);
+};
+
 pttchrome.App.prototype.doPaste = function() {
   if (this.pref && this.pref.modalShown)
     return;
@@ -878,7 +883,23 @@ pttchrome.App.prototype.createMenu = function(title, func, parentId, id) {
 pttchrome.App.prototype.resetMenuItems = function() {
   chrome.contextMenus.removeAll();
   this.menuHandler = {};
-  // create the contentMenu item
+  this.menuHandler['searchGoogle'] = function() {
+    pttchrome.app.doSearchGoogle();
+  };
+  chrome.contextMenus.create({
+    title: i18n('menu_searchGoogle'),
+    id: 'searchGoogle',
+    contexts: ['selection']
+  });
+  this.menuHandler['fullscreen'] = function() {
+    chrome.app.window.current().fullscreen();
+  };
+  chrome.contextMenus.create({
+    title: i18n('menu_fullscreen'),
+    id: 'fullscreen',
+    contexts: ['page', 'selection']
+  });
+  // create the contextMenu item
   var popup_paste = this.createMenu(i18n("menu_paste"), function() {
       pttchrome.app.doPaste();
   }, null, 'paste');
