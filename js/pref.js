@@ -45,6 +45,7 @@ PttChromePref.prototype = {
 
   populatePreferencesToUi: function() {
     var self = this;
+    $('#opt_reset').off();
     $('#opt_reset').text(i18n('options_reset'));
     $('#opt_reset').click(function() {
       $('#prefModal').modal('hide');
@@ -53,6 +54,7 @@ PttChromePref.prototype = {
 
     this.updatePreferencesToUi();
 
+    $('#prefModal').off();
     $('#prefModal').on('shown.bs.modal', function(e) {
       self.modalShown = true;
     });

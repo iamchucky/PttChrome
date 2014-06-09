@@ -2,7 +2,7 @@
 
 var pttchrome = {};
 
-pttchrome.App = function() {
+pttchrome.App = function(onInitializedCallback) {
 
   this.CmdHandler = document.getElementById('cmdHandler');
   this.CmdHandler.setAttribute('useMouseBrowsing', '1');
@@ -108,21 +108,24 @@ pttchrome.App = function() {
   this.mbTimer=null;
   this.timerEverySec=null;
 
+  this.setupConnectionAlert();
+  this.pref = new PttChromePref(this, function() {
+    self.resetMenuItems();
+    onInitializedCallback();
+  })
+
 };
 
 pttchrome.App.prototype.connect = function(url) {
   dumpLog(DUMP_TYPE_LOG, "connect to " + url);
-  var self = this;
-  this.pref = new PttChromePref(this, function() {
-    document.title = url;
-    var splits = url.split(/:/g);
-    var port = 23;
-    if (splits.length == 2) {
-      url = splits[0];
-      port = parseInt(splits[1]);
-    }
-    self.telnetCore.connect(url, port);
-  });
+  document.title = url;
+  var splits = url.split(/:/g);
+  var port = 23;
+  if (splits.length == 2) {
+    url = splits[0];
+    port = parseInt(splits[1]);
+  }
+  this.telnetCore.connect(url, port);
 };
 
 pttchrome.App.prototype.disconnect = function() {
@@ -157,6 +160,7 @@ pttchrome.App.prototype.onClose = function() {
   this.connectState = 2;
   this.idleTime = 0;
 
+  $('#connectionAlert').show();
   this.updateTabIcon('disconnect');
   this.timerEverySec.cancel();
 };
@@ -207,6 +211,24 @@ pttchrome.App.prototype.setDblclickTimer = function() {
 pttchrome.App.prototype.setInputAreaFocus = function() {
   //this.DocInputArea.disabled="";
   this.inputArea.focus();
+};
+
+pttchrome.App.prototype.setupConnectionAlert = function() {
+  $('#connectionAlertReconnect').empty();
+  $('#connectionAlertExitAll').empty();
+  $('#connectionAlertHeader').text(i18n('alert_connectionHeader'));
+  $('#connectionAlertText').text(i18n('alert_connectionText'));
+  $('#connectionAlertReconnect').text(i18n('alert_connectionReconnect'));
+  $('#connectionAlertExitAll').text(i18n('alert_connectionExitAll'));
+
+  var self = this;
+  $('#connectionAlertReconnect').click(function(e) {
+    self.connect(document.title);
+    $('#connectionAlert').hide();
+  });
+  $('#connectionAlertExitAll').click(function(e) {
+    chrome.app.window.current().close();
+  });
 };
 
 pttchrome.App.prototype.doSearchGoogle = function() {
@@ -677,7 +699,7 @@ pttchrome.App.prototype.mouse_down = function(e) {
   } else if(e.button == 2) {
     this.mouseRightButtonDown = true;
     //create context menu
-    this.resetMenuItems();
+    //this.resetMenuItems();
   }
 };
 
@@ -881,8 +903,24 @@ pttchrome.App.prototype.createMenu = function(title, func, parentId, id) {
 };
 
 pttchrome.App.prototype.resetMenuItems = function() {
+  var self = this;
   chrome.contextMenus.removeAll();
   this.menuHandler = {};
+  // create the contextMenu item
+  var popup_paste = this.createMenu(i18n("menu_paste"), function() {
+      pttchrome.app.doPaste();
+  }, null, 'paste');
+  var popup_selectAll = this.createMenu(i18n("menu_selAll"), function() {
+      pttchrome.app.doSelectAll();
+  }, null, 'selectall');
+
+  chrome.contextMenus.create({
+    type: 'separator',
+    title: '',
+    id: 'sep0',
+    contexts: ['page', 'selection']
+  });
+
   this.menuHandler['searchGoogle'] = function() {
     pttchrome.app.doSearchGoogle();
   };
@@ -891,24 +929,46 @@ pttchrome.App.prototype.resetMenuItems = function() {
     id: 'searchGoogle',
     contexts: ['selection']
   });
+
   this.menuHandler['fullscreen'] = function() {
-    chrome.app.window.current().fullscreen();
+    var isFullscreened = chrome.app.window.current().isFullscreen();
+    if (isFullscreened) {
+      chrome.app.window.current().restore();
+      chrome.contextMenus.update('fullscreen', { checked: false });
+    } else {
+      chrome.app.window.current().fullscreen();
+      chrome.contextMenus.update('fullscreen', { checked: true });
+    }
   };
+  chrome.app.window.current().onRestored.addListener(function() {
+    chrome.contextMenus.update('fullscreen', { checked: false });
+  });
   chrome.contextMenus.create({
+    type: 'checkbox',
+    checked: chrome.app.window.current().isFullscreen(),
     title: i18n('menu_fullscreen'),
     id: 'fullscreen',
     contexts: ['page', 'selection']
   });
-  // create the contextMenu item
-  var popup_paste = this.createMenu(i18n("menu_paste"), function() {
-      pttchrome.app.doPaste();
-  }, null, 'paste');
-  var popup_selectAll = this.createMenu(i18n("menu_selAll"), function() {
-      pttchrome.app.doSelectAll();
-  }, null, 'selectall');
-  var popup_pref = this.createMenu(i18n("menu_toggleMouseBrowsing"), function() {
-      pttchrome.app.switchMouseBrowsing();
-  }, null, 'toggleMouseBrowsing');
+
+  this.menuHandler['toggleMouseBrowsing'] = function() {
+    pttchrome.app.switchMouseBrowsing();
+  };
+  chrome.contextMenus.create({
+    type: 'checkbox',
+    checked: self.pref.get('useMouseBrowsing'),
+    title: i18n('menu_toggleMouseBrowsing'),
+    id: 'toggleMouseBrowsing',
+    contexts: ['page', 'selection']
+  });
+
+  chrome.contextMenus.create({
+    type: 'separator',
+    title: '',
+    id: 'sep1',
+    contexts: ['page', 'selection']
+  });
+
   var popup_pref = this.createMenu(i18n("menu_pref"), function() {
       pttchrome.app.doPreferences();
   }, null, 'pref');

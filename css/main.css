@@ -194,3 +194,14 @@ span{margin: 0px;}
   margin-right:2px;
   margin-bottom:2px;
 }
+
+#connectionAlert {
+  display: none;
+  margin-top: 15px;
+  position: relative;
+  z-index: 2;
+
+  width: 400px;
+  left: 50%;
+  margin-left: -200px;
+}

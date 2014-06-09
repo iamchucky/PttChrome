@@ -41,7 +41,7 @@
     "message": "Preferences"
   },
   "menu_toggleMouseBrowsing": {
-    "message": "Toggle mouse browsing"
+    "message": "Mouse browsing"
   },
   "menu_fullscreen": {
     "message": "Fullscreen"
@@ -263,7 +263,7 @@
     "message": "Appearance"
   },
   "options_usemousebrowsing": {
-    "message": "Enable mouse browsing"
+    "message": "Mouse browsing on start"
   },
   "options_usemousebrowsingex": {
     "message": "Enable advanced mouse browsing function"
@@ -272,7 +272,7 @@
     "message": "In mouse browsing mode, send [Enter] after mouse left button press for 1 second"
   },
   "options_mousebrowsinghighlight": {
-    "message": "Enable mouse browsing highlight effect"
+    "message": "Mouse browsing highlight effect"
   },
   "options_highlightColor": {
     "message": "  Color"
@@ -513,5 +513,17 @@
   },
   "options_ask_delSite2": {
     "message": "?"
+  },
+  "alert_connectionHeader": {
+    "message": "You are disconnected!"
+  },
+  "alert_connectionText": {
+    "message": "Would you like to reconnect to the site or quit the app?"
+  },
+  "alert_connectionReconnect": {
+    "message": "Reconnect"
+  },
+  "alert_connectionExitAll": {
+    "message": "Quit"
   }
 }

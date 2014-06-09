@@ -4,7 +4,6 @@
 	<title>PttChrome</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css" />
     <link rel="stylesheet" type="text/css" href="css/main.css" />
     <link rel="stylesheet" type="text/css" href="css/color.css" />
     
@@ -77,6 +76,15 @@
           </div>
         </div>
       </div>
+    </div>
+    <div id="connectionAlert" class="alert alert-danger alert-dismissable fade in">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <h4 id="connectionAlertHeader"></h4>
+      <p id="connectionAlertText"></p>
+      <p>
+        <button id="connectionAlertExitAll" type"button" class="btn btn-danger"></button>
+        <button id="connectionAlertReconnect" type"button" class="btn btn-default"></button>
+      </p>
     </div>
   </body>
 </html>

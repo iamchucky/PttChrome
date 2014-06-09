@@ -41,10 +41,10 @@
     "message": "設定"
   },
   "menu_toggleMouseBrowsing": {
-    "message": "切換滑鼠瀏覽"
+    "message": "使用滑鼠瀏覽"
   },
   "menu_fullscreen": {
-    "message": "全螢幕"
+    "message": "全螢幕模式"
   },
   "options_autologin": {
     "message": "自動登入"
@@ -263,7 +263,7 @@
     "message": "介面"
   },
   "options_usemousebrowsing": {
-    "message": "使用滑鼠瀏覽"
+    "message": "預設使用滑鼠瀏覽"
   },
   "options_usemousebrowsingex": {
     "message": "啟用進階滑鼠瀏覽(更新文章、同標題第一篇/上一篇/下一篇/最後一篇)"
@@ -513,5 +513,17 @@
   },
   "options_ask_delSite2": {
     "message": ", 這個站嗎?"
+  },
+  "alert_connectionHeader": {
+    "message": "你斷線了!"
+  },
+  "alert_connectionText": {
+    "message": "現在要重新連線還是離開?"
+  },
+  "alert_connectionReconnect": {
+    "message": "重新連線"
+  },
+  "alert_connectionExitAll": {
+    "message": "離開"
   }
 }

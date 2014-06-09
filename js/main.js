@@ -1,16 +1,16 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
   var site = getQueryVariable('site');
   if (site) {
-    pttchrome.app = new pttchrome.App();
+    pttchrome.app = new pttchrome.App(function() {
+      pttchrome.app.setInputAreaFocus();
+      pttchrome.app.view.fontResize();
+      pttchrome.app.connect(site);
+    });
     window.onresize = function() {
       if (pttchrome.app) {
         pttchrome.app.view.fontResize();
       }
     };
-
-    pttchrome.app.setInputAreaFocus();
-    pttchrome.app.view.fontResize();
-    pttchrome.app.connect(site);
   } else {
     console.log("empty site!");
   }
