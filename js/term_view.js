@@ -113,8 +113,8 @@ function TermView(rowCount) {
       if (self.bbscore.pref && self.bbscore.pref.modalShown)
         return;
       self.onkeyPress(e);
-      if (window.getSelection().isCollapsed)
-        self.bbscore.setInputAreaFocus();
+      // set input area focus whenever key down even if there is selection
+      self.bbscore.setInputAreaFocus();
     }, false);
 
     this.input.addEventListener('input', function(e) {
