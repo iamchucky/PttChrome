@@ -319,10 +319,29 @@ pttchrome.App.prototype.updateTabIcon = function(aStatus) {
   }
 };
 
+// use this method to get better window size in case of page zoom != 100%
+pttchrome.App.prototype.getWindowInnerBounds = function() {
+  var win = chrome.app.window.current();
+  var bounds = null;
+  if (win.isFullscreen())
+    bounds = chrome.app.window.current().outerBounds;
+  else {
+    bounds = chrome.app.window.current().innerBounds;
+    if (win.isMaximized()) {
+      bounds = {
+        width: bounds.width,
+        height: bounds.height - 14
+      };
+    }
+  }
+  return bounds;
+};
+
 pttchrome.App.prototype.clientToPos = function(cX, cY) {
   var x;
+  var w = this.getWindowInnerBounds().width;
   if (this.view.horizontalAlignCenter && this.view.scaleX != 1)
-    x = cX - ((document.documentElement.clientWidth - (this.view.chw * this.buf.cols) * this.view.scaleX) / 2);
+    x = cX - ((w - (this.view.chw * this.buf.cols) * this.view.scaleX) / 2);
   else
     x = cX - parseFloat(this.view.firstGrid.offsetLeft);
   var y = cY - parseFloat(this.view.firstGrid.offsetTop);
@@ -699,6 +718,13 @@ pttchrome.App.prototype.mouse_down = function(e) {
   } else if(e.button == 2) {
     this.mouseRightButtonDown = true;
     //create context menu
+
+    // update context menu's fullscreen checkbox
+    if (chrome.app.window.current().isFullscreen()) {
+      chrome.contextMenus.update('fullscreen', { checked: true });
+    } else {
+      chrome.contextMenus.update('fullscreen', { checked: false });
+    }
     //this.resetMenuItems();
   }
 };
@@ -934,15 +960,10 @@ pttchrome.App.prototype.resetMenuItems = function() {
     var isFullscreened = chrome.app.window.current().isFullscreen();
     if (isFullscreened) {
       chrome.app.window.current().restore();
-      chrome.contextMenus.update('fullscreen', { checked: false });
     } else {
       chrome.app.window.current().fullscreen();
-      chrome.contextMenus.update('fullscreen', { checked: true });
     }
   };
-  chrome.app.window.current().onRestored.addListener(function() {
-    chrome.contextMenus.update('fullscreen', { checked: false });
-  });
   chrome.contextMenus.create({
     type: 'checkbox',
     checked: chrome.app.window.current().isFullscreen(),

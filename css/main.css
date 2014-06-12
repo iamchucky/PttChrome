@@ -57,7 +57,7 @@ a:link,a:visited,a:active,a:hover
 }
 
 img{background:white; color:black; padding:5px 5px;}
-body{color: white;background-color: #000000;margin: 0px;overflow:hidden;}
+body{zoom:reset;color: white;background-color: #000000;margin: 0px;overflow:hidden;}
 span [link="true"]{margin: 0px; background-image: inherit; background-repeat: inherit; background-position: inherit;}
 span{margin: 0px;}
 .drag{display: none; position: absolute; cursor: default; z-Index: 11;}

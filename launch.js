@@ -12,8 +12,14 @@ chrome.app.runtime.onLaunched.addListener(function() {
       height: 530
     },
     minWidth: 880,
-    minHeight: 530
+    minHeight: 530,
   }, function(appWindow) {
+    appWindow.onBoundsChanged.addListener(function() {
+      var app = appWindow.contentWindow.pttchrome.app;
+      if (app) {
+        app.view.fontResize();
+      }
+    });
     appWindow.onClosed.addListener(function() {
       var so = appWindow.contentWindow.pttchrome.app.telnetCore.socket;
       if (so) {

@@ -854,6 +854,7 @@ TermView.prototype = {
     },
 
     setTermFontSize: function(cw, ch) {
+      var innerBounds = this.bbscore.getWindowInnerBounds();
       this.chw = cw;
       this.chh = ch;
       this.mainDisplay.style.fontSize = this.chh + 'px';
@@ -863,12 +864,12 @@ TermView.prototype = {
       this.mainDisplay.style.overflow = 'hidden';
       this.mainDisplay.style.textAlign = 'left';
       this.mainDisplay.style.width = this.chw*this.buf.cols + 'px';
-      if(this.verticalAlignCenter && this.chh*this.buf.rows < document.documentElement.clientHeight)
-        this.mainDisplay.style.marginTop = ((document.documentElement.clientHeight-this.chh*this.buf.rows)/2) + 'px';
+      if(this.verticalAlignCenter && this.chh*this.buf.rows < innerBounds.height)
+        this.mainDisplay.style.marginTop = ((innerBounds.height-this.chh*this.buf.rows)/2) + 'px';
       else
         this.mainDisplay.style.marginTop = '0px';
       if(this.fontFitWindowWidth)
-        this.scaleX = Math.floor(document.documentElement.clientWidth / (this.chw*this.buf.cols) * 100)/100;
+        this.scaleX = Math.floor(innerBounds.width / (this.chw*this.buf.cols) * 100)/100;
       else
         this.scaleX = 1;
 
@@ -892,7 +893,7 @@ TermView.prototype = {
       //}
       //else
       //{
-      //  if(this.chw*this.buf.cols>document.documentElement.clientWidth)
+      //  if(this.chw*this.buf.cols>innerBounds.width)
       //  {
       //    this.mainDisplay.style.textAlign = 'left';
       //    this.mainDisplay.style.width = this.chw*this.buf.cols + 'px';
@@ -921,8 +922,9 @@ TermView.prototype = {
 
     convertMN2XYEx: function (cx, cy){
       var origin;
+      var w = this.bbscore.getWindowInnerBounds().width;
       if(this.horizontalAlignCenter && this.scaleX!=1)
-        origin = [((document.documentElement.clientWidth - (this.chw*this.buf.cols)*this.scaleX)/2), this.firstGrid.offsetTop];
+        origin = [((w - (this.chw*this.buf.cols)*this.scaleX)/2), this.firstGrid.offsetTop];
       else
         origin = [this.firstGrid.offsetLeft, this.firstGrid.offsetTop];
       var realX = origin[0] + (cx) * this.chw * this.scaleX;
@@ -1054,13 +1056,15 @@ TermView.prototype = {
       var cols = this.buf ? this.buf.cols : 80;
       var rows = this.buf ? this.buf.rows : 24;
 
-      this.BBSWin.style.height = document.documentElement.clientHeight +'px';
-      this.BBSWin.style.width = document.documentElement.clientWidth +'px';
+      var innerBounds = this.bbscore.getWindowInnerBounds();
+
+      this.BBSWin.style.height = innerBounds.height + 'px';
+      this.BBSWin.style.width = innerBounds.width + 'px';
 
       if(this.screenType==0 || this.screenType==1)
       {
-        var width = this.bbsWidth ? this.bbsWidth : document.documentElement.clientWidth;
-        var height = this.bbsHeight ? this.bbsHeight : document.documentElement.clientHeight;
+        var width = this.bbsWidth ? this.bbsWidth : innerBounds.width;
+        var height = this.bbsHeight ? this.bbsHeight : innerBounds.height;
         if(width == 0 || height == 0) return; // errors for openning in a new window
 
         var o_h, o_w, i = 4;

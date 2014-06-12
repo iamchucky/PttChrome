@@ -6,11 +6,6 @@
       pttchrome.app.view.fontResize();
       pttchrome.app.connect(site);
     });
-    window.onresize = function() {
-      if (pttchrome.app) {
-        pttchrome.app.view.fontResize();
-      }
-    };
   } else {
     console.log("empty site!");
   }
