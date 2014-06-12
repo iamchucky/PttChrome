@@ -317,13 +317,13 @@ TermView.prototype = {
           return {s1: char1, s2: char2};
         else
         {
-          var s1 = '<span style="display:inline-block;width:'+panding+'px;">' + char1 + '</span>';
+          var s1 = '<span class="wpadding" style="display:inline-block;width:'+panding+'px;">' + char1 + '</span>';
           return {s1: s1, s2: ''};
         }
       }
       else
       {
-          var s1 = '<span class="q' +fg+ 'b' +bg+'" ';
+          var s1 = '<span class="wpadding q' +fg+ 'b' +bg+'" ';
           s1 += ((panding==0?'':'style="display:inline-block;width:'+panding+'px;"') +'>' + (ch.isBlink()?'<x s="q'+fg+'b'+bg+'" h="qq'+bg+'"></x>':'') + char1 + '</span>');
           return {s1: s1, s2: ''};
       }
@@ -1081,10 +1081,12 @@ TermView.prototype = {
         nowchh = i*2;
         nowchw = i;
         this.setTermFontSize(nowchw, nowchh);
+        $('.wpadding').css('width', nowchh);
       }
       else
       {
         this.setTermFontSize(this.bbsFontSize, this.bbsFontSize*2);
+        $('.wpadding').css('width', this.bbsFontSize*2);
       }
     }
     /*
