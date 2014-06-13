@@ -1,3 +1,8 @@
+@font-face {
+  font-family: "symmingliu";
+  src: url('../fonts/symmingliu.woff');
+}
+
 #BBSWindow {
   position:absolute;
   width:0px;

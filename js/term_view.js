@@ -584,23 +584,6 @@ TermView.prototype = {
                 tmp.push('</span>');
 
               this.BBSROW[row].innerHTML = tmp.join('');
-              if(row==this.buf.tempMouseRow && this.FXVersion >= 4.0)
-              {
-
-                //var isOnLink = false;
-                //var uris = this.buf.lines[row].uris;
-                //if (uris) {
-                //  for (var urridx=0;i<uris.length;i++) {
-                //    if (this.buf.tempMouseCol >= uris[urridx][0] && this.buf.tempMouseCol < uris[urridx][1]) {
-                //      isOnLink = true;
-                //      break;
-                //    }
-                //  }
-                //}
-                //if(!isOnLink)
-
-                this.bbscore.resetStatusBar();
-              }
               anylineUpdate = true;
               lineChangeds[row] = false;
             }
