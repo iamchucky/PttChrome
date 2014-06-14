@@ -227,7 +227,8 @@ pttchrome.App.prototype.setupConnectionAlert = function() {
     $('#connectionAlert').hide();
   });
   $('#connectionAlertExitAll').click(function(e) {
-    //chrome.app.window.current().close();
+    window.open('','_self');
+    window.close();
   });
 };
 
