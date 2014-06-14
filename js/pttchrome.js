@@ -97,10 +97,10 @@ pttchrome.App = function(onInitializedCallback) {
     self.mouse_over(e);
   }, false);
 
-  this.menuHandler = {};
+  /*this.menuHandler = {};
   chrome.contextMenus.onClicked.addListener(function(onClickData, tab) {
     pttchrome.app.menuHandler[onClickData.menuItemId]();
-  });
+  });*/
 
   this.view.fontResize();
   this.view.updateCursorPos();
@@ -110,7 +110,7 @@ pttchrome.App = function(onInitializedCallback) {
 
   this.setupConnectionAlert();
   this.pref = new PttChromePref(this, function() {
-    self.resetMenuItems();
+    //self.resetMenuItems();
     onInitializedCallback();
   })
 
@@ -227,7 +227,7 @@ pttchrome.App.prototype.setupConnectionAlert = function() {
     $('#connectionAlert').hide();
   });
   $('#connectionAlertExitAll').click(function(e) {
-    chrome.app.window.current().close();
+    //chrome.app.window.current().close();
   });
 };
 
@@ -321,7 +321,14 @@ pttchrome.App.prototype.updateTabIcon = function(aStatus) {
 
 // use this method to get better window size in case of page zoom != 100%
 pttchrome.App.prototype.getWindowInnerBounds = function() {
-  var win = chrome.app.window.current();
+  var width = document.documentElement.clientWidth;
+  var height = document.documentElement.clientHeight;
+  var bounds = {
+    width: width,
+    height: height
+  };
+
+  /*var win = chrome.app.window.current();
   var bounds = null;
   if (win.isFullscreen())
     bounds = chrome.app.window.current().outerBounds;
@@ -333,7 +340,7 @@ pttchrome.App.prototype.getWindowInnerBounds = function() {
         height: bounds.height - 14
       };
     }
-  }
+  }*/
   return bounds;
 };
 
@@ -720,11 +727,11 @@ pttchrome.App.prototype.mouse_down = function(e) {
     //create context menu
 
     // update context menu's fullscreen checkbox
-    if (chrome.app.window.current().isFullscreen()) {
+    /*if (chrome.app.window.current().isFullscreen()) {
       chrome.contextMenus.update('fullscreen', { checked: true });
     } else {
       chrome.contextMenus.update('fullscreen', { checked: false });
-    }
+    }*/
     //this.resetMenuItems();
   }
 };
@@ -914,6 +921,7 @@ pttchrome.App.prototype.setBBSCmd = function(cmd, cmdhandler) {
   }
 };
 
+/*
 pttchrome.App.prototype.createMenu = function(title, func, parentId, id) {
   var createProperties = { 
     "title": title, 
@@ -994,3 +1002,4 @@ pttchrome.App.prototype.resetMenuItems = function() {
       pttchrome.app.doPreferences();
   }, null, 'pref');
 };
+*/

@@ -5,7 +5,8 @@ function PttChromePref(app, onInitializedCallback) {
   this.modalShown = false;
   this.shouldResetToDefault = false;
 
-  this.reloadPreference(onInitializedCallback);
+  this.loadDefault(onInitializedCallback);
+  //this.reloadPreference(onInitializedCallback);
 }
 
 PttChromePref.prototype = {
@@ -96,6 +97,14 @@ PttChromePref.prototype = {
       self.modalShown = false;
       self.app.setInputAreaFocus();
     });
+  },
+
+  loadDefault: function(callback) {
+    this.values = JSON.parse(JSON.stringify(DEFAULT_PREFS));
+    this.logins = {'u':'', 'p':''};
+    this.updatePrefToApp();
+    this.populatePreferencesToUi();
+    callback();
   },
 
   reloadPreference: function(callback) {
