@@ -72,14 +72,11 @@ TelnetCore.prototype.connect = function(host, port) {
   this.read = function(str) {
     conn.onDataAvailable(str, str.length);
   };
-  this.write = function(str, length) {
+  this.write = function(str) {
     if (conn.socket == null) {
       return;
     }
-    var byteArray = new Uint8Array(str.split('').map(function(x) {
-      return x.charCodeAt(0);
-    }));
-    conn.socket.send(byteArray.buffer);
+    conn.socket.send(str);
   };
 
   // Check AutoLogin Stage
@@ -215,7 +212,7 @@ TelnetCore.prototype.send = function(str) {
   if (str) {
     if (this.listener && this.write) {
       this.listener.idleTime = 0;
-      this.write(str, str.length);
+      this.write(str);
     }
   }
 };

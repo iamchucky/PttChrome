@@ -73,13 +73,13 @@ lib.Socket.prototype.connect = function() {
   });
 };
 
-lib.Socket.prototype.send = function(arrayBuffer) {
+lib.Socket.prototype.send = function(str) {
   if (this.appSocket == null) {
     return;
   }
   this.appSocket.postMessage({
     action: 'send',
-    data: arrayBuffer
+    data: str
   });
 };
 
