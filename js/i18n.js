@@ -1,7 +1,11 @@
 var locale = {};
 var i18n_val = {};
 function i18n(str) {
-  return i18n_val[str].message;
+  if (i18n_val[str]) {
+    return i18n_val[str].message;
+  } else {
+    console.log('missing i18n '+str);
+  }
 }
 
 function setupI18n(callback) {
