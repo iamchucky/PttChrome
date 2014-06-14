@@ -26,6 +26,9 @@ lib.Socket = function(spec) {
 
 lib.Socket.prototype.checkChromeApp = function(callback) {
   var appId = this.appId;
+  if (!chrome.runtime) {
+    console.log('app is not running or installed');
+  }
   chrome.runtime.sendMessage(appId, { action: 'status' }, function(resposne) {
     if (!response) {
       console.log('app is not running or installed');
