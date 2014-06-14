@@ -1,14 +1,9 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
-  var site = getQueryVariable('site');
-  if (site) {
-    pttchrome.app = new pttchrome.App(function(app) {
-      app.setInputAreaFocus();
-      app.view.fontResize();
-      app.connect(site);
-    });
-  } else {
-    console.log("empty site!");
-  }
+  pttchrome.app = new pttchrome.App(function(app) {
+    app.setInputAreaFocus();
+    app.view.fontResize();
+    app.connect('ptt.cc');
+  });
 });
 
 function setTimer(repeat, func, timelimit) {
