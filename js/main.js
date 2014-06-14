@@ -1,10 +1,9 @@
 ﻿$(document).ready(function() {
-  setupI18n(function() {
-    pttchrome.app = new pttchrome.App(function(app) {
-      app.setInputAreaFocus();
-      app.view.fontResize();
-      app.connect('ptt.cc');
-    });
+  setupI18n();
+  pttchrome.app = new pttchrome.App(function(app) {
+    app.setInputAreaFocus();
+    app.view.fontResize();
+    app.connect('ptt.cc');
   });
 });
 
@@ -55,18 +54,15 @@ function dumpLog(type, string) {
 }
 
 var i18n_val = {};
+var locale = {};
 function i18n(str) {
-  return i18n_val[str];
+  return i18n_val[str].message;
 }
 
 function setupI18n(callback) {
   var lang = navigator.language || navigator.userLanguage;
-  lang = lang.replace('-', '_');
-  if (lang === '') {
-    lang = 'en_US';
+  if (lang === '' || !(lang == 'en-US' || lang == 'zh-TW')) {
+    lang = 'en-US';
   }
-  $.getJSON('/PttChrome/_locales/'+lang+'/messages.json', function(json) {
-    i18n_val = json;
-    callback();
-  });
+  i18n_val = locale[lang];
 }
