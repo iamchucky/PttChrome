@@ -9,8 +9,6 @@
     "128": "icon_128.png"
   },
 
-  "default_locale": "en_US",
-
   "minimum_chrome_version": "24.0",
   "app": {
     "background": {
