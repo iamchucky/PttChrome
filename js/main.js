@@ -65,7 +65,7 @@ function setupI18n(callback) {
   if (lang === '') {
     lang = 'en_US';
   }
-  $.getJSON('/_locales/'+lang+'/messages.json', function(json) {
+  $.getJSON('/PttChrome/_locales/'+lang+'/messages.json', function(json) {
     i18n_val = json;
     callback();
   });
