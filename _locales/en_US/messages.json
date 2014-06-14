@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "PttChrome",
+    "description": "The title of the application, displayed in the web store."
+  },
+  "appDesc": {
+    "message": "A GNU/GPL telnet client specifically designed for BBS browsing.",
+    "description":"The description of the application, displayed in the web store."
+  }
+}
