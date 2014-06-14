@@ -1,9 +1,10 @@
 ﻿$(document).ready(function() {
-  setupI18n();
-  pttchrome.app = new pttchrome.App(function(app) {
-    app.setInputAreaFocus();
-    app.view.fontResize();
-    app.connect('ptt.cc');
+  setupI18n(function() {
+    pttchrome.app = new pttchrome.App(function(app) {
+      app.setInputAreaFocus();
+      app.view.fontResize();
+      app.connect('ptt.cc');
+    });
   });
 });
 
@@ -58,7 +59,7 @@ function i18n(str) {
   return i18n_val[str];
 }
 
-function setupI18n() {
+function setupI18n(callback) {
   var lang = navigator.language || navigator.userLanguage;
   lang = lang.replace('-', '_');
   if (lang === '') {
@@ -66,5 +67,6 @@ function setupI18n() {
   }
   $.getJSON('/_locales/'+lang+'/messages.json', function(json) {
     i18n_val = json;
-  }
+    callback();
+  });
 }
