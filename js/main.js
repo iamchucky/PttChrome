@@ -1,10 +1,10 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
   var site = getQueryVariable('site');
   if (site) {
-    pttchrome.app = new pttchrome.App(function() {
-      pttchrome.app.setInputAreaFocus();
-      pttchrome.app.view.fontResize();
-      pttchrome.app.connect(site);
+    pttchrome.app = new pttchrome.App(function(app) {
+      app.setInputAreaFocus();
+      app.view.fontResize();
+      app.connect(site);
     });
   } else {
     console.log("empty site!");

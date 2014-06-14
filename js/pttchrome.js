@@ -111,7 +111,7 @@ pttchrome.App = function(onInitializedCallback) {
   this.setupConnectionAlert();
   this.pref = new PttChromePref(this, function() {
     //self.resetMenuItems();
-    onInitializedCallback();
+    onInitializedCallback(self);
   })
 
 };
