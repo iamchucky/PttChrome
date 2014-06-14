@@ -1,4 +1,5 @@
-﻿document.addEventListener('DOMContentLoaded', function () {
+﻿$(document).ready(function() {
+  setupI18n();
   pttchrome.app = new pttchrome.App(function(app) {
     app.setInputAreaFocus();
     app.view.fontResize();
@@ -52,7 +53,18 @@ function dumpLog(type, string) {
 	}
 }
 
+var i18n_val = {};
 function i18n(str) {
-  return str;
-  //return chrome.i18n.getMessage(str);
+  return i18n_val[str];
+}
+
+function setupI18n() {
+  var lang = navigator.language || navigator.userLanguage;
+  lang = lang.replace('-', '_');
+  if (lang === '') {
+    lang = 'en_US';
+  }
+  $.getJSON('/_locales/'+lang+'/messages.json', function(json) {
+    i18n_val = json;
+  }
 }
