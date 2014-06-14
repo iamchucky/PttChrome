@@ -172,7 +172,7 @@ locale.en_US = {
   "options_linewrap2": {
     "message": "(0 = disabled)"
   },
-  "options_fontface": {
+  "options_fontFace": {
     "message": "Font face"
   },
   "options_site": {
@@ -262,7 +262,7 @@ locale.en_US = {
   "options_appearance": {
     "message": "Appearance"
   },
-  "options_usemousebrowsing": {
+  "options_useMouseBrowsing": {
     "message": "Mouse browsing on start"
   },
   "options_usemousebrowsingex": {
@@ -271,7 +271,7 @@ locale.en_US = {
   "options_mousebrowsesendenter": {
     "message": "In mouse browsing mode, send [Enter] after mouse left button press for 1 second"
   },
-  "options_mousebrowsinghighlight": {
+  "options_mouseBrowsingHighlight": {
     "message": "Mouse browsing highlight effect"
   },
   "options_highlightColor": {

@@ -172,7 +172,7 @@
   "options_linewrap2": {
     "message": "自動換行(0=關閉不用)"
   },
-  "options_fontface": {
+  "options_fontFace": {
     "message": "字型"
   },
   "options_site": {
@@ -262,7 +262,7 @@
   "options_appearance": {
     "message": "介面"
   },
-  "options_usemousebrowsing": {
+  "options_useMouseBrowsing": {
     "message": "預設使用滑鼠瀏覽"
   },
   "options_usemousebrowsingex": {
@@ -271,7 +271,7 @@
   "options_mousebrowsesendenter": {
     "message": "滑鼠瀏覽時長按左鍵時送出Enter"
   },
-  "options_mousebrowsinghighlight": {
+  "options_MouseBrowsingHighlight": {
     "message": "啟用滑鼠瀏覽的底色效果"
   },
   "options_highlightColor": {
