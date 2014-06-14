@@ -30,7 +30,7 @@ lib.Socket.prototype.checkChromeApp = function(callback) {
     console.log('app is not running or installed');
     return;
   }
-  chrome.runtime.sendMessage(appId, { action: 'status' }, function(resposne) {
+  chrome.runtime.sendMessage(appId, { action: 'status' }, function(response) {
     if (!response) {
       console.log('app is not running or installed');
     } else {
