@@ -20,7 +20,7 @@ lib.Socket = function(spec) {
   // Socket.
   this.socketId = null;
   this.isConnected = false;
-  this.appId = 'eodoggnlciofajelomnjiihhnpapoajj';
+  this.appId = 'hhnlfapopmaimdlldbknjdgekpgffmbo';
   this.appSocket = null;
 };
 
