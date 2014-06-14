@@ -58,5 +58,6 @@ function dumpLog(type, string) {
 }
 
 function i18n(str) {
-  return chrome.i18n.getMessage(str);
+  return str;
+  //return chrome.i18n.getMessage(str);
 }
