@@ -1,4 +1,4 @@
-﻿locale.zh-TW = {
+﻿locale.zh_TW = {
   "appName": {
     "message": "BBSChrome",
     "description": "The title of the application, displayed in the web store."

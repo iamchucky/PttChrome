@@ -1,4 +1,4 @@
-locale.en-US = {
+locale.en_US = {
   "appName": {
     "message": "BBSChrome",
     "description": "The title of the application, displayed in the web store."

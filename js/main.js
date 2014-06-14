@@ -64,5 +64,6 @@ function setupI18n(callback) {
   if (lang === '' || !(lang == 'en-US' || lang == 'zh-TW')) {
     lang = 'en-US';
   }
+  lang = lang.replace('-', '_');
   i18n_val = locale[lang];
 }
