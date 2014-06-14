@@ -18,6 +18,10 @@
     }
   },
 
+  "externally_connectable": {
+    "matches": ["*://iamchucky.github.io/*"]
+  },
+
   "permissions": [
     "clipboardRead",
     "clipboardWrite",
