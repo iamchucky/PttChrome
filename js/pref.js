@@ -94,7 +94,7 @@ PttChromePref.prototype = {
       }
       var data = {
         values: self.values,
-        logins: {'ptt.cc': {'u':self.logins[0], 'p':self.logins[1]}}
+        logins: {'u':self.logins[0], 'p':self.logins[1]}
       };
       self.setStorage(data);
       self.updateToApp();
