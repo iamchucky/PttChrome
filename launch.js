@@ -9,6 +9,19 @@ chrome.app.runtime.onLaunched.addListener(function() {
   window.open('http://iamchucky.github.io/PttChrome/');
 });
 
+var pasteInput = document.createElement('input');
+pasteInput.type = 'text';
+document.body.appendChild(pasteInput);
+
+function doPaste() {
+  pasteInput.focus();
+  var result = '';
+  if (document.execCommand('paste')) {
+    result = pasteInput.value;
+    pasteInput.value = '';
+  }
+  return result;
+}
 ///
 function SocketClient(spec) {
   this.host = spec.host;
@@ -97,6 +110,7 @@ SocketClient.prototype._onWriteComplete = function(writeInfo) {
     // other errors
   }
 };
+
 ///
 //
 var loadFileEntry = function (_chosenEntry, readcb) {
@@ -122,55 +136,114 @@ chrome.runtime.onMessageExternal.addListener(function(request, sender, sendRespo
 
 chrome.runtime.onConnectExternal.addListener(function(port) {
   port.onMessage.addListener(function(msg) {
-    if (msg.action == "connect") {
-      var onConnect = function() {
-        port.postMessage({ action: "connected" });
-      };
-      var onDisconnect = function() {
-        port.postMessage({action: "disconnected" });
-      };
-      var onReceive = function(str) {
-        port.postMessage({action: "onReceive", data: str});
-      };
-      var so = new SocketClient({
-          host: msg.host,
-          port: msg.port,
-          onConnect: onConnect,
-          onDisconnect: onDisconnect,
-          onReceive: onReceive,
-          onSent: null
-        });
-      port.so = so;
-      so.connect();
-    } else if (msg.action =="send") {
-      if(port.so && typeof(msg.data) == 'string') {
-        var byteArray = new Uint8Array(msg.data.split('').map(function(x){return x.charCodeAt(0);}));
-        port.so.send(byteArray.buffer);
-      }
-    } else if(msg.action =="disconnect") {
-      if (port.so) {
-        port.so.disconnect();
-        port.so = null;
-      }
-    } else if(msg.action =="readFile") {
-      //pop up a open file dialog
-      //after user select a file, conv to base 64 and send a string message back;
-      var accepts = [{
-        //mimeTypes: ['text/*'],
-        extensions: ['jpg', 'jpeg', 'gif', 'png']
-      }];
-      chrome.fileSystem.chooseEntry({type: 'openFile', accepts: accepts}, function(theEntry) {
-        if (!theEntry) {
-          port.postMessage({action: "onFileDataReady", data: ""});            
-        } else {
-          // use local storage to retain access to this file
-          chrome.storage.local.set({'chosenFile': chrome.fileSystem.retainEntry(theEntry)});
-          var readcb = function(str) {
-            port.postMessage({action: "onFileDataReady", data: str});
-          }
-          loadFileEntry(theEntry, readcb);
+    switch(msg.action) {
+      case 'connect':
+        var onConnect = function() {
+          port.postMessage({ action: "connected" });
+        };
+        var onDisconnect = function() {
+          port.postMessage({action: "disconnected" });
+          port.so = null;
+        };
+        var onReceive = function(str) {
+          port.postMessage({action: "onReceive", data: str});
+        };
+        var so = new SocketClient({
+            host: msg.host,
+            port: msg.port,
+            onConnect: onConnect,
+            onDisconnect: onDisconnect,
+            onReceive: onReceive,
+            onSent: null
+          });
+        port.so = so;
+        so.connect();
+        break;
+      case 'send':
+        if(port.so && typeof(msg.data) == 'string') {
+          var byteArray = new Uint8Array(msg.data.split('').map(function(x){return x.charCodeAt(0);}));
+          port.so.send(byteArray.buffer);
         }
-      });
+        break;
+      case 'disconnect':
+        if (port.so) {
+          port.so.disconnect();
+          port.so = null;
+        }
+        break;
+      case 'readFile':
+        //pop up a open file dialog
+        //after user select a file, conv to base 64 and send a string message back;
+        var accepts = [{
+          //mimeTypes: ['text/*'],
+          extensions: ['jpg', 'jpeg', 'gif', 'png']
+        }];
+        chrome.fileSystem.chooseEntry({type: 'openFile', accepts: accepts}, function(theEntry) {
+          if (!theEntry) {
+            port.postMessage({action: "onFileDataReady", data: ""});            
+          } else {
+            // use local storage to retain access to this file
+            chrome.storage.local.set({'chosenFile': chrome.fileSystem.retainEntry(theEntry)});
+            var readcb = function(str) {
+              port.postMessage({action: "onFileDataReady", data: str});
+            }
+            loadFileEntry(theEntry, readcb);
+          }
+        });
+        break;
+      case 'paste':
+        var result = doPaste();
+        port.postMessage({ action: 'onPasteDone', data: result});
+        break;
+      case 'storage':
+        var stype = msg.type;
+        switch(stype) {
+          case 'set':
+            if (msg.data && msg.data.values)
+              chrome.storage.sync.set(msg.data.values);
+            if (msg.data && msg.data.logins)
+              chrome.storage.local.set(msg.data.logins);
+            break;
+          case 'get':
+            chrome.storage.sync.get(null, function(items) {
+              var itemsEmpty = (Object.keys(items).length === 0);
+              if (itemsEmpty) {
+                items = JSON.parse(JSON.stringify(msg.defaults.values));
+                console.log('pref: first time, load default to sync storage');
+                chrome.storage.sync.set(items);
+              }
+              chrome.storage.local.get(null, function(localItems) {
+                var localItemsEmpty = (Object.keys(localItems).length === 0);
+                if (localItemsEmpty) {
+                  localItems = JSON.parse(JSON.stringify(msg.defaults.logins));
+                  chrome.storage.local.set(localItems);
+                }
+                var data = {
+                  values: items,
+                  logins: localItems
+                };
+                port.postMessage({ action: 'onStorageDone', type: 'get', data: data });
+              });
+            });
+            break;
+          case 'clear':
+            chrome.storage.local.clear(function() {
+              var err = chrome.runtime.lastError;
+              if (err)
+                console.log(err);
+            });
+            chrome.storage.sync.clear(function() {
+              var err = chrome.runtime.lastError;
+              if (err)
+                console.log(err);
+            });
+            break;
+          default:
+            break;
+        }
+        break;
+      default:
+        break;
     }
   });
   port.onDisconnect.addListener(function(msg) {

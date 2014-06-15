@@ -21,7 +21,7 @@
   },
 
   "externally_connectable": {
-    "matches": ["*://iamchucky.github.io/*"]
+    "matches": ["*://iamchucky.github.io/*", "*://localhost/*"]
   },
 
   "permissions": [
