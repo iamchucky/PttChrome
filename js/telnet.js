@@ -37,13 +37,8 @@ const STATE_DO=4;
 const STATE_DONT=5;
 const STATE_SB=6;
 
-function TelnetCore(listener) {
-  this.read = null;
-  this.write = null;
-  this.host = null;
-  this.port = 23;
-
-  this.listener = listener;
+function TelnetCore(app) {
+  this.app = app;
 
   this.state = STATE_DATA;
   this.iac_sb = '';
@@ -58,29 +53,11 @@ function TelnetCore(listener) {
   this.loginPrompt = ['','',''];
   this.loginStr = ['','','',''];
   //AutoLogin - end
-
-  this.socket = null;
 }
 
 TelnetCore.prototype.connect = function(host, port) {
-  if(host) {
-    this.host = host;
-    this.port = port;
-  }
-
-  var conn = this;
-  this.read = function(str) {
-    conn.onDataAvailable(str, str.length);
-  };
-  this.write = function(str) {
-    if (conn.socket == null) {
-      return;
-    }
-    conn.socket.send(str);
-  };
-
   // Check AutoLogin Stage
-  //this.listener.loadLoginData(); //load login data
+  //this.app.loadLoginData(); //load login data
   if(this.loginStr[1])
     this.autoLoginStage = this.loginStr[0] ? 1 : 2;
   else if(this.loginStr[2])
@@ -89,32 +66,12 @@ TelnetCore.prototype.connect = function(host, port) {
     this.autoLoginStage = 0;
 
   //this.initialAutoLogin();
-  this.socket = new lib.Socket({
-    host: this.host,
-    port: this.port,
-    onConnect: this.onConnect.bind(this),
-    onDisconnect: this.onDisconnect.bind(this),
-    onReceive: this.read,
-    onSent: null
-  });
-  this.socket.connect();
+  this.app.appConn.connectTelnet(host, port);
 };
 
-TelnetCore.prototype.onConnect = function() {
-  if(this.listener)
-    this.listener.onConnect();
-};
-
-TelnetCore.prototype.onDisconnect = function() {
-  if(this.socket) {
-    this.socket = null;
-  }
-  if(this.listener)
-    this.listener.onClose();
-};
-
-TelnetCore.prototype.onDataAvailable = function(str, count) {
+TelnetCore.prototype.onDataAvailable = function(str) {
   var data='';
+  var count = str.length;
   while (count > 0) {
     var s = str;
     count -= s.length;
@@ -125,7 +82,7 @@ TelnetCore.prototype.onDataAvailable = function(str, count) {
       case STATE_DATA:
         if( ch == IAC ) {
           if (data) {
-            this.listener.onData(data);
+            this.app.onData(data);
             data='';
           }
           this.state = STATE_IAC;
@@ -190,7 +147,7 @@ TelnetCore.prototype.onDataAvailable = function(str, count) {
           switch (this.iac_sb[0]) {
           case TERM_TYPE: 
             // FIXME: support other terminal types
-            //var termType = this.listener.prefs.TermType;
+            //var termType = this.app.prefs.TermType;
             var rep = IAC + SB + TERM_TYPE + IS + this.termType + IAC + SE;
             this.send( rep );
             break;
@@ -202,7 +159,7 @@ TelnetCore.prototype.onDataAvailable = function(str, count) {
       }
     }
     if (data) {
-      this.listener.onData(data);
+      this.app.onData(data);
       data='';
     }
   }
@@ -210,9 +167,9 @@ TelnetCore.prototype.onDataAvailable = function(str, count) {
 
 TelnetCore.prototype.send = function(str) {
   if (str) {
-    if (this.listener && this.write) {
-      this.listener.idleTime = 0;
-      this.write(str);
+    if (this.app && this.app.appConn) {
+      this.app.idleTime = 0;
+      this.app.appConn.sendTelnet(str);
     }
   }
 };
@@ -227,8 +184,8 @@ TelnetCore.prototype.convSend = function(unicode_str) {
 };
 
 TelnetCore.prototype.sendNaws = function() {
-  var cols = this.listener.buf ? this.listener.buf.cols : 80;
-  var rows = this.listener.buf ? this.listener.buf.rows : 24;
+  var cols = this.app.buf ? this.app.buf.cols : 80;
+  var rows = this.app.buf ? this.app.buf.rows : 24;
   var nawsStr = String.fromCharCode(Math.floor(cols/256), cols%256, Math.floor(rows/256), rows%256).replace(/(\xff)/g,'\xff\xff');
   var rep = IAC + SB + NAWS + nawsStr + IAC + SE;
   this.send( rep );
@@ -240,11 +197,11 @@ TelnetCore.prototype.checkAutoLogin = function(row) {
     return;
   }
 
-  var line = this.listener.buf.getRowText(row, 0, this.listener.buf.cols);
+  var line = this.app.buf.getRowText(row, 0, this.app.buf.cols);
   if (line.indexOf(this.loginPrompt[this.autoLoginStage - 1]) < 0)
     return;
 
-  var unicode_str = this.loginStr[this.autoLoginStage-1] + this.listener.view.EnterChar;
+  var unicode_str = this.loginStr[this.autoLoginStage-1] + this.app.view.EnterChar;
   this.send(this.convSend(unicode_str));
 
   if (this.autoLoginStage == 3) {

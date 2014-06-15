@@ -3,6 +3,56 @@
   src: url('../fonts/symmingliu.woff');
 }
 
+#sideMenus {
+  position: fixed;
+  width: 90px;
+  top: 20px;
+  z-index: 3;
+  box-shadow: 0 0 15px 2px black;
+  background-color: #9c0808;
+
+  transition: 0.25s ease;
+}
+
+.menu {
+  left: 0px;
+}
+
+.menuHidden {
+  left: -85px;
+}
+
+.menuHidden:hover {
+  left: 0px;
+}
+
+#logo {
+  width: 85px;
+  height: 90px;
+  background: url('../icon_128.png') 0 0/85px 85px no-repeat;
+}
+
+.font_btn {
+  width: 85px;
+  height: 90px;
+  background-color: #1a1a1a;
+  text-align: center;
+  padding: 15px;
+  margin: 0px;
+  float: left;
+  cursor: pointer;
+}
+.font_btn:hover {
+  background-color: #333;
+}
+
+.font_btn > i {
+  line-height: 40px;
+}
+.font_btn > span {
+  font-size: 13px;
+}
+
 #BBSWindow {
   position:absolute;
   width:0px;
@@ -22,6 +72,8 @@
   margin-right:0px;
   margin-bottom:0px;
   -webkit-user-select: text;
+  background-color: black;
+  box-shadow: 0 0 60px 50px black;
 }
 
 .linkurl
@@ -51,18 +103,18 @@ a:link,a:visited,a:active,a:hover
 }
 
 .terminal_display {
-        font-family : MingLiu, monospace;
-        font-size    : 26px;
-        line-height:26px;
-        white-space: pre;
-        cursor: text;
-        position: absolute;
-        color: #FFFFFF;
-        text-decoration: blink;
+  font-family : MingLiu, monospace;
+  font-size    : 26px;
+  line-height:26px;
+  white-space: pre;
+  cursor: text;
+  position: absolute;
+  color: #FFFFFF;
+  text-decoration: blink;
 }
 
 img{background:white; color:black; padding:5px 5px;}
-body{zoom:reset;color: white;background-color: #000000;margin: 0px;overflow:hidden;}
+body{zoom:reset;color: white;background-color: #101010;margin: 0px;overflow:hidden;}
 span [link="true"]{margin: 0px; background-image: inherit; background-repeat: inherit; background-position: inherit;}
 span{margin: 0px;}
 .drag{display: none; position: absolute; cursor: default; z-Index: 11;}

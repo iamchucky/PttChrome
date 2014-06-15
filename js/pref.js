@@ -1,17 +1,18 @@
 function PttChromePref(app, onInitializedCallback) {
   this.values = null;
-  this.logins = ['',''];
+  this.logins = null;
   this.app = app;
   this.modalShown = false;
   this.shouldResetToDefault = false;
 
-  this.loadDefault(onInitializedCallback);
-  //this.reloadPreference(onInitializedCallback);
+  //this.loadDefault(onInitializedCallback);
+  this.onInitializedCallback = onInitializedCallback;
+  this.initCallbackCalled = false;
 }
 
 PttChromePref.prototype = {
 
-  updatePreferencesToUi: function() {
+  updateSettingsToUi: function() {
     for (var i in PREFS_CATEGORIES) {
       var cat = PREFS_CATEGORIES[i];
       $('#opt_'+cat).text(i18n('options_'+cat));
@@ -44,7 +45,7 @@ PttChromePref.prototype = {
     $('#opt_autologin').html(i18n('options_autologin')+'  <small style="color:red;">'+i18n('autologin_warning')+'</small>');
   },
 
-  populatePreferencesToUi: function() {
+  populateSettingsToUi: function() {
     var self = this;
     $('#opt_reset').off();
     $('#opt_reset').text(i18n('options_reset'));
@@ -53,7 +54,7 @@ PttChromePref.prototype = {
       self.shouldResetToDefault = true;
     });
 
-    this.updatePreferencesToUi();
+    this.updateSettingsToUi();
 
     $('#prefModal').off();
     $('#prefModal').on('shown.bs.modal', function(e) {
@@ -64,7 +65,7 @@ PttChromePref.prototype = {
         self.clearStorage();
         self.values = JSON.parse(JSON.stringify(DEFAULT_PREFS));
         self.logins = ['',''];
-        self.updatePreferencesToUi();
+        self.updateSettingsToUi();
         self.shouldResetToDefault = false;
       } else {
         for (var i in self.values) {
@@ -91,9 +92,12 @@ PttChromePref.prototype = {
         }
         self.logins = [user, pswd];
       }
-      self.setStorage(self.values);
-      self.setLoginStorage({'u':self.logins[0], 'p':self.logins[1]});
-      self.updatePrefToApp();
+      var data = {
+        values: self.values,
+        logins: {'ptt.cc': {'u':self.logins[0], 'p':self.logins[1]}}
+      };
+      self.setStorage(data);
+      self.updateToApp();
       self.modalShown = false;
       self.app.setInputAreaFocus();
     });
@@ -102,36 +106,12 @@ PttChromePref.prototype = {
   loadDefault: function(callback) {
     this.values = JSON.parse(JSON.stringify(DEFAULT_PREFS));
     this.logins = {'u':'', 'p':''};
-    this.updatePrefToApp();
-    this.populatePreferencesToUi();
+    this.updateToApp();
+    this.populateSettingsToUi();
     callback();
   },
 
-  reloadPreference: function(callback) {
-    var self = this;
-    this.getStorage(null, function(items) {
-      var itemsEmpty = (Object.keys(items).length === 0);
-      if (itemsEmpty) {
-        items = JSON.parse(JSON.stringify(DEFAULT_PREFS));
-        console.log('pref: first time, load default to sync storage');
-        self.setStorage(items);
-      }
-      self.values = items;
-      self.getLoginStorage(null, function(items) {
-        var itemsEmpty = (Object.keys(items).length === 0);
-        if (itemsEmpty) {
-          items = {'u':'','p':''};
-          self.setLoginStorage(items);
-        }
-        self.logins = [items['u'], items['p']];
-        self.updatePrefToApp();
-        self.populatePreferencesToUi();
-        callback();
-      });
-    });
-  },
-
-  updatePrefToApp: function() {
+  updateToApp: function() {
     for (var i in this.values) {
       this.app.onPrefChange(this, i);
     }
@@ -143,9 +123,9 @@ PttChromePref.prototype = {
     }
   },
 
-  resetPreference: function() {
+  resetSettings: function() {
     this.clearStorage();
-    this.reloadPreference();
+    this.getStorage();
   },
 
   get: function(prefName) {
@@ -157,36 +137,40 @@ PttChromePref.prototype = {
     this.values[prefName] = value;
   },
 
-  getLoginStorage: function(key, callback) {
-    chrome.storage.local.get(key,callback);
+  onStorageDone: function(msg) {
+    if (msg.data && msg.data.values) {
+      this.values = JSON.parse(JSON.stringify(msg.data.values));
+    }
+    if (msg.data && msg.data.logins) {
+      var data = msg.data.logins;
+      this.logins = [data['ptt.cc']['u'], data['ptt.cc']['p']];
+    }
+    this.updateToApp();
+    this.populateSettingsToUi();
+    if (!this.initCallbackCalled) {
+      if (this.values != null && this.logins != null) {
+        this.initCallbackCalled = true;
+        this.onInitializedCallback(this.app);
+      }
+    }
   },
 
-  getStorage: function(key, callback) {
-    chrome.storage.sync.get(key, callback);
-  },
-
-  setLoginStorage: function(items) {
-    chrome.storage.local.set(items, function() {
-    });
+  getStorage: function(key) {
+    if (this.app.appConn.isConnected) {
+      this.app.appConn.appPort.postMessage({ action: 'storage', type: 'get' });
+    }
   },
 
   setStorage: function(items) {
-    chrome.storage.sync.set(items, function() {
-      console.log('preference saved');
-    });
+    if (this.app.appConn.isConnected) {
+      this.app.appConn.appPort.postMessage({ action: 'storage', type: 'set', data: items });
+    }
   },
 
   clearStorage: function() {
-    chrome.storage.local.clear(function() {
-      var err = chrome.runtime.lastError;
-      if (err)
-        console.log(err);
-    });
-    chrome.storage.sync.clear(function() {
-      var err = chrome.runtime.lastError;
-      if (err)
-        console.log(err);
-    });
+    if (this.app.appConn.isConnected) {
+      this.app.appConn.appPort.postMessage({ action: 'storage', type: 'clear' });
+    }
   }
 
 }

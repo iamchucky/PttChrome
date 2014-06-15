@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="css/main.css" />
     <link rel="stylesheet" type="text/css" href="css/color.css" />
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     
     <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
@@ -28,7 +29,15 @@
   </head>
 
   <body>
-    <div id='BBSWindow'>
+    <div id="sideMenus" class="menu">
+      <!--<a href="//iamchucky.github.io/PttChrome/" target="_self"><div id="logo"></div></a>-->
+      <!--<div id="menu_sites" class="font_btn"><i class="fa fa-globe fa-2x"></i><br/><span></span></div>-->
+      <div id="menu_paste" class="font_btn"><i class="fa fa-clipboard fa-2x"></i><br/><span></span></div>
+      <div id="menu_selectAll" class="font_btn"><i class="fa fa-file-text fa-2x"></i><br/><span></span></div>
+      <div id="menu_mouseBrowsing" class="font_btn"><i class="fa fa-magic fa-2x"></i><br/><span></span></div>
+      <div id="menu_settings" class="font_btn"><i class="fa fa-cog fa-2x"></i><br/><span></span></div>
+    </div>
+    <div id="BBSWindow">
       <input id="t" type="text" style="box-sizing:content-box; color:initial; border: none; width: 200px; height: 24px; position:absolute; left:-10000px; top:0px; z-index:2;resize: none;" autofocus/>
       <div id="cursor" class="terminal_display">_</div>
     </div> <!--BBSWindow end-->

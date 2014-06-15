@@ -5,7 +5,7 @@ if (typeof lib != 'undefined')
 
 var lib = {};
 
-lib.Socket = function(spec) {
+lib.AppConnection = function(spec) {
   this.host = spec.host;
   this.port = spec.port;
   
@@ -14,17 +14,17 @@ lib.Socket = function(spec) {
     connect: spec.onConnect,        // Called when socket is connected.
     disconnect: spec.onDisconnect,  // Called when socket is disconnected.
     recv: spec.onReceive,           // Called when client receives data from server.
-    sent: spec.onSent               // Called when client sends data to server.
+    sent: spec.onSent,               // Called when client sends data to server.
+    paste: spec.onPasteDone,
+    storage: spec.onStorageDone,
   };
 
-  // Socket.
-  this.socketId = null;
   this.isConnected = false;
   this.appId = 'hhnlfapopmaimdlldbknjdgekpgffmbo';
-  this.appSocket = null;
+  this.appPort = null;
 };
 
-lib.Socket.prototype.checkChromeApp = function(callback) {
+lib.AppConnection.prototype.checkChromeApp = function(callback) {
   var appId = this.appId;
   if (!chrome.runtime) {
     console.log('app is not running or installed');
@@ -39,13 +39,13 @@ lib.Socket.prototype.checkChromeApp = function(callback) {
   });
 };
 
-lib.Socket.prototype.connect = function() {
+lib.AppConnection.prototype.connect = function(callback) {
   var self = this;
   this.checkChromeApp(function() {
     //var tabid = document.getElementById('cmdHandler').getAttribute('mapcode');
     //_this.so.connect(_this.host, _this.port, tabid);
-    self.appSocket = chrome.runtime.connect(self.appId);
-    self.appSocket.onMessage.addListener(function(msg) {
+    self.appPort = chrome.runtime.connect(self.appId);
+    self.appPort.onMessage.addListener(function(msg) {
       switch(msg.action) {
         case "connected":
           self.callbacks.connect();
@@ -56,37 +56,59 @@ lib.Socket.prototype.connect = function() {
         case "disconnected":
           self.callbacks.disconnect();
           break;
+        case "onPasteDone":
+          self.callbacks.paste(msg.data);
+          break;
+        case "onStorageDone":
+          self.callbacks.storage(msg);
         default:
           break;
       }
     });
     
-    self.appSocket.onDisconnect.addListener(function(msg) {
+    self.appPort.onDisconnect.addListener(function(msg) {
       self.callbacks.disconnect();
     });
+    self.isConnected = true;
     
-    self.appSocket.postMessage({
-      action: "connect",
-      host: self.host,
-      port: self.port
-    });
+    callback();
   });
 };
 
-lib.Socket.prototype.send = function(str) {
-  if (this.appSocket == null) {
+lib.AppConnection.prototype.connectTelnet = function(host, port) {
+  if (!this.isConnected) {
     return;
   }
-  this.appSocket.postMessage({
+  this.appPort.postMessage({
+    action: "connect",
+    host: host,
+    port: port
+  });
+};
+
+lib.AppConnection.prototype.sendTelnet = function(str) {
+  if (this.appPort == null) {
+    return;
+  }
+  if (!this.isConnected) {
+    return;
+  }
+  this.appPort.postMessage({
     action: 'send',
     data: str
   });
 };
 
-lib.Socket.prototype.disconnect = function() {
-  if (this.appSocket) {
-    this.appSocket.postMessage({ action: 'disconnect' });
-    this.appSocket = null;
+lib.AppConnection.prototype.disconnect = function() {
+  if (!this.isConnected) {
+    return;
+  }
+  if (this.appPort) {
+    try {
+      this.appPort.postMessage({ action: 'disconnect' });
+    } catch (e) {
+    }
+    this.appPort = null;
   }
   this.isConnected = false;
 };

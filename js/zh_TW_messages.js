@@ -7,44 +7,20 @@
     "message": "專為 BBS 瀏覽設計，採 GNU/GPL 授權的 telnet 連線程式套件",
     "description":"The description of the application, displayed in the web store."
   },
-  "menu_copy": {
-    "message": "複製"
-  },
   "menu_coloredCopy": {
     "message": "複製(包含ANSI彩色)"
   },
   "menu_paste": {
     "message": "貼上"
   },
-  "menu_selAll": {
+  "menu_selectAll": {
     "message": "全選"
   },
-  "menu_search": {
-    "message": "搜尋"
-  },
-  "menu_searchGoogle": {
-    "message": "在 Google 上搜尋'%s'"
-  },
-  "menu_fileio": {
-    "message": "檔案讀寫"
-  },
-  "menu_loadfile": {
-    "message": "載入檔案"
-  },
-  "menu_savefile": {
-    "message": "另存檔案"
-  },
-  "menu_sitepref": {
-    "message": "站台設定"
-  },
-  "menu_pref": {
+  "menu_settings": {
     "message": "設定"
   },
-  "menu_toggleMouseBrowsing": {
-    "message": "使用滑鼠瀏覽"
-  },
-  "menu_fullscreen": {
-    "message": "全螢幕模式"
+  "menu_mouseBrowsing": {
+    "message": "滑鼠瀏覽"
   },
   "options_autologin": {
     "message": "自動登入"
@@ -271,7 +247,7 @@
   "options_mousebrowsesendenter": {
     "message": "滑鼠瀏覽時長按左鍵時送出Enter"
   },
-  "options_MouseBrowsingHighlight": {
+  "options_mouseBrowsingHighlight": {
     "message": "啟用滑鼠瀏覽的底色效果"
   },
   "options_highlightColor": {

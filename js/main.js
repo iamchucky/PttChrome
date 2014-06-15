@@ -2,10 +2,10 @@
   setupI18n();
   pttchrome.app = new pttchrome.App(function(app) {
     app.setInputAreaFocus();
-    app.view.fontResize();
     app.connect('ptt.cc');
   });
 });
+
 
 function setTimer(repeat, func, timelimit) {
   if(repeat) {

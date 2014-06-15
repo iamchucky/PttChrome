@@ -134,9 +134,6 @@ function TermView(rowCount) {
       this.BBSROW[row].innerHTML = tmp.join('');
     //init view - end
 
-    this.blinkTimeout = setTimer(true, function() {
-      self.onBlink();
-    }, 1000);
 }
 
 
@@ -634,11 +631,11 @@ TermView.prototype = {
   },
     onTextInput: function(text) {
     //dumpLog(DUMP_TYPE_LOG, "onTextInput :" + text);
-        if(this.conn.listener.pasting) {
-            //var prefs = this.conn.listener.prefs;
-            text = text.replace(/\r\n/g, '\r');
-            text = text.replace(/\n/g, '\r');
-      text = text.replace(/\r/g, this.EnterChar);
+        if (this.bbscore.pasting) {
+          //var prefs = this.conn.listener.prefs;
+          text = text.replace(/\r\n/g, '\r');
+          text = text.replace(/\n/g, '\r');
+          text = text.replace(/\r/g, this.EnterChar);
             //text = text.replace(/\r/g, UnEscapeStr(this.EnterChar));
       //dumpLog(DUMP_TYPE_LOG, "AfterParser :" + text);
 

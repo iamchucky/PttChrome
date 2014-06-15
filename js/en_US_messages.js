@@ -7,44 +7,20 @@ locale.en_US = {
     "message": "A GNU/GPL telnet client extension specifically designed for BBS browsing.",
     "description":"The description of the application, displayed in the web store."
   },
-  "menu_copy": {
-    "message": "Copy"
-  },
   "menu_coloredCopy": {
     "message": "Copy with ANSI color"
   },
   "menu_paste": {
     "message": "Paste"
   },
-  "menu_selAll": {
-    "message": "Select All"
+  "menu_selectAll": {
+    "message": "Select all"
   },
-  "menu_search": {
-    "message": "Search"
+  "menu_mouseBrowsing": {
+    "message": "Mouse"
   },
-  "menu_searchGoogle": {
-    "message": "Search Google for '%s'"
-  },
-  "menu_fileio": {
-    "message": "File I/O"
-  },
-  "menu_loadfile": {
-    "message": "Load File"
-  },
-  "menu_savefile": {
-    "message": "Save File"
-  },
-  "menu_sitepref": {
-    "message": "Site Preferences"
-  },
-  "menu_pref": {
-    "message": "Preferences"
-  },
-  "menu_toggleMouseBrowsing": {
-    "message": "Mouse browsing"
-  },
-  "menu_fullscreen": {
-    "message": "Fullscreen"
+  "menu_settings": {
+    "message": "Settings"
   },
   "options_autologin": {
     "message": "Auto login"

@@ -97,44 +97,67 @@ pttchrome.App = function(onInitializedCallback) {
     self.mouse_over(e);
   }, false);
 
-  /*this.menuHandler = {};
-  chrome.contextMenus.onClicked.addListener(function(onClickData, tab) {
-    pttchrome.app.menuHandler[onClickData.menuItemId]();
-  });*/
+  window.onresize = function() {
+    self.onWindowResize();
+  };
 
-  this.view.fontResize();
-  this.view.updateCursorPos();
   this.dblclickTimer=null;
   this.mbTimer=null;
   this.timerEverySec=null;
-
+  this.onWindowResize();
   this.setupConnectionAlert();
-  this.pref = new PttChromePref(this, function() {
-    //self.resetMenuItems();
-    onInitializedCallback(self);
-  })
+  this.setupSideMenus();
+
+  this.pref = new PttChromePref(this, onInitializedCallback);
+  this.appConn = null;
+  // load the settings after the app connection is made
+  this.setupAppConnection(function() {
+    // call getStorage to trigger load setting
+    self.pref.getStorage();
+  });
 
 };
 
+pttchrome.App.prototype.setupAppConnection = function(callback) {
+  var self = this;
+  this.appConn = new lib.AppConnection({
+    host: self.telnetCore.host,
+    port: self.telnetCore.port,
+    onConnect: self.onConnect.bind(self),
+    onDisconnect: self.onTelnetDisconnected.bind(self),
+    onReceive: self.telnetCore.onDataAvailable.bind(self.telnetCore),
+    onSent: null,
+    onPasteDone: self.onPasteDone.bind(self),
+    onStorageDone: self.pref.onStorageDone.bind(self.pref)
+  });
+  this.appConn.connect(callback);
+}
+
 pttchrome.App.prototype.connect = function(url) {
-  dumpLog(DUMP_TYPE_LOG, "connect to " + url);
-  document.title = url;
-  var splits = url.split(/:/g);
+  var self = this;
   var port = 23;
+  var splits = url.split(/:/g);
+  document.title = url;
   if (splits.length == 2) {
     url = splits[0];
     port = parseInt(splits[1]);
   }
-  this.telnetCore.connect(url, port);
+  if (!this.appConn.isConnected) {
+    this.setupAppConnection(function() {
+      dumpLog(DUMP_TYPE_LOG, "connect to " + url);
+      self.telnetCore.connect(url, port);
+    });
+  } else {
+    dumpLog(DUMP_TYPE_LOG, "connect to " + url);
+    this.telnetCore.connect(url, port);
+  }
 };
 
-pttchrome.App.prototype.disconnect = function() {
-  this.telnetCore.listener = null;
-  this.telnetCore.disconnect();
-
-  this.view.blinkTimeout.cancel();
+pttchrome.App.prototype.onTelnetDisconnected = function() {
+  this.timerEverySec.cancel();
 
   this.cancelMbTimer();
+  this.onClose();
 };
 
 pttchrome.App.prototype.onConnect = function() {
@@ -142,9 +165,10 @@ pttchrome.App.prototype.onConnect = function() {
   this.connectState = 1;
   this.updateTabIcon('connect');
   this.idleTime = 0;
-  var _this = this;
+  var self = this;
   this.timerEverySec = setTimer(true, function() {
-    _this.antiIdle();
+    self.antiIdle();
+    self.view.onBlink();
   }, 1000);
 };
 
@@ -162,7 +186,6 @@ pttchrome.App.prototype.onClose = function() {
 
   $('#connectionAlert').show();
   this.updateTabIcon('disconnect');
-  this.timerEverySec.cancel();
 };
 
 pttchrome.App.prototype.sendData = function(str) {
@@ -232,27 +255,64 @@ pttchrome.App.prototype.setupConnectionAlert = function() {
   });
 };
 
-pttchrome.App.prototype.doSearchGoogle = function() {
-  var searchTerm = window.getSelection().toString();
-  window.open('http://google.com/search?q='+searchTerm);
+pttchrome.App.prototype.setupSideMenus = function() {
+  // i18n
+  $('#menu_paste span').text(i18n('menu_paste'));
+  $('#menu_selectAll span').text(i18n('menu_selectAll'));
+  $('#menu_mouseBrowsing span').text(i18n('menu_mouseBrowsing'));
+  $('#menu_settings span').text(i18n('menu_settings'));
+
+  // tie the methods up to the buttons
+  var self = this;
+  $('#menu_paste').click(function(e) {
+    self.doPaste();
+  });
+  $('#menu_selectAll').click(function(e) {
+    self.doSelectAll();
+  });
+  $('#menu_mouseBrowsing').click(function(e) {
+    self.switchMouseBrowsing();
+  });
+  $('#menu_settings').click(function(e) {
+    self.doSettings();
+  });
 };
 
 pttchrome.App.prototype.doPaste = function() {
-  if (this.pref && this.pref.modalShown)
+  var port = this.appConn.appPort;
+  if (!port)
     return;
+  
   this.pasting = true;
-  this.setInputAreaFocus();
-  document.execCommand("paste", false, null);
+  // Doing paste by having the launch.js read the clipboard data
+  // and then send the content on the onPasteDone
+  if (this.appConn.isConnected) {
+    port.postMessage({ action: 'paste' });
+  } else {
+    this.pasting = false;
+  }
+};
+
+pttchrome.App.prototype.onPasteDone = function(content) {
+  this.telnetCore.send(content);
   this.pasting = false;
 };
 
 pttchrome.App.prototype.doSelectAll = function() {
-  //var allspans = document.getElementById("main");
   window.getSelection().selectAllChildren(this.view.mainDisplay);
 };
 
-pttchrome.App.prototype.doPreferences = function() {
+pttchrome.App.prototype.doSettings = function() {
   $('#prefModal').modal('show');
+};
+
+pttchrome.App.prototype.onWindowResize = function() {
+  this.view.fontResize();
+  if (this.view.firstGrid.offsetLeft <= 100) {
+    $('#sideMenus').addClass('menuHidden');
+  } else {
+    $('#sideMenus').removeClass('menuHidden');
+  }
 };
 
 pttchrome.App.prototype.switchMouseBrowsing = function() {
@@ -277,7 +337,6 @@ pttchrome.App.prototype.switchMouseBrowsing = function() {
     this.view.redraw(true);
     this.view.updateCursorPos();
   }
-  //this.view.showAlertMessage(document.title, this.buf.useMouseBrowsing?this.getLM('mouseBrowseOn'):this.getLM('mouseBrowseOff'));
 };
 
 pttchrome.App.prototype.antiIdle = function() {
@@ -328,20 +387,6 @@ pttchrome.App.prototype.getWindowInnerBounds = function() {
     width: width,
     height: height
   };
-
-  /*var win = chrome.app.window.current();
-  var bounds = null;
-  if (win.isFullscreen())
-    bounds = chrome.app.window.current().outerBounds;
-  else {
-    bounds = chrome.app.window.current().innerBounds;
-    if (win.isMaximized()) {
-      bounds = {
-        width: bounds.width,
-        height: bounds.height - 14
-      };
-    }
-  }*/
   return bounds;
 };
 
@@ -725,15 +770,6 @@ pttchrome.App.prototype.mouse_down = function(e) {
         onbbsarea = false;
   } else if(e.button == 2) {
     this.mouseRightButtonDown = true;
-    //create context menu
-
-    // update context menu's fullscreen checkbox
-    /*if (chrome.app.window.current().isFullscreen()) {
-      chrome.contextMenus.update('fullscreen', { checked: true });
-    } else {
-      chrome.contextMenus.update('fullscreen', { checked: false });
-    }*/
-    //this.resetMenuItems();
   }
 };
 
@@ -768,9 +804,6 @@ pttchrome.App.prototype.mouse_up = function(e) {
           e.preventDefault();
       }
     } else { //something has be select
-      //document.getElementById('t').disabled="disabled"; //prevent input area get focus, if it get focus, select area will disappear
-      //pttchrome.app.clearHighlight(); don't do this
-      //document.getElementById('t').focus(); // if re-set focuse to input area, select area will disappear
     }
   } else {
     this.setInputAreaFocus();
@@ -819,58 +852,6 @@ pttchrome.App.prototype.mouse_move = function(e) {
       return;
     }
   }
-  //
-  if (e.target.className) {
-    if(e.target.className.indexOf("q") >= 0) {
-      if (this.view.enablePicturePreview 
-          && (this.view.ctrlPicturePreview==false || (this.view.ctrlPicturePreview && e.ctrlKey) ) ) {
-        //if (e.target.rel.toLowerCase() == "p")
-        var url = null;// = e.target.parentNode.getAttribute("href");
-        var hrel = null;// = e.target.parentNode.getAttribute("rel");
-        var node = e.target;
-        if (node.getAttribute("link") == 'true') {
-          while (node.parentNode && !url) {
-            node = node.parentNode;
-            url = node.getAttribute("href");
-            hrel = node.getAttribute("rel");
-          }
-        }
-        if (hrel && hrel.toLowerCase() == 'p'
-            && url.toLowerCase().indexOf("http://photo.xuite.net/") < 0
-            && url.toLowerCase().indexOf("http://simplest-image-hosting.net/") < 0
-            && url.toLowerCase().indexOf("http://screensnapr.com/") < 0) {
-
-          this.setPicLocation(e.clientX, e.clientY);
-          this.view.pictureWindow.style.display = "block";
-          if (this.CmdHandler.getAttribute('LastPicAddr') == url) {
-            //if(this.view.picturePreviewInfo)
-            //  this.view.pictureInfoLabel.style.display='inline';
-            //else
-            //  this.view.pictureInfoLabel.style.display='none';
-          } else {
-            this.view.picturePreview.innerHTML = "";
-            this.view.picturePreview.style.display = "none";
-            this.view.pictureInfoLabel.style.display = "none";
-            this.view.picLoadingImage.src="chrome://pttchrome/skin/state_icon/connecting.gif";
-            this.view.picturePreviewLoading.style.display = "block";
-            this.CmdHandler.setAttribute('LastPicAddr', url);
-            var image = document.createElement('img');
-            this.view.picturePreview.appendChild(image);
-            image.onload = function(){
-                pttchrome.app.prePicResize(this);
-            };
-            image.onerror = function(){
-                pttchrome.app.picLoaderror(this);
-            };
-            image.setAttribute('src',url);
-          }
-        }
-      }
-    } else {// if(e.target.tagName.toLowerCase() == "img")
-      //fix bug while no mouseout event to hide img
-      //this.view.pictureWindow.style.display = "none";
-    }
-  }//end of if(e.target.className)
 
   if (this.buf.useMouseBrowsing) {
     if (window.getSelection().isCollapsed) {
@@ -922,85 +903,3 @@ pttchrome.App.prototype.setBBSCmd = function(cmd, cmdhandler) {
   }
 };
 
-/*
-pttchrome.App.prototype.createMenu = function(title, func, parentId, id) {
-  var createProperties = { 
-    "title": title, 
-    "id": (id?id:title),
-    "contexts": ["page", "selection"]
-  };
-  if (func)
-    this.menuHandler[createProperties.id] = func;
-  if (parentId)
-    createProperties.parentId = parentId;
-
-  return chrome.contextMenus.create(createProperties, function() {});
-};
-
-pttchrome.App.prototype.resetMenuItems = function() {
-  var self = this;
-  chrome.contextMenus.removeAll();
-  this.menuHandler = {};
-  // create the contextMenu item
-  var popup_paste = this.createMenu(i18n("menu_paste"), function() {
-      pttchrome.app.doPaste();
-  }, null, 'paste');
-  var popup_selectAll = this.createMenu(i18n("menu_selAll"), function() {
-      pttchrome.app.doSelectAll();
-  }, null, 'selectall');
-
-  chrome.contextMenus.create({
-    type: 'separator',
-    title: '',
-    id: 'sep0',
-    contexts: ['page', 'selection']
-  });
-
-  this.menuHandler['searchGoogle'] = function() {
-    pttchrome.app.doSearchGoogle();
-  };
-  chrome.contextMenus.create({
-    title: i18n('menu_searchGoogle'),
-    id: 'searchGoogle',
-    contexts: ['selection']
-  });
-
-  this.menuHandler['fullscreen'] = function() {
-    var isFullscreened = chrome.app.window.current().isFullscreen();
-    if (isFullscreened) {
-      chrome.app.window.current().restore();
-    } else {
-      chrome.app.window.current().fullscreen();
-    }
-  };
-  chrome.contextMenus.create({
-    type: 'checkbox',
-    checked: chrome.app.window.current().isFullscreen(),
-    title: i18n('menu_fullscreen'),
-    id: 'fullscreen',
-    contexts: ['page', 'selection']
-  });
-
-  this.menuHandler['toggleMouseBrowsing'] = function() {
-    pttchrome.app.switchMouseBrowsing();
-  };
-  chrome.contextMenus.create({
-    type: 'checkbox',
-    checked: self.pref.get('useMouseBrowsing'),
-    title: i18n('menu_toggleMouseBrowsing'),
-    id: 'toggleMouseBrowsing',
-    contexts: ['page', 'selection']
-  });
-
-  chrome.contextMenus.create({
-    type: 'separator',
-    title: '',
-    id: 'sep1',
-    contexts: ['page', 'selection']
-  });
-
-  var popup_pref = this.createMenu(i18n("menu_pref"), function() {
-      pttchrome.app.doPreferences();
-  }, null, 'pref');
-};
-*/
