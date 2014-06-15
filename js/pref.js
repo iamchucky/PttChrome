@@ -143,7 +143,7 @@ PttChromePref.prototype = {
     }
     if (msg.data && msg.data.logins) {
       var data = msg.data.logins;
-      this.logins = [data['ptt.cc']['u'], data['ptt.cc']['p']];
+      this.logins = [data['u'], data['p']];
     }
     this.updateToApp();
     this.populateSettingsToUi();
@@ -159,7 +159,7 @@ PttChromePref.prototype = {
     if (this.app.appConn.isConnected) {
       this.app.appConn.appPort.postMessage({ action: 'storage', type: 'get', defaults: {
         values: DEFAULT_PREFS,
-        logins: {'ptt.cc': {'u':'', 'p':''}}
+        logins: {'u':'', 'p':''}
       } });
     }
   },
