@@ -26,17 +26,28 @@ lib.AppConnection = function(spec) {
 
 lib.AppConnection.prototype.checkChromeApp = function(callback) {
   var appId = this.appId;
+  var self = this;
   if (!chrome.runtime) {
-    console.log('app is not running or installed');
+    self.showJumbo();
     return;
   }
   chrome.runtime.sendMessage(appId, { action: 'status' }, function(response) {
     if (!response) {
-      console.log('app is not running or installed');
+      self.showJumbo();
     } else {
       callback();
     }
   });
+};
+
+lib.AppConnection.prototype.showJumbo = function() {
+  $('#getAppBtn').off();
+  $('#getAppBtn').click(function() {
+    chrome.webstore.install();
+  });
+  console.log('app is not running or installed');
+  $('#getAppBtn').text(i18n('getAppBtn'));
+  $('#welcomeJumbo').show();
 };
 
 lib.AppConnection.prototype.connect = function(callback) {

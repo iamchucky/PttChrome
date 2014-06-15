@@ -14,5 +14,6 @@ function setupI18n(callback) {
     lang = 'en-US';
   }
   lang = lang.replace('-', '_');
+  lang = 'zh_TW';
   i18n_val = locale[lang];
 }

@@ -501,5 +501,8 @@
   },
   "alert_connectionExitAll": {
     "message": "離開"
+  },
+  "getAppBtn": {
+    "message": "來去Chrome線上應用程式商店下載PttChrome"
   }
 }

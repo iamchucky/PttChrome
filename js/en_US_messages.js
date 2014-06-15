@@ -501,5 +501,8 @@ locale.en_US = {
   },
   "alert_connectionExitAll": {
     "message": "Quit"
+  },
+  "getAppBtn": {
+    "message": "Get PttChrome from chrome web store"
   }
 }

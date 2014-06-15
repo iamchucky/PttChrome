@@ -3,6 +3,63 @@
   src: url('../fonts/symmingliu.woff');
 }
 
+#welcomeJumbo {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  display: none;
+
+  background-image: -webkit-radial-gradient(center center, circle cover, #352e24, #1a160d);
+}
+
+#welcomeBanner {
+  position: fixed;
+  margin-top: 100px;
+  left: 50%;
+  margin-left: -506px;
+  width: 1012px;
+  height: 512px;
+
+  font-family: "微軟正黑體", "Microsoft JhengHei", Tahoma , Verdana , Arial , sans-serif;
+}
+
+#welcomeBanner h1 {
+  font-weight: 900;
+  font-size: 150px;
+  margin-top: 90px;
+  margin-right: 50px;
+  float: left;
+}
+
+#welcomeBannerPtt {
+  display: inline-block;
+  float: left;
+  font-size: 130px;
+  font-weight: 900;
+  margin-top: -30px;
+}
+#welcomeBannerChrome {
+  display: inline-block;
+  float: left;
+  font-size: 120px;
+  width: 350px;
+  margin-top: -20px;
+  margin-left: -70px;
+  -webkit-transform: scaleX(0.58);
+}
+
+#bigLogo {
+  width: 512px;
+  height: 512px;
+  float: left;
+  background-image: url('../icon_512.png');
+}
+
+#getAppBtn {
+  width: 450px;
+  font-weight: 900;
+}
+
 #sideMenus {
   position: fixed;
   width: 90px;

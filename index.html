@@ -7,6 +7,8 @@
     <link rel="stylesheet" type="text/css" href="css/main.css" />
     <link rel="stylesheet" type="text/css" href="css/color.css" />
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/hhnlfapopmaimdlldbknjdgekpgffmbo">
     
     <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
@@ -29,7 +31,7 @@
   </head>
 
   <body>
-    <div id="sideMenus" class="menu">
+    <div id="sideMenus" class="menu" style="display:none">
       <!--<a href="//iamchucky.github.io/PttChrome/" target="_self"><div id="logo"></div></a>-->
       <!--<div id="menu_sites" class="font_btn"><i class="fa fa-globe fa-2x"></i><br/><span></span></div>-->
       <div id="menu_paste" class="font_btn"><i class="fa fa-clipboard fa-2x"></i><br/><span></span></div>
@@ -37,7 +39,7 @@
       <div id="menu_mouseBrowsing" class="font_btn"><i class="fa fa-magic fa-2x"></i><br/><span></span></div>
       <div id="menu_settings" class="font_btn"><i class="fa fa-cog fa-2x"></i><br/><span></span></div>
     </div>
-    <div id="BBSWindow">
+    <div id="BBSWindow" style="display:none">
       <input id="t" type="text" style="box-sizing:content-box; color:initial; border: none; width: 200px; height: 24px; position:absolute; left:-10000px; top:0px; z-index:2;resize: none;" autofocus/>
       <div id="cursor" class="terminal_display">_</div>
     </div> <!--BBSWindow end-->
@@ -97,6 +99,16 @@
         <button id="connectionAlertExitAll" type"button" class="btn btn-danger"></button>
         <button id="connectionAlertReconnect" type"button" class="btn btn-default"></button>
       </p>
+    </div>
+    <div id="welcomeJumbo">
+      <div id="welcomeBanner">
+        <div id="bigLogo"></div>
+        <h1>踢踢控</h1>
+        <br/>
+        <h2 id="welcomeBannerPtt">Ptt</h2><h2 id="welcomeBannerChrome">Chrome</h2>
+        <br/>
+        <div id="getAppBtn" class="btn btn-default btn-lg">Get PttChrome from chrome web store</div>
+      </div>
     </div>
   </body>
 </html>

@@ -3,6 +3,9 @@
   pttchrome.app = new pttchrome.App(function(app) {
     app.setInputAreaFocus();
     app.connect('ptt.cc');
+    $('#BBSWindow').show();
+    $('#sideMenus').show();
+    app.onWindowResize();
   });
 });
 
