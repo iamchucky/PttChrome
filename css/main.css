@@ -130,7 +130,7 @@
   margin-bottom:0px;
   -webkit-user-select: text;
   background-color: black;
-  box-shadow: 0 0 60px 50px black;
+  //box-shadow: 0 0 60px 50px black;
 }
 
 .linkurl {
@@ -175,7 +175,8 @@ img {
 
 body {
   color: white;
-  background-color: #101010;
+  //background-color: #101010;
+  background-color: black;
   margin: 0px;
   overflow:hidden;
 }
