@@ -9,8 +9,6 @@
     "128": "icon_128.png"
   },
   
-  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgQ9pfjogWlGAdV3PixkqW9CSrHgVQlU0gm7yeafq/YiOnCEjkT1QZi1r76fzBSHrUqHXvWKTvHC1k1ARWVgaqEyklK+BFcbObhKJteFUyPJZKLz40AnTtY6PN/jMYUrsx1o4vXLiBsXhTbeFineXd9zzILo10XLxZPJ4k32QqTBPI2JYS4YznoG2tMQHcxXYr+RD49Na5FimkO8LKmck4nLaHNCqkR4WhrE1h/xkCzaKRRiMVo5c+eqhiSPRUiakvVrfUCUHs2AXbHkZOy0/YuWgJMFwT/O+RPLageo+xzL4FTMnXQC4Y62GiAAV4931AAU/I+zir1F1TTMOW8A0IwIDAQAB",
-  
   "default_locale": "en_US",
 
   "minimum_chrome_version": "24.0",
@@ -27,7 +25,6 @@
   "permissions": [
     "clipboardRead",
     "clipboardWrite",
-    "contextMenus",
     "notifications",
     "unlimitedStorage",
     {"socket": [
@@ -37,7 +34,6 @@
       "retainEntries",
       "directory"
     ]},
-    "storage",
-    "fullscreen"
+    "storage"
   ]
 }
