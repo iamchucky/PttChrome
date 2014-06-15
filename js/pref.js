@@ -157,7 +157,10 @@ PttChromePref.prototype = {
 
   getStorage: function(key) {
     if (this.app.appConn.isConnected) {
-      this.app.appConn.appPort.postMessage({ action: 'storage', type: 'get' });
+      this.app.appConn.appPort.postMessage({ action: 'storage', type: 'get', defaults: {
+        values: DEFAULT_PREFS,
+        logins: {'ptt.cc': {'u':'', 'p':''}}
+      } });
     }
   },
 
