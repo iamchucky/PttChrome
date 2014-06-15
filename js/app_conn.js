@@ -41,9 +41,12 @@ lib.AppConnection.prototype.checkChromeApp = function(callback) {
 };
 
 lib.AppConnection.prototype.showJumbo = function() {
+  var self = this;
   $('#getAppBtn').off();
   $('#getAppBtn').click(function() {
-    chrome.webstore.install();
+    // turn it on when it works
+    // chrome.webstore.install();
+    window.open('https://chrome.google.com/webstore/detail/pttchrome/'+self.appId, '_self');
   });
   console.log('app is not running or installed');
   $('#getAppBtn').text(i18n('getAppBtn'));
