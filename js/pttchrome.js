@@ -6,6 +6,7 @@ pttchrome.App = function(onInitializedCallback) {
 
   this.CmdHandler = document.getElementById('cmdHandler');
   this.CmdHandler.setAttribute('useMouseBrowsing', '1');
+  this.CmdHandler.setAttribute('doDOMMouseScroll','0');
   //this.CmdHandler.setAttribute('useMouseUpDown', '0');
   //this.CmdHandler.setAttribute('useMouseSwitchPage', '0');
   //this.CmdHandler.setAttribute("useMouseReadThread", '0');
@@ -95,6 +96,14 @@ pttchrome.App = function(onInitializedCallback) {
 
   document.addEventListener('mouseover', function(e) {
     self.mouse_over(e);
+  }, false);
+
+  document.addEventListener('mousewheel', function(e) {
+    self.mouse_scroll(e);
+  }, true);
+
+  window.addEventListener('contextmenu', function(e) {
+    self.context_menu(e);
   }, false);
 
   window.onresize = function() {
@@ -867,6 +876,54 @@ pttchrome.App.prototype.mouse_over = function(e) {
     return;
   if(window.getSelection().isCollapsed && !this.mouseLeftButtonDown)
     this.setInputAreaFocus();
+};
+
+pttchrome.App.prototype.mouse_scroll = function(e) {
+  var cmdhandler = this.CmdHandler;
+
+  // scroll = up/down
+  // hold right mouse key + scroll = page up/down
+  // hold left mouse key + scroll = thread prev/next
+
+  if (e.wheelDelta > 0) { // scrolling up
+    if (this.mouseRightButtonDown) {
+      this.setBBSCmd('doPageUp', cmdhandler);
+    } else if (this.mouseLeftButtonDown) {
+      this.setBBSCmd('prevousThread', cmdhandler);
+      this.setBBSCmd('cancelHoldMouse', cmdhandler);
+    } else {
+      this.setBBSCmd('doArrowUp', cmdhandler);
+    }
+  } else { // scrolling down
+    if (this.mouseRightButtonDown) {
+      this.setBBSCmd('doPageDown', cmdhandler);
+    } else if (this.mouseLeftButtonDown) {
+      this.setBBSCmd('nextThread', cmdhandler);
+      this.setBBSCmd('cancelHoldMouse', cmdhandler);
+    } else {
+      this.setBBSCmd('doArrowDown', cmdhandler);
+    }
+  }
+  e.stopPropagation();
+  e.preventDefault();
+
+  if (this.mouseRightButtonDown) //prevent context menu popup
+    cmdhandler.setAttribute('doDOMMouseScroll','1');
+  if (this.mouseLeftButtonDown) {
+    if (this.buf.useMouseBrowsing) {
+      cmdhandler.setAttribute('SkipMouseClick','1');
+    }
+  }
+};
+
+pttchrome.App.prototype.context_menu = function(e) {
+  var cmdhandler = this.CmdHandler;
+  var doDOMMouseScroll = (cmdhandler.getAttribute('doDOMMouseScroll')=='1');
+  if (doDOMMouseScroll) {
+    e.stopPropagation();
+    e.preventDefault();
+    cmdhandler.setAttribute('doDOMMouseScroll','0');
+  }
 };
 
 pttchrome.App.prototype.window_beforeunload = function(e) {
