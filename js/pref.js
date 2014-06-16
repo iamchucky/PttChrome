@@ -93,7 +93,6 @@ PttChromePref.prototype = {
         for (var i in self.values) {
           if (i === 'mouseBrowsingHighlightColor') {
             var selectedVal = $('#opt_'+i+' select').val();
-            console.log(selectedVal);
             self.values[i] = parseInt(selectedVal);
             continue;
           }

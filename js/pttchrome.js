@@ -275,15 +275,19 @@ pttchrome.App.prototype.setupSideMenus = function() {
   var self = this;
   $('#menu_paste').click(function(e) {
     self.doPaste();
+    e.stopPropagation();
   });
   $('#menu_selectAll').click(function(e) {
     self.doSelectAll();
+    e.stopPropagation();
   });
   $('#menu_mouseBrowsing').click(function(e) {
     self.switchMouseBrowsing();
+    e.stopPropagation();
   });
   $('#menu_settings').click(function(e) {
     self.doSettings();
+    e.stopPropagation();
   });
 };
 
