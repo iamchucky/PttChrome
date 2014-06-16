@@ -105,14 +105,19 @@ function TermView(rowCount) {
       self.bbscore.setInputAreaFocus();
     }, false);
 
-    //addEventListener('keypress', key_press, true);
     addEventListener('keydown', function(e) {
-      //self.bbscore.setInputAreaFocus();
       if(e.keyCode > 15 && e.keyCode < 19)
         return; // Shift Ctrl Alt (19)
       if (self.bbscore.pref && self.bbscore.pref.modalShown)
         return;
-      self.onkeyPress(e);
+      self.onkeyDown(e);
+    }, false);
+
+    addEventListener('keyup', function(e) {
+      if(e.keyCode > 15 && e.keyCode < 19)
+        return; // Shift Ctrl Alt (19)
+      if (self.bbscore.pref && self.bbscore.pref.modalShown)
+        return;
       // set input area focus whenever key down even if there is selection
       self.bbscore.setInputAreaFocus();
     }, false);
@@ -651,7 +656,7 @@ TermView.prototype = {
         this.conn.convSend(text);
     },
 
-    onkeyPress: function(e) {
+    onkeyDown: function(e) {
         // dump('onKeyPress:'+e.charCode + ', '+e.keyCode+'\n');
         var conn = this.conn;
 
