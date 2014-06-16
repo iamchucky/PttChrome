@@ -9,6 +9,7 @@ var DEFAULT_PREFS = {
   // mouse browsing
   useMouseBrowsing  : false,
   mouseBrowsingHighlight : true,
+  mouseBrowsingHighlightColor: 2,
 
   // displays
   fontFace      : 'MingLiu,monospace',

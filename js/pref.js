@@ -1,5 +1,5 @@
 function PttChromePref(app, onInitializedCallback) {
-  this.values = null;
+  this.values = {};
   this.logins = null;
   this.app = app;
   this.modalShown = false;
@@ -13,6 +13,7 @@ function PttChromePref(app, onInitializedCallback) {
 PttChromePref.prototype = {
 
   updateSettingsToUi: function() {
+    var self = this;
     for (var i in PREFS_CATEGORIES) {
       var cat = PREFS_CATEGORIES[i];
       $('#opt_'+cat).text(i18n('options_'+cat));
@@ -20,6 +21,27 @@ PttChromePref.prototype = {
     for (var i in this.values) {
       $('#opt_'+i).empty();
       var val = this.values[i];
+      
+      // for the color selection box
+      if (i === 'mouseBrowsingHighlightColor') {
+        var qName = '#opt_'+i;
+        var htmlStr = '<select class="form-control">';
+        for (var n = 1; n < 16; ++n) {
+          htmlStr += '<option value="'+n+'" class="q'+n+'b'+n+'"></option>';
+        }
+        htmlStr += '</select>';
+        $(qName).html(htmlStr);
+        $(qName+' select').val(val);
+        var bg = $(qName+' .q'+val+'b'+val).css('background-color');
+        $(qName+' select').css('background-color', bg);
+        $(qName+' select').on('change', function(e) {
+          var val = $(qName+' select').val();
+          var bg = $(qName+' .q'+val+'b'+val).css('background-color');
+          $(qName+' select').css('background-color', bg);
+        });
+        continue;
+      }
+
       switch(typeof(val)) {
         case 'number':
         case 'string':
@@ -69,6 +91,13 @@ PttChromePref.prototype = {
         self.shouldResetToDefault = false;
       } else {
         for (var i in self.values) {
+          if (i === 'mouseBrowsingHighlightColor') {
+            var selectedVal = $('#opt_'+i+' select').val();
+            console.log(selectedVal);
+            self.values[i] = parseInt(selectedVal);
+            continue;
+          }
+
           var elem = $('#opt_'+i+' input');
           var type = typeof(self.values[i]);
           switch(type) {
@@ -139,7 +168,14 @@ PttChromePref.prototype = {
 
   onStorageDone: function(msg) {
     if (msg.data && msg.data.values) {
-      this.values = JSON.parse(JSON.stringify(msg.data.values));
+      // iterate through default prefs to make sure all up to date
+      for (var i in DEFAULT_PREFS) {
+        if (!(i in msg.data.values)) {
+          this.values[i] = DEFAULT_PREFS[i];
+        } else {
+          this.values[i] = msg.data.values[i];
+        }
+      }
     }
     if (msg.data && msg.data.logins) {
       var data = msg.data.logins;

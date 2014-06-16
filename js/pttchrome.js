@@ -668,6 +668,11 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
       this.view.redraw(true);
       this.view.updateCursorPos();
       break;
+    case 'mouseBrowsingHighlightColor':
+      this.view.highlightBG = pref.get(name);
+      this.view.redraw(true);
+      this.view.updateCursorPos();
+      break;
     case 'closeQuery':
       if (pref.get(name))
         this.regExitAlert();
