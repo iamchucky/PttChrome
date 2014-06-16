@@ -22,6 +22,9 @@ locale.en_US = {
   "menu_settings": {
     "message": "Settings"
   },
+  "menu_hide": {
+    "message": "Hide menu"
+  },
   "options_autologin": {
     "message": "Auto login"
   },

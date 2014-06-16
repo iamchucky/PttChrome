@@ -19,6 +19,9 @@
   "menu_settings": {
     "message": "設定"
   },
+  "menu_hide": {
+    "message": "隱藏選單"
+  },
   "menu_mouseBrowsing": {
     "message": "滑鼠瀏覽"
   },

@@ -270,6 +270,7 @@ pttchrome.App.prototype.setupSideMenus = function() {
   $('#menu_selectAll span').text(i18n('menu_selectAll'));
   $('#menu_mouseBrowsing span').text(i18n('menu_mouseBrowsing'));
   $('#menu_settings span').text(i18n('menu_settings'));
+  $('#menu_hide span').text(i18n('menu_hide'));
 
   // tie the methods up to the buttons
   var self = this;
@@ -287,6 +288,10 @@ pttchrome.App.prototype.setupSideMenus = function() {
   });
   $('#menu_settings').click(function(e) {
     self.doSettings();
+    e.stopPropagation();
+  });
+  $('#menu_hide').click(function(e) {
+    $('#sideMenus').addClass('menuHidden');
     e.stopPropagation();
   });
 };
