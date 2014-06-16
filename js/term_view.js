@@ -648,7 +648,7 @@ TermView.prototype = {
             //text = text.replace(/\x1b/g, UnEscapeStr(this.telnetCore.EscChar));
       //text = text.replace(/\r/g, this.EnterChar);
         }
-        this.conn.convSend(text, this.charset);
+        this.conn.convSend(text);
     },
 
     onkeyPress: function(e) {

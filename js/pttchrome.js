@@ -190,7 +190,7 @@ pttchrome.App.prototype.onClose = function() {
 
 pttchrome.App.prototype.sendData = function(str) {
   if (this.connectState == 1)
-    this.telnetCore.convSend(str, this.view.charset);
+    this.telnetCore.convSend(str);
 };
 
 pttchrome.App.prototype.sendCmdData = function(str) {
@@ -294,7 +294,7 @@ pttchrome.App.prototype.doPaste = function() {
 };
 
 pttchrome.App.prototype.onPasteDone = function(content) {
-  this.telnetCore.send(content);
+  this.telnetCore.convSend(content);
   this.pasting = false;
 };
 
