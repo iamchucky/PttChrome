@@ -1,0 +1,212 @@
+@font-face {
+  font-family: "symmingliu";
+  src: url('../fonts/symmingliu.woff');
+}
+
+#BBSWindow {
+  position:absolute;
+  width:0px;
+  height:0px;
+  top:0px;
+  left:0px;
+  overflow:hidden;
+  z-index:1;
+}
+
+.main {
+  font-family: MingLiu, monospace;
+  font-size: 26px;
+  line-height: 100%;
+  margin-top:0px;
+  margin-left:0px;
+  margin-right:0px;
+  margin-bottom:0px;
+  -webkit-user-select: text;
+}
+
+.linkurl
+{
+  text-decoration:underline;
+  color:#FF00FF;
+}
+
+a
+{
+  background-image:url(../icon/http.bmp);
+  background-repeat: repeat-x;
+  background-position: 0% 90%;
+  text-decoration:none;
+}
+
+a:link,a:visited,a:active,a:hover
+{
+  background-position: 0% 90%;
+  text-decoration:none;
+}
+
+.main > span {
+  display:inline;
+  color:#C0C0C0;
+  white-space: pre;
+}
+
+.terminal_display {
+        font-family : MingLiu, monospace;
+        font-size    : 26px;
+        line-height:26px;
+        white-space: pre;
+        cursor: text;
+        position: absolute;
+        color: #FFFFFF;
+        text-decoration: blink;
+}
+
+img{background:white; color:black; padding:5px 5px;}
+body{zoom:reset;color: white;background-color: #000000;margin: 0px;overflow:hidden;}
+span [link="true"]{margin: 0px; background-image: inherit; background-repeat: inherit; background-position: inherit;}
+span{margin: 0px;}
+.drag{display: none; position: absolute; cursor: default; z-Index: 11;}
+
+.closeSI {
+  float: right;
+  margin-top:0px;
+  margin-left:0px;
+  margin-right:0px;
+  margin-bottom:0px;
+  border: 0px;
+  padding: 1px 1px;
+  background-color: #bbbbff;
+  cursor: default;
+}
+
+.EPbtn {
+  margin-top:0px;
+  margin-left:0px;
+  margin-right:0px;
+  margin-bottom:0px;
+  border: 0px;
+  padding: 1px 1px;
+  background-color: #ffbbbb;
+  cursor: default;
+}
+
+.closePP {
+  margin-top:0px;
+  margin-left:0px;
+  margin-right:0px;
+  margin-bottom:0px;
+  border: 0px;
+  padding: 1px 1px;
+  background-color: #bbffbb;
+  cursor: default;
+}
+
+#PicturePreviewInfo{
+  color : #fff;
+  text-shadow: 0 0 1px #fff,0 0 2px #fff,0 0 3px #fff,0 0 4px #0000ff,0 0 7px #0000ff,0 0 8px #0000ff,0 0 10px #0000ff,0 0 15px #0000ff;
+}
+
+#SymbolInput {
+  left: 10px;
+  top: 10px;
+  z-index: 3;
+  background-color: #bbbbff;
+  opacity: 0.75;
+  padding: 3px 3px 3px 3px;
+  border:0px double #cccccc;
+  -moz-border-radius:8px;
+  cursor: default;
+}
+
+#YoutubeWindow, #YoutubeWindow2 {
+  left: 10px;
+  top: 10px;
+  z-index: 3;
+  background-color: #ffbbbb;
+  padding: 3px 3px 3px 3px;
+  border:0px double #cccccc;
+  -moz-border-radius:8px;
+  cursor: default;
+}
+
+#PictureWindow {
+  left: 10px;
+  top: 10px;
+  z-index: 3;
+  background-color: #ffffff;
+  padding: 3px 3px 3px 3px;
+  border:0px double #cccccc;
+  -moz-border-radius:8px;
+  cursor: default;
+}
+
+.floatWindowClientArea {
+  background-color: #ffffff;
+  margin-top:22px;
+  margin-left:3px;
+  margin-right:3px;
+  margin-bottom:3px;
+  border: 1px solid #000000;
+  cursor: default;
+}
+
+.floatWindowClientArea2 {
+  background-color: #ffbbbb;
+  margin-top:22px;
+  margin-left:3px;
+  margin-right:3px;
+  margin-bottom:0px;
+  border: 0px solid #000000;
+  cursor: default;
+}
+
+.floatWindowClientArea3 {
+  background-color: #ffbbbb;
+  margin-top:0px;
+  margin-left:3px;
+  margin-right:3px;
+  margin-bottom:3px;
+  border: 0px solid #000000;
+  cursor: default;
+}
+
+.floatWindowClientArea4 {
+  background-color: #ffffff;
+  margin: 0px;
+  padding: 0px;
+  border: 0px solid #000000;
+  cursor: default;
+  position: relative;
+}
+
+.floatWindowClientArea5 {
+  background-color: #bbffbb;
+  margin: 0px;
+  padding: 0px;
+  border: 0px solid #000000;
+  cursor: default;
+}
+
+.picturePreview {background:white; color:black; padding:0px;margin: 0px;}
+
+.sBtn{
+  font-family: MingLiu, monospace;
+  font-size: 12px;
+  cursor: default;
+  min-width: 26px;
+  margin-top:2px;
+  margin-left:2px;
+  margin-right:2px;
+  margin-bottom:2px;
+}
+
+#connectionAlert {
+  display: none;
+  margin-top: 15px;
+  position: relative;
+  z-index: 2;
+
+  width: 400px;
+  left: 50%;
+  margin-left: -200px;
+}
