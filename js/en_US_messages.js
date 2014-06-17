@@ -40,6 +40,9 @@ locale.en_US = {
   "autologin_warning": {
     "message": "Login info is not encrypted, DO NOT use on a public machine"
   },
+  "options_openInPackagedApp": {
+    "message": "Launch PttChrome in packaged app."
+  },
   "options_preferences": {
     "message": "Preferences"
   },

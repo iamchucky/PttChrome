@@ -4,6 +4,7 @@ var DEFAULT_PREFS = {
   // general
   //closeQuery    : false,
   //dbcsDetect    : false,
+  openInPackagedApp: false,
   antiIdleTime  : 0,
 
   // mouse browsing
