@@ -1151,7 +1151,7 @@ TermBuf.prototype={
         }
       }
 
-      if ( this.useMouseBrowsing && this.view.bbscore.pref && !this.view.bbscore.pref.modalShown )
+      if ( this.useMouseBrowsing && !this.view.bbscore.modalShown )
       {
         switch( this.PageState )
         {

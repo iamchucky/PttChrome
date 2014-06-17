@@ -10,6 +10,9 @@
   "menu_coloredCopy": {
     "message": "複製(包含ANSI彩色)"
   },
+  "menu_goToOtherSite": {
+    "message": "其他站台"
+  },
   "menu_paste": {
     "message": "貼上"
   },
@@ -507,5 +510,8 @@
   },
   "getAppBtn": {
     "message": "來去Chrome線上應用程式商店下載PttChrome"
+  },
+  "input_sitePlaceholder": {
+    "message": "在此輸入站台地址後按 ENTER"
   }
 }

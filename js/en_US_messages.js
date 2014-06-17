@@ -10,6 +10,9 @@ locale.en_US = {
   "menu_coloredCopy": {
     "message": "Copy with ANSI color"
   },
+  "menu_goToOtherSite": {
+    "message": "Other site"
+  },
   "menu_paste": {
     "message": "Paste"
   },
@@ -507,5 +510,9 @@ locale.en_US = {
   },
   "getAppBtn": {
     "message": "Get PttChrome from chrome web store"
+  },
+  "input_sitePlaceholder": {
+    "message": "input URL here and then press ENTER"
   }
+
 }

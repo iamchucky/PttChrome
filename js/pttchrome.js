@@ -72,6 +72,7 @@ pttchrome.App = function(onInitializedCallback) {
 
   this.inputAreaFocusTimer = null;
   this.alertBeforeUnload = false;
+  this.modalShown = false;
 
   var self = this;
   this.CmdHandler.addEventListener("OverlayCommand", function(e) {
@@ -115,6 +116,7 @@ pttchrome.App = function(onInitializedCallback) {
   this.timerEverySec=null;
   this.onWindowResize();
   this.setupConnectionAlert();
+  this.setupOtherSiteInput();
   this.setupSideMenus();
 
   this.pref = new PttChromePref(this, onInitializedCallback);
@@ -133,7 +135,7 @@ pttchrome.App.prototype.setupAppConnection = function(callback) {
     host: self.telnetCore.host,
     port: self.telnetCore.port,
     onConnect: self.onConnect.bind(self),
-    onDisconnect: self.onTelnetDisconnected.bind(self),
+    onDisconnect: self.onClose.bind(self),
     onReceive: self.telnetCore.onDataAvailable.bind(self.telnetCore),
     onSent: null,
     onPasteDone: self.onPasteDone.bind(self),
@@ -162,13 +164,6 @@ pttchrome.App.prototype.connect = function(url) {
   }
 };
 
-pttchrome.App.prototype.onTelnetDisconnected = function() {
-  this.timerEverySec.cancel();
-
-  this.cancelMbTimer();
-  this.onClose();
-};
-
 pttchrome.App.prototype.onConnect = function() {
   dumpLog(DUMP_TYPE_LOG, "pttchrome onConnect");
   this.connectState = 1;
@@ -188,6 +183,9 @@ pttchrome.App.prototype.onData = function(data) {
 
 pttchrome.App.prototype.onClose = function() {
   dumpLog(DUMP_TYPE_LOG, "pttchrome onClose");
+  this.timerEverySec.cancel();
+
+  this.cancelMbTimer();
   this.unregExitAlert();
 
   this.connectState = 2;
@@ -264,8 +262,36 @@ pttchrome.App.prototype.setupConnectionAlert = function() {
   });
 };
 
+pttchrome.App.prototype.setupOtherSiteInput = function() {
+  var self = this;
+  $('#siteModal input').attr('placeholder', i18n('input_sitePlaceholder'));
+  $('#siteModal input').keyup(function(e) {
+    if (e.keyCode == 13) {
+      var url = $(this).val();
+      if (self.appConn && self.appConn.isConnected) {
+        self.appConn.disconnect();
+        self.onClose();
+      }
+      self.connect(url);
+      $('#siteModal').modal('hide');
+    }
+  });
+  $('#siteModal').on('shown.bs.modal', function(e) {
+    $('#connectionAlert').hide();
+    self.modalShown = true;
+    $('#siteModal input').val('');
+    $('#siteModal input').focus();
+  });
+  $('#siteModal').on('hidden.bs.modal', function(e) {
+    $('#connectionAlert').hide();
+    self.modalShown = false;
+  });
+
+};
+
 pttchrome.App.prototype.setupSideMenus = function() {
   // i18n
+  $('#menu_goToOtherSite span').text(i18n('menu_goToOtherSite'));
   $('#menu_paste span').text(i18n('menu_paste'));
   $('#menu_selectAll span').text(i18n('menu_selectAll'));
   $('#menu_mouseBrowsing span').text(i18n('menu_mouseBrowsing'));
@@ -274,6 +300,10 @@ pttchrome.App.prototype.setupSideMenus = function() {
 
   // tie the methods up to the buttons
   var self = this;
+  $('#menu_goToOtherSite').click(function(e) {
+    self.doGoToOtherSite();
+    e.stopPropagation();
+  });
   $('#menu_paste').click(function(e) {
     self.doPaste();
     e.stopPropagation();
@@ -318,6 +348,10 @@ pttchrome.App.prototype.onPasteDone = function(content) {
 
 pttchrome.App.prototype.doSelectAll = function() {
   window.getSelection().selectAllChildren(this.view.mainDisplay);
+};
+
+pttchrome.App.prototype.doGoToOtherSite = function() {
+  $('#siteModal').modal('show');
 };
 
 pttchrome.App.prototype.doSettings = function() {
@@ -718,7 +752,7 @@ pttchrome.App.prototype.checkClass = function(cn) {
 };
 
 pttchrome.App.prototype.mouse_click = function(e) {
-  if (this.pref && this.pref.modalShown)
+  if (this.modalShown)
     return;
   var skipMouseClick = (this.CmdHandler.getAttribute('SkipMouseClick') == '1');
   this.CmdHandler.setAttribute('SkipMouseClick','0');
@@ -767,7 +801,7 @@ pttchrome.App.prototype.mouse_click = function(e) {
 };
 
 pttchrome.App.prototype.mouse_down = function(e) {
-  if (this.pref && this.pref.modalShown)
+  if (this.modalShown)
     return;
   //0=left button, 1=middle button, 2=right button
   if (e.button == 0) {
@@ -797,7 +831,7 @@ pttchrome.App.prototype.mouse_down = function(e) {
 };
 
 pttchrome.App.prototype.mouse_up = function(e) {
-  if (this.pref && this.pref.modalShown)
+  if (this.modalShown)
     return;
   //0=left button, 1=middle button, 2=right button
   if (e.button == 0) {
@@ -836,7 +870,7 @@ pttchrome.App.prototype.mouse_up = function(e) {
   this.inputAreaFocusTimer = setTimer(false, function() {
     clearTimeout(_this.inputAreaFocusTimer);
     _this.inputAreaFocusTimer = null;
-    if (this.pref && this.pref.modalShown)
+    if (this.modalShown)
       return;
     if (window.getSelection().isCollapsed)
       _this.setInputAreaFocus();
@@ -886,7 +920,7 @@ pttchrome.App.prototype.mouse_move = function(e) {
 };
 
 pttchrome.App.prototype.mouse_over = function(e) {
-  if (this.pref && this.pref.modalShown)
+  if (this.modalShown)
     return;
   if(window.getSelection().isCollapsed && !this.mouseLeftButtonDown)
     this.setInputAreaFocus();

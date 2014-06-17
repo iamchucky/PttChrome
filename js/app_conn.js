@@ -122,7 +122,6 @@ lib.AppConnection.prototype.disconnect = function() {
       this.appPort.postMessage({ action: 'disconnect' });
     } catch (e) {
     }
-    this.appPort = null;
   }
   this.isConnected = false;
 };
