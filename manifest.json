@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "PttChrome",
-  "version": "0.0.6",
+  "version": "0.0.7",
 
   "description": "PttChrome provides telnet connections to ptt.cc.",
   "icons": {
