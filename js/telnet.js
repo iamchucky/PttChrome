@@ -40,6 +40,9 @@ const STATE_SB=6;
 function TelnetCore(app) {
   this.app = app;
 
+  this.host = 'ptt.cc';
+  this.port = 23;
+
   this.state = STATE_DATA;
   this.iac_sb = '';
   //this.b52k3uao = window.uaotable;
@@ -56,6 +59,11 @@ function TelnetCore(app) {
 }
 
 TelnetCore.prototype.connect = function(host, port) {
+  if (host) {
+    this.host = host;
+    this.port = port;
+  }
+
   // Check AutoLogin Stage
   //this.app.loadLoginData(); //load login data
   if(this.loginStr[1])
@@ -66,7 +74,7 @@ TelnetCore.prototype.connect = function(host, port) {
     this.autoLoginStage = 0;
 
   //this.initialAutoLogin();
-  this.app.appConn.connectTelnet(host, port);
+  this.app.appConn.connectTelnet(this.host, this.port);
 };
 
 TelnetCore.prototype.onDataAvailable = function(str) {
@@ -201,11 +209,13 @@ TelnetCore.prototype.checkAutoLogin = function(row) {
   if (line.indexOf(this.loginPrompt[this.autoLoginStage - 1]) < 0)
     return;
 
-  var unicode_str = this.loginStr[this.autoLoginStage-1] + this.app.view.EnterChar;
-  this.send(this.convSend(unicode_str));
+  if (this.host == 'ptt.cc') {
+    var unicode_str = this.loginStr[this.autoLoginStage-1] + this.app.view.EnterChar;
+    this.send(this.convSend(unicode_str));
+  }
 
   if (this.autoLoginStage == 3) {
-    if (this.loginStr[3])
+    if (this.loginStr[3] && this.host == 'ptt.cc')
       this.send(this.convSend(this.loginStr[3]));
     this.autoLoginStage = 0;
     return;
