@@ -109,7 +109,7 @@ function TermView(rowCount) {
       //self.bbscore.setInputAreaFocus();
       if(e.keyCode > 15 && e.keyCode < 19)
         return; // Shift Ctrl Alt (19)
-      if (self.bbscore.pref && self.bbscore.pref.modalShown)
+      if (self.bbscore.modalShown)
         return;
       self.onkeyDown(e);
     }, false);
@@ -117,7 +117,7 @@ function TermView(rowCount) {
     addEventListener('keyup', function(e) {
       if(e.keyCode > 15 && e.keyCode < 19)
         return; // Shift Ctrl Alt (19)
-      if (self.bbscore.pref && self.bbscore.pref.modalShown)
+      if (self.bbscore.modalShown)
         return;
       // set input area focus whenever key down even if there is selection
       self.bbscore.setInputAreaFocus();

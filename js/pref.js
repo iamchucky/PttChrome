@@ -2,7 +2,7 @@ function PttChromePref(app, onInitializedCallback) {
   this.values = {};
   this.logins = ['',''];
   this.app = app;
-  this.modalShown = false;
+
   this.shouldResetToDefault = false;
 
   this.reloadPreference(onInitializedCallback);
@@ -70,15 +70,15 @@ PttChromePref.prototype = {
     $('#opt_reset').off();
     $('#opt_reset').text(i18n('options_reset'));
     $('#opt_reset').click(function() {
-      $('#prefModal').modal('hide');
       self.shouldResetToDefault = true;
+      $('#prefModal').modal('hide');
     });
 
     this.updatePreferencesToUi();
 
     $('#prefModal').off();
     $('#prefModal').on('shown.bs.modal', function(e) {
-      self.modalShown = true;
+      self.app.modalShown = true;
     });
     $('#prefModal').on('hidden.bs.modal', function(e) {
       if (self.shouldResetToDefault) {
@@ -86,44 +86,53 @@ PttChromePref.prototype = {
         self.values = JSON.parse(JSON.stringify(DEFAULT_PREFS));
         self.logins = ['',''];
         self.updatePreferencesToUi();
+
         self.shouldResetToDefault = false;
       } else {
-        for (var i in self.values) {
-          if (i === 'mouseBrowsingHighlightColor') {
-            var selectedVal = $('#opt_'+i+' select').val();
-            self.values[i] = parseInt(selectedVal);
-            continue;
-          }
-
-          var elem = $('#opt_'+i+' input');
-          var type = typeof(self.values[i]);
-          switch(type) {
-            case 'number':
-              self.values[i] = parseInt(elem.val());
-              break;
-            case 'string':
-              self.values[i] = elem.val();
-              break;
-            case 'boolean':
-              self.values[i] = elem.prop('checked');
-              break;
-            default:
-              break;
-          }
-        }
-        var user = $('#login_username input').val();
-        var pswd = $('#login_password input').val();
-        if (user === '') {
-          pswd = '';
-        }
-        self.logins = [user, pswd];
+        self.readValueFromUi();
       }
-      self.setStorage(self.values);
-      self.setLoginStorage({'u':self.logins[0], 'p':self.logins[1]});
-      self.updateToApp();
-      self.modalShown = false;
-      self.app.setInputAreaFocus();
+      self.saveAndDoneWithIt();
     });
+  },
+
+  saveAndDoneWithIt: function() {
+    this.setStorage(this.values);
+    this.setLoginStorage({'u':this.logins[0], 'p':this.logins[1]});
+    this.updateToApp();
+    this.app.modalShown = false;
+    this.app.setInputAreaFocus();
+  },
+
+  readValueFromUi: function() {
+    for (var i in this.values) {
+      if (i === 'mouseBrowsingHighlightColor') {
+        var selectedVal = $('#opt_'+i+' select').val();
+        this.values[i] = parseInt(selectedVal);
+        continue;
+      }
+
+      var elem = $('#opt_'+i+' input');
+      var type = typeof(this.values[i]);
+      switch(type) {
+        case 'number':
+          this.values[i] = parseInt(elem.val());
+          break;
+        case 'string':
+          this.values[i] = elem.val();
+          break;
+        case 'boolean':
+          this.values[i] = elem.prop('checked');
+          break;
+        default:
+          break;
+      }
+    }
+    var user = $('#login_username input').val();
+    var pswd = $('#login_password input').val();
+    if (user === '') {
+      pswd = '';
+    }
+    this.logins = [user, pswd];
   },
 
   reloadPreference: function(callback) {

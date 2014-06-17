@@ -113,7 +113,7 @@ TelnetCore.prototype.onDisconnect = function() {
     this.socket = null;
   }
   if(this.app)
-    this.app.onTelnetDisconnected();
+    this.app.onClose();
 };
 
 TelnetCore.prototype.onDataAvailable = function(str, count) {

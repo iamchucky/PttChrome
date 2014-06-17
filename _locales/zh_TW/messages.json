@@ -37,6 +37,9 @@
   "menu_sitepref": {
     "message": "站台設定"
   },
+  "menu_goToOtherSite": {
+    "message": "去其他站台 ..."
+  },
   "menu_pref": {
     "message": "設定"
   },
@@ -528,5 +531,8 @@
   },
   "alert_connectionExitAll": {
     "message": "離開"
+  },
+  "input_sitePlaceholder": {
+    "message": "在此輸入站台地址後按 ENTER"
   }
 }

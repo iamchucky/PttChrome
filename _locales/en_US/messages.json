@@ -37,6 +37,9 @@
   "menu_sitepref": {
     "message": "Site Preferences"
   },
+  "menu_goToOtherSite": {
+    "message": "Go to other site ..."
+  },
   "menu_pref": {
     "message": "Preferences"
   },
@@ -528,5 +531,9 @@
   },
   "alert_connectionExitAll": {
     "message": "Quit"
+  },
+  "input_sitePlaceholder": {
+    "message": "input URL here and then press ENTER"
   }
+  
 }
