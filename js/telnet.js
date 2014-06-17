@@ -247,11 +247,13 @@ TelnetCore.prototype.checkAutoLogin = function(row) {
   if (line.indexOf(this.loginPrompt[this.autoLoginStage - 1]) < 0)
     return;
 
-  var unicode_str = this.loginStr[this.autoLoginStage-1] + this.app.view.EnterChar;
-  this.send(this.convSend(unicode_str));
+  if (this.host == 'ptt.cc') {
+    var unicode_str = this.loginStr[this.autoLoginStage-1] + this.app.view.EnterChar;
+    this.send(this.convSend(unicode_str));
+  }
 
   if (this.autoLoginStage == 3) {
-    if (this.loginStr[3])
+    if (this.loginStr[3] && this.host == 'ptt.cc')
       this.send(this.convSend(this.loginStr[3]));
     this.autoLoginStage = 0;
     return;
