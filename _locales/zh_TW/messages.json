@@ -64,6 +64,9 @@
   "autologin_warning": {
     "message": "帳號密碼沒有加密儲存, 千萬不要在公用電腦上使用"
   },
+  "options_openInPackagedApp": {
+    "message": "'批' 圖示會在獨立視窗開啟 PttChrome"
+  },
   "options_preferences": {
     "message": "設定"
   },

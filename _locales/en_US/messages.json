@@ -1,539 +1,541 @@
-{
+﻿{
   "appName": {
     "message": "PttChrome",
     "description": "The title of the application, displayed in the web store."
   },
   "appDesc": {
-    "message": "A GNU/GPL telnet client extension specifically designed for BBS browsing.",
+    "message": "專為 BBS 瀏覽設計，採 GNU/GPL 授權的 telnet 連線程式套件",
     "description":"The description of the application, displayed in the web store."
   },
   "menu_copy": {
-    "message": "Copy"
+    "message": "複製"
   },
   "menu_coloredCopy": {
-    "message": "Copy with ANSI color"
+    "message": "複製(包含ANSI彩色)"
   },
   "menu_paste": {
-    "message": "Paste"
+    "message": "貼上"
   },
   "menu_selAll": {
-    "message": "Select All"
+    "message": "全選"
   },
   "menu_search": {
-    "message": "Search"
+    "message": "搜尋"
   },
   "menu_searchGoogle": {
-    "message": "Search Google for '%s'"
+    "message": "在 Google 上搜尋'%s'"
   },
   "menu_fileio": {
-    "message": "File I/O"
+    "message": "檔案讀寫"
   },
   "menu_loadfile": {
-    "message": "Load File"
+    "message": "載入檔案"
   },
   "menu_savefile": {
-    "message": "Save File"
+    "message": "另存檔案"
   },
   "menu_sitepref": {
-    "message": "Site Preferences"
+    "message": "站台設定"
   },
   "menu_goToOtherSite": {
-    "message": "Go to other site ..."
+    "message": "去其他站台 ..."
   },
   "menu_pref": {
-    "message": "Preferences"
+    "message": "設定"
   },
   "menu_restartInTab": {
-    "message": "Restart PttChrome in a new tab"
+    "message": "在新分頁重新開啟 PttChrome"
   },
   "menu_toggleMouseBrowsing": {
-    "message": "Mouse browsing"
+    "message": "使用滑鼠瀏覽"
   },
   "menu_fullscreen": {
-    "message": "Fullscreen"
+    "message": "全螢幕模式"
   },
   "options_autologin": {
-    "message": "Auto login"
+    "message": "自動登入"
   },
   "autologin_username": {
-    "message": "Username"
+    "message": "帳號"
   },
   "autologin_password": {
-    "message": "Password"
+    "message": "密碼"
   },
   "autologin_warning": {
-    "message": "Login info is not encrypted, DO NOT use on a public machine"
+    "message": "帳號密碼沒有加密儲存, 千萬不要在公用電腦上使用"
+  },
+  "options_openInPackagedApp": {
+    "message": "'批'圖示會在獨立視窗開啟 PttChrome"
   },
   "options_preferences": {
-    "message": "Preferences"
+    "message": "設定"
   },
   "options_general": {
-    "message": "General"
+    "message": "一般"
   },
   "options_reset": {
-    "message": "Reset to default"
+    "message": "設回預設值"
   },
   "options_siteName": {
-    "message": "Site name"
+    "message": "站台名稱"
   },
   "options_siteAddress": {
-    "message": "Address"
+    "message": "站台位置"
   },
   "options_defaultSite": {
-    "message": "default"
+    "message": "預設值"
   },
   "options_defaultAddress": {
-    "message": "default"
+    "message": "預設值"
   },
   "options_btn_addsite": {
-    "message": "Add Site"
+    "message": "新增站台"
   },
   "options_btn_delsite": {
-    "message": "Remove Site"
+    "message": "刪除站台"
   },
   "options_siteprefnote": {
-    "message": "This site uses the default setting"
+    "message": "這個站台使用預設的設定值"
   },
   "options_display": {
-    "message": "Display"
+    "message": "顯示"
   },
   "options_fontSizeMode": {
-    "message": "Font size mode"
+    "message": "字體大小調整方式"
   },
   "options_bbssize": {
-    "message": "Varying font size by window size"
+    "message": "隨視窗大小調整字體"
   },
   "options_fixsize": {
-    "message": "Fixed screen size"
+    "message": "固定畫面大小"
   },
   "options_fixfont": {
-    "message": "Fixed font size"
+    "message": "固定字體大小"
   },
   "options_fixsize_viewsize": {
-    "message": "  Screen size"
+    "message": "　BBS畫面大小"
   },
   "options_fixfont_fontsize": {
-    "message": "  Font size"
+    "message": "　字體大小"
   },
   "options_alignment": {
-    "message": "View alignment"
+    "message": "畫面對齊"
   },
   "options_haligncenter": {
-    "message": "Horizontally centered"
+    "message": "水平置中"
   },
   "options_valigncenter": {
-    "message": "Vertically centered"
+    "message": "垂直置中"
   },
   "options_border": {
-    "message": "Border"
+    "message": "邊框"
   },
   "options_displayBorder": {
-    "message": "Display border"
+    "message": "顯示邊框"
   },
   "options_borderColor": {
-    "message": "  Color"
+    "message": "　顏色"
   },
   "options_background": {
-    "message": "Background"
+    "message": "背景設定"
   },
   "options_backgroundType": {
-    "message": "Background type"
+    "message": "背景種類"
   },
   "options_bgpurecolor": {
-    "message": "Single color (Black)"
+    "message": "純色背景(黑色)"
   },
   "options_bgrepeatimage": {
-    "message": "Repeat image"
+    "message": "圖片並排"
   },
   "options_bgcenterimage": {
-    "message": "Center image"
+    "message": "圖片置於中央"
   },
   "options_bgfillimage": {
-    "message": "Image fill BBS view (original aspect ratio)"
+    "message": "圖片放大到整個視窗(維持長寬比)"
   },
   "options_bgstretchimage": {
-    "message": "Stretch image"
+    "message": "圖片放大到整個視窗"
   },
   "options_setBgImage": {
-    "message": "Select background image"
+    "message": "設定背景圖片"
   },
   "options_bgBrightness": {
-    "message": "  Background Image Brightness"
+    "message": "　圖片亮度"
   },
   "options_characterDisplay": {
-    "message": "Character display"
+    "message": "字元顯示"
   },
   "options_encoding": {
-    "message": "Encoding:"
+    "message": "編碼："
   },
   "options_dbcsdetect": {
-    "message": "Detect DBCS words"
+    "message": "自動偵測雙位元組字集文字"
   },
   "options_linefeed": {
-    "message": "If text is longer than screen line feeds"
+    "message": "文字超出畫面自動換行"
   },
   "options_linewrap": {
-    "message": "Line wrap for texts longer than"
+    "message": "貼上文字超過"
   },
   "options_linewrap2": {
-    "message": "(0 = disabled)"
+    "message": "自動換行(0=關閉不用)"
   },
   "options_fontface": {
-    "message": "Font face"
+    "message": "字型"
   },
   "options_site": {
-    "message": "Site"
+    "message": "站台"
   },
   "options_siteSetting": {
-    "message": "Site setting"
+    "message": "站台設定"
   },
   "options_closeQuery": {
-    "message": "Ask before closing connecting BBS"
+    "message": "關閉BBS頁面時若還在連線中要詢問"
   },
   "options_antiIdleTime": {
-    "message": "Anti-idle interval (sec)"
+    "message": "防閒置間隔(秒)"
   },
   "options_antiIdleHint": {
-    "message": "(0 sec = disabled)"
+    "message": "(0=關閉不用)"
   },
   "options_escapestr": {
-    "message": "As ANSI pasting replace ESC as:"
+    "message": "貼上彩色文字把ESC轉換成："
   },
   "options_escapestr2": {
-    "message": "Most BBS use ^U or ^C^H^H"
+    "message": "大多數站台使用^U或^C^H^H"
   },
   "options_entertype": {
-    "message": "When pressing ENTER send:"
+    "message": "當按下Enter鍵時送出："
   },
   "options_termtype": {
-    "message": "Terminal type:"
+    "message": "終端機型態："
   },
   "options_autoLogin": {
-    "message": "Auto login"
+    "message": "自動登入"
   },
   "options_preloginprompt": {
-    "message": "Pre-login Prompt:"
+    "message": "登入前的提示："
   },
   "options_loginprompt": {
-    "message": "Pre-login String:"
+    "message": "登入提示："
   },
   "options_passwordprompt": {
-    "message": "Password Prompt:"
+    "message": "密碼提示："
   },
   "options_postlogin": {
-    "message": "Post Login String:"
+    "message": "登入後送出的字串："
   },
   "options_prelogin": {
-    "message": "Pre-login String:"
+    "message": "登入前的字串："
   },
   "options_login": {
-    "message": "User Name:"
+    "message": "帳號："
   },
   "options_passwd": {
-    "message": "Password:"
+    "message": "密碼："
   },
   "options_mouse": {
-    "message": "Mouse"
+    "message": "滑鼠"
   },
   "options_mouseWheel": {
-    "message": "Mouse wheel"
+    "message": "滾輪控制"
   },
   "options_scroll": {
-    "message": "Mouse wheel:"
+    "message": "滾輪"
   },
   "options_scrollAndLeftBtn": {
-    "message": "mouse right button + mouse wheel:"
+    "message": "滑鼠右鍵+滾輪"
   },
   "options_scrollAndRightBtn": {
-    "message": "mouse left button + mouse wheel:"
+    "message": "滑鼠左鍵+滾輪"
   },
   "options_scrollNone": {
-    "message": "No Action"
+    "message": "無動作"
   },
   "options_scrollUpDown": {
-    "message": "Control up/down"
+    "message": "上/下"
   },
   "options_scrollPageSwitch": {
-    "message": "Control Page up/Page down"
+    "message": "上一頁/下一頁"
   },
   "options_scrollSameThread": {
-    "message": "Control Prevous thread/Next thread"
+    "message": "同標題上一篇/同標題下一篇"
   },
   "options_scrollHomeEnd": {
-    "message": "Control Home/End"
+    "message": "第一頁/最後一頁"
   },
   "options_mouseBrowsing": {
-    "message": "Mouse browsing"
+    "message": "滑鼠瀏覽"
   },
   "options_appearance": {
-    "message": "Appearance"
+    "message": "介面"
   },
   "options_usemousebrowsing": {
-    "message": "Mouse browsing on start"
+    "message": "預設使用滑鼠瀏覽"
   },
   "options_usemousebrowsingex": {
-    "message": "Enable advanced mouse browsing function"
+    "message": "啟用進階滑鼠瀏覽(更新文章、同標題第一篇/上一篇/下一篇/最後一篇)"
   },
   "options_mousebrowsesendenter": {
-    "message": "In mouse browsing mode, send [Enter] after mouse left button press for 1 second"
+    "message": "滑鼠瀏覽時長按左鍵時送出Enter"
   },
   "options_mousebrowsinghighlight": {
-    "message": "Mouse browsing highlight effect"
+    "message": "啟用滑鼠瀏覽的底色效果"
   },
   "options_highlightColor": {
-    "message": "  Color"
+    "message": "　顏色"
   },
   "options_mousebrowsinghandpointer": {
-    "message": "Hand point cursor for mouse browsing"
+    "message": "滑鼠瀏覽文章/看板列表時使用手指狀游標"
   },
   "options_mouseOther": {
-    "message": "Other"
+    "message": "其他"
   },
   "options_middlebuttonfunction": {
-    "message": "When middle button press"
+    "message": "滑鼠中鍵按下時"
   },
   "options_middlebuttonNoAction": {
-    "message": "No action"
+    "message": "無動作"
   },
   "options_middlebuttonSendEnter": {
-    "message": "Send [Enter]"
+    "message": "送出Enter"
   },
   "options_middlebuttonSendEnd": {
-    "message": "Send [End]"
+    "message": "送出End"
   },
   "options_middlebuttonSendSpace": {
-    "message": "Send [Space]"
+    "message": "送出空白鍵"
   },
   "options_middlebuttonSendLeftArrow": {
-    "message": "Back to prevous page"
+    "message": "回到上一頁"
   },
   "options_middlebuttonCopy": {
-    "message": "Copy(if some text be selected)"
+    "message": "複製(如果有選取文字)"
   },
   "options_middlebuttonPaste": {
-    "message": "Paste"
+    "message": "貼上"
   },
   "options_middlebuttonCopyPaste": {
-    "message": "Copy(if some text be selected)/Paste"
+    "message": "複製(有選取文字)/貼上(無選取文字)"
   },
   "options_fontfitwindowwidth": {
-    "message": "Font scale fit window width"
+    "message": "字體拉伸符合視窗寬度"
   },
   "options_loadurlinbg": {
-    "message": "Don't go to the new tab after clicking links in BBS (not recommend)"
+    "message": "BBS畫面點擊鏈結後不要自動跳到新的分頁(不建議使用)"
   },
   "options_droptopaste": {
-    "message": "Paste [Text/Link/Image URL] when drop [Text/Link/Image] on BBS View"
+    "message": "當拖放 文字/鏈結/圖片 到BBS視窗時 貼上 文字/鏈結/圖片網址"
   },
   "options_clearcopiedsel": {
-    "message": "Clear selection after copying"
+    "message": "複製完畢自動取消選取"
   },
   "options_detectlink": {
-    "message": "Detect link"
+    "message": "偵測鏈結"
   },
   "options_hotkeys": {
-    "message": "Hotkey"
+    "message": "熱鍵"
   },
   "options_hotkeyctrlw": {
-    "message": "Hotkey [Ctrl+W]"
+    "message": "熱鍵Ctrl+W"
   },
   "options_ctrlW_default": {
-    "message": "Browser Default - Close Tab"
+    "message": "瀏覽器預設動作-關閉頁籤"
   },
   "options_ctrlW_bbs": {
-    "message": "BBS Default - Send Ctrl+W"
+    "message": "BBS預設動作-送出Ctrl+W"
   },
   "options_hotkeyctrll": {
-    "message": "Hotkey [Ctrl+L]"
+    "message": "熱鍵Ctrl+L"
   },
   "options_ctrlL_default": {
-    "message": "Browser Default - Set focus to URL bar"
+    "message": "瀏覽器預設動作-網址列輸入"
   },
   "options_ctrlL_bbs": {
-    "message": "BBS Default - Send Ctrl+L"
+    "message": "BBS預設動作-送出Ctrl+L"
   },
   "options_hokeyforselectall": {
-    "message": "Enable Select All [Ctrl+A]"
+    "message": "啟用[全選]熱鍵"
   },
   "options_hokeyfrmousebrowsing": {
-    "message": "Enable Mouse Browsing On/Off [Ctrl+M]"
+    "message": "啟用[滑鼠瀏覽切換]熱鍵"
   },
   "options_hokeyforbgdisplay": {
-    "message": "Enable Easy Reading Mode [Ctrl+G]"
+    "message": "啟用[背景圖片切換]熱鍵"
   },
   "options_hokeyforeasyreading": {
-    "message": "Enable Background Image Display On/Off[Ctrl+E]"
+    "message": "啟用好讀模式熱鍵"
   },
   "options_hokeyfordownloadpost": {
-    "message": "Enable Download Post [Ctrl+D]"
+    "message": "啟用下載文章熱鍵"
   },
   "options_hotkeydownloadtext": {
-    "message": "Text"
+    "message": "文字"
   },
   "options_hotkeydownloadcolor": {
-    "message": "AnsiCopy"
+    "message": "ANSI彩色"
   },
   "options_hotkeydownloadhtml": {
     "message": "HTML"
   },
   "options_contextmenu": {
-    "message": "Context Menu"
+    "message": "快顯功能表"
   },
   "options_embeddedplayermenu": {
-    "message": "Enable item [Enable Embedded Player](only support Youtube/USTREAM)"
+    "message": "啟用[在浮動視窗中顯示影片]項目"
   },
   "options_previewpicturemenu": {
-    "message": "Enable item [Show Preview Image]"
+    "message": "啟用[顯示縮圖]項目"
   },
   "options_mousebrowsemenu": {
-    "message": "Enable item [Mouse Browsing On/Off]"
+    "message": "啟用[滑鼠瀏覽切換]項目"
   },
   "options_openalllinkmenu": {
-    "message": "Enable item [Open All Links]"
+    "message": "啟用[開啟畫面上所有鏈結]項目"
   },
   "options_screenkeyboardmenu": {
-    "message": "Enable item [Enable punctuation window]"
+    "message": "啟用[開啟標點符號輸入窗]項目"
   },
   "options_pushthreadmenu": {
-    "message": "Enable item [Push Thread Tool](only for ptt.cc site)"
+    "message": "啟用[推文工具]項目"
   },
   "options_embeddedPlayer": {
-    "message": "Embedded Player"
+    "message": "影片視窗"
   },
   "options_embeddedPlayerSize": {
-    "message": "Embedded player size"
+    "message": "浮動影片視窗的大小"
   },
   "options_picturePreview": {
-    "message": "Preview Image"
+    "message": "圖片預覽"
   },
   "options_epautoplay": {
-    "message": "Auto play"
+    "message": "自動開始播放影片"
   },
   "options_eploop": {
-    "message": "Loop"
+    "message": "自動重複播放影片"
   },
   "options_ephtml5": {
-    "message": "Use Html5 Player(Only for Youtube)"
+    "message": "使用Html5播放器(只適用於Youtube)"
   },
   "options_epautousehq": {
-    "message": "Higher priority for HQ video"
+    "message": "優先使用高畫質播放"
   },
   "options_epcopyurlbutton": {
-    "message": "Display [Copy URL] button"
+    "message": "顯示[複製網址]按鈕"
   },
   "options_epwhendroplink": {
-    "message": "Open embedded player when drop a video URL on BBS view"
+    "message": "當拖放一個影片網址到BBS視窗時開啟播放窗"
   },
   "options_misc": {
-    "message": "Misc"
+    "message": "雜項"
   },
   "options_about": {
-    "message": "About"
+    "message": "關於"
   },
   "options_btn_save": {
-    "message": "Save"
+    "message": "儲存設定值"
   },
   "options_enablepicturepreview": {
-    "message": "Show preview image when mouse on image link"
+    "message": "滑鼠停在鏈結上時啟用圖片預覽"
   },
   "options_ctrlpicturepreview": {
-    "message": "Need press [Ctrl]"
+    "message": "只在Ctrl按下時才啟用圖片預覽"
   },
   "options_picturepreviewinfo": {
-    "message": "Display image information"
+    "message": "顯示縮圖資訊"
   },
   "options_picturepreviewheight": {
-    "message": "Preview height"
+    "message": "縮圖高度"
   },
   "options_picturepreviewheight2": {
-    "message": "(0 for original size)"
+    "message": "(0=原始大小)"
   },
   "options_projectHome": {
-    "message": "Project Home"
+    "message": "專案首頁"
   },
   "options_developer": {
-    "message": "Developer"
+    "message": "開發者"
   },
   "options_bugReport": {
-    "message": "Bug report"
+    "message": "問題回報"
   },
   "options_addsite_name": {
-    "message": "Site name"
+    "message": "站台名稱"
   },
   "options_addsite_addr": {
-    "message": "Site address"
+    "message": "站台位置"
   },
   "options_addsite_usedefault": {
-    "message": "Use default setting"
+    "message": "使用預設的設定值"
   },
   "options_btn_Ok": {
-    "message": "OK"
+    "message": "確定"
   },
   "options_btn_Cancel": {
-    "message": "Cancel"
+    "message": "取消"
   },
   "options_ScreenKeyboardAlpha": {
-    "message": "Transparency for punctuation window"
+    "message": "符號輸入窗的透明度"
   },
   "options_ScreenKeyboardAlpha2": {
-    "message": "(0 = Opaque, 100 = Transparent)"
+    "message": "(0=不透明, 100=完全透明)"
   },
   "options_PushThreadLineLength": {
-    "message": "Text length in Push Thread Tool"
+    "message": "推文工具每行的文字數"
   },
   "options_DownloadLineDelay": {
-    "message": "Line delay in download post"
+    "message": "下載文章時每行間的延遲"
   },
   "options_DownloadLineDelay2": {
-    "message": "(ms) default is 600ms"
+    "message": "ms(建議值600ms)"
   },
   "options_EasyReadingWithImg": {
-    "message": "Insert image in easy reading mode"
+    "message": "好讀模式中直接引入圖片內容"
   },
   "options_EasyReadingWithVideo": {
-    "message": "Insert video in easy reading mode"
+    "message": "好讀模式中直接引入影片內容"
   },
   "options_DeleteSpaceWhenCopy": {
-    "message": "Discard trailing space characters when copied"
+    "message": "複製時去除行尾空白"
   },
   "options_inputBuffer": {
-    "message": "IME punctuation window"
+    "message": "輸入法緩衝區"
   },
   "options_hideInputBuffer": {
-    "message": "Disable punctuation window (applicable to Microsoft Phonetic IME)"
+    "message": "不顯示輸入法緩衝區(XP傳統注音輸入法適用)"
   },
   "options_inputBufferSizeType": {
-    "message": "IME punctuation window size"
+    "message": "輸入法緩衝區高度"
   },
   "options_InputBufferSizeByFont": {
-    "message": "Same with font size"
+    "message": "和目前字體大小相同"
   },
   "options_InputBufferSizeFixed": {
-    "message": "Fixed Size"
+    "message": "固定大小"
   },
   "options_InputBufferSizeSet": {
-    "message": "Size"
+    "message": "指定緩衝區大小"
   },
   "options_ask_delSite": {
-    "message": "Are you sure to delete site: "
+    "message": "確定要刪除"
   },
   "options_ask_delSite2": {
-    "message": "?"
+    "message": ", 這個站嗎?"
   },
   "alert_connectionHeader": {
-    "message": "You are disconnected!"
+    "message": "你斷線了!"
   },
   "alert_connectionText": {
-    "message": "Would you like to reconnect to the site or quit the app?"
+    "message": "現在要重新連線還是離開?"
   },
   "alert_connectionReconnect": {
-    "message": "Reconnect"
+    "message": "重新連線"
   },
   "alert_connectionExitAll": {
-    "message": "Quit"
+    "message": "離開"
   },
   "input_sitePlaceholder": {
-    "message": "input URL here and then press ENTER"
+    "message": "在此輸入站台地址後按 ENTER"
   }
-  
 }
