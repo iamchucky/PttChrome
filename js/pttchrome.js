@@ -360,7 +360,7 @@ pttchrome.App.prototype.doSettings = function() {
 
 pttchrome.App.prototype.onWindowResize = function() {
   this.view.fontResize();
-  if (this.view.firstGrid.offsetLeft <= 100) {
+  if (this.view.fontFitWindowWidth || this.view.firstGrid.offsetLeft <= 100) {
     $('#sideMenus').addClass('menuHidden');
   } else {
     $('#sideMenus').removeClass('menuHidden');
@@ -732,7 +732,7 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
       var fontFace = pref.get(name);
       if (!fontFace) 
         fontFace='monospace';
-      this.view.setFontFace('symmingliu,'+fontFace);
+      this.view.setFontFace(fontFace);
       break;
     default:
       break;
