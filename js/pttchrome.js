@@ -738,6 +738,11 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
       break;
     case 'fontFitWindowWidth':
       this.view.fontFitWindowWidth = pref.get(name);
+      if (this.view.fontFitWindowWidth) {
+        $('.main').addClass('trans-fix');
+      } else {
+        $('.main').removeClass('trans-fix');
+      }
       this.onWindowResize();
       break;
     case 'fontFace':
