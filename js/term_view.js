@@ -850,21 +850,18 @@ TermView.prototype = {
       this.mainDisplay.style.overflow = 'hidden';
       this.mainDisplay.style.textAlign = 'left';
       this.mainDisplay.style.width = this.chw*this.buf.cols + 'px';
-      if(this.verticalAlignCenter && this.chh*this.buf.rows < innerBounds.height)
+      if (this.verticalAlignCenter && this.chh*this.buf.rows < innerBounds.height)
         this.mainDisplay.style.marginTop = ((innerBounds.height-this.chh*this.buf.rows)/2) + 'px';
       else
         this.mainDisplay.style.marginTop = '0px';
-      if(this.fontFitWindowWidth)
+      if (this.fontFitWindowWidth)
         this.scaleX = Math.floor(innerBounds.width / (this.chw*this.buf.cols) * 100)/100;
       else
         this.scaleX = 1;
 
-      if(this.scaleX==1)
-      {
-        this.mainDisplay.style.transform = 'none';
-      }
-      else
-      {
+      if (this.scaleX == 1) {
+        this.mainDisplay.style.webkitTransform = 'none';
+      } else {
         //this.mainDisplay.style.transform = 'scaleX('+this.scaleX+')'; // chrome not stable support yet!
         this.mainDisplay.style.webkitTransform = 'scaleX('+this.scaleX+')';
         if(this.horizontalAlignCenter)
@@ -943,7 +940,7 @@ TermView.prototype = {
     // Cursor
     updateCursorPos: function(){
 
-      var pos = this.convertMN2XY(this.buf.cur_x, this.buf.cur_y);
+      var pos = this.convertMN2XYEx(this.buf.cur_x, this.buf.cur_y);
       // if you want to set cursor color by now background, use this.
       if(this.buf.cur_y>=this.buf.rows || this.buf.cur_x>=this.buf.cols)
         return; //sometimes, the value of this.buf.cur_x is 80 :(
@@ -952,6 +949,14 @@ TermView.prototype = {
       var line = lines[this.buf.cur_y];
       var ch = line[this.buf.cur_x];
       var bg = ch.getBg();
+
+      if (this.scaleX == 1) {
+        this.bbsCursor.style.webkitTransform = 'none';
+      } else {
+        //this.mainDisplay.style.transform = 'scaleX('+this.scaleX+')'; // chrome not stable support yet!
+        this.bbsCursor.style.webkitTransform = 'scaleX('+this.scaleX+')';
+        this.bbsCursor.style.webkitTransformOriginX = 'left';
+      }
 
       this.bbsCursor.style.left = pos[0] + 'px';
       this.bbsCursor.style.top = (pos[1] - 1) + 'px';

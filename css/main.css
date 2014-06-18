@@ -51,14 +51,17 @@ a:link,a:visited,a:active,a:hover
 }
 
 .terminal_display {
-        font-family : MingLiu, monospace;
-        font-size    : 26px;
-        line-height:26px;
-        white-space: pre;
-        cursor: text;
-        position: absolute;
-        color: #FFFFFF;
-        text-decoration: blink;
+  font-family : MingLiu, monospace;
+  font-size    : 26px;
+  line-height:26px;
+  white-space: pre;
+  cursor: text;
+  position: absolute;
+  color: #FFFFFF;
+  text-decoration: blink;
+  -webkit-user-select: none;
+  height: 0px;
+  z-index: 2;
 }
 
 img{background:white; color:black; padding:5px 5px;}
