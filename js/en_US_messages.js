@@ -157,6 +157,9 @@ locale.en_US = {
   "options_linewrap2": {
     "message": "(0 = disabled)"
   },
+  "options_fontFitWindowWidth": {
+    "message": "Stretch font width to fill the view"
+  },
   "options_fontFace": {
     "message": "Font face"
   },
@@ -294,9 +297,6 @@ locale.en_US = {
   },
   "options_middlebuttonCopyPaste": {
     "message": "Copy(if some text be selected)/Paste"
-  },
-  "options_fontfitwindowwidth": {
-    "message": "Font scale fit window width"
   },
   "options_loadurlinbg": {
     "message": "Don't go to the new tab after clicking links in BBS (not recommend)"

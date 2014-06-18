@@ -165,6 +165,9 @@ a:link,a:visited,a:active,a:hover {
   position: absolute;
   color: #FFFFFF;
   text-decoration: blink;
+  -webkit-user-select: none;
+  height: 0px;
+  z-index: 2;
 }
 
 img {

@@ -13,6 +13,7 @@ var DEFAULT_PREFS = {
   mouseBrowsingHighlightColor: 2,
 
   // displays
+  fontFitWindowWidth: false,
   fontFace      : 'SymMingLiu,MingLiu,monospace',
 
 };

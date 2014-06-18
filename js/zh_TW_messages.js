@@ -157,6 +157,9 @@
   "options_linewrap2": {
     "message": "自動換行(0=關閉不用)"
   },
+  "options_fontFitWindowWidth": {
+    "message": "把字體拉寬來補滿畫面"
+  },
   "options_fontFace": {
     "message": "字型"
   },
@@ -294,9 +297,6 @@
   },
   "options_middlebuttonCopyPaste": {
     "message": "複製(有選取文字)/貼上(無選取文字)"
-  },
-  "options_fontfitwindowwidth": {
-    "message": "字體拉伸符合視窗寬度"
   },
   "options_loadurlinbg": {
     "message": "BBS畫面點擊鏈結後不要自動跳到新的分頁(不建議使用)"

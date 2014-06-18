@@ -728,6 +728,10 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
     case 'dbcsDetect':
       this.view.dbcsDetect = pref.get(name);
       break;
+    case 'fontFitWindowWidth':
+      this.view.fontFitWindowWidth = pref.get(name);
+      this.onWindowResize();
+      break;
     case 'fontFace':
       var fontFace = pref.get(name);
       if (!fontFace) 
