@@ -668,7 +668,7 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
       var fontFace = pref.get(name);
       if (!fontFace) 
         fontFace='monospace';
-      this.view.setFontFace('symmingliu,'+fontFace);
+      this.view.setFontFace(fontFace);
       break;
     default:
       break;
