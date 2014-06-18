@@ -76,6 +76,9 @@ locale.en_US = {
   "options_display": {
     "message": "Display"
   },
+  "options_hideMenuDisplayLine": {
+    "message": "Hide the red line along the side menu"
+  },
   "options_fontSizeMode": {
     "message": "Font size mode"
   },

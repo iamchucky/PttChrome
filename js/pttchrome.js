@@ -728,6 +728,14 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
     case 'dbcsDetect':
       this.view.dbcsDetect = pref.get(name);
       break;
+    case 'hideMenuDisplayLine':
+      var hideMenuDisplayLine = pref.get(name);
+      if (hideMenuDisplayLine) {
+        $('#sideMenus').removeClass('menu_red');
+      } else {
+        $('#sideMenus').addClass('menu_red');
+      }
+      break;
     case 'fontFitWindowWidth':
       this.view.fontFitWindowWidth = pref.get(name);
       this.onWindowResize();

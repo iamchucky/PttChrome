@@ -60,13 +60,16 @@
   font-weight: 900;
 }
 
+.menu_red {
+  background-color: #9c0808;
+  box-shadow: 0 0 15px 2px black;
+}
+
 #sideMenus {
   position: fixed;
   width: 90px;
   top: 20px;
   z-index: 3;
-  box-shadow: 0 0 15px 2px black;
-  background-color: #9c0808;
 
   transition: 0.25s ease;
 }

@@ -76,6 +76,9 @@
   "options_display": {
     "message": "顯示"
   },
+  "options_hideMenuDisplayLine": {
+    "message": "隱藏左上側選單的紅色條紋"
+  },
   "options_fontSizeMode": {
     "message": "字體大小調整方式"
   },
