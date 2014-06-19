@@ -9,7 +9,7 @@ chrome.app.runtime.onLaunched.addListener(function() {
   chrome.storage.sync.get(null, function(items) {
     if ('openInPackagedApp' in items && items['openInPackagedApp']) {
 
-      chrome.app.window.create('main.html', {
+      chrome.app.window.create('view.html', {
         id: "mainwin",
         bounds: {
           width: 880,
@@ -18,21 +18,7 @@ chrome.app.runtime.onLaunched.addListener(function() {
         minWidth: 880,
         minHeight: 530,
       }, function(appWindow) {
-        appWindow.onBoundsChanged.addListener(function() {
-          var app = appWindow.contentWindow.pttchrome.app;
-          if (app) {
-            app.view.fontResize();
-          }
-        });
-        appWindow.onClosed.addListener(function() {
-          var so = appWindow.contentWindow.pttchrome.app.telnetCore.socket;
-          if (so) {
-            var id = so.socketId;
-            if (id) {
-              chrome.socket.disconnect(id);
-            }
-          }
-        });
+        // onloaded
       });
 
     } else { // if not in or false, this is the default
@@ -40,6 +26,23 @@ chrome.app.runtime.onLaunched.addListener(function() {
     }
   });
 });
+
+// somehow I have to create a chrome app window in order to use clipboardWrite
+var clipHelper = null;
+chrome.app.window.create('clipboard_helper.html', {
+  id: "clipboard_helper",
+  hidden: true,
+  bounds: {
+    width: 0,
+    height: 0
+  }
+}, function(appWindow) {
+  clipHelper = appWindow.contentWindow;
+});
+
+function doCopy(str) {
+  clipHelper.doCopy(str);
+}
 
 var pasteInput = document.createElement('input');
 pasteInput.type = 'text';
@@ -222,6 +225,11 @@ chrome.runtime.onConnectExternal.addListener(function(port) {
             loadFileEntry(theEntry, readcb);
           }
         });
+        break;
+      case 'copy':
+        if (msg.data) {
+          doCopy(msg.data);
+        }
         break;
       case 'paste':
         var result = doPaste();
