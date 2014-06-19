@@ -38,8 +38,19 @@
       <div id="menu_selectAll" class="font_btn"><i class="fa fa-file-text fa-2x"></i><br/><span></span></div>
       <div id="menu_mouseBrowsing" class="font_btn"><i class="fa fa-magic fa-2x"></i><br/><span></span></div>
       <div id="menu_settings" class="font_btn"><i class="fa fa-cog fa-2x"></i><br/><span></span></div>
-      <div id="menu_hide" class="font_btn"><i class="fa fa-eye-slash fa-2x"></i><br/><span></span></div>
     </div>
+    <ul id="contextMenus" class="dropdown-menu" role="menu" style="display:none">
+      <li id="cmenu_copy" class="cmenuItem"><a></a></li>
+      <li id="cmenu_paste" class="cmenuItem"><a></a></li>
+      <li class="divider"></li>
+      <li id="cmenu_selectAll" class="cmenuItem"><a></a></li>
+      <li id="cmenu_searchGoogle" class="cmenuItem"><a></a></li>
+      <li class="divider"></li>
+      <li id="cmenu_mouseBrowsing" class="cmenuItem"><a></a></li>
+      <li id="cmenu_goToOtherSite" class="cmenuItem"><a></a></li>
+      <li id="cmenu_settings" class="cmenuItem"><a></a></li>
+    </ul>
+
     <div id="BBSWindow" style="display:none">
       <input id="t" type="text" autocomplete="off" style="box-sizing:content-box; color:initial; border: none; width: 200px; height: 24px; position:absolute; left:-10000px; top:0px; z-index:2;resize: none;" autofocus/>
       <div id="cursor" class="terminal_display">_</div>
@@ -90,8 +101,6 @@
             <div class="list-group">
               <h4 id="opt_appearance" class="list-group-item-heading" style="font-weight:bold"></h4>
               <div class="list-group-item-text">
-                <div id="opt_hideMenuDisplayLine" class="checkbox">
-                </div>
                 <div id="opt_fontFitWindowWidth" class="checkbox">
                 </div>
                 <div id="opt_fontFace" class="form-group">

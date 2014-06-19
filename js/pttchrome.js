@@ -118,6 +118,7 @@ pttchrome.App = function(onInitializedCallback) {
   this.setupConnectionAlert();
   this.setupOtherSiteInput();
   this.setupSideMenus();
+  this.setupContextMenus();
 
   this.pref = new PttChromePref(this, onInitializedCallback);
   this.appConn = null;
@@ -296,7 +297,6 @@ pttchrome.App.prototype.setupSideMenus = function() {
   $('#menu_selectAll span').text(i18n('menu_selectAll'));
   $('#menu_mouseBrowsing span').text(i18n('menu_mouseBrowsing'));
   $('#menu_settings span').text(i18n('menu_settings'));
-  $('#menu_hide span').text(i18n('menu_hide'));
 
   // tie the methods up to the buttons
   var self = this;
@@ -320,10 +320,22 @@ pttchrome.App.prototype.setupSideMenus = function() {
     self.doSettings();
     e.stopPropagation();
   });
-  $('#menu_hide').click(function(e) {
-    $('#sideMenus').addClass('menuHidden');
+  $('#sideMenus').on('contextmenu', function(e) {
     e.stopPropagation();
+    e.preventDefault();
   });
+};
+
+pttchrome.App.prototype.doCopy = function(str) {
+  var port = this.appConn.appPort;
+  if (!port)
+    return;
+  
+  // Doing copy by having the launch.js read message
+  // and then copy onto clipboard
+  if (this.appConn.isConnected) {
+    port.postMessage({ action: 'copy', data: str });
+  }
 };
 
 pttchrome.App.prototype.doPaste = function() {
@@ -348,6 +360,10 @@ pttchrome.App.prototype.onPasteDone = function(content) {
 
 pttchrome.App.prototype.doSelectAll = function() {
   window.getSelection().selectAllChildren(this.view.mainDisplay);
+};
+
+pttchrome.App.prototype.doSearchGoogle = function(searchTerm) {
+  window.open('http://google.com/search?q='+searchTerm);
 };
 
 pttchrome.App.prototype.doGoToOtherSite = function() {
@@ -728,14 +744,6 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
     case 'dbcsDetect':
       this.view.dbcsDetect = pref.get(name);
       break;
-    case 'hideMenuDisplayLine':
-      var hideMenuDisplayLine = pref.get(name);
-      if (hideMenuDisplayLine) {
-        $('#sideMenus').removeClass('menu_red');
-      } else {
-        $('#sideMenus').addClass('menu_red');
-      }
-      break;
     case 'fontFitWindowWidth':
       this.view.fontFitWindowWidth = pref.get(name);
       if (this.view.fontFitWindowWidth) {
@@ -981,6 +989,129 @@ pttchrome.App.prototype.mouse_scroll = function(e) {
   }
 };
 
+pttchrome.App.prototype.setupContextMenus = function() {
+  var self = this;
+  var menuSelector = '#contextMenus';
+  var selectedText = '';
+
+  $('#BBSWindow').on('contextmenu', function(e) {
+    // if i am doing scrolling, i should skip
+    var cmdhandler = self.CmdHandler;
+    var doDOMMouseScroll = (cmdhandler.getAttribute('doDOMMouseScroll')=='1');
+    if (doDOMMouseScroll) {
+      e.stopPropagation();
+      e.preventDefault();
+      cmdhandler.setAttribute('doDOMMouseScroll','0');
+      return;
+    }
+
+    var target = e.target;
+    selectedText = window.getSelection().toString();
+    if (window.getSelection().isCollapsed) { 
+      $('#cmenu_copy').hide();
+      $('#cmenu_searchGoogle').hide();
+    } else {
+      // got something selected, show copy and searchGoogle
+      $('#cmenu_copy').show();
+      $('#cmenu_searchGoogle').show();
+      $('#cmenuSearchContent').text("'"+selectedText+"'");
+    }
+
+    // show and position
+    $(menuSelector)
+      .show()
+      .css({
+        position: "absolute",
+        left: function(e) {
+          var mouseWidth = e.pageX;
+          var pageWidth = $(window).width();
+          var menuWidth = $(menuSelector).width();
+          
+          // opening menu would pass the side of the page
+          if (mouseWidth + menuWidth > pageWidth &&
+              menuWidth < mouseWidth) {
+              return mouseWidth - menuWidth;
+          } 
+          return mouseWidth;
+        }(e),
+        top: function(e) {
+          var mouseHeight = e.pageY;
+          var pageHeight = $(window).height();
+          var menuHeight = $(menuSelector).height();
+
+          // opening menu would pass the bottom of the page
+          if (mouseHeight + menuHeight > pageHeight &&
+              menuHeight < mouseHeight) {
+              return mouseHeight - menuHeight;
+          } 
+          return mouseHeight;
+        }(e)
+      });
+    self.contextMenuShown = true;
+    return false;
+  });
+
+  var hideContextMenu = function() {
+    $(menuSelector).hide();
+    selectedText = '';
+    self.contextMenuShown = false;
+  };
+
+  //make sure menu closes on any click
+  $(document).click(function () {
+    hideContextMenu();
+  });
+
+  $('#cmenu_copy a').html(i18n('cmenu_copy')+'<span class="cmenuHotkey">Ctrl+C</span>');
+  $('#cmenu_paste a').html(i18n('cmenu_paste')+'<span class="cmenuHotkey">Ctrl+Shift+V</span>');
+  $('#cmenu_selectAll a').text(i18n('cmenu_selectAll'));
+  $('#cmenu_searchGoogle a').html(i18n('cmenu_searchGoogle')+' <span id="cmenuSearchContent"></span>');
+  $('#cmenu_mouseBrowsing a').text(i18n('cmenu_mouseBrowsing'));
+  $('#cmenu_goToOtherSite a').text(i18n('cmenu_goToOtherSite'));
+  $('#cmenu_settings a').text(i18n('cmenu_settings'));
+
+  $('#cmenu_copy').click(function(e) {
+    self.doCopy(selectedText);
+    e.stopPropagation();
+    hideContextMenu();
+  });
+  $('#cmenu_paste').click(function(e) {
+    self.doPaste();
+    e.stopPropagation();
+    hideContextMenu();
+  });
+  $('#cmenu_selectAll').click(function(e) {
+    self.doSelectAll();
+    e.stopPropagation();
+    hideContextMenu();
+  });
+  $('#cmenu_searchGoogle').click(function(e) {
+    self.doSearchGoogle(selectedText);
+    e.stopPropagation();
+    hideContextMenu();
+  });
+  $('#cmenu_mouseBrowsing').click(function(e) {
+    self.switchMouseBrowsing();
+    e.stopPropagation();
+    hideContextMenu();
+  });
+  $('#cmenu_goToOtherSite').click(function(e) {
+    self.doGoToOtherSite();
+    e.stopPropagation();
+    hideContextMenu();
+  });
+  $('#cmenu_settings').click(function(e) {
+    self.doSettings();
+    e.stopPropagation();
+    hideContextMenu();
+  });
+
+  $(menuSelector).on('contextmenu', function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+  });
+};
+
 pttchrome.App.prototype.context_menu = function(e) {
   var cmdhandler = this.CmdHandler;
   var doDOMMouseScroll = (cmdhandler.getAttribute('doDOMMouseScroll')=='1');
@@ -988,6 +1119,7 @@ pttchrome.App.prototype.context_menu = function(e) {
     e.stopPropagation();
     e.preventDefault();
     cmdhandler.setAttribute('doDOMMouseScroll','0');
+    return;
   }
 };
 

@@ -1,8 +1,12 @@
 ﻿$(document).ready(function() {
+  var site = getQueryVariable('site');
   setupI18n();
   pttchrome.app = new pttchrome.App(function(app) {
     app.setInputAreaFocus();
-    app.connect('ptt.cc');
+    if (!site) {
+      site = 'ptt.cc';
+    }
+    app.connect(site);
     $('#BBSWindow').show();
     $('#sideMenus').show();
     app.onWindowResize();

@@ -13,7 +13,6 @@ var DEFAULT_PREFS = {
   mouseBrowsingHighlightColor: 2,
 
   // displays
-  hideMenuDisplayLine: false,
   fontFitWindowWidth: false,
   fontFace      : 'SymMingLiu,MingLiu,monospace',
 

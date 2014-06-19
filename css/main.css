@@ -60,15 +60,10 @@
   font-weight: 900;
 }
 
-.menu_red {
-  background-color: #9c0808;
-  box-shadow: 0 0 15px 2px black;
-}
-
 #sideMenus {
   position: fixed;
-  width: 90px;
-  top: 20px;
+  width: 95px;
+  top: 0px;
   z-index: 3;
 
   transition: 0.25s ease;
@@ -85,6 +80,35 @@
 .menuHidden:hover {
   left: 0px;
 }
+
+.dropdown-menu {
+  -webkit-user-select: none;
+}
+
+.dropdown-menu li > a {
+  cursor: pointer;
+  -webkit-user-select: none;
+}
+
+.dropdown-menu li > a:hover,
+.dropdown-menu li > a:focus {
+  color: white;
+  background-color: #555;
+}
+
+.dropdown-menu li > a:hover span,
+.dropdown-menu li > a:focus span {
+  color: white;
+}
+
+.cmenuHotkey {
+  float: right;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.42857143;
+  color: #aaa;
+}
+
 
 #logo {
   width: 85px;
@@ -141,7 +165,7 @@
   color:#FF00FF;
 }
 
-a {
+a:not(.cmenuItem a) {
   background-image:url(../icon/http.bmp);
   background-repeat: repeat-x;
   background-position: 0% 90%;
