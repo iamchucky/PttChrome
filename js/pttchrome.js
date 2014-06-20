@@ -112,6 +112,14 @@ pttchrome.App = function(onInitializedCallback, from) {
   };
 
   this.isFromApp = (from === 'app');
+  if (this.isFromApp) {
+    window.addEventListener('message', function(e) {
+      var msg = e.data;
+      if (msg.action === 'newwindow' && self.appConn && self.appConn.isConnected) {
+        self.appConn.appPort.postMessage({ action: 'newWindow', data: msg.data });
+      }
+    });
+  }
 
   this.dblclickTimer=null;
   this.mbTimer=null;
