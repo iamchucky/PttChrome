@@ -961,6 +961,53 @@ pttchrome.App.prototype.mouse_move = function(e) {
 pttchrome.App.prototype.mouse_over = function(e) {
   if (this.modalShown)
     return;
+
+  var parent = $(e.target).parent();
+  var selector = '#hoverPPT';
+  if (parent.is('a')) {
+    var src = parent.attr('href') + '@.jpg';
+    var image = new Image();
+    image.onload = function() {
+      $(selector).html('<img src="'+src+'"></img>')
+        .show()
+        .css({
+          position: "absolute",
+          left: function(e) {
+            var mouseWidth = e.pageX;
+            var pageWidth = $(window).width();
+            var imageWidth = image.width;
+            
+            // opening image would pass the side of the page
+            if (mouseWidth + imageWidth > pageWidth &&
+                imageWidth < mouseWidth) {
+                return mouseWidth - imageWidth;
+            } 
+            return mouseWidth;
+          }(e),
+          top: function(e) {
+            var mouseHeight = e.pageY;
+            var pageHeight = $(window).height();
+            var imageHeight = image.height;
+
+            // opening image would pass the bottom of the page
+            if (mouseHeight + imageHeight / 2 > pageHeight - 20) {
+              if (imageHeight / 2 < mouseHeight) {
+                return pageHeight - 20 - imageHeight;
+              } else {
+                return 20;
+              }
+            } else if (mouseHeight - 20 < imageHeight / 2) {
+              return 20;
+            }
+            return mouseHeight - imageHeight / 2;
+          }(e)
+        });
+    };
+    image.src = src;
+  } else if (e.target.parentNode !== $(selector)[0]) {
+    $(selector).hide();
+  }
+
   if(window.getSelection().isCollapsed && !this.mouseLeftButtonDown)
     this.setInputAreaFocus();
 };

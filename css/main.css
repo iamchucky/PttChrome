@@ -3,6 +3,14 @@
   src: url('../fonts/symmingliu.woff');
 }
 
+#hoverPPT {
+  position: absolute;
+  display: none;
+  width: 50px;
+  height: 50px;
+  z-index: 3;
+}
+
 #welcomeJumbo {
   width: 100%;
   height: 100%;
