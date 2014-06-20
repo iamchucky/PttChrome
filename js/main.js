@@ -9,7 +9,7 @@
     }
     app.connect(site);
     $('#BBSWindow').show();
-    $('#sideMenus').show();
+    //$('#sideMenus').show();
     app.onWindowResize();
   }, from);
 });

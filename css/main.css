@@ -85,7 +85,14 @@
   -webkit-user-select: none;
 }
 
+.dropdown-menu li > a > i {
+  position: absolute;
+  left: 10px;
+  margin-top: 3px;
+}
+
 .dropdown-menu li > a {
+  padding: 3px 20px 3px 30px;
   cursor: pointer;
   -webkit-user-select: none;
 }
@@ -93,7 +100,7 @@
 .dropdown-menu li > a:hover,
 .dropdown-menu li > a:focus {
   color: white;
-  background-color: #555;
+  background-color: #428bca;
 }
 
 .dropdown-menu li > a:hover span,
@@ -107,6 +114,7 @@
   font-weight: 400;
   line-height: 1.42857143;
   color: #aaa;
+  margin-left: 15px;
 }
 
 

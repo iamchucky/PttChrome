@@ -1029,6 +1029,13 @@ pttchrome.App.prototype.setupContextMenus = function() {
       $('#cmenuSearchContent').text("'"+selectedText+"'");
     }
 
+    // check if mouse browsing is on
+    if (self.buf.useMouseBrowsing) {
+      $('#mouseBrowsingCheck').show();
+    } else {
+      $('#mouseBrowsingCheck').hide();
+    }
+
     // show and position
     $(menuSelector)
       .show()
@@ -1078,7 +1085,7 @@ pttchrome.App.prototype.setupContextMenus = function() {
   $('#cmenu_paste a').html(i18n('cmenu_paste')+'<span class="cmenuHotkey">Ctrl+Shift+V</span>');
   $('#cmenu_selectAll a').text(i18n('cmenu_selectAll'));
   $('#cmenu_searchGoogle a').html(i18n('cmenu_searchGoogle')+' <span id="cmenuSearchContent"></span>');
-  $('#cmenu_mouseBrowsing a').text(i18n('cmenu_mouseBrowsing'));
+  $('#cmenu_mouseBrowsing a').html('<i id="mouseBrowsingCheck" class="fa fa-check"></i>'+i18n('cmenu_mouseBrowsing'));
   $('#cmenu_goToOtherSite a').text(i18n('cmenu_goToOtherSite'));
   $('#cmenu_settings a').text(i18n('cmenu_settings'));
 
