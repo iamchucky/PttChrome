@@ -4,6 +4,10 @@ document.addEventListener('DOMContentLoaded', function () {
     if (e.keyCode == 116) // F5
       webv.reload();
   };
+
+  webv.addEventListener('newwindow', function(e) {
+    webv.contentWindow.postMessage({action: 'newwindow', data: e.targetUrl}, webv.src);
+  });
 });
 
 var closeWindow = function() {

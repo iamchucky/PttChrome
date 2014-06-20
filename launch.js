@@ -29,7 +29,6 @@ chrome.app.runtime.onLaunched.addListener(function() {
   });
 });
 
-
 // somehow I have to create a chrome app window in order to use clipboardWrite
 var clipHelper = null;
 chrome.app.window.create('clipboard_helper.html', {
@@ -284,6 +283,10 @@ chrome.runtime.onConnectExternal.addListener(function(port) {
           default:
             break;
         }
+        break;
+      case 'newWindow':
+        if (msg.data)
+          clipHelper.openWindow(msg.data);
         break;
       case 'closeAppWindow':
         if (webview) {
