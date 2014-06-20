@@ -5,3 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
       webv.reload();
   };
 });
+
+var closeWindow = function() {
+  chrome.app.window.current().close();
+};

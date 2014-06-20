@@ -5,6 +5,7 @@
  * @see http://developer.chrome.com/apps/app.window.html
  */
 
+var webview = null;
 chrome.app.runtime.onLaunched.addListener(function() {
   chrome.storage.sync.get(null, function(items) {
     if ('openInPackagedApp' in items && items['openInPackagedApp']) {
@@ -19,6 +20,7 @@ chrome.app.runtime.onLaunched.addListener(function() {
         minHeight: 530,
       }, function(appWindow) {
         // onloaded
+        webview = appWindow.contentWindow
       });
 
     } else { // if not in or false, this is the default
@@ -26,6 +28,7 @@ chrome.app.runtime.onLaunched.addListener(function() {
     }
   });
 });
+
 
 // somehow I have to create a chrome app window in order to use clipboardWrite
 var clipHelper = null;
@@ -280,6 +283,11 @@ chrome.runtime.onConnectExternal.addListener(function(port) {
             break;
           default:
             break;
+        }
+        break;
+      case 'closeAppWindow':
+        if (webview) {
+          webview.closeWindow();
         }
         break;
       default:
