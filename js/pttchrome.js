@@ -99,7 +99,7 @@ pttchrome.App = function(onInitializedCallback, from) {
     self.mouse_over(e);
   }, false);
 
-  document.addEventListener('mousewheel', function(e) {
+  window.addEventListener('mousewheel', function(e) {
     self.mouse_scroll(e);
   }, true);
 
@@ -768,7 +768,7 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
       var fontFace = pref.get(name);
       if (!fontFace) 
         fontFace='monospace';
-      this.view.setFontFace(fontFace);
+      this.view.setFontFace('symmingliu,'+fontFace);
       break;
     default:
       break;
@@ -1022,11 +1022,25 @@ pttchrome.App.prototype.setupContextMenus = function() {
     if (window.getSelection().isCollapsed) { 
       $('#cmenu_copy').hide();
       $('#cmenu_searchGoogle').hide();
+
+      $('#cmenu_paste').show();
+      $('#cmenu_selectAll').show();
+      $('#cmenu_mouseBrowsing').show();
+      $('#cmenu_goToOtherSite').show();
+
+      $('#cmenu_divider2').show();
     } else {
       // got something selected, show copy and searchGoogle
       $('#cmenu_copy').show();
       $('#cmenu_searchGoogle').show();
       $('#cmenuSearchContent').text("'"+selectedText+"'");
+
+      $('#cmenu_paste').hide();
+      $('#cmenu_selectAll').hide();
+      $('#cmenu_mouseBrowsing').hide();
+      $('#cmenu_goToOtherSite').hide();
+
+      $('#cmenu_divider2').hide();
     }
 
     // check if mouse browsing is on
@@ -1077,7 +1091,7 @@ pttchrome.App.prototype.setupContextMenus = function() {
   };
 
   //make sure menu closes on any click
-  $(document).click(function () {
+  $(window).click(function() {
     hideContextMenu();
   });
 

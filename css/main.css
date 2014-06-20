@@ -93,7 +93,7 @@
 
 .dropdown-menu li > a {
   padding: 3px 20px 3px 30px;
-  cursor: pointer;
+  cursor: default;
   -webkit-user-select: none;
 }
 
@@ -117,6 +117,9 @@
   margin-left: 15px;
 }
 
+.modal-footer {
+  padding: 19px 0 0;
+}
 
 #logo {
   width: 85px;

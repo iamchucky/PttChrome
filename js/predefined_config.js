@@ -14,7 +14,7 @@ var DEFAULT_PREFS = {
 
   // displays
   fontFitWindowWidth: false,
-  fontFace      : 'SymMingLiu,MingLiu,monospace',
+  fontFace      : 'MingLiu,monospace',
 
 };
 
