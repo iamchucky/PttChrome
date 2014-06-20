@@ -2,7 +2,7 @@
 
 var pttchrome = {};
 
-pttchrome.App = function(onInitializedCallback) {
+pttchrome.App = function(onInitializedCallback, from) {
 
   this.CmdHandler = document.getElementById('cmdHandler');
   this.CmdHandler.setAttribute('useMouseBrowsing', '1');
@@ -110,6 +110,8 @@ pttchrome.App = function(onInitializedCallback) {
   window.onresize = function() {
     self.onWindowResize();
   };
+
+  this.isFromApp = (from === 'app');
 
   this.dblclickTimer=null;
   this.mbTimer=null;
@@ -260,6 +262,15 @@ pttchrome.App.prototype.setupConnectionAlert = function() {
   $('#connectionAlertExitAll').click(function(e) {
     window.open('','_self');
     window.close();
+
+    if (self.isFromApp) {
+      var port = self.appConn.appPort;
+      if (!port)
+        return;
+      if (self.appConn.isConnected) {
+        port.postMessage({ action: 'closeAppWindow' });
+      }
+    }
   });
 };
 
@@ -1006,7 +1017,8 @@ pttchrome.App.prototype.setupContextMenus = function() {
     }
 
     var target = e.target;
-    selectedText = window.getSelection().toString();
+    // replace the &nbsp;
+    selectedText = window.getSelection().toString().replace(/\u00a0/g, " ");
     if (window.getSelection().isCollapsed) { 
       $('#cmenu_copy').hide();
       $('#cmenu_searchGoogle').hide();

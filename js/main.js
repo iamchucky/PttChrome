@@ -1,5 +1,6 @@
 ﻿$(document).ready(function() {
   var site = getQueryVariable('site');
+  var from = getQueryVariable('from');
   setupI18n();
   pttchrome.app = new pttchrome.App(function(app) {
     app.setInputAreaFocus();
@@ -10,7 +11,7 @@
     $('#BBSWindow').show();
     $('#sideMenus').show();
     app.onWindowResize();
-  });
+  }, from);
 });
 
 

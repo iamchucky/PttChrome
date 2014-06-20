@@ -57,7 +57,6 @@ function TermView(rowCount) {
     this.bbsCursor = document.getElementById('cursor');
     this.trackKeyWordList = document.getElementById('TrackKeyWordList');
     this.BBSWin = document.getElementById('BBSWindow');
-    this.TempPast = document.getElementById('TempPast');
     this.pictureWindow = document.getElementById('PictureWindow');
     this.picturePreview = document.getElementById('PicturePreview');
     this.picturePreviewLoading = document.getElementById('PicturePreviewLoading');
@@ -627,13 +626,6 @@ TermView.prototype = {
           }
     },
     */
-  getPastText: function() {
-    TempPast.value = "";
-    TempPast.focus();
-    document.execCommand('paste');
-    dumpLog(DUMP_TYPE_LOG, "TempPast = "+ TempPast.value);
-    return TempPast.value;
-  },
     onTextInput: function(text) {
     //dumpLog(DUMP_TYPE_LOG, "onTextInput :" + text);
         if (this.bbscore.pasting) {
