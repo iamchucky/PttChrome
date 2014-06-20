@@ -965,6 +965,7 @@ pttchrome.App.prototype.mouse_over = function(e) {
   var parent = $(e.target).parent();
   var selector = '#hoverPPT';
   if (parent.is('a')) {
+    // TODO: make it also work on comment posted urls
     var src = parent.attr('href') + '@.jpg';
     var image = new Image();
     image.onload = function() {
