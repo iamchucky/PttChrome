@@ -56,6 +56,7 @@ function TelnetCore(app) {
   this.loginPrompt = ['','',''];
   this.loginStr = ['','','',''];
   //AutoLogin - end
+  this.isConnected = false;
 }
 
 TelnetCore.prototype.connect = function(host, port) {
@@ -74,6 +75,7 @@ TelnetCore.prototype.connect = function(host, port) {
     this.autoLoginStage = 0;
 
   //this.initialAutoLogin();
+  this.isConnected = true;
   this.app.appConn.connectTelnet(this.host, this.port);
 };
 

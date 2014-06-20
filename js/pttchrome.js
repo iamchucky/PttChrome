@@ -187,6 +187,7 @@ pttchrome.App.prototype.onData = function(data) {
 pttchrome.App.prototype.onClose = function() {
   dumpLog(DUMP_TYPE_LOG, "pttchrome onClose");
   this.timerEverySec.cancel();
+  this.telnetCore.isConnected = false;
 
   this.cancelMbTimer();
   this.unregExitAlert();
@@ -494,6 +495,8 @@ pttchrome.App.prototype.clientToPos = function(cX, cY) {
 };
 
 pttchrome.App.prototype.onMouse_click = function (cX, cY) {
+  if (!this.telnetCore.isConnected)
+    return;
   switch (this.buf.mouseCursor) {
     case 1:
       this.telnetCore.send('\x1b[D');  //Arrow Left
