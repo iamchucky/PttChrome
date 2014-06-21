@@ -31,19 +31,25 @@ chrome.app.runtime.onLaunched.addListener(function() {
 
 // somehow I have to create a chrome app window in order to use clipboardWrite
 var clipHelper = null;
-chrome.app.window.create('clipboard_helper.html', {
-  id: "clipboard_helper",
-  hidden: true,
-  bounds: {
-    width: 0,
-    height: 0
-  }
-}, function(appWindow) {
-  clipHelper = appWindow.contentWindow;
-});
+
+function createClipboardHelper(callback) {
+  chrome.app.window.create('clipboard_helper.html', {
+    id: "clipboard_helper",
+    hidden: true,
+    bounds: {
+      width: 0,
+      height: 0
+    }
+  }, function(appWindow) {
+    clipHelper = appWindow;
+    clipHelper.contentWindow.addEventListener('DOMContentLoaded', function() {
+      callback();
+    });
+  });
+}
 
 function doCopy(str) {
-  clipHelper.doCopy(str);
+  clipHelper.contentWindow.doCopy(str);
 }
 
 var pasteInput = document.createElement('input');
@@ -171,6 +177,7 @@ chrome.runtime.onMessageExternal.addListener(function(request, sender, sendRespo
   }
 });
 
+var avaliblePorts = [];
 chrome.runtime.onConnectExternal.addListener(function(port) {
   port.onMessage.addListener(function(msg) {
     switch(msg.action) {
@@ -229,8 +236,16 @@ chrome.runtime.onConnectExternal.addListener(function(port) {
         });
         break;
       case 'copy':
-        if (msg.data) {
-          doCopy(msg.data);
+        if (!clipHelper) {
+          createClipboardHelper(function() {
+            if (msg.data) {
+              doCopy(msg.data);
+            }
+          });
+        } else {
+          if (msg.data) {
+            doCopy(msg.data);
+          }
         }
         break;
       case 'paste':
@@ -285,8 +300,15 @@ chrome.runtime.onConnectExternal.addListener(function(port) {
         }
         break;
       case 'newWindow':
-        if (msg.data)
-          clipHelper.openWindow(msg.data);
+        if (!clipHelper) {
+          createClipboardHelper(function() {
+            if (msg.data)
+              clipHelper.contentWindow.openWindow(msg.data);
+          });
+        } else {
+          if (msg.data)
+            clipHelper.contentWindow.openWindow(msg.data);
+        }
         break;
       case 'closeAppWindow':
         if (webview) {
@@ -298,6 +320,10 @@ chrome.runtime.onConnectExternal.addListener(function(port) {
     }
   });
   port.onDisconnect.addListener(function(msg) {
+    if (clipHelper) {
+      clipHelper.close();
+      clipHelper = null;
+    }
     if (port.so) {
       port.so.disconnect();
       port.so = null;
