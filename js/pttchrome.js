@@ -970,6 +970,7 @@ pttchrome.App.prototype.mouse_over = function(e) {
   if (this.modalShown)
     return;
 
+  /*
   var parent = $(e.target).parent();
   var selector = '#hoverPPT';
   if (parent.is('a')) {
@@ -1016,6 +1017,7 @@ pttchrome.App.prototype.mouse_over = function(e) {
   } else if (e.target.parentNode !== $(selector)[0]) {
     $(selector).hide();
   }
+  */
 
   if(window.getSelection().isCollapsed && !this.mouseLeftButtonDown)
     this.setInputAreaFocus();
