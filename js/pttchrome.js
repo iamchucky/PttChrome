@@ -831,9 +831,8 @@ pttchrome.App.prototype.mouse_click = function(e) {
       }
     }
   } else if (e.button == 1) { //middle button
-    if (e.target && e.target.parentNode) {
-      if (e.target.getAttribute("link") == 'true')
-        return;
+    if ($(e.target).is('a') || $(e.target).parent().is('a')) {
+      return;
     }
     if (this.view.middleButtonFunction == 1)
       this.telnetCore.send('\r');
@@ -1077,6 +1076,13 @@ pttchrome.App.prototype.setupContextMenus = function() {
     }
 
     var target = e.target;
+    var contextOnUrl = '';
+    if ($(e.target).is('a')) {
+      contextOnUrl = $(e.target).attr('href');
+    } else if ($(e.target).parent().is('a')) {
+      contextOnUrl = $(e.target).parent().attr('href');
+    }
+
     // replace the &nbsp;
     selectedText = window.getSelection().toString().replace(/\u00a0/g, " ");
     if (window.getSelection().isCollapsed) { 

@@ -335,9 +335,9 @@ TermView.prototype = {
       var s1 = '';
       var s2 = '';
       if(ch.isStartOfURL() && useHyperLink)
-        s0 = '<a class="y" href="' +ch.getFullURL() + '"' + this.prePicRel( ch.getFullURL()) + ' target="_blank"><span link="true" class="q'+deffg+'b'+defbg+'">';
+        s0 = '<a class="y q'+deffg+'b'+defbg+'" href="' +ch.getFullURL() + '"' + this.prePicRel( ch.getFullURL()) + ' target="_blank">';
       if(ch.isEndOfURL() && useHyperLink)
-        s2 = '</span></a>';
+        s2 = '</a>';
       if(bg==defbg && (fg == deffg || char1 <= ' ') && !ch.isBlink() )
       {
         if(char1 <= ' ') // only display visible chars to speed up

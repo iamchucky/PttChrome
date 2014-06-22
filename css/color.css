@@ -4,6 +4,9 @@
  background-repeat: repeat-x;
  background-position: 0% 90%;
 }
+.y:hover {
+  color: inherit;
+}
 .q0b0{color:#000000;}
 .q0b1{color:#000000;background-color:#800000;}
 .q0b2{color:#000000;background-color:#008000;}
