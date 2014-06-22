@@ -48,7 +48,7 @@ function TelnetCore(app) {
   //this.b52k3uao = window.uaotable;
   this.EscChar = '\x15'; // Ctrl-U
   this.termType = 'VT100';
-  this.lineWrap = 0;
+  this.lineWrap = 78;
   this.initial = true;
 
   //AutoLogin - start

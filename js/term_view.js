@@ -625,25 +625,23 @@ TermView.prototype = {
           }
     },
     */
-    onTextInput: function(text) {
+    onTextInput: function(text, isPasting) {
         this.resetCursorBlink();
-    //dumpLog(DUMP_TYPE_LOG, "onTextInput :" + text);
-        if (this.bbscore.pasting) {
+        //dumpLog(DUMP_TYPE_LOG, "onTextInput :" + text);
+        var telnet = this.bbscore.telnetCore;
+        if (isPasting) {
           //var prefs = this.conn.listener.prefs;
           text = text.replace(/\r\n/g, '\r');
           text = text.replace(/\n/g, '\r');
           text = text.replace(/\r/g, this.EnterChar);
-            //text = text.replace(/\r/g, UnEscapeStr(this.EnterChar));
-      //dumpLog(DUMP_TYPE_LOG, "AfterParser :" + text);
+          //dumpLog(DUMP_TYPE_LOG, "AfterParser :" + text);
 
-      // not using now
-            //if(text.indexOf('\x1b') < 0 && this.telnetCore.lineWrap > 0) {
-      //  text = wrapText(text, this.telnetCore.lineWrap, UnEscapeStr(this.EnterChar));
-      //}
+          if(text.indexOf('\x1b') < 0 && telnet.lineWrap > 0) {
+            text = text.wrapText(telnet.lineWrap, this.EnterChar);
+          }
 
-            //FIXME: stop user from pasting DBCS words with 2-color
-            //text = text.replace(/\x1b/g, UnEscapeStr(this.telnetCore.EscChar));
-      //text = text.replace(/\r/g, this.EnterChar);
+          //FIXME: stop user from pasting DBCS words with 2-color
+          text = text.replace(/\x1b/g, telnet.EscChar);
         }
         this.conn.convSend(text);
     },
@@ -743,13 +741,11 @@ TermView.prototype = {
             case 115: //F4
                 conn.send('\x1bOS');
                 break;
-                */
             case 116: //F5
                 this.bbscore.pref.reloadPreference();
                 e.preventDefault();
                 e.stopPropagation();
                 break;
-                /*
             case 117: //F6
                 conn.send('\x1b[17~');
                 break;
@@ -797,7 +793,9 @@ TermView.prototype = {
                 var charCode = 127;
                 break;
             case 86: //ctrl+shift+v
-                //this.bbscore.doPaste();
+                this.bbscore.doPaste();
+                e.preventDefault();
+                e.stopPropagation();
                 var charCode = 0;
                 break;
             }

@@ -365,19 +365,16 @@ pttchrome.App.prototype.doPaste = function() {
   if (!port)
     return;
   
-  this.pasting = true;
   // Doing paste by having the launch.js read the clipboard data
   // and then send the content on the onPasteDone
   if (this.appConn.isConnected) {
     port.postMessage({ action: 'paste' });
-  } else {
-    this.pasting = false;
   }
 };
 
 pttchrome.App.prototype.onPasteDone = function(content) {
-  this.telnetCore.convSend(content);
-  this.pasting = false;
+  //this.telnetCore.convSend(content);
+  this.view.onTextInput(content, true);
 };
 
 pttchrome.App.prototype.doSelectAll = function() {
