@@ -778,6 +778,12 @@ TermView.prototype = {
             else if(e.keyCode >= 219 && e.keyCode <= 221) // [ \ ]
                 var charCode = e.keyCode - 192;
         } else if(!e.ctrlKey && e.altKey && !e.shiftKey) {
+          if (e.keyCode == 87) {// alt+w
+            conn.send('^W'.unescapeStr());
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+          }
         } else if(e.ctrlKey && !e.altKey && e.shiftKey) {
             switch(e.keyCode) {
             case 50: // @
