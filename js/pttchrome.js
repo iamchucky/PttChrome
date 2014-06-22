@@ -468,8 +468,8 @@ pttchrome.App.prototype.updateTabIcon = function(aStatus) {
 
 // use this method to get better window size in case of page zoom != 100%
 pttchrome.App.prototype.getWindowInnerBounds = function() {
-  var width = document.documentElement.clientWidth;
-  var height = document.documentElement.clientHeight;
+  var width = document.documentElement.clientWidth - this.view.bbsViewMargin * 2;
+  var height = document.documentElement.clientHeight - this.view.bbsViewMargin * 2;
   var bounds = {
     width: width,
     height: height
@@ -698,7 +698,6 @@ pttchrome.App.prototype.overlayCommandListener = function (e) {
           //alert(param);
           break;
         default:
-          //e v a l("bbsfox."+cmd+"();"); //unsafe javascript? how to fix it?
           break;
       }
     }

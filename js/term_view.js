@@ -32,6 +32,7 @@ function TermView(rowCount) {
     this.easyReadingWithImg=false;
     //new pref - end
 
+    this.bbsViewMargin = 0;
     this.cursorShow = true;
 
     this.buf=null;
@@ -847,9 +848,9 @@ TermView.prototype = {
       this.mainDisplay.style.textAlign = 'left';
       this.mainDisplay.style.width = this.chw*this.buf.cols + 'px';
       if (this.verticalAlignCenter && this.chh*this.buf.rows < innerBounds.height)
-        this.mainDisplay.style.marginTop = ((innerBounds.height-this.chh*this.buf.rows)/2) + 'px';
+        this.mainDisplay.style.marginTop = ((innerBounds.height-this.chh*this.buf.rows)/2) + this.bbsViewMargin + 'px';
       else
-        this.mainDisplay.style.marginTop = '0px';
+        this.mainDisplay.style.marginTop =  this.bbsViewMargin + 'px';
       if (this.fontFitWindowWidth)
         this.scaleX = Math.floor(innerBounds.width / (this.chw*this.buf.cols) * 100)/100;
       else
@@ -903,7 +904,7 @@ TermView.prototype = {
       var origin;
       var w = this.bbscore.getWindowInnerBounds().width;
       if(this.horizontalAlignCenter && this.scaleX!=1)
-        origin = [((w - (this.chw*this.buf.cols)*this.scaleX)/2), this.firstGrid.offsetTop];
+        origin = [((w - (this.chw*this.buf.cols)*this.scaleX)/2) + this.bbsViewMargin, this.firstGrid.offsetTop];
       else
         origin = [this.firstGrid.offsetLeft, this.firstGrid.offsetTop];
       var realX = origin[0] + (cx) * this.chw * this.scaleX;
@@ -993,8 +994,9 @@ TermView.prototype = {
           this.input.style.opacity = '0';
           //this.input.style.left = '-100000px';
         }
-        var bbswinheight = parseFloat(this.BBSWin.style.height);
-        var bbswinwidth = parseFloat(this.BBSWin.style.width);
+        var innerBounds = this.bbscore.getWindowInnerBounds();
+        var bbswinheight = innerBounds.height;
+        var bbswinwidth = innerBounds.width;
         if(bbswinheight < pos[1] + parseFloat(this.input.style.height) + this.chh)
           this.input.style.top = (pos[1] - parseFloat(this.input.style.height) - this.chh)+ 4 +'px';
         else
@@ -1043,9 +1045,6 @@ TermView.prototype = {
       var rows = this.buf ? this.buf.rows : 24;
 
       var innerBounds = this.bbscore.getWindowInnerBounds();
-
-      this.BBSWin.style.height = innerBounds.height + 'px';
-      this.BBSWin.style.width = innerBounds.width + 'px';
 
       if(this.screenType==0 || this.screenType==1)
       {
