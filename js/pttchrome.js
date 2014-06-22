@@ -185,6 +185,7 @@ pttchrome.App.prototype.onConnect = function() {
     self.antiIdle();
     self.view.onBlink();
   }, 1000);
+  this.view.resetCursorBlink();
 };
 
 pttchrome.App.prototype.onData = function(data) {
@@ -195,6 +196,7 @@ pttchrome.App.prototype.onData = function(data) {
 pttchrome.App.prototype.onClose = function() {
   dumpLog(DUMP_TYPE_LOG, "pttchrome onClose");
   this.timerEverySec.cancel();
+  this.view.cursorBlinkTimer.cancel();
   this.telnetCore.isConnected = false;
 
   this.cancelMbTimer();

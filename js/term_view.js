@@ -45,6 +45,7 @@ function TermView(rowCount) {
     this.blinkShow = false;
     this.blinkOn = false;
     this.doBlink = true;
+    this.cursorBlinkTimer = null;
 
     this.selection = null;
     /*
@@ -150,48 +151,46 @@ TermView.prototype = {
             return str.b2u(str);
         }
     },
-    /*
-    conv: Components.classes["@mozilla.org/intl/utf8converterservice;1"].getService(Components.interfaces.nsIUTF8ConverterService),
-    timerTrackKeyWord: Components.classes["@mozilla.org/timer;1"].createInstance(Components.interfaces.nsITimer),
-    */
-    onBlink: function(){
-         this.blinkOn=true;
-         //   if(this.buf && this.buf.changed)
-         this.buf.queueUpdate(true);
-         //   else this.update();
-         this.cursorShow=!this.cursorShow;
-         if(this.cursorShow)
-           this.bbsCursor.style.display = 'block';
-         else
-           this.bbsCursor.style.display = 'none';
-    },
-    /*
-    showAlertMessage: function(caption, message){
-      try{
-        this.alertService.showAlertNotification("chrome://bbsfox/skin/logo/logo.png", caption, message, false, "", null);
-      }catch(e){}
 
+    onBlink: function() {
+      this.blinkOn=true;
+      //   if(this.buf && this.buf.changed)
+      this.buf.queueUpdate(true);
+      //   else this.update();
     },
-    */
+
+    onCursorBlink: function() {
+      this.cursorShow=!this.cursorShow;
+      if(this.cursorShow)
+        this.bbsCursor.style.display = 'block';
+      else
+        this.bbsCursor.style.display = 'none';
+    },
+
+    resetCursorBlink: function() {
+      if (!this.conn.isConnected)
+        return;
+      var self = this;
+      this.cursorShow = true;
+      this.bbsCursor.style.display = 'block';
+      if (this.cursorBlinkTimer) {
+        this.cursorBlinkTimer.cancel();
+      }
+      this.cursorBlinkTimer = setTimer(true, function() {
+        self.onCursorBlink();
+      }, 1000);
+    },
+
     setBuf: function(buf) {
-        this.buf=buf;
+      this.buf=buf;
     },
 
     setConn: function(conn) {
-        this.conn=conn;
+      this.conn=conn;
     },
 
     setCore: function(core) {
-        this.bbscore=core;
-        /*
-        var rw = Components.classes["@mozilla.org/appshell/window-mediator;1"].getService(Components.interfaces.nsIWindowMediator).getMostRecentWindow("navigator:browser");
-        var browserIndex = rw.gBrowser.getBrowserIndexForDocument(document);
-
-        if (browserIndex > -1) {
-          this.findBar = rw.gFindBar;
-        }
-        */
-        //this.loadSymbolInput();
+      this.bbscore=core;
     },
 
     setFontFace: function(fontFace) {
@@ -627,6 +626,7 @@ TermView.prototype = {
     },
     */
     onTextInput: function(text) {
+        this.resetCursorBlink();
     //dumpLog(DUMP_TYPE_LOG, "onTextInput :" + text);
         if (this.bbscore.pasting) {
           //var prefs = this.conn.listener.prefs;
@@ -651,6 +651,7 @@ TermView.prototype = {
     onkeyDown: function(e) {
         // dump('onKeyPress:'+e.charCode + ', '+e.keyCode+'\n');
         var conn = this.conn;
+        this.resetCursorBlink();
 
         if(e.charCode){
             // Control characters
