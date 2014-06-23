@@ -236,7 +236,7 @@ chrome.runtime.onConnectExternal.addListener(function(port) {
         });
         break;
       case 'copy':
-        if (msg.data)
+        if (!msg.data)
           return;
         if (!clipHelper) {
           createClipboardHelper(function() {
