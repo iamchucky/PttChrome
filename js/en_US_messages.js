@@ -1,6 +1,6 @@
 locale.en_US = {
   "appName": {
-    "message": "BBSChrome",
+    "message": "PttChrome",
     "description": "The title of the application, displayed in the web store."
   },
   "appDesc": {
@@ -36,6 +36,12 @@ locale.en_US = {
   },
   "cmenu_searchGoogle": {
     "message": "Search Google for"
+  },
+  "cmenu_openUrlNewTab": {
+    "message": "Open link in new tab"
+  },
+  "cmenu_copyLinkUrl": {
+    "message": "Copy link address"
   },
   "cmenu_mouseBrowsing": {
     "message": "Mouse browsing"

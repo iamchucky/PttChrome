@@ -1,6 +1,6 @@
 ﻿locale.zh_TW = {
   "appName": {
-    "message": "BBSChrome",
+    "message": "PttChrome",
     "description": "The title of the application, displayed in the web store."
   },
   "appDesc": {
@@ -36,6 +36,12 @@
   },
   "cmenu_searchGoogle": {
     "message": "在 Google 上搜尋"
+  },
+  "cmenu_openUrlNewTab": {
+    "message": "在新分頁中開啟連結"
+  },
+  "cmenu_copyLinkUrl": {
+    "message": "複製聯結網址"
   },
   "cmenu_mouseBrowsing": {
     "message": "滑鼠瀏覽"

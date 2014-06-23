@@ -385,6 +385,12 @@ pttchrome.App.prototype.doSearchGoogle = function(searchTerm) {
   window.open('http://google.com/search?q='+searchTerm);
 };
 
+pttchrome.App.prototype.doOpenUrlNewTab = function(a) {
+  var e = document.createEvent('MouseEvents');
+  e.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, true, false, false, false, 0, null);
+  a.dispatchEvent(e);
+};
+
 pttchrome.App.prototype.doGoToOtherSite = function() {
   $('#siteModal').modal('show');
 };
@@ -1062,6 +1068,8 @@ pttchrome.App.prototype.setupContextMenus = function() {
   var self = this;
   var menuSelector = '#contextMenus';
   var selectedText = '';
+  var contextOnUrl = '';
+  var aElement = null;
 
   $('#BBSWindow').on('contextmenu', function(e) {
     // if i am doing scrolling, i should skip
@@ -1075,37 +1083,34 @@ pttchrome.App.prototype.setupContextMenus = function() {
     }
 
     var target = e.target;
-    var contextOnUrl = '';
+    contextOnUrl = '';
+    aElement = null;
     if ($(e.target).is('a')) {
       contextOnUrl = $(e.target).attr('href');
+      aElement = e.target;
     } else if ($(e.target).parent().is('a')) {
       contextOnUrl = $(e.target).parent().attr('href');
+      aElement = e.target.parentNode;
     }
 
     // replace the &nbsp;
     selectedText = window.getSelection().toString().replace(/\u00a0/g, " ");
-    if (window.getSelection().isCollapsed) { 
-      $('#cmenu_copy').hide();
-      $('#cmenu_searchGoogle').hide();
-
-      $('#cmenu_paste').show();
-      $('#cmenu_selectAll').show();
-      $('#cmenu_mouseBrowsing').show();
-      $('#cmenu_goToOtherSite').show();
-
-      $('#cmenu_divider2').show();
+    if (contextOnUrl) {
+      $('.contextUrl').show();
+      $('.contextSel').hide();
+      $('.contextNormal').hide();
     } else {
-      // got something selected, show copy and searchGoogle
-      $('#cmenu_copy').show();
-      $('#cmenu_searchGoogle').show();
-      $('#cmenuSearchContent').text("'"+selectedText+"'");
-
-      $('#cmenu_paste').hide();
-      $('#cmenu_selectAll').hide();
-      $('#cmenu_mouseBrowsing').hide();
-      $('#cmenu_goToOtherSite').hide();
-
-      $('#cmenu_divider2').hide();
+      if (window.getSelection().isCollapsed) { 
+        $('.contextUrl').hide();
+        $('.contextSel').hide();
+        $('.contextNormal').show();
+      } else {
+        // got something selected, show copy and searchGoogle
+        $('.contextUrl').hide();
+        $('.contextSel').show();
+        $('.contextNormal').hide();
+        $('#cmenuSearchContent').text("'"+selectedText+"'");
+      }
     }
 
     // check if mouse browsing is on
@@ -1164,6 +1169,8 @@ pttchrome.App.prototype.setupContextMenus = function() {
   $('#cmenu_paste a').html(i18n('cmenu_paste')+'<span class="cmenuHotkey">Ctrl+Shift+V</span>');
   $('#cmenu_selectAll a').text(i18n('cmenu_selectAll'));
   $('#cmenu_searchGoogle a').html(i18n('cmenu_searchGoogle')+' <span id="cmenuSearchContent"></span>');
+  $('#cmenu_openUrlNewTab a').text(i18n('cmenu_openUrlNewTab'));
+  $('#cmenu_copyLinkUrl a').text(i18n('cmenu_copyLinkUrl'));
   $('#cmenu_mouseBrowsing a').html('<i id="mouseBrowsingCheck" class="fa fa-check"></i>'+i18n('cmenu_mouseBrowsing'));
   $('#cmenu_goToOtherSite a').text(i18n('cmenu_goToOtherSite'));
   $('#cmenu_settings a').text(i18n('cmenu_settings'));
@@ -1185,6 +1192,16 @@ pttchrome.App.prototype.setupContextMenus = function() {
   });
   $('#cmenu_searchGoogle').click(function(e) {
     self.doSearchGoogle(selectedText);
+    e.stopPropagation();
+    hideContextMenu();
+  });
+  $('#cmenu_openUrlNewTab').click(function(e) {
+    self.doOpenUrlNewTab(aElement);
+    e.stopPropagation();
+    hideContextMenu();
+  });
+  $('#cmenu_copyLinkUrl').click(function(e) {
+    self.doCopy(contextOnUrl);
     e.stopPropagation();
     hideContextMenu();
   });
