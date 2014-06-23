@@ -406,6 +406,15 @@ pttchrome.App.prototype.onWindowResize = function() {
   } else {
     $('#sideMenus').removeClass('menuHidden');
   }
+
+  if (this.modalShown) {
+    var width = document.documentElement.clientWidth * 0.7;
+    width = (width > 730) ? width : 730;
+    width -= 190;
+    var height = document.documentElement.clientHeight * 0.9 - 76;
+    $('#prefModal .modal-body').css('height', height + 'px');
+    $('#prefModal .modal-body').css('width', width + 'px');
+  }
 };
 
 pttchrome.App.prototype.switchMouseBrowsing = function() {
@@ -1027,6 +1036,8 @@ pttchrome.App.prototype.mouse_over = function(e) {
 };
 
 pttchrome.App.prototype.mouse_scroll = function(e) {
+  if (this.modalShown) 
+    return;
   var cmdhandler = this.CmdHandler;
 
   // scroll = up/down

@@ -24,7 +24,7 @@ PttChromePref.prototype = {
       // for the color selection box
       if (i === 'mouseBrowsingHighlightColor') {
         var qName = '#opt_'+i;
-        var htmlStr = '<select class="form-control">';
+        var htmlStr = i18n('options_highlightColor')+'<select class="form-control">';
         for (var n = 1; n < 16; ++n) {
           htmlStr += '<option value="'+n+'" class="q'+n+'b'+n+'"></option>';
         }
@@ -78,6 +78,14 @@ PttChromePref.prototype = {
     this.updateSettingsToUi();
 
     $('#prefModal').off();
+    $('#prefModal').on('show.bs.modal', function(e) {
+      var width = document.documentElement.clientWidth * 0.7;
+      width = (width > 730) ? width : 730;
+      width -= 190;
+      var height = document.documentElement.clientHeight * 0.9 - 76;
+      $('#prefModal .modal-body').css('height', height + 'px');
+      $('#prefModal .modal-body').css('width', width + 'px');
+    });
     $('#prefModal').on('shown.bs.modal', function(e) {
       self.app.modalShown = true;
     });

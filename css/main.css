@@ -125,8 +125,96 @@
   margin-left: 15px;
 }
 
-.modal-footer {
-  padding: 19px 0 0;
+#prefModal > .modal-dialog {
+  width: 70%;
+  min-width: 730px;
+  height: 90%;
+  margin-top: 2.5%;
+  margin-bottom: 0;
+}
+
+#prefModal .modal-content {
+  height: 100%;
+  cursor: default;
+  -webkit-user-select: none;
+}
+#prefModal .modal-body {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  overflow-y: auto;
+  margin-left: 150px;
+}
+
+#prefModal h3 {
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+#prefModal .close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+#modalHeader {
+  top: 0px;
+  left: 180px;
+  position: absolute;
+}
+
+#modalNav {
+  padding-left: 30px;
+  width: 180px;
+}
+
+#modalNav .nav {
+  margin-top: 20px;
+}
+
+#modalNav .nav > li > a {
+  padding: 5px 0px;
+  color: black;
+}
+
+#modalNav .nav > li > a:hover,
+#modalNav .nav > li > a:focus {
+  background: none;
+}
+
+#modalNav .nav-pills > li.active > a,
+#modalNav .nav-pills > li.active > a:hover,
+#modalNav .nav-pills > li.active > a:focus {
+  font-weight: bold;
+  padding: 5px 0px;
+  color: black;
+  background: none;
+}
+
+.group {
+  float: left;
+  width: 50%;
+  min-width: 400px;
+}
+
+.list-group-item-text input[type="text"],
+.list-group-item-text input[type="password"] {
+  width: 300px;
+}
+
+.list-group-item-text > div {
+  margin-left: 20px;
+}
+
+#opt_mouseBrowsingHighlightColor {
+  margin-left: 50px;
+  margin-top: -5px;
+}
+
+#opt_mouseBrowsingHighlightColor > select {
+  margin-top: 5px;
+  width: 70px;
+  -webkit-appearance: none;
 }
 
 #logo {

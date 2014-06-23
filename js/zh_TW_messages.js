@@ -100,6 +100,9 @@
   "options_mouseBrowsingHighlight": {
     "message": "啟用滑鼠瀏覽的底色效果"
   },
+  "options_highlightColor": {
+    "message": "    底色"
+  },
   "alert_connectionHeader": {
     "message": "你斷線了!"
   },

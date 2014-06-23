@@ -78,46 +78,57 @@
     <div id="prefModal" class="modal fade" style="color:black;overflow-y:auto">
       <div class="modal-dialog">
         <div class="modal-content">
+          <div id="modalNav">
+            <h3 id="opt_title">Settings</h3>
+            <button id="opt_reset" type="button" class="btn btn-default"></button>
+            <ul class="nav nav-pills nav-stacked">
+              <li><a href="#genral" data-toggle="pill">General</a></li>
+              <li><a href="#autologin" data-toggle="pill">Auto login</a></li>
+              <li><a href="#shortcuts" data-toggle="pill">Shortcuts</a></li>
+            </ul>
+          </div>
+          <h3 id="modalHeader">General</h3>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <div class="modal-body">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <div class="list-group">
-              <h4 id="opt_general" class="list-group-item-heading" style="font-weight:bold"></h4>
-              <div class="list-group-item-text">
-                <div id="opt_openInPackagedApp" class="checkbox">
+            <div class="group">
+              <div class="list-group">
+                <h4 id="opt_general" class="list-group-item-heading"></h4>
+                <div class="list-group-item-text">
+                  <div id="opt_openInPackagedApp" class="checkbox">
+                  </div>
+                  <div id="opt_antiIdleTime" class="form-group">
+                  </div>
                 </div>
-                <div id="opt_antiIdleTime" class="form-group">
+              </div>
+              <div class="list-group">
+                <h4 id="opt_mouseBrowsing" class="list-group-item-heading"></h4>
+                <div class="list-group-item-text">
+                  <div id="opt_useMouseBrowsing" class="checkbox">
+                  </div>
+                  <div id="opt_mouseBrowsingHighlight" class="checkbox">
+                  </div>
+                  <div id="opt_mouseBrowsingHighlightColor">
+                  </div>
+                </div>
+              </div>
+              <div class="list-group">
+                <h4 id="opt_appearance" class="list-group-item-heading"></h4>
+                <div class="list-group-item-text">
+                  <div id="opt_fontFitWindowWidth" class="checkbox">
+                  </div>
+                  <div id="opt_fontFace" class="form-group">
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="list-group">
-              <h4 id="opt_mouseBrowsing" class="list-group-item-heading" style="font-weight:bold"></h4>
-              <div class="list-group-item-text">
-                <div id="opt_useMouseBrowsing" class="checkbox">
-                </div>
-                <div id="opt_mouseBrowsingHighlight" class="checkbox">
-                </div>
-                <div id="opt_mouseBrowsingHighlightColor">
+            <div class="group">
+              <div class="list-group">
+                <h4 id="opt_autologin" class="list-group-item-heading" style="margin-bottom:10px;"></h4>
+                <div class="list-group-item-text">
+                  <div id="login_username" class="form-group"></div>
+                  <div id="login_password" class="form-group"></div>
                 </div>
               </div>
-            </div>
-            <div class="list-group">
-              <h4 id="opt_appearance" class="list-group-item-heading" style="font-weight:bold"></h4>
-              <div class="list-group-item-text">
-                <div id="opt_fontFitWindowWidth" class="checkbox">
-                </div>
-                <div id="opt_fontFace" class="form-group">
-                </div>
-              </div>
-            </div>
-            <div class="list-group">
-              <h4 id="opt_autologin" class="list-group-item-heading" style="font-weight:bold"></h4>
-              <div class="list-group-item-text">
-                <div id="login_username" class="form-group"></div>
-                <div id="login_password" class="form-group"></div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button id="opt_reset" type="button" class="btn btn-default"></button>
             </div>
           </div>
         </div>
