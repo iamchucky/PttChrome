@@ -236,16 +236,14 @@ chrome.runtime.onConnectExternal.addListener(function(port) {
         });
         break;
       case 'copy':
+        if (msg.data)
+          return;
         if (!clipHelper) {
           createClipboardHelper(function() {
-            if (msg.data) {
-              doCopy(msg.data);
-            }
+            doCopy(msg.data);
           });
         } else {
-          if (msg.data) {
-            doCopy(msg.data);
-          }
+          doCopy(msg.data);
         }
         break;
       case 'paste':
@@ -300,14 +298,15 @@ chrome.runtime.onConnectExternal.addListener(function(port) {
         }
         break;
       case 'newWindow':
+        if (!msg.data)
+          return;
+        
         if (!clipHelper) {
           createClipboardHelper(function() {
-            if (msg.data)
-              clipHelper.contentWindow.openWindow(msg.data);
+            clipHelper.contentWindow.openWindow(msg.data);
           });
         } else {
-          if (msg.data)
-            clipHelper.contentWindow.openWindow(msg.data);
+          clipHelper.contentWindow.openWindow(msg.data);
         }
         break;
       case 'closeAppWindow':
