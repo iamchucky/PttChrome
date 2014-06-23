@@ -13,10 +13,6 @@ PttChromePref.prototype = {
 
   updateSettingsToUi: function() {
     var self = this;
-    for (var i in PREFS_CATEGORIES) {
-      var cat = PREFS_CATEGORIES[i];
-      $('#opt_'+cat).text(i18n('options_'+cat));
-    }
     for (var i in this.values) {
       $('#opt_'+i).empty();
       var val = this.values[i];
@@ -43,6 +39,11 @@ PttChromePref.prototype = {
 
       switch(typeof(val)) {
         case 'number':
+          $('#opt_'+i).html(
+            '<label style="font-weight:normal;">'+i18n('options_'+i)+'</label>'+
+            '<input type="number" class="form-control" value="'+val+'">');
+          break;
+          break;
         case 'string':
           $('#opt_'+i).html(
             '<label style="font-weight:normal;">'+i18n('options_'+i)+'</label>'+
@@ -63,18 +64,53 @@ PttChromePref.prototype = {
     $('#login_password').html(
       '<label style="font-weight:normal;">'+i18n('autologin_password')+'</label>'+
       '<input type="password" class="form-control" value="'+this.logins[1]+'">');
-    $('#opt_autologin').html(i18n('options_autologin')+'  <small style="color:red;">'+i18n('autologin_warning')+'</small>');
   },
 
-  populateSettingsToUi: function() {
+  setupSettingsUi: function() {
     var self = this;
+    $('#opt_title').text(i18n('menu_settings'));
+
     $('#opt_reset').off();
     $('#opt_reset').text(i18n('options_reset'));
     $('#opt_reset').click(function() {
       self.shouldResetToDefault = true;
       $('#prefModal').modal('hide');
     });
+    // adjust the size alittle according to the locale
+    var lang = getLang();
+    if (lang == 'en_US') {
+      $('#opt_reset').css('fontSize', '12px');
+      $('#opt_reset').css('marginLeft', '-10px');
+    }
 
+    for (var i in PREFS_CATEGORIES) {
+      var cat = PREFS_CATEGORIES[i];
+      $('#opt_'+cat).text(i18n('options_'+cat));
+    }
+    for (var i in PREFS_NAV) {
+      var cat = PREFS_NAV[i];
+      $('#optNav_'+cat).text(i18n('options_'+cat));
+    }
+
+    $('#opt_tabs a:first').tab('show');
+    var currTab = 'general';
+    $('#modalHeader').text(i18n('options_'+currTab));
+
+    $('#opt_autologinWarning').text(i18n('autologin_warning'));
+    
+    $('#opt_tabs a').click(function(e) {
+      e.preventDefault();
+
+      var currTab = $(this).attr('name');
+      $('#modalHeader').text(i18n('options_'+currTab));
+      $(this).tab('show');
+    });
+
+  },
+
+  populateSettingsToUi: function() {
+    var self = this;
+    this.setupSettingsUi();
     this.updateSettingsToUi();
 
     $('#prefModal').off();
@@ -82,7 +118,9 @@ PttChromePref.prototype = {
       var width = document.documentElement.clientWidth * 0.7;
       width = (width > 730) ? width : 730;
       width -= 190;
-      var height = document.documentElement.clientHeight * 0.9 - 76;
+      var height = document.documentElement.clientHeight * 0.9;
+      height = (height > 400) ? height: 400;
+      height -= 76;
       $('#prefModal .modal-body').css('height', height + 'px');
       $('#prefModal .modal-body').css('width', width + 'px');
     });

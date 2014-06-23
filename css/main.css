@@ -125,12 +125,17 @@
   margin-left: 15px;
 }
 
+#opt_reset {
+  bottom: 30px;
+  position: absolute;
+}
+
 #prefModal > .modal-dialog {
   width: 70%;
   min-width: 730px;
   height: 90%;
-  margin-top: 2.5%;
   margin-bottom: 0;
+  min-height: 400px;
 }
 
 #prefModal .modal-content {
@@ -144,10 +149,10 @@
   right: 10px;
   overflow-y: auto;
   margin-left: 150px;
+  padding-top: 10px;
 }
 
 #prefModal h3 {
-  margin-top: 30px;
   margin-bottom: 20px;
 }
 
@@ -161,11 +166,15 @@
   top: 0px;
   left: 180px;
   position: absolute;
+  margin-top: 30px;
 }
 
 #modalNav {
   padding-left: 30px;
-  width: 180px;
+  padding-top: 10px;
+  height: 100%;
+  width: 160px;
+  -webkit-box-shadow: -10px 0 180px -60px #888 inset
 }
 
 #modalNav .nav {
@@ -198,8 +207,9 @@
 }
 
 .list-group-item-text input[type="text"],
+.list-group-item-text input[type="number"],
 .list-group-item-text input[type="password"] {
-  width: 300px;
+  width: 250px;
 }
 
 .list-group-item-text > div {

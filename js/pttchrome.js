@@ -411,7 +411,9 @@ pttchrome.App.prototype.onWindowResize = function() {
     var width = document.documentElement.clientWidth * 0.7;
     width = (width > 730) ? width : 730;
     width -= 190;
-    var height = document.documentElement.clientHeight * 0.9 - 76;
+    var height = document.documentElement.clientHeight * 0.9;
+    height = (height > 400) ? height: 400;
+    height -= 76;
     $('#prefModal .modal-body').css('height', height + 'px');
     $('#prefModal .modal-body').css('width', width + 'px');
   }
@@ -779,6 +781,9 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
     case 'dbcsDetect':
       this.view.dbcsDetect = pref.get(name);
       break;
+    case 'lineWrap':
+      this.telnetCore.lineWrap = pref.get(name);
+      break;
     case 'fontFitWindowWidth':
       this.view.fontFitWindowWidth = pref.get(name);
       if (this.view.fontFitWindowWidth) {
@@ -793,6 +798,11 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
       if (!fontFace) 
         fontFace='monospace';
       this.view.setFontFace(fontFace);
+      break;
+    case 'bbsMargin':
+      var margin = pref.get(name);
+      this.view.bbsViewMargin = margin;
+      this.onWindowResize();
       break;
     default:
       break;

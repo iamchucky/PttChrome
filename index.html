@@ -80,56 +80,82 @@
         <div class="modal-content">
           <div id="modalNav">
             <h3 id="opt_title">Settings</h3>
-            <button id="opt_reset" type="button" class="btn btn-default"></button>
-            <ul class="nav nav-pills nav-stacked">
-              <li><a href="#genral" data-toggle="pill">General</a></li>
-              <li><a href="#autologin" data-toggle="pill">Auto login</a></li>
-              <li><a href="#shortcuts" data-toggle="pill">Shortcuts</a></li>
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-pills nav-stacked" id="opt_tabs">
+              <li><a id="optNav_general" href="#tabContentGeneral" name="general" data-toggle="pill">General</a></li>
+              <li><a id="optNav_autologin" href="#tabContentAutologin" name="autologin" data-toggle="pill">Auto login</a></li>
+              <li><a id="optNav_shortcuts" href="#tabContentShortcuts" name="shortcuts" data-toggle="pill">Shortcuts</a></li>
             </ul>
+
+            <button id="opt_reset" type="button" class="btn btn-default"></button>
           </div>
           <h3 id="modalHeader">General</h3>
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <div class="modal-body">
-            <div class="group">
-              <div class="list-group">
-                <h4 id="opt_general" class="list-group-item-heading"></h4>
-                <div class="list-group-item-text">
-                  <div id="opt_openInPackagedApp" class="checkbox">
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+
+              <div class="tab-pane" id="tabContentGeneral">
+                <div class="group">
+                  <div class="list-group">
+                    <div class="list-group-item-text">
+                      <div id="opt_openInPackagedApp" class="checkbox">
+                      </div>
+                      <div id="opt_antiIdleTime" class="form-group">
+                      </div>
+                      <div id="opt_lineWrap" class="form-group">
+                      </div>
+                    </div>
                   </div>
-                  <div id="opt_antiIdleTime" class="form-group">
+                  <div class="list-group">
+                    <h4 id="opt_mouseBrowsing" class="list-group-item-heading"></h4>
+                    <div class="list-group-item-text">
+                      <div id="opt_useMouseBrowsing" class="checkbox">
+                      </div>
+                      <div id="opt_mouseBrowsingHighlight" class="checkbox">
+                      </div>
+                      <div id="opt_mouseBrowsingHighlightColor">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="group">
+                  <div class="list-group">
+                    <h4 id="opt_appearance" class="list-group-item-heading"></h4>
+                    <div class="list-group-item-text">
+                      <div id="opt_fontFitWindowWidth" class="checkbox">
+                      </div>
+                      <div id="opt_fontFace" class="form-group">
+                      </div>
+                      <div id="opt_bbsMargin" class="form-group">
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div class="list-group">
-                <h4 id="opt_mouseBrowsing" class="list-group-item-heading"></h4>
-                <div class="list-group-item-text">
-                  <div id="opt_useMouseBrowsing" class="checkbox">
-                  </div>
-                  <div id="opt_mouseBrowsingHighlight" class="checkbox">
-                  </div>
-                  <div id="opt_mouseBrowsingHighlightColor">
-                  </div>
-                </div>
-              </div>
-              <div class="list-group">
-                <h4 id="opt_appearance" class="list-group-item-heading"></h4>
-                <div class="list-group-item-text">
-                  <div id="opt_fontFitWindowWidth" class="checkbox">
-                  </div>
-                  <div id="opt_fontFace" class="form-group">
+
+              <div class="tab-pane" id="tabContentAutologin">
+                <div class="group">
+                  <small id="opt_autologinWarning" style="color:red;"></small>
+                  <div class="list-group">
+                    <h4 id="opt_autologin" class="list-group-item-heading" style="margin-bottom:10px;"></h4>
+                    <div class="list-group-item-text">
+                      <div id="login_username" class="form-group"></div>
+                      <div id="login_password" class="form-group"></div>
+                    </div>
                   </div>
                 </div>
               </div>
+
+              <div class="tab-pane" id="tabContentShortcuts">
+                <div class="group">
+                </div>
+              </div>
+
             </div>
-            <div class="group">
-              <div class="list-group">
-                <h4 id="opt_autologin" class="list-group-item-heading" style="margin-bottom:10px;"></h4>
-                <div class="list-group-item-text">
-                  <div id="login_username" class="form-group"></div>
-                  <div id="login_password" class="form-group"></div>
-                </div>
-              </div>
-            </div>
+
           </div>
         </div>
       </div>

@@ -1,20 +1,23 @@
-﻿var PREFS_CATEGORIES = ['general', 'mouseBrowsing', 'appearance'];
+﻿var PREFS_CATEGORIES = ['mouseBrowsing', 'appearance'];
+var PREFS_NAV = ['general', 'autologin', 'shortcuts' ];
 var DEFAULT_PREFS = {
 
   // general
   //closeQuery    : false,
   //dbcsDetect    : false,
-  openInPackagedApp: false,
-  antiIdleTime  : 0,
+  openInPackagedApp : false,
+  antiIdleTime      : 0,
+  lineWrap          : 78,
 
   // mouse browsing
-  useMouseBrowsing  : false,
-  mouseBrowsingHighlight : true,
-  mouseBrowsingHighlightColor: 2,
+  useMouseBrowsing            : false,
+  mouseBrowsingHighlight      : true,
+  mouseBrowsingHighlightColor : 2,
 
   // displays
   fontFitWindowWidth: false,
-  fontFace      : 'SymMingLiu,MingLiu,monospace',
+  fontFace          : 'SymMingLiu,MingLiu,monospace',
+  bbsMargin         : 0,
 
 };
 

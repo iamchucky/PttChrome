@@ -7,6 +7,8 @@ locale.en_US = {
     "message": "A GNU/GPL telnet client extension specifically designed for BBS browsing.",
     "description":"The description of the application, displayed in the web store."
   },
+
+  // side menus
   "menu_coloredCopy": {
     "message": "Copy with ANSI color"
   },
@@ -25,6 +27,8 @@ locale.en_US = {
   "menu_settings": {
     "message": "Settings"
   },
+
+  // context menus
   "cmenu_copy": {
     "message": "Copy"
   },
@@ -55,41 +59,45 @@ locale.en_US = {
   "cmenu_restartInTab": {
     "message": "Restart PttChrome in a new tab"
   },
+
+  // options nav
+  "options_general": {
+    "message": "General"
+  },
   "options_autologin": {
     "message": "Auto login"
   },
-  "autologin_username": {
-    "message": "Username"
+  "options_shortcuts": {
+    "message": "Shortcuts"
   },
-  "autologin_password": {
-    "message": "Password"
-  },
-  "autologin_warning": {
-    "message": "Login info is not encrypted, DO NOT use on a public machine"
-  },
+
+  // options
   "options_openInPackagedApp": {
     "message": "Launch PttChrome in packaged app."
   },
   "options_preferences": {
     "message": "Preferences"
   },
-  "options_general": {
-    "message": "General"
+  "options_antiIdleTime": {
+    "message": "Anti-idle interval (sec)"
+  },
+  "options_lineWrap": {
+    "message": "Wrap line for pasting text longer than"
   },
   "options_reset": {
-    "message": "Reset to default"
+    "message": "Restore defaults"
   },
   "options_appearance": {
     "message": "Appearance"
+  },
+  "options_bbsMargin": {
+    "message": "Margins around BBS view (px)"
   },
   "options_fontFitWindowWidth": {
     "message": "Stretch font width to fill the view"
   },
   "options_fontFace": {
     "message": "Font face"
-  },
-  "options_antiIdleTime": {
-    "message": "Anti-idle interval (sec)"
   },
   "options_mouse": {
     "message": "Mouse"
@@ -104,8 +112,21 @@ locale.en_US = {
     "message": "Mouse browsing highlight effect"
   },
   "options_highlightColor": {
-    "message": "  Color"
+    "message": "Color"
   },
+
+  // auto logins
+  "autologin_username": {
+    "message": "Username"
+  },
+  "autologin_password": {
+    "message": "Password"
+  },
+  "autologin_warning": {
+    "message": "Login info is not encrypted, DO NOT use on a public machine"
+  },
+
+  // alerts
   "alert_connectionHeader": {
     "message": "You are disconnected!"
   },
@@ -118,6 +139,7 @@ locale.en_US = {
   "alert_connectionExitAll": {
     "message": "Quit"
   },
+
   "getAppBtn": {
     "message": "Get PttChrome from chrome web store"
   },
