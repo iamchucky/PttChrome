@@ -22,6 +22,9 @@ function TermView(rowCount) {
     this.ctrlPicturePreview = false;
     this.picturePreviewInfo = false;
     this.middleButtonFunction = 0;
+    this.mouseWheelFunction1 = 1;
+    this.mouseWheelFunction2 = 2;
+    this.mouseWheelFunction3 = 3;
     //this.shadowHighLight = false;
     //this.highlightFG = 7;
     this.DisplayBackground=false;

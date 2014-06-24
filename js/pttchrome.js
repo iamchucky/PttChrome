@@ -614,7 +614,7 @@ pttchrome.App.prototype.overlayCommandListener = function (e) {
         case "doPageDown":
           this.telnetCore.send('\x1b[6~');
           break;
-        case "prevousThread":
+        case "previousThread":
           this.buf.SetPageState();
           if (this.buf.PageState==2 || this.buf.PageState==3 || this.buf.PageState==4) {
             this.telnetCore.send('[');
@@ -769,6 +769,18 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
       this.view.redraw(true);
       this.view.updateCursorPos();
       break;
+    case 'mouseMiddleFunction':
+      this.view.middleButtonFunction = pref.get(name);
+      break;
+    case 'mouseWheelFunction1':
+      this.view.mouseWheelFunction1 = pref.get(name);
+      break;
+    case 'mouseWheelFunction2':
+      this.view.mouseWheelFunction2 = pref.get(name);
+      break;
+    case 'mouseWheelFunction3':
+      this.view.mouseWheelFunction3 = pref.get(name);
+      break;
     case 'closeQuery':
       if (pref.get(name))
         this.regExitAlert();
@@ -829,7 +841,7 @@ pttchrome.App.prototype.mouse_click = function(e) {
 
   if (e.button == 2) { //right button
   } else if (e.button == 0) { //left button
-    if (e.target && e.target.getAttribute("link") == 'true') {
+    if ($(e.target).is('a') || $(e.target).parent().is('a')) {
       return;
     }
     if (window.getSelection().isCollapsed) { //no anything be select
@@ -1053,24 +1065,44 @@ pttchrome.App.prototype.mouse_scroll = function(e) {
   // scroll = up/down
   // hold right mouse key + scroll = page up/down
   // hold left mouse key + scroll = thread prev/next
+  var mouseWheelActionsUp = [ 'none', 'doArrowUp', 'doPageUp', 'previousThread' ];
+  var mouseWheelActionsDown = [ 'none', 'doArrowDown', 'doPageDown', 'nextThread' ];
 
   if (e.wheelDelta > 0) { // scrolling up
     if (this.mouseRightButtonDown) {
-      this.setBBSCmd('doPageUp', cmdhandler);
+      var action = mouseWheelActionsUp[this.view.mouseWheelFunction2];
+      if (action !== 'none') {
+        this.setBBSCmd(action, cmdhandler);
+      }
     } else if (this.mouseLeftButtonDown) {
-      this.setBBSCmd('prevousThread', cmdhandler);
-      this.setBBSCmd('cancelHoldMouse', cmdhandler);
+      var action = mouseWheelActionsUp[this.view.mouseWheelFunction3];
+      if (action !== 'none') {
+        this.setBBSCmd(action, cmdhandler);
+        this.setBBSCmd('cancelHoldMouse', cmdhandler);
+      }
     } else {
-      this.setBBSCmd('doArrowUp', cmdhandler);
+      var action = mouseWheelActionsUp[this.view.mouseWheelFunction1];
+      if (action !== 'none') {
+        this.setBBSCmd(action, cmdhandler);
+      }
     }
   } else { // scrolling down
     if (this.mouseRightButtonDown) {
-      this.setBBSCmd('doPageDown', cmdhandler);
+      var action = mouseWheelActionsDown[this.view.mouseWheelFunction2];
+      if (action !== 'none') {
+        this.setBBSCmd(action, cmdhandler);
+      }
     } else if (this.mouseLeftButtonDown) {
-      this.setBBSCmd('nextThread', cmdhandler);
-      this.setBBSCmd('cancelHoldMouse', cmdhandler);
+      var action = mouseWheelActionsDown[this.view.mouseWheelFunction3];
+      if (action !== 'none') {
+        this.setBBSCmd(action, cmdhandler);
+        this.setBBSCmd('cancelHoldMouse', cmdhandler);
+      }
     } else {
-      this.setBBSCmd('doArrowDown', cmdhandler);
+      var action = mouseWheelActionsDown[this.view.mouseWheelFunction1];
+      if (action !== 'none') {
+        this.setBBSCmd(action, cmdhandler);
+      }
     }
   }
   e.stopPropagation();

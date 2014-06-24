@@ -111,6 +111,36 @@
   "options_highlightColor": {
     "message": "底色"
   },
+  "options_mouseMiddleFunction": {
+    "message": "滑鼠中鍵"
+  },
+  "options_mouseWheelFunction1": {
+    "message": "滑鼠滾輪"
+  },
+  "options_mouseWheelFunction2": {
+    "message": "滑鼠右鍵 + 滑鼠滾輪"
+  },
+  "options_mouseWheelFunction3": {
+    "message": "滑鼠左鍵 + 滑鼠滾輪"
+  },
+  "options_none": {
+    "message": "無動作"
+  },
+  "options_leftKey": {
+    "message": "送出左方向鍵"
+  },
+  "options_enterKey": {
+    "message": "送出ENTER鍵"
+  },
+  "options_upDown": {
+    "message": "控制上 / 下"
+  },
+  "options_pageUpDown": {
+    "message": "控制上頁 / 下頁"
+  },
+  "options_threadLastNext": {
+    "message": "控制文章前篇 / 下篇"
+  },
 
   // auto logins
   "autologin_username": {

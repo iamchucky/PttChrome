@@ -37,6 +37,21 @@ PttChromePref.prototype = {
         continue;
       }
 
+      // for options that's predefined
+      if (i in PREF_OPTIONS) {
+        var optName = '#opt_'+i;
+        var htmlStr = i18n('options_'+i) + '<select class="form-control">';
+        var options = PREF_OPTIONS[i];
+        for (var n = 0; n < options.length; ++n) {
+          htmlStr += '<option value="'+n+'">'+i18n(options[n])+'</option>';
+        }
+        htmlStr += '</select>';
+        $(optName).html(htmlStr);
+        $(optName+' select').val(val);
+
+        continue;
+      }
+
       switch(typeof(val)) {
         case 'number':
           $('#opt_'+i).html(
@@ -157,6 +172,12 @@ PttChromePref.prototype = {
   readValueFromUi: function() {
     for (var i in this.values) {
       if (i === 'mouseBrowsingHighlightColor') {
+        var selectedVal = $('#opt_'+i+' select').val();
+        this.values[i] = parseInt(selectedVal);
+        continue;
+      }
+
+      if (i in PREF_OPTIONS) {
         var selectedVal = $('#opt_'+i+' select').val();
         this.values[i] = parseInt(selectedVal);
         continue;

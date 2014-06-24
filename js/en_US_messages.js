@@ -114,6 +114,36 @@ locale.en_US = {
   "options_highlightColor": {
     "message": "Color"
   },
+  "options_mouseMiddleFunction": {
+    "message": "Mouse middle button"
+  },
+  "options_mouseWheelFunction1": {
+    "message": "Mouse wheel"
+  },
+  "options_mouseWheelFunction2": {
+    "message": "Right mouse key + mouse wheel"
+  },
+  "options_mouseWheelFunction3": {
+    "message": "Left mouse key + mouse wheel"
+  },
+  "options_none": {
+    "message": "No action"
+  },
+  "options_leftKey": {
+    "message": "Sends LEFT key"
+  },
+  "options_enterKey": {
+    "message": "Sends ENTER key"
+  },
+  "options_upDown": {
+    "message": "Controls up / down"
+  },
+  "options_pageUpDown": {
+    "message": "Controls pageup / pagedown"
+  },
+  "options_threadLastNext": {
+    "message": "Controls thread previous / next"
+  },
 
   // auto logins
   "autologin_username": {

@@ -174,7 +174,7 @@
   padding-top: 10px;
   height: 100%;
   width: 160px;
-  -webkit-box-shadow: -10px 0 180px -60px #888 inset
+  -webkit-box-shadow: -10px 0 180px -60px #949494 inset
 }
 
 #modalNav .nav {
@@ -208,8 +208,13 @@
 
 .list-group-item-text input[type="text"],
 .list-group-item-text input[type="number"],
-.list-group-item-text input[type="password"] {
+.list-group-item-text input[type="password"], 
+.list-group-item-text select {
   width: 250px;
+}
+
+.list-group-item-text select {
+  margin-top: 5px;
 }
 
 .list-group-item-text > div {
@@ -223,6 +228,7 @@
 
 #opt_mouseBrowsingHighlightColor > select {
   margin-top: 5px;
+  margin-bottom: 10px;
   width: 70px;
   -webkit-appearance: none;
 }
