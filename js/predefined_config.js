@@ -1,5 +1,5 @@
 ﻿var PREFS_CATEGORIES = ['mouseBrowsing', 'appearance'];
-var PREFS_NAV = ['general', 'autologin', 'shortcuts' ];
+var PREFS_NAV = ['general', 'autologin' ];
 var DEFAULT_PREFS = {
 
   // general
