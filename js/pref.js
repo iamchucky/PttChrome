@@ -245,7 +245,7 @@ PttChromePref.prototype = {
     if (msg.data && msg.data.values) {
       // iterate through default prefs to make sure all up to date
       for (var i in DEFAULT_PREFS) {
-        if (!(i in msg.data.values)) {
+        if (!(i in msg.data.values) || msg.data.values[i] === null) {
           this.values[i] = DEFAULT_PREFS[i];
         } else {
           this.values[i] = msg.data.values[i];
