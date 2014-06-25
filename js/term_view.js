@@ -432,9 +432,9 @@ TermView.prototype = {
                             {
                               if(ch2.ch=='\x20') //a LeadByte + ' ' //we set this in '?' + ' '
                               {
-                                var spanstr = this.createNormalChar(row, col, ch, '?', fg, bg, deffg, defbg);
+                                var spanstr = this.createNormalChar(row, col-1, ch, '?', fg, bg, deffg, defbg);
                                 outtemp.setHtml(spanstr);
-                                spanstr = this.createNormalChar(row, col, ch, ' ', fg2, bg2, deffg, defbg);
+                                spanstr = this.createNormalChar(row, col-1, ch, ' ', fg2, bg2, deffg, defbg);
                                 outtemp2.setHtml(spanstr);
                               }
                               else //maybe normal ...
@@ -453,29 +453,29 @@ TermView.prototype = {
                                     var code = this.symtable['x'+u.charCodeAt(0).toString(16)];
                                     if(code == 1 || code == 2)
                                     {
-                                      var spanstr = this.createTwoColorWord(row, col, ch, ch2, u, u, fg, fg2, bg, bg2, this.chh);
+                                      var spanstr = this.createTwoColorWord(row, col-1, ch, ch2, u, u, fg, fg2, bg, bg2, this.chh);
                                       outtemp.setHtml(spanstr.s1);
                                       outtemp2.setHtml(spanstr.s2);
                                     }
                                     else if(code == 3) //[4 code char]
                                     {
-                                      var spanstr = this.createNormalChar(row, col, ch, '?', fg2, bg2, deffg, defbg);
+                                      var spanstr = this.createNormalChar(row, col-1, ch, '?', fg2, bg2, deffg, defbg);
                                       outtemp.setHtml(spanstr);
-                                      spanstr = this.createNormalChar(row, col, ch2, '?', fg2, bg2, deffg, defbg);
+                                      spanstr = this.createNormalChar(row, col-1, ch2, '?', fg2, bg2, deffg, defbg);
                                       outtemp2.setHtml(spanstr);
                                     }
                                     else //if(this.wordtest.offsetWidth==this.chh)
                                     {
-                                      var spanstr = this.createTwoColorWord(row, col, ch, ch2, u, u, fg, fg2, bg, bg2, 0);
+                                      var spanstr = this.createTwoColorWord(row, col-1, ch, ch2, u, u, fg, fg2, bg, bg2, 0);
                                       outtemp.setHtml(spanstr.s1);
                                       outtemp2.setHtml(spanstr.s2);
                                     }
                                   }
                                   else //a <?> + one normal char // we set this in '?' + ch2
                                   {
-                                    var spanstr = this.createNormalChar(row, col, ch, '?', fg, bg, deffg, defbg);
+                                    var spanstr = this.createNormalChar(row, col-1, ch, '?', fg, bg, deffg, defbg);
                                     outtemp.setHtml(spanstr);
-                                    spanstr = this.createNormalChar(row, col, ch, ch2.ch, fg2, bg2, deffg, defbg);
+                                    spanstr = this.createNormalChar(row, col-1, ch, ch2.ch, fg2, bg2, deffg, defbg);
                                     outtemp2.setHtml(spanstr);
                                   }
                                 }
@@ -485,9 +485,9 @@ TermView.prototype = {
                             {
                               if(ch2.ch=='\x20') //a LeadByte + ' ' //we set this in '?' + ' '
                               {
-                                var spanstr = this.createNormalChar(row, col, ch, '?', fg, bg, deffg, defbg);
+                                var spanstr = this.createNormalChar(row, col-1, ch, '?', fg, bg, deffg, defbg);
                                 outtemp.setHtml(spanstr);
-                                spanstr = this.createNormalChar(row, col, ch, ' ', fg, bg, deffg, defbg);
+                                spanstr = this.createNormalChar(row, col-1, ch, ' ', fg, bg, deffg, defbg);
                                 outtemp2.setHtml(spanstr);
                               }
                               else //maybe normal ...
@@ -505,15 +505,15 @@ TermView.prototype = {
                                     var code = this.symtable['x'+u.charCodeAt(0).toString(16)];
                                     if(code == 1 || code == 2)
                                     {
-                                      var spanstr = this.createNormalWord(row, col, ch, ch2, u, '', fg, bg, this.chh, deffg, defbg);
+                                      var spanstr = this.createNormalWord(row, col-1, ch, ch2, u, '', fg, bg, this.chh, deffg, defbg);
                                       outtemp.setHtml(spanstr.s1);
                                       outtemp2.setHtml(spanstr.s2);
                                     }
                                     else if(code == 3) //[4 code char]
                                     {
-                                      var spanstr = this.createNormalChar(row, col, ch, '?', fg, bg, deffg, defbg);
+                                      var spanstr = this.createNormalChar(row, col-1, ch, '?', fg, bg, deffg, defbg);
                                       outtemp.setHtml(spanstr);
-                                      spanstr = this.createNormalChar(row, col, ch2, '?', fg, bg, deffg, defbg);
+                                      spanstr = this.createNormalChar(row, col-1, ch2, '?', fg, bg, deffg, defbg);
                                       outtemp2.setHtml(spanstr);
                                     }
                                     else //normal case //if(this.wordtest.offsetWidth==this.chh)
@@ -527,16 +527,16 @@ TermView.prototype = {
                                       //  alert('!!!!! : '+ u.charCodeAt(0).toString(16)); //for debug.
 
                                       //for font test - end
-                                      var spanstr = this.createNormalWord(row, col, ch, ch2, u, '', fg, bg, 0, deffg, defbg);
+                                      var spanstr = this.createNormalWord(row, col-1, ch, ch2, u, '', fg, bg, 0, deffg, defbg);
                                       outtemp.setHtml(spanstr.s1);
                                       outtemp2.setHtml(spanstr.s2);
                                     }
                                   }
                                   else //a <?> + one normal char // we set this in '?' + ch2
                                   {
-                                    var spanstr = this.createNormalChar(row, col, ch, '?', fg, bg, deffg, defbg);
+                                    var spanstr = this.createNormalChar(row, col-1, ch, '?', fg, bg, deffg, defbg);
                                     outtemp.setHtml(spanstr);
-                                    spanstr = this.createNormalChar(row, col, ch, ch2.ch, fg, bg, deffg, defbg);
+                                    spanstr = this.createNormalChar(row, col-1, ch, ch2.ch, fg, bg, deffg, defbg);
                                     outtemp2.setHtml(spanstr);
                                   }
                                 }
