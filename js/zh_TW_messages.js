@@ -32,6 +32,9 @@
   "cmenu_copy": {
     "message": "複製"
   },
+  "cmenu_copyAnsi": {
+    "message": "複製包含 ANSI 顏色"
+  },
   "cmenu_paste": {
     "message": "貼上"
   },

@@ -32,6 +32,9 @@ locale.en_US = {
   "cmenu_copy": {
     "message": "Copy"
   },
+  "cmenu_copyAnsi": {
+    "message": "Copy with ANSI colors"
+  },
   "cmenu_paste": {
     "message": "Paste"
   },
