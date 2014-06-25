@@ -52,7 +52,7 @@ function doCopy(str) {
   clipHelper.contentWindow.doCopy(str);
 }
 
-var pasteInput = document.createElement('input');
+var pasteInput = document.createElement('textarea');
 pasteInput.type = 'text';
 document.body.appendChild(pasteInput);
 

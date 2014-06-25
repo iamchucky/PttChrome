@@ -8,6 +8,10 @@ document.addEventListener('DOMContentLoaded', function () {
   webv.addEventListener('newwindow', function(e) {
     webv.contentWindow.postMessage({action: 'newwindow', data: e.targetUrl}, webv.src);
   });
+
+  window.addEventListener('focus', function(e) {
+    webv.focus();
+  });
 });
 
 var closeWindow = function() {
