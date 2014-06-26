@@ -107,10 +107,14 @@ lib.AppConnection.prototype.sendTelnet = function(str) {
   if (!this.isConnected) {
     return;
   }
-  this.appPort.postMessage({
-    action: 'send',
-    data: str
-  });
+  var chunk = 1000;
+  for (var i = 0; i < str.length; i += chunk) {
+    var chunkStr = str.substring(i, i+chunk);
+    this.appPort.postMessage({
+      action: 'send',
+      data: chunkStr
+    });
+  }
 };
 
 lib.AppConnection.prototype.disconnect = function() {
