@@ -107,6 +107,9 @@ lib.AppConnection.prototype.sendTelnet = function(str) {
   if (!this.isConnected) {
     return;
   }
+
+  // because ptt seems to reponse back slowly after large
+  // chunk of text is pasted, so better to split it up.
   var chunk = 1000;
   for (var i = 0; i < str.length; i += chunk) {
     var chunkStr = str.substring(i, i+chunk);
