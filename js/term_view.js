@@ -110,6 +110,13 @@ function TermView(rowCount) {
       self.bbscore.setInputAreaFocus();
     }, false);
 
+    this.input.addEventListener('compositionupdate', function(e) {
+      // change width according to input
+      var wordCounts = e.data.u2b().length;
+      // chh / 2 - 2 because border of 1
+      self.input.style.width  = (self.chh/2-2)*wordCounts + 'px';
+    }, false);
+
     addEventListener('keydown', function(e) {
       if(e.keyCode > 15 && e.keyCode < 19)
         return; // Shift Ctrl Alt (19)

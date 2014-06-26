@@ -486,12 +486,11 @@ pttchrome.App.prototype.updateTabIcon = function(aStatus) {
   var icon = 'icon/logo.png';
   switch (aStatus) {
     case 'connect':
-      icon =  'icon/connect.png';
+      icon =  'icon/logo_connect.png';
       this.setInputAreaFocus();
       break;
     case 'disconnect':
-  dumpLog(DUMP_TYPE_LOG, "icon/disconnect.png");
-      icon =  'icon/disconnect.png';
+      icon =  'icon/logo_disconnect.png';
       break;
     case 'newmessage':  // Not used yet
       icon =  'icon/connect.png';
