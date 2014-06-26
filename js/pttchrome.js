@@ -360,6 +360,35 @@ pttchrome.App.prototype.doCopy = function(str) {
   }
 };
 
+pttchrome.App.prototype.doCopyAnsi = function() {
+  if (window.getSelection().isCollapsed)
+    return;
+
+  var selection = this.view.getSelectionColRow();
+
+  var ansiText = '';
+  if (selection.start.row == selection.end.row) {
+    ansiText += this.buf.getText(selection.start.row, selection.start.col, selection.end.col+1, true, true, false);
+  } else {
+    for (var i = selection.start.row; i <= selection.end.row; ++i) {
+      var scol = 0;
+      var ecol = this.buf.cols-1;
+      if (i == selection.start.row) {
+        scol = selection.start.col;
+      } else if (i == selection.end.row) {
+        ecol = selection.end.col;
+      }
+      ansiText += this.buf.getText(i, scol, ecol+1, true, true, false);
+      if (i != selection.end.row ) {
+        ansiText += '\r';
+      }
+    }
+  }
+
+  //console.log(ansiText);
+  this.doCopy(ansiText);
+};
+
 pttchrome.App.prototype.doPaste = function() {
   var port = this.appConn.appPort;
   if (!port)
@@ -1234,6 +1263,11 @@ pttchrome.App.prototype.setupContextMenus = function() {
     e.stopPropagation();
     hideContextMenu();
   });
+  $('#cmenu_copyAnsi').click(function(e) {
+    self.doCopyAnsi();
+    e.stopPropagation();
+    hideContextMenu();
+  });
   $('#cmenu_paste').click(function(e) {
     self.doPaste();
     e.stopPropagation();
@@ -1271,75 +1305,6 @@ pttchrome.App.prototype.setupContextMenus = function() {
   });
   $('#cmenu_settings').click(function(e) {
     self.doSettings();
-    e.stopPropagation();
-    hideContextMenu();
-  });
-  $('#cmenu_copyAnsi').click(function(e) {
-    if (window.getSelection().isCollapsed)
-      return;
-    var sel = window.getSelection();
-    var r = sel.getRangeAt(0);
-    var b = r.startContainer;
-    var l = r.endContainer;
-
-    var selection = { start: { row: 0, col: 0 }, end: { row: 0, col: 0 } };
-    if (b.parentNode.getAttribute('type') === 'bbsrow') {
-      selection.start.row = self.view.BBSROW.indexOf(b.parentNode);
-      if (b.previousSibling) {
-        var textContent = b.previousSibling.textContent;
-        textContent = textContent.replace(/\u00a0/g, " ");
-        selection.start.col = parseInt(b.previousSibling.getAttribute('scol')) + textContent.u2b().length;
-      }
-    } else {
-      selection.start.row = parseInt(b.parentNode.getAttribute('srow'));
-      selection.start.col = parseInt(b.parentNode.getAttribute('scol'));
-    }
-    if (r.startOffset != 0) {
-      var substr = b.substringData(0, r.startOffset);
-      substr = substr.replace(/\u00a0/g, " ");
-      selection.start.col += substr.u2b().length;
-    }
-    if (l.parentNode.getAttribute('type') === 'bbsrow') {
-      selection.end.row = self.view.BBSROW.indexOf(l.parentNode);
-      if (l.previousSibling) {
-        var textContent = l.previousSibling.textContent;
-        textContent = textContent.replace(/\u00a0/g, " ");
-        selection.end.col = parseInt(l.previousSibling.getAttribute('scol')) + textContent.u2b().length;
-      }
-    } else {
-      selection.end.row = parseInt(l.parentNode.getAttribute('srow'));
-      selection.end.col = parseInt(l.parentNode.getAttribute('scol'));
-    }
-    if (r.endOffset != 1) {
-      var substr = l.substringData(0, r.endOffset);
-      substr = substr.replace(/\u00a0/g, " ");
-      selection.end.col += substr.u2b().length - 1;
-    }
-
-    console.log(selection);
-
-    var ansiText = '';
-    if (selection.start.row == selection.end.row) {
-      ansiText += self.buf.getText(selection.start.row, selection.start.col, selection.end.col+1, true, true, false);
-    } else {
-      for (var i = selection.start.row; i <= selection.end.row; ++i) {
-        var scol = 0;
-        var ecol = self.buf.cols-1;
-        if (i == selection.start.row) {
-          scol = selection.start.col;
-        } else if (i == selection.end.row) {
-          ecol = selection.end.col;
-        }
-        ansiText += self.buf.getText(i, scol, ecol+1, true, true, false);
-        if (i != selection.end.row ) {
-          ansiText += '\r';
-        }
-      }
-    }
-
-    console.log(ansiText);
-    self.doCopy(ansiText);
-
     e.stopPropagation();
     hideContextMenu();
   });

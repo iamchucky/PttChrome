@@ -1078,17 +1078,49 @@ TermView.prototype = {
         this.setTermFontSize(this.bbsFontSize, this.bbsFontSize*2);
         $('.wpadding').css('width', this.bbsFontSize*2);
       }
+    },
+
+    getSelectionColRow: function() {
+      var sel = window.getSelection();
+      var r = sel.getRangeAt(0);
+      var b = r.startContainer;
+      var e = r.endContainer;
+
+      var selection = { start: { row: 0, col: 0 }, end: { row: 0, col: 0 } };
+
+      if (b.parentNode.getAttribute('type') === 'bbsrow') {
+        selection.start.row = this.BBSROW.indexOf(b.parentNode);
+        if (b.previousSibling) {
+          var textContent = b.previousSibling.textContent;
+          textContent = textContent.replace(/\u00a0/g, " ");
+          selection.start.col = parseInt(b.previousSibling.getAttribute('scol')) + textContent.u2b().length;
+        }
+      } else {
+        selection.start.row = parseInt(b.parentNode.getAttribute('srow'));
+        selection.start.col = parseInt(b.parentNode.getAttribute('scol'));
+      }
+      if (r.startOffset != 0) {
+        var substr = b.substringData(0, r.startOffset);
+        substr = substr.replace(/\u00a0/g, " ");
+        selection.start.col += substr.u2b().length;
+      }
+      if (e.parentNode.getAttribute('type') === 'bbsrow') {
+        selection.end.row = this.BBSROW.indexOf(e.parentNode);
+        if (e.previousSibling) {
+          var textContent = e.previousSibling.textContent;
+          textContent = textContent.replace(/\u00a0/g, " ");
+          selection.end.col = parseInt(e.previousSibling.getAttribute('scol')) + textContent.u2b().length;
+        }
+      } else {
+        selection.end.row = parseInt(e.parentNode.getAttribute('srow'));
+        selection.end.col = parseInt(e.parentNode.getAttribute('scol'));
+      }
+      if (r.endOffset != 1) {
+        var substr = e.substringData(0, r.endOffset);
+        substr = substr.replace(/\u00a0/g, " ");
+        selection.end.col += substr.u2b().length - 1;
+      }
+
+      return selection;
     }
-    /*
-    myTimer: function(repeat, func_obj, timelimit) {
-      var timer = Components.classes["@mozilla.org/timer;1"]
-                      .createInstance(Components.interfaces.nsITimer);
-      timer.initWithCallback(
-         { notify: function(timer) { func_obj(); } },
-         timelimit,
-         repeat  ? Components.interfaces.nsITimer.TYPE_REPEATING_SLACK
-                 : Components.interfaces.nsITimer.TYPE_ONE_SHOT);
-      return timer;
-    }
-    */
 }
