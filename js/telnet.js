@@ -187,8 +187,11 @@ TelnetCore.prototype.send = function(str) {
 TelnetCore.prototype.convSend = function(unicode_str) {
   // supports UAO
   // when converting unicode to big5, use UAO.
+
   var s = unicode_str.u2b();
+  // detect ;50m (half color) and then convert accordingly
   if (s) {
+    s = s.ansiHalfColorConv();
     this.send(s);
   }
 };

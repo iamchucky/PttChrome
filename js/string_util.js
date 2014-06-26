@@ -128,6 +128,30 @@ String.prototype.b2u = function() {
     return str;
 };
 
+String.prototype.ansiHalfColorConv = function() {
+  var str = '';
+  var regex = new RegExp('\x15\\[(([0-9]+)?;)+50m', 'g');
+  var result = null;
+  var indices = [];
+  while ((result = regex.exec(this))) {
+    indices.push(result.index + result[0].length - 4);
+  }
+
+  if (indices.length == 0) {
+    return this;
+  }
+
+  var curInd = 0;
+  for (var i = 0; i < indices.length; ++i) {
+    var ind = indices[i];
+    var preEscInd = this.substring(curInd, ind).lastIndexOf('\x15') + curInd;
+    str += this.substring(curInd, preEscInd) + '\x00' + this.substring(ind+4, ind+5) + this.substring(preEscInd, ind) + 'm';
+    curInd = ind+5;
+  }
+  str += this.substring(curInd);
+  return str;
+};
+
 String.prototype.trimLeft = function() {
   var i;
   for (i = 0; i < this.length; ++i) {
