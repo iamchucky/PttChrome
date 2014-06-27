@@ -10,7 +10,7 @@
 
   // side menus
   "menu_coloredCopy": {
-    "message": "複製(包含ANSI彩色)"
+    "message": "複製 (包含 ANSI 顏色)"
   },
   "menu_goToOtherSite": {
     "message": "其他站台"
@@ -33,7 +33,7 @@
     "message": "複製"
   },
   "cmenu_copyAnsi": {
-    "message": "複製包含 ANSI 顏色"
+    "message": "複製 (包含 ANSI 顏色)"
   },
   "cmenu_paste": {
     "message": "貼上"
