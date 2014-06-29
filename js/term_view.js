@@ -101,7 +101,13 @@ function TermView(rowCount) {
     // change width according to input
     var wordCounts = e.data.u2b().length;
     // chh / 2 - 2 because border of 1
-    self.input.style.width  = (self.chh/2-2)*wordCounts + 'px';
+    var oneWordWidth = (self.chh/2-2);
+    var width = oneWordWidth*wordCounts;
+    self.input.style.width  = width + 'px';
+    var bounds = self.bbscore.getWindowInnerBounds();
+    if (parseInt(self.input.style.left) + width + oneWordWidth*2 >= bounds.width) {
+      self.input.style.left = bounds.width - width - oneWordWidth*2 + 'px';
+    }
   }, false);
 
   addEventListener('keydown', function(e) {
@@ -803,12 +809,12 @@ TermView.prototype = {
         this.input.style.opacity = '1';
         this.input.style.border = 'double';
         if (this.inputBufferSizeType == 0) {
-          this.input.style.width  = (this.chh-4)*10 + 'px';
+          //this.input.style.width  = (this.chh-4)*10 + 'px';
           this.input.style.fontSize = this.chh-4 + 'px';
           //this.input.style.lineHeight = this.chh+4 + 'px';
           this.input.style.height = this.chh + 'px';
         } else {
-          this.input.style.width  = ((this.defineInputBufferSize*2)-4)*10 + 'px';
+          //this.input.style.width  = ((this.defineInputBufferSize*2)-4)*10 + 'px';
           this.input.style.fontSize = ((this.defineInputBufferSize*2)-4) + 'px';
           //this.input.style.lineHeight = this.bbscore.inputBufferSize*2+4 + 'px';
           this.input.style.height = this.defineInputBufferSize*2 + 'px';
