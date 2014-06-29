@@ -916,7 +916,7 @@ TermView.prototype = {
       selection.start.col += substr.u2b().length;
     }
     if (e.parentNode.getAttribute('type') === 'bbsrow') {
-      selection.end.row = parseInt(b.parentNode.getAttribute('srow'));
+      selection.end.row = parseInt(e.parentNode.getAttribute('srow'));
       if (e.previousSibling) {
         var textContent = e.previousSibling.textContent;
         textContent = textContent.replace(/\u00a0/g, " ");

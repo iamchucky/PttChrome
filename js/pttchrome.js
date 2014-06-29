@@ -465,7 +465,7 @@ pttchrome.App.prototype.switchMouseBrowsing = function() {
     this.buf.tempMouseCol=0;
     this.buf.tempMouseRow=0;
   } else {
-    this.buf.SetPageState();
+    this.buf.setPageState();
     this.buf.resetMousePos();
     this.view.redraw(true);
     this.view.updateCursorPos();
@@ -643,14 +643,14 @@ pttchrome.App.prototype.overlayCommandListener = function (e) {
           this.telnetCore.send('\x1b[6~');
           break;
         case "previousThread":
-          this.buf.SetPageState();
-          if (this.buf.PageState==2 || this.buf.PageState==3 || this.buf.PageState==4) {
+          this.buf.setPageState();
+          if (this.buf.pageState==2 || this.buf.pageState==3 || this.buf.pageState==4) {
             this.telnetCore.send('[');
           }
           break;
         case "nextThread":
-          this.buf.SetPageState();
-          if (this.buf.PageState==2 || this.buf.PageState==3 || this.buf.PageState==4) {
+          this.buf.setPageState();
+          if (this.buf.pageState==2 || this.buf.pageState==3 || this.buf.pageState==4) {
             this.telnetCore.send(']');
           }
           break;
@@ -782,7 +782,7 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
         this.buf.tempMouseCol = 0;
         this.buf.tempMouseRow = 0;
       }
-      this.buf.SetPageState();
+      this.buf.setPageState();
       this.buf.resetMousePos();
       this.view.redraw(true);
       this.view.updateCursorPos();
@@ -901,8 +901,8 @@ pttchrome.App.prototype.mouse_click = function(e) {
     if (this.view.middleButtonFunction == 1)
       this.telnetCore.send('\r');
     else if (this.view.middleButtonFunction == 2) {
-      this.buf.SetPageState();
-      if (this.buf.PageState == 2 || this.buf.PageState == 3 || this.buf.PageState == 4)
+      this.buf.setPageState();
+      if (this.buf.pageState == 2 || this.buf.pageState == 3 || this.buf.pageState == 4)
         this.telnetCore.send('\x1b[D');
     }
   } else {
