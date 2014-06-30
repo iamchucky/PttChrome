@@ -67,24 +67,20 @@ function TermView(rowCount) {
   this.picLoadingImage = document.getElementById('PicLoadingImage');
   this.scaleX = 1;
 
-  this.BBSROW = new Array(rowCount);
+  this.htmlRowStrArray = [];
 
   var mainDiv = document.createElement('div');
   mainDiv.setAttribute('class', 'main');
   for (var i = 0; i < rowCount; ++i) {
-    var element = document.createElement('span');
-    element.setAttribute('type', 'bbsrow');
-    element.setAttribute('srow', i);
-    var br = document.createElement('br');
-    this.BBSROW[i] = element;
-    mainDiv.appendChild(element);
-    mainDiv.appendChild(br);
+    this.htmlRowStrArray.push('<span type="bbsrow" srow="'+i+'"></span><br>');
   }
-  this.firstGrid = this.BBSROW[0];
+  mainDiv.innerHTML = this.htmlRowStrArray.join('');
   this.BBSWin.appendChild(mainDiv);
   this.mainDisplay = mainDiv;
   this.mainDisplay.style.border = '0px';
   this.setFontFace('MingLiu,monospace');
+
+  this.hoverPptShouldShown = false;
 
   var self = this;
   this.input.addEventListener('compositionstart', function(e) {
@@ -136,13 +132,6 @@ function TermView(rowCount) {
     e.target.value='';
   }, false);
 
-  //init view - start
-  var tmp = [];
-  for(var col=0; col<80; ++col)
-    tmp[col] = '<span style="color:#FFFFFF;background-color:#000000;">&nbsp;</span>';
-  for (var row=0 ;row<24 ;++row)
-    this.BBSROW[row].innerHTML = tmp.join('');
-  //init view - end
 
 }
 
@@ -500,12 +489,14 @@ TermView.prototype = {
         if (doHighLight)
           tmp.push('</span>');
 
-        this.BBSROW[row].innerHTML = tmp.join('');
+        this.htmlRowStrArray[row] = '<span type="bbsrow" srow="'+row+'">' + tmp.join('') + '</span><br>';
         anylineUpdate = true;
         lineChangeds[row] = false;
       }
     }
+    this.mainDisplay.innerHTML = this.htmlRowStrArray.join('');
 
+    var self = this;
     $("a[href^='http://ppt\.cc/']").hover(function(e) {
       var src = $(this).attr('href') + '@.jpg';
       var currSrc = $('#hoverPPT img').attr('src');
@@ -514,7 +505,9 @@ TermView.prototype = {
       } else {
         $('#hoverPPT').show();
       }
+      self.hoverPptShouldShown = true;
     }, function(e) {
+      self.hoverPptShouldShown = false;
       $('#hoverPPT').hide();
     });
   },
@@ -754,11 +747,12 @@ TermView.prototype = {
 
   convertMN2XYEx: function(cx, cy) {
     var origin;
+    var firstGrid = $(".main span[srow='0']")[0];
     var w = this.bbscore.getWindowInnerBounds().width;
     if(this.horizontalAlignCenter && this.scaleX!=1)
-      origin = [((w - (this.chw*this.buf.cols)*this.scaleX)/2) + this.bbsViewMargin, this.firstGrid.offsetTop];
+      origin = [((w - (this.chw*this.buf.cols)*this.scaleX)/2) + this.bbsViewMargin, firstGrid.offsetTop];
     else
-      origin = [this.firstGrid.offsetLeft, this.firstGrid.offsetTop];
+      origin = [firstGrid.offsetLeft, firstGrid.offsetTop];
     var realX = origin[0] + (cx) * this.chw * this.scaleX;
     var realY = origin[1] + (cy) * this.chh +1;
     return [realX, realY];

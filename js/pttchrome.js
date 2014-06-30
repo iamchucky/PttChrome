@@ -115,8 +115,10 @@ pttchrome.App = function(onInitializedCallback, from) {
     self.onWindowResize();
   };
   $('#hoverPPT img').load(function(e) {
-    $('#hoverPPT').show()
-    self.updateHoverPptPosition();
+    if (self.view.hoverPptShouldShown) {
+      $('#hoverPPT').show()
+      self.updateHoverPptPosition();
+    }
   });
 
   this.isFromApp = (from === 'app');
@@ -438,7 +440,8 @@ pttchrome.App.prototype.doSettings = function() {
 
 pttchrome.App.prototype.onWindowResize = function() {
   this.view.fontResize();
-  if (this.view.fontFitWindowWidth || this.view.firstGrid.offsetLeft <= 100) {
+  var firstGrid = $(".main span[srow='0']")[0];
+  if (this.view.fontFitWindowWidth || firstGrid.offsetLeft <= 100) {
     $('#sideMenus').addClass('menuHidden');
   } else {
     $('#sideMenus').removeClass('menuHidden');
@@ -531,13 +534,14 @@ pttchrome.App.prototype.getWindowInnerBounds = function() {
 };
 
 pttchrome.App.prototype.clientToPos = function(cX, cY) {
+  var firstGrid = $(".main span[srow='0']")[0];
   var x;
   var w = this.getWindowInnerBounds().width;
   if (this.view.horizontalAlignCenter && this.view.scaleX != 1)
     x = cX - ((w - (this.view.chw * this.buf.cols) * this.view.scaleX) / 2);
   else
-    x = cX - parseFloat(this.view.firstGrid.offsetLeft);
-  var y = cY - parseFloat(this.view.firstGrid.offsetTop);
+    x = cX - parseFloat(firstGrid.offsetLeft);
+  var y = cY - parseFloat(firstGrid.offsetTop);
   var col = Math.floor(x / (this.view.chw * this.view.scaleX));
   var row = Math.floor(y / this.view.chh);
 
