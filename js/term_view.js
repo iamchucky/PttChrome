@@ -505,6 +505,18 @@ TermView.prototype = {
         lineChangeds[row] = false;
       }
     }
+
+    $("a[href^='http://ppt\.cc/']").hover(function(e) {
+      var src = $(this).attr('href') + '@.jpg';
+      var currSrc = $('#hoverPPT img').attr('src');
+      if (src !== currSrc) {
+        $('#hoverPPT img').attr('src', src);
+      } else {
+        $('#hoverPPT').show();
+      }
+    }, function(e) {
+      $('#hoverPPT').hide();
+    });
   },
 
   onTextInput: function(text, isPasting) {

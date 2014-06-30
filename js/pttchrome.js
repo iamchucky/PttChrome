@@ -60,6 +60,10 @@ pttchrome.App = function(onInitializedCallback, from) {
   //new pref - end
   this.connectState = 0;
 
+  // for hoverPPT
+  this.curX = 0;
+  this.curY = 0;
+
   this.inputArea = document.getElementById('t');
   this.BBSWin = document.getElementById('BBSWindow');
 
@@ -110,6 +114,10 @@ pttchrome.App = function(onInitializedCallback, from) {
   window.onresize = function() {
     self.onWindowResize();
   };
+  $('#hoverPPT img').load(function(e) {
+    $('#hoverPPT').show()
+    self.updateHoverPptPosition();
+  });
 
   this.isFromApp = (from === 'app');
   if (this.isFromApp) {
@@ -987,8 +995,9 @@ pttchrome.App.prototype.mouse_up = function(e) {
 };
 
 pttchrome.App.prototype.mouse_move = function(e) {
-  this.view.tempPicX = e.clientX;
-  this.view.tempPicY = e.clientY;
+  this.curX = e.clientX;
+  this.curY = e.clientY;
+
   //if we draging window, pass all detect.
   if (this.playerMgr && this.playerMgr.dragingWindow) {
     var dW = this.playerMgr.dragingWindow;
@@ -1026,60 +1035,16 @@ pttchrome.App.prototype.mouse_move = function(e) {
     } else
       this.resetMouseCursor();
   }
+
+  this.updateHoverPptPosition();
 };
 
 pttchrome.App.prototype.mouse_over = function(e) {
   if (this.modalShown)
     return;
 
-  /*
-  var parent = $(e.target).parent();
-  var selector = '#hoverPPT';
-  if (parent.is('a')) {
-    // TODO: make it also work on comment posted urls
-    var src = parent.attr('href') + '@.jpg';
-    var image = new Image();
-    image.onload = function() {
-      $(selector).html('<img src="'+src+'"></img>')
-        .show()
-        .css({
-          position: "absolute",
-          left: function(e) {
-            var mouseWidth = e.pageX;
-            var pageWidth = $(window).width();
-            var imageWidth = image.width;
-            
-            // opening image would pass the side of the page
-            if (mouseWidth + imageWidth > pageWidth &&
-                imageWidth < mouseWidth) {
-                return mouseWidth - imageWidth;
-            } 
-            return mouseWidth;
-          }(e),
-          top: function(e) {
-            var mouseHeight = e.pageY;
-            var pageHeight = $(window).height();
-            var imageHeight = image.height;
-
-            // opening image would pass the bottom of the page
-            if (mouseHeight + imageHeight / 2 > pageHeight - 20) {
-              if (imageHeight / 2 < mouseHeight) {
-                return pageHeight - 20 - imageHeight;
-              } else {
-                return 20;
-              }
-            } else if (mouseHeight - 20 < imageHeight / 2) {
-              return 20;
-            }
-            return mouseHeight - imageHeight / 2;
-          }(e)
-        });
-    };
-    image.src = src;
-  } else if (e.target.parentNode !== $(selector)[0]) {
-    $(selector).hide();
-  }
-  */
+  this.curX = e.clientX;
+  this.curY = e.clientY;
 
   if(window.getSelection().isCollapsed && !this.mouseLeftButtonDown)
     this.setInputAreaFocus();
@@ -1359,3 +1324,26 @@ pttchrome.App.prototype.setBBSCmd = function(cmd, cmdhandler) {
   }
 };
 
+pttchrome.App.prototype.updateHoverPptPosition = function() {
+  if ($('#hoverPPT').css('display') == 'none')
+    return;
+  var mouseHeight = this.curY;
+  var curX = this.curX;
+  var pageHeight = $(window).height();
+  var imageHeight = $('#hoverPPT img').height();
+  var imgTop = 20;
+
+  // opening image would pass the bottom of the page
+  if (mouseHeight + imageHeight / 2 > pageHeight - 20) {
+    if (imageHeight / 2 < mouseHeight) {
+      imgTop = pageHeight - 20 - imageHeight;
+    }
+  } else if (mouseHeight - 20 > imageHeight / 2) {
+    imgTop = mouseHeight - imageHeight / 2;
+  }
+  $('#hoverPPT img').css({
+    position: "absolute",
+    left: curX + 20,
+    top: imgTop
+  });
+};
