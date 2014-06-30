@@ -67,6 +67,10 @@ function TermView(rowCount) {
   this.picLoadingImage = document.getElementById('PicLoadingImage');
   this.scaleX = 1;
 
+  // for cpu efficiency
+  this.innerBounds = { width: 0, height: 0 };
+  this.firstGridOffset = { top: 0, left: 0 };
+
   this.htmlRowStrArray = [];
 
   var mainDiv = document.createElement('div');
@@ -100,7 +104,7 @@ function TermView(rowCount) {
     var oneWordWidth = (self.chh/2-2);
     var width = oneWordWidth*wordCounts;
     self.input.style.width  = width + 'px';
-    var bounds = self.bbscore.getWindowInnerBounds();
+    var bounds = self.innerBounds;
     if (parseInt(self.input.style.left) + width + oneWordWidth*2 >= bounds.width) {
       self.input.style.left = bounds.width - width - oneWordWidth*2 + 'px';
     }
@@ -331,6 +335,9 @@ TermView.prototype = {
     //var useKeyWordTrack = this.bbscore.useKeyWordTrack;
     //var ctx = this.ctx;
     var lineChangeds = this.buf.lineChangeds;
+    var lineChangedCount = 0;
+    var changedLineHtmlStr = '';
+    var changedRow = 0;
 
     var lines = this.buf.lines;
     var outhtmls = this.buf.outputhtmls;
@@ -489,27 +496,38 @@ TermView.prototype = {
         if (doHighLight)
           tmp.push('</span>');
 
-        this.htmlRowStrArray[row] = '<span type="bbsrow" srow="'+row+'">' + tmp.join('') + '</span><br>';
+        changedLineHtmlStr = tmp.join('');
+        changedRow = row;
+        this.htmlRowStrArray[row] = '<span type="bbsrow" srow="'+row+'">' + changedLineHtmlStr + '</span><br>';
         anylineUpdate = true;
         lineChangeds[row] = false;
+        lineChangedCount += 1;
       }
     }
-    this.mainDisplay.innerHTML = this.htmlRowStrArray.join('');
 
-    var self = this;
-    $("a[href^='http://ppt\.cc/']").hover(function(e) {
-      var src = $(this).attr('href') + '@.jpg';
-      var currSrc = $('#hoverPPT img').attr('src');
-      if (src !== currSrc) {
-        $('#hoverPPT img').attr('src', src);
+    if (anylineUpdate) {
+      if (lineChangedCount > 1) {
+        this.mainDisplay.innerHTML = this.htmlRowStrArray.join('');
       } else {
-        $('#hoverPPT').show();
+        $('.main span[srow="'+changedRow+'"]')[0].innerHTML = changedLineHtmlStr;
       }
-      self.hoverPptShouldShown = true;
-    }, function(e) {
-      self.hoverPptShouldShown = false;
-      $('#hoverPPT').hide();
-    });
+
+      var self = this;
+      $("a[href^='http://ppt\.cc/']").hover(function(e) {
+        var src = $(this).attr('href') + '@.jpg';
+        var currSrc = $('#hoverPPT img').attr('src');
+        if (src !== currSrc) {
+          $('#hoverPPT img').attr('src', src);
+        } else {
+          $('#hoverPPT').show();
+        }
+        self.hoverPptShouldShown = true;
+      }, function(e) {
+        self.hoverPptShouldShown = false;
+        $('#hoverPPT').hide();
+      });
+    }
+
   },
 
   onTextInput: function(text, isPasting) {
@@ -712,7 +730,7 @@ TermView.prototype = {
   },
 
   setTermFontSize: function(cw, ch) {
-    var innerBounds = this.bbscore.getWindowInnerBounds();
+    var innerBounds = this.innerBounds;
     this.chw = cw;
     this.chh = ch;
     this.mainDisplay.style.fontSize = this.chh + 'px';
@@ -747,12 +765,11 @@ TermView.prototype = {
 
   convertMN2XYEx: function(cx, cy) {
     var origin;
-    var firstGrid = $(".main span[srow='0']")[0];
-    var w = this.bbscore.getWindowInnerBounds().width;
+    var w = this.innerBounds.width;
     if(this.horizontalAlignCenter && this.scaleX!=1)
-      origin = [((w - (this.chw*this.buf.cols)*this.scaleX)/2) + this.bbsViewMargin, firstGrid.offsetTop];
+      origin = [((w - (this.chw*this.buf.cols)*this.scaleX)/2) + this.bbsViewMargin, this.firstGridOffset.top];
     else
-      origin = [firstGrid.offsetLeft, firstGrid.offsetTop];
+      origin = [this.firstGridOffset.left, this.firstGridOffset.top];
     var realX = origin[0] + (cx) * this.chw * this.scaleX;
     var realY = origin[1] + (cy) * this.chh +1;
     return [realX, realY];
@@ -833,7 +850,7 @@ TermView.prototype = {
         this.input.style.opacity = '0';
         //this.input.style.left = '-100000px';
       }
-      var innerBounds = this.bbscore.getWindowInnerBounds();
+      var innerBounds = this.innerBounds;
       var bbswinheight = innerBounds.height;
       var bbswinwidth = innerBounds.width;
       if(bbswinheight < pos[1] + parseFloat(this.input.style.height) + this.chh)
@@ -875,7 +892,7 @@ TermView.prototype = {
     var cols = this.buf ? this.buf.cols : 80;
     var rows = this.buf ? this.buf.rows : 24;
 
-    var innerBounds = this.bbscore.getWindowInnerBounds();
+    var innerBounds = this.innerBounds;
 
     if (this.screenType == 0 || this.screenType == 1) {
       var width = this.bbsWidth ? this.bbsWidth : innerBounds.width;

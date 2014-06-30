@@ -111,6 +111,8 @@ pttchrome.App = function(onInitializedCallback, from) {
     self.context_menu(e);
   }, false);
 
+  this.view.innerBounds = this.getWindowInnerBounds();
+  this.view.firstGridOffset = this.getFirstGridOffsets();
   window.onresize = function() {
     self.onWindowResize();
   };
@@ -439,9 +441,10 @@ pttchrome.App.prototype.doSettings = function() {
 };
 
 pttchrome.App.prototype.onWindowResize = function() {
+  this.view.innerBounds = this.getWindowInnerBounds();
+  this.view.firstGridOffset = this.getFirstGridOffsets();
   this.view.fontResize();
-  var firstGrid = $(".main span[srow='0']")[0];
-  if (this.view.fontFitWindowWidth || firstGrid.offsetLeft <= 100) {
+  if (this.view.fontFitWindowWidth || this.view.firstGridOffset.left <= 100) {
     $('#sideMenus').addClass('menuHidden');
   } else {
     $('#sideMenus').removeClass('menuHidden');
@@ -533,15 +536,23 @@ pttchrome.App.prototype.getWindowInnerBounds = function() {
   return bounds;
 };
 
-pttchrome.App.prototype.clientToPos = function(cX, cY) {
+pttchrome.App.prototype.getFirstGridOffsets = function() {
   var firstGrid = $(".main span[srow='0']")[0];
+  var offsets = {
+    top: firstGrid.offsetTop,
+    left: firstGrid.offsetLeft
+  };
+  return offsets;
+};
+
+pttchrome.App.prototype.clientToPos = function(cX, cY) {
   var x;
-  var w = this.getWindowInnerBounds().width;
+  var w = this.view.innerBounds.width;
   if (this.view.horizontalAlignCenter && this.view.scaleX != 1)
     x = cX - ((w - (this.view.chw * this.buf.cols) * this.view.scaleX) / 2);
   else
-    x = cX - parseFloat(firstGrid.offsetLeft);
-  var y = cY - parseFloat(firstGrid.offsetTop);
+    x = cX - parseFloat(this.view.firstGridOffset.left);
+  var y = cY - parseFloat(this.view.firstGridOffset.top);
   var col = Math.floor(x / (this.view.chw * this.view.scaleX));
   var row = Math.floor(y / this.view.chh);
 
