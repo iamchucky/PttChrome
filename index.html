@@ -106,6 +106,8 @@
                     <div class="list-group-item-text">
                       <div id="opt_openInPackagedApp" class="checkbox">
                       </div>
+                      <div id="opt_enablePicPreview" class="checkbox">
+                      </div>
                       <div id="opt_antiIdleTime" class="form-group">
                       </div>
                       <div id="opt_lineWrap" class="form-group">
@@ -186,9 +188,8 @@
         <div id="getAppBtn" class="btn btn-default btn-lg">Get PttChrome from chrome web store</div>
       </div>
     </div>
-    <div id="picPreview">
-      <img src='' style='max-height:20em'></img>
-    </div>
+    <img id="picPreview" src='' style='max-height:80%; max-width:90%'></img>
+    <img id="picLoading" src='icon/connecting.gif' style="display:none; position:absolute; z-index:2"></img>
     <ul id="emoticonList">
     </ul>
   </body>

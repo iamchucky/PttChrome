@@ -118,9 +118,10 @@ pttchrome.App = function(onInitializedCallback, from) {
   window.onresize = function() {
     self.onWindowResize();
   };
-  $('#picPreview img').load(function(e) {
+  this.view.picPreview.load(function(e) {
     if (self.view.picPreviewShouldShown) {
-      $('#picPreview').show()
+      self.view.picPreview.show();
+      self.view.picLoading.hide();
       self.updatePicPreviewPosition();
     }
   });
@@ -444,7 +445,6 @@ pttchrome.App.prototype.doSettings = function() {
 
 pttchrome.App.prototype.onWindowResize = function() {
   this.view.innerBounds = this.getWindowInnerBounds();
-  this.view.firstGridOffset = this.getFirstGridOffsets();
   this.view.fontResize();
   if (this.view.fontFitWindowWidth || this.view.firstGridOffset.left <= 100) {
     $('#sideMenus').addClass('menuHidden');
@@ -840,6 +840,9 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
       else
         this.unregExitAlert();
       break;
+    case 'enablePicPreview':
+      this.view.enablePicPreview = pref.get(name);
+      break;
     case 'antiIdleTime':
       this.antiIdleTime = pref.get(name) * 1000;
       break;
@@ -1014,6 +1017,13 @@ pttchrome.App.prototype.mouse_up = function(e) {
 pttchrome.App.prototype.mouse_move = function(e) {
   this.curX = e.clientX;
   this.curY = e.clientY;
+
+  if (this.view.enablePicPreview && this.view.picLoading.css('display') != 'none') {
+    this.view.picLoading.css({
+      left: e.clientX + 20,
+      top: e.clientY
+    });
+  }
 
   //if we draging window, pass all detect.
   if (this.playerMgr && this.playerMgr.dragingWindow) {
@@ -1342,12 +1352,12 @@ pttchrome.App.prototype.setBBSCmd = function(cmd, cmdhandler) {
 };
 
 pttchrome.App.prototype.updatePicPreviewPosition = function() {
-  if ($('#picPreview').css('display') == 'none')
+  if (this.view.picPreview.css('display') == 'none')
     return;
   var mouseHeight = this.curY;
   var curX = this.curX;
   var pageHeight = $(window).height();
-  var imageHeight = $('#picPreview img').height();
+  var imageHeight = this.view.picPreview.height();
   var imgTop = 20;
 
   // opening image would pass the bottom of the page
@@ -1359,8 +1369,7 @@ pttchrome.App.prototype.updatePicPreviewPosition = function() {
     imgTop = mouseHeight - imageHeight / 2;
   }
   var fontSize = this.view.chh;
-  $('#picPreview img').css({
-    position: "absolute",
+  this.view.picPreview.css({
     fontSize: fontSize,
     left: curX + 20,
     top: imgTop

@@ -60,11 +60,9 @@ function TermView(rowCount) {
   this.bbsCursor = document.getElementById('cursor');
   this.trackKeyWordList = document.getElementById('TrackKeyWordList');
   this.BBSWin = document.getElementById('BBSWindow');
-  this.pictureWindow = document.getElementById('PictureWindow');
-  this.picturePreview = document.getElementById('PicturePreview');
-  this.picturePreviewLoading = document.getElementById('PicturePreviewLoading');
-  this.pictureInfoLabel = document.getElementById('PicturePreviewInfo');
-  this.picLoadingImage = document.getElementById('PicLoadingImage');
+  this.picPreview = $('#picPreview');
+  this.picLoading = $('#picLoading');
+  this.enablePicPreview = true;
   this.scaleX = 1;
 
   // for cpu efficiency
@@ -512,23 +510,32 @@ TermView.prototype = {
         $('.main span[srow="'+changedRow+'"]')[0].innerHTML = changedLineHtmlStr;
       }
 
-      var self = this;
-      $("a[href^='http://ppt\.cc/'], a[type='p'], a[href^='http://imgur\.com/']").hover(function(e) {
-        var elem = $(this);
-        var href = elem.attr('href');
-        var type = elem.attr('type');
-        var src = (type == 'p') ? href : (href.indexOf('imgur\.com') > 0) ? href.replace('http://imgur\.com', 'http://i\.imgur\.com') + '.jpg' : href + '@.jpg';
-        var currSrc = $('#picPreview img').attr('src');
-        if (src !== currSrc) {
-          $('#picPreview img').attr('src', src);
-        } else {
-          $('#picPreview').show();
-        }
-        self.picPreviewShouldShown = true;
-      }, function(e) {
-        self.picPreviewShouldShown = false;
-        $('#picPreview').hide();
-      });
+      if (this.enablePicPreview) {
+        // hide preview if any update
+        this.picPreviewShouldShown = false;
+        this.picPreview.hide();
+        this.picLoading.hide();
+
+        var self = this;
+        $("a[href^='http://ppt\.cc/'], a[type='p'], a[href^='http://imgur\.com/']").hover(function(e) {
+          var elem = $(this);
+          var href = elem.attr('href');
+          var type = elem.attr('type');
+          var src = (type == 'p') ? href : (href.indexOf('imgur\.com') > 0) ? href.replace('http://imgur\.com', 'http://i\.imgur\.com') + '.jpg' : href + '@.jpg';
+          var currSrc = self.picPreview.attr('src');
+          if (src !== currSrc) {
+            self.picLoading.show();
+            self.picPreview.attr('src', src);
+          } else {
+            self.picPreview.show();
+          }
+          self.picPreviewShouldShown = true;
+        }, function(e) {
+          self.picPreviewShouldShown = false;
+          self.picPreview.hide();
+          self.picLoading.hide();
+        });
+      }
     }
 
   },
@@ -762,6 +769,8 @@ TermView.prototype = {
       else
         this.mainDisplay.style.webkitTransformOriginX = 'left';
     }
+
+    this.firstGridOffset = this.bbscore.getFirstGridOffsets();
 
     this.updateCursorPos();
   },

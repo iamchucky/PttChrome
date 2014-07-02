@@ -6,6 +6,7 @@ var DEFAULT_PREFS = {
   //closeQuery    : false,
   //dbcsDetect    : false,
   openInPackagedApp : false,
+  enablePicPreview  : true,
   antiIdleTime      : 0,
   lineWrap          : 78,
 
