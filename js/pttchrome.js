@@ -78,6 +78,8 @@ pttchrome.App = function(onInitializedCallback, from) {
   this.alertBeforeUnload = false;
   this.modalShown = false;
 
+  this.emoticon = new Emoticon();
+
   var self = this;
   this.CmdHandler.addEventListener("OverlayCommand", function(e) {
     self.overlayCommandListener(e);

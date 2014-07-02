@@ -3,6 +3,17 @@
   src: url('../fonts/symmingliu.woff');
 }
 
+#emoticonList {
+  position: absolute;
+  display: none;
+  list-style-type: none;
+}
+
+#emoticonList li {
+  padding: 5px;
+  font-family: symmingliu, MingLiU, monospace;
+}
+
 #hoverPPT {
   position: absolute;
   display: none;
