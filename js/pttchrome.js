@@ -60,7 +60,7 @@ pttchrome.App = function(onInitializedCallback, from) {
   //new pref - end
   this.connectState = 0;
 
-  // for hoverPPT
+  // for picPreview
   this.curX = 0;
   this.curY = 0;
 
@@ -118,10 +118,10 @@ pttchrome.App = function(onInitializedCallback, from) {
   window.onresize = function() {
     self.onWindowResize();
   };
-  $('#hoverPPT img').load(function(e) {
-    if (self.view.hoverPptShouldShown) {
-      $('#hoverPPT').show()
-      self.updateHoverPptPosition();
+  $('#picPreview img').load(function(e) {
+    if (self.view.picPreviewShouldShown) {
+      $('#picPreview').show()
+      self.updatePicPreviewPosition();
     }
   });
 
@@ -1053,7 +1053,7 @@ pttchrome.App.prototype.mouse_move = function(e) {
       this.resetMouseCursor();
   }
 
-  this.updateHoverPptPosition();
+  this.updatePicPreviewPosition();
 };
 
 pttchrome.App.prototype.mouse_over = function(e) {
@@ -1341,13 +1341,13 @@ pttchrome.App.prototype.setBBSCmd = function(cmd, cmdhandler) {
   }
 };
 
-pttchrome.App.prototype.updateHoverPptPosition = function() {
-  if ($('#hoverPPT').css('display') == 'none')
+pttchrome.App.prototype.updatePicPreviewPosition = function() {
+  if ($('#picPreview').css('display') == 'none')
     return;
   var mouseHeight = this.curY;
   var curX = this.curX;
   var pageHeight = $(window).height();
-  var imageHeight = $('#hoverPPT img').height();
+  var imageHeight = $('#picPreview img').height();
   var imgTop = 20;
 
   // opening image would pass the bottom of the page
@@ -1358,8 +1358,10 @@ pttchrome.App.prototype.updateHoverPptPosition = function() {
   } else if (mouseHeight - 20 > imageHeight / 2) {
     imgTop = mouseHeight - imageHeight / 2;
   }
-  $('#hoverPPT img').css({
+  var fontSize = this.view.chh;
+  $('#picPreview img').css({
     position: "absolute",
+    fontSize: fontSize,
     left: curX + 20,
     top: imgTop
   });

@@ -84,7 +84,7 @@ function TermView(rowCount) {
   this.mainDisplay.style.border = '0px';
   this.setFontFace('MingLiu,monospace');
 
-  this.hoverPptShouldShown = false;
+  this.picPreviewShouldShown = false;
 
   var self = this;
   this.input.addEventListener('compositionstart', function(e) {
@@ -203,9 +203,9 @@ TermView.prototype = {
 
   prePicRel: function(str) {
     if(str.search(/\.(bmp|gif|jpe?g|png)$/i) == -1)
-      return ' rel="w"';
+      return ' type="w"';
     else
-      return ' rel="p"';
+      return ' type="p"';
   },
 
   createTwoColorWord: function(row, col, ch, ch2, char1, char2, fg, fg2, bg, bg2, panding) {
@@ -299,7 +299,7 @@ TermView.prototype = {
     var s1 = '';
     var s2 = '';
     if (ch.isStartOfURL() && useHyperLink)
-      s0 = '<a class="y q'+deffg+'b'+defbg+'" href="' +ch.getFullURL() + '"' + this.prePicRel( ch.getFullURL()) + ' target="_blank">';
+      s0 = '<a class="y q'+deffg+'b'+defbg+'" href="' +ch.getFullURL() + '"' + this.prePicRel( ch.getFullURL()) + ' rel="noreferrer" target="_blank">';
     if (ch.isEndOfURL() && useHyperLink)
       s2 = '</a>';
     if (bg==defbg && (fg == deffg || char1 <= ' ') && !ch.isBlink() ) {
@@ -513,18 +513,21 @@ TermView.prototype = {
       }
 
       var self = this;
-      $("a[href^='http://ppt\.cc/']").hover(function(e) {
-        var src = $(this).attr('href') + '@.jpg';
-        var currSrc = $('#hoverPPT img').attr('src');
+      $("a[href^='http://ppt\.cc/'], a[type='p'], a[href^='http://imgur\.com/']").hover(function(e) {
+        var elem = $(this);
+        var href = elem.attr('href');
+        var type = elem.attr('type');
+        var src = (type == 'p') ? href : (href.indexOf('imgur\.com') > 0) ? href.replace('http://imgur\.com', 'http://i\.imgur\.com') + '.jpg' : href + '@.jpg';
+        var currSrc = $('#picPreview img').attr('src');
         if (src !== currSrc) {
-          $('#hoverPPT img').attr('src', src);
+          $('#picPreview img').attr('src', src);
         } else {
-          $('#hoverPPT').show();
+          $('#picPreview').show();
         }
-        self.hoverPptShouldShown = true;
+        self.picPreviewShouldShown = true;
       }, function(e) {
-        self.hoverPptShouldShown = false;
-        $('#hoverPPT').hide();
+        self.picPreviewShouldShown = false;
+        $('#picPreview').hide();
       });
     }
 

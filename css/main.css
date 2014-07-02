@@ -14,7 +14,7 @@
   font-family: symmingliu, MingLiU, monospace;
 }
 
-#hoverPPT {
+#picPreview {
   position: absolute;
   display: none;
   width: 50px;
