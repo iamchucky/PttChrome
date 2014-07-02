@@ -9,9 +9,14 @@ document.addEventListener('DOMContentLoaded', function () {
     webv.contentWindow.postMessage({action: 'newwindow', data: e.targetUrl}, webv.src);
   });
 
+  webv.addEventListener('contentload', function() {
+    webv.focus();
+  });
+
   window.addEventListener('focus', function(e) {
     webv.focus();
   });
+
 });
 
 var closeWindow = function() {
