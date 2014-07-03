@@ -154,20 +154,6 @@ SocketClient.prototype._onWriteComplete = function(writeInfo) {
   }
 };
 
-///
-//
-var loadFileEntry = function (_chosenEntry, readcb) {
-  var chosenEntry = _chosenEntry;
-    chosenEntry.file(function(file) {
-      var reader = new FileReader();
-      reader.onerror = function(e) {
-      };
-      reader.onload = function(e) {
-        readcb(reader.result);
-      };
-      reader.readAsDataURL(file);
-    });
-};
 
 // used for only checking status
 chrome.runtime.onMessageExternal.addListener(function(request, sender, sendResponse) {
@@ -214,26 +200,6 @@ chrome.runtime.onConnectExternal.addListener(function(port) {
           port.so.disconnect();
           port.so = null;
         }
-        break;
-      case 'readFile':
-        //pop up a open file dialog
-        //after user select a file, conv to base 64 and send a string message back;
-        var accepts = [{
-          //mimeTypes: ['text/*'],
-          extensions: ['jpg', 'jpeg', 'gif', 'png']
-        }];
-        chrome.fileSystem.chooseEntry({type: 'openFile', accepts: accepts}, function(theEntry) {
-          if (!theEntry) {
-            port.postMessage({action: "onFileDataReady", data: ""});            
-          } else {
-            // use local storage to retain access to this file
-            chrome.storage.local.set({'chosenFile': chrome.fileSystem.retainEntry(theEntry)});
-            var readcb = function(str) {
-              port.postMessage({action: "onFileDataReady", data: str});
-            }
-            loadFileEntry(theEntry, readcb);
-          }
-        });
         break;
       case 'copy':
         if (!msg.data)

@@ -28,13 +28,8 @@
     "clipboardRead",
     "clipboardWrite",
     "notifications",
-    "unlimitedStorage",
     {"socket": [
       "tcp-connect:*:*"
-    ]},
-    {"fileSystem": [
-      "retainEntries",
-      "directory"
     ]},
     "storage"
   ]
