@@ -79,6 +79,9 @@ pttchrome.App = function(onInitializedCallback, from) {
   this.modalShown = false;
 
   this.emoticon = new Emoticon();
+  this.navigateTo = { board: getQueryVariable('board'), aid: getQueryVariable('aid') };
+  this.navigationCanStart = false;
+  this.navigationDone = false;
 
   var self = this;
   this.CmdHandler.addEventListener("OverlayCommand", function(e) {

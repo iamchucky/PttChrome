@@ -190,7 +190,6 @@ function TermBuf(cols, rows) {
   this.altScreen = '';
   this.changed = false;
   this.posChanged = false;
-  this.downPostChanged = false;
   this.pageState = 0;
   this.forceFullWidth = false;
 
@@ -762,11 +761,38 @@ TermBuf.prototype = {
         this.resetMousePos();
       }
       this.updateCharAttr();
+
+      // support for url specified navigation
+      if (this.view.bbscore.navigateTo.board != null && !this.view.bbscore.navigationDone) {
+        this.setPageState();
+        if (this.pageState == 1 && !this.view.bbscore.navigationCanStart) {
+          this.view.bbscore.navigationCanStart = true;
+          this.sendNavigateToBoardCmd();
+        } else if (this.pageState == 2) {
+          if (this.view.bbscore.navigateTo.aid != null) {
+            this.view.bbscore.navigationDone = true;
+            this.sendNavigateToArticleCmd();
+          } else {
+            this.view.bbscore.navigationDone = true;
+          }
+        } else if (this.pageState == 3) {
+          // send enter to pass the screen
+          this.view.conn.send('\r');
+        }
+
+        // use this to stop page from rendering
+        /*
+        if (this.view.conn.loginStr[1] && !this.view.bbscore.navigationDone) {
+          this.changed = false;
+          return;
+        }
+        */
+      }
+
       if (this.view) {
         this.view.update();
       }
       this.changed = false;
-      this.downPostChanged = true;
       //if (this.view.conn.autoLoginStage > 0)
       //  this.view.conn.checkAutoLogin();
     }
@@ -1042,7 +1068,7 @@ TermBuf.prototype = {
 
     if ( this.isUnicolor(0, 0, 29) && this.isUnicolor(0, 60, 70) ) {
       if (this.isUnicolor(2, 0, 70) && !this.isLineEmpty(1) && (this.cur_x < 19 || this.cur_y == 23)) {
-        // console.log('pageState = 2 (LIST)')
+        //console.log('pageState = 2 (LIST)')
         this.pageState = 2; // LIST
       } else {
         if (this.useMouseBrowsingPtt) {
@@ -1050,18 +1076,20 @@ TermBuf.prototype = {
             this.pageState = 4; // PTT-Z
           else
             this.pageState = 1; // MENU
-        } else
+        } else {
+          //console.log('pageState = 1 (MENU)')
           this.pageState = 1; // MENU
+        }
       }
     } else {
       if ( this.isUnicolor(23, 28, 53) && this.cur_y == 23) {
-        // console.log('pageState = 3 (READING)')
+        //console.log('pageState = 3 (READING)')
         this.pageState = 3; // READING
       }
     }
 
     if (this.pageState == 0) {
-      // console.log('pageState = 0 (NORMAL)')
+      //console.log('pageState = 0 (NORMAL)')
     }
   },
 
@@ -1312,6 +1340,22 @@ TermBuf.prototype = {
       this.view.redraw(false);
     }
     this.mouseCursor = 0;
-  }
+  },
+
+  sendNavigateToBoardCmd: function() {
+    var conn = this.view.conn;
+    var board = this.view.bbscore.navigateTo.board;
+    // navigate to board
+    conn.send('s'+board+'\r');
+  },
+
+  sendNavigateToArticleCmd: function() {
+    var conn = this.view.conn;
+    var aid = this.view.bbscore.navigateTo.aid;
+    // navigate to article
+    if (aid) {
+      conn.send('#'+aid+'\r\r');
+    }
+  },
 
 }
