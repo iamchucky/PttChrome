@@ -728,15 +728,14 @@ TermBuf.prototype = {
     this.timerUpdate = null;
 
     if (this.changed) { // content changed
+      this.setPageState();
       if (this.useMouseBrowsing) {
-        this.setPageState();
         this.resetMousePos();
       }
       this.updateCharAttr();
 
       // support for url specified navigation
       if (this.view.bbscore.navigateTo.board != null && !this.view.bbscore.navigationDone) {
-        this.setPageState();
         if (this.pageState == 1 && !this.view.bbscore.navigationCanStart) {
           this.view.bbscore.navigationCanStart = true;
           this.sendNavigateToBoardCmd();

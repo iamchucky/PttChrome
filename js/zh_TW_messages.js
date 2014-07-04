@@ -56,6 +56,12 @@
   "cmenu_goToOtherSite": {
     "message": "去其他站台 ..."
   },
+  "cmenu_addBlacklistUserId": {
+    "message": "在黑名單裡加入使用者"
+  },
+  "cmenu_removeBlacklistUserId": {
+    "message": "在黑名單裡移除使用者"
+  },
   "cmenu_settings": {
     "message": "設定"
   },

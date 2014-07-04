@@ -56,6 +56,12 @@ locale.en_US = {
   "cmenu_goToOtherSite": {
     "message": "Go to other site ..."
   },
+  "cmenu_addBlacklistUserId": {
+    "message": "Add blacklist user"
+  },
+  "cmenu_removeBlacklistUserId": {
+    "message": "Remove blacklist user"
+  },
   "cmenu_settings": {
     "message": "Settings"
   },

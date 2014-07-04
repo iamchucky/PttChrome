@@ -469,6 +469,16 @@ pttchrome.App.prototype.doGoToOtherSite = function() {
   $('#siteModal').modal('show');
 };
 
+pttchrome.App.prototype.doAddBlacklistUserId = function(userid) {
+  this.pref.blacklistedUserIds[userid] = true;
+  this.view.redraw(true);
+};
+
+pttchrome.App.prototype.doRemoveBlacklistUserId = function(userid) {
+  delete this.pref.blacklistedUserIds[userid];
+  this.view.redraw(true);
+};
+
 pttchrome.App.prototype.doSettings = function() {
   $('#prefModal').modal('show');
 };
@@ -1172,6 +1182,7 @@ pttchrome.App.prototype.setupContextMenus = function() {
   var menuSelector = '#contextMenus';
   var selectedText = '';
   var contextOnUrl = '';
+  var contextOnUserId = '';
   var aElement = null;
 
   $('#BBSWindow').on('contextmenu', function(e) {
@@ -1185,19 +1196,34 @@ pttchrome.App.prototype.setupContextMenus = function() {
       return;
     }
 
-    var target = e.target;
+    var target = $(e.target);
     contextOnUrl = '';
+    contextOnUserId = '';
+
     aElement = null;
-    if ($(e.target).is('a')) {
-      contextOnUrl = $(e.target).attr('href');
-      aElement = e.target;
-    } else if ($(e.target).parent().is('a')) {
-      contextOnUrl = $(e.target).parent().attr('href');
-      aElement = e.target.parentNode;
+    if (target.is('a')) {
+      contextOnUrl = target.attr('href');
+      aElement = target[0];
+    } else if (target.parent().is('a')) {
+      contextOnUrl = target.parent().attr('href');
+      aElement = target[0].parentNode;
+    }
+
+    // for getting push thread user id
+    var srow = target.attr('srow') 
+    if (srow == undefined || srow == null)
+      srow = target.parent().attr('srow');
+    srow = parseInt(srow);
+    var rowText = self.buf.getRowText(srow, 0, self.buf.cols);
+    if (self.buf.pageState == 3) {
+      contextOnUserId = rowText.parsePushthreadForUserId();
+    } else if (self.buf.pageState == 2) {
+      contextOnUserId = rowText.parseThreadForUserId();
     }
 
     // replace the &nbsp;
     selectedText = window.getSelection().toString().replace(/\u00a0/g, " ");
+
     if (contextOnUrl) {
       $('.contextUrl').show();
       $('.contextSel').hide();
@@ -1214,6 +1240,22 @@ pttchrome.App.prototype.setupContextMenus = function() {
         $('.contextNormal').hide();
         $('#cmenuSearchContent').text("'"+selectedText+"'");
       }
+    }
+
+    if (contextOnUserId) {
+      if (contextOnUserId in self.pref.blacklistedUserIds) {
+        $('#cmenuRemoveBlacklistUserIdContent').text("'"+contextOnUserId+"'");
+        $('#cmenu_addBlacklistUserId').hide();
+        $('#cmenu_removeBlacklistUserId').show();
+      } else {
+        $('#cmenuAddBlacklistUserIdContent').text("'"+contextOnUserId+"'");
+        $('#cmenu_addBlacklistUserId').show();
+        $('#cmenu_removeBlacklistUserId').hide();
+      }
+      $('#cmenu_divider2').show();
+    } else {
+      $('#cmenu_addBlacklistUserId').hide();
+      $('#cmenu_removeBlacklistUserId').hide();
     }
 
     // check if mouse browsing is on
@@ -1277,6 +1319,8 @@ pttchrome.App.prototype.setupContextMenus = function() {
   $('#cmenu_copyLinkUrl a').text(i18n('cmenu_copyLinkUrl'));
   $('#cmenu_mouseBrowsing a').html('<i id="mouseBrowsingCheck" class="fa fa-check"></i>'+i18n('cmenu_mouseBrowsing'));
   $('#cmenu_goToOtherSite a').text(i18n('cmenu_goToOtherSite'));
+  $('#cmenu_addBlacklistUserId a').html(i18n('cmenu_addBlacklistUserId')+' <span id="cmenuAddBlacklistUserIdContent"></span>');
+  $('#cmenu_removeBlacklistUserId a').html(i18n('cmenu_removeBlacklistUserId')+' <span id="cmenuRemoveBlacklistUserIdContent"></span>');
   $('#cmenu_settings a').text(i18n('cmenu_settings'));
 
   $('#cmenu_copy').click(function(e) {
@@ -1321,6 +1365,16 @@ pttchrome.App.prototype.setupContextMenus = function() {
   });
   $('#cmenu_goToOtherSite').click(function(e) {
     self.doGoToOtherSite();
+    e.stopPropagation();
+    hideContextMenu();
+  });
+  $('#cmenu_addBlacklistUserId').click(function(e) {
+    self.doAddBlacklistUserId(contextOnUserId);
+    e.stopPropagation();
+    hideContextMenu();
+  });
+  $('#cmenu_removeBlacklistUserId').click(function(e) {
+    self.doRemoveBlacklistUserId(contextOnUserId);
     e.stopPropagation();
     hideContextMenu();
   });

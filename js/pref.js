@@ -7,6 +7,7 @@ function PttChromePref(app, onInitializedCallback) {
   //this.loadDefault(onInitializedCallback);
   this.onInitializedCallback = onInitializedCallback;
   this.initCallbackCalled = false;
+  this.blacklistedUserIds = {};
 }
 
 PttChromePref.prototype = {

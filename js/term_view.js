@@ -476,6 +476,19 @@ TermView.prototype = {
         lineUpdated = false;
         var tmp = [];
 
+        // check blacklist for user and fade row
+        var rowText = this.buf.getRowText(row, 0, this.buf.cols);
+        var userid = '';
+        if (this.buf.pageState == 3) {
+          userid = rowText.parsePushthreadForUserId();
+        } else if (this.buf.pageState == 2) {
+          userid = rowText.parseThreadForUserId();
+        }
+        var shouldFade = false;
+        if (userid in this.bbscore.pref.blacklistedUserIds) {
+          shouldFade = true;
+        }
+
         //
         if (doHighLight) {
           if (this.shadowHighLight)
@@ -491,7 +504,7 @@ TermView.prototype = {
 
         changedLineHtmlStr = tmp.join('');
         changedRow = row;
-        this.htmlRowStrArray[row] = '<span type="bbsrow" srow="'+row+'">' + changedLineHtmlStr + '</span><br>';
+        this.htmlRowStrArray[row] = '<span type="bbsrow" srow="'+row+'"'+ (shouldFade ? ' style="opacity:0.2"' : '') +'>' + changedLineHtmlStr + '</span><br>';
         anylineUpdate = true;
         lineChangeds[row] = false;
         lineChangedCount += 1;
