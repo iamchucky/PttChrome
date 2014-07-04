@@ -204,18 +204,6 @@ function TermBuf(cols, rows) {
 
   this.viewBufferTimer = 30;
 
-  //this.severNotifyStr = 'server notify';
-  //this.severNotifySound = false;
-  //this.severNotifyMessage = false;
-  //this.notifyBackgroundTab = false;
-
-  //new pref - start
-  this.severNotifyStr = '';
-  this.notifyWhenBackbround = true;
-  this.notifyBySound = true;
-  this.notifyByMessage = true;
-  //new pref - end
-
   while (--rows >= 0) {
     var line = new Array(cols);
     var outputhtml = new Array(cols);
@@ -256,23 +244,7 @@ TermBuf.prototype = {
       switch (ch) {
       case '\x07':
         // FIXME: beep (1)Sound (2)AlertNotification (3)change icon
-        /*
-        var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
-            .getService(Components.interfaces.nsIWindowMediator);
-        var recentWindow = wm.getMostRecentWindow("navigator:browser");
-        if (!recentWindow)
-          continue;
-        if (recentWindow.content.document==document && this.notifyWhenBackbround)
-          continue;
-        if (this.notifyBySound) {
-          var sound = Components.classes["@mozilla.org/sound;1"]
-                .createInstance(Components.interfaces.nsISound);
-          sound.beep();
-        }
-        if (this.notifyByMessage) {
-          this.view.showAlertMessage(document.title, this.severNotifyStr);
-        }
-        */
+        // should only play sound
         continue;
       case '\b':
         this.back();

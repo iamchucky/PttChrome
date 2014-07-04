@@ -50,12 +50,7 @@ function TermView(rowCount) {
   this.cursorBlinkTimer = null;
 
   this.selection = null;
-  /*
-  this.alertService = Components.classes["@mozilla.org/alerts-service;1"].getService(Components.interfaces.nsIAlertsService);
-  */
   this.input = document.getElementById('t');
-  //this.input.setAttribute('BBSFoxInput', '0');
-  //this.input.setAttribute('BBSInputText', '');
   this.symtable = lib.symbolTable;
   this.bbsCursor = document.getElementById('cursor');
   this.trackKeyWordList = document.getElementById('TrackKeyWordList');
@@ -974,5 +969,30 @@ TermView.prototype = {
     }
 
     return selection;
+  },
+
+  showWaterballNotification: function() {
+    var app = this.bbscore;
+    //console.log('message from ' + this.waterball.userId + ': ' + this.waterball.message); 
+    var title = app.waterball.userId + ' ' + i18n('notification_said');
+    var timer = setTimer(true, function() {
+      if (document.title == app.connectedUrl) {
+        document.title = title + ' ' + app.waterball.message;
+      } else {
+        document.title = app.connectedUrl;
+      }
+    }, 1500);
+    var options = {
+      icon: 'icon_128.png',
+      body: app.waterball.message,
+      tag: app.waterball.userId
+    };
+    var notif = new Notification(title, options);
+    notif.onclick = function() {
+      window.focus();
+      timer.cancel();
+      document.title = app.connectedUrl;
+      this.close();
+    };
   }
 }

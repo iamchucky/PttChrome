@@ -176,6 +176,11 @@ locale.en_US = {
     "message": "Quit"
   },
 
+  // notifications
+  "notification_said": {
+    "message": "says:"
+  },
+
   "getAppBtn": {
     "message": "Get PttChrome from chrome web store"
   },

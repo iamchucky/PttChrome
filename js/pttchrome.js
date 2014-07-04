@@ -59,6 +59,7 @@ pttchrome.App = function(onInitializedCallback, from) {
   this.idleTime = 0;
   //new pref - end
   this.connectState = 0;
+  this.connectedUrl = '';
 
   // for picPreview
   this.curX = 0;
@@ -82,6 +83,9 @@ pttchrome.App = function(onInitializedCallback, from) {
   this.navigateTo = { board: getQueryVariable('board'), aid: getQueryVariable('aid') };
   this.navigationCanStart = false;
   this.navigationDone = false;
+
+  this.waterball = { userId: '', message: '' };
+  this.appFocused = true;
 
   var self = this;
   this.CmdHandler.addEventListener("OverlayCommand", function(e) {
@@ -114,6 +118,14 @@ pttchrome.App = function(onInitializedCallback, from) {
 
   window.addEventListener('contextmenu', function(e) {
     self.context_menu(e);
+  }, false);
+
+  window.addEventListener('focus', function(e) {
+    self.appFocused = true;
+  }, false);
+
+  window.addEventListener('blur', function(e) {
+    self.appFocused = false;
   }, false);
 
   this.view.innerBounds = this.getWindowInnerBounds();
@@ -177,7 +189,8 @@ pttchrome.App.prototype.connect = function(url) {
   var self = this;
   var port = 23;
   var splits = url.split(/:/g);
-  document.title = url;
+  this.connectedUrl = url;
+  document.title = this.connectedUrl;
   if (splits.length == 2) {
     url = splits[0];
     port = parseInt(splits[1]);
@@ -209,6 +222,20 @@ pttchrome.App.prototype.onConnect = function() {
 pttchrome.App.prototype.onData = function(data) {
 //dumpLog(DUMP_TYPE_LOG, "pttchrome onData");
   this.parser.feed(data);
+
+  if (!this.appFocused) {
+    // parse received data for waterball
+    var wb = data.b2u().parseWaterball();
+    if (wb) {
+      if ('userId' in wb) {
+        this.waterball.userId = wb.userId;
+      }
+      if ('message' in wb) {
+        this.waterball.message = wb.message;
+      }
+      this.view.showWaterballNotification();
+    }
+  }
 };
 
 pttchrome.App.prototype.onClose = function() {
@@ -285,7 +312,7 @@ pttchrome.App.prototype.setupConnectionAlert = function() {
 
   var self = this;
   $('#connectionAlertReconnect').click(function(e) {
-    self.connect(document.title);
+    self.connect(self.connectedUrl);
     $('#connectionAlert').hide();
   });
   $('#connectionAlertExitAll').click(function(e) {

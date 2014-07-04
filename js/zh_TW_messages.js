@@ -173,6 +173,11 @@
     "message": "離開"
   },
 
+  // notifications
+  "notification_said": {
+    "message": "說:"
+  },
+
   "getAppBtn": {
     "message": "來去Chrome線上應用程式商店下載PttChrome"
   },

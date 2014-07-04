@@ -128,6 +128,23 @@ String.prototype.b2u = function() {
     return str;
 };
 
+String.prototype.parseWaterball = function() {
+  var str = this;
+  var regex = new RegExp(/\x1b\[1;33;46m\u2605(\w+)\x1b\[0;1;37;45m (.+) \x1b\[m\x1b\[K/g);
+  var result = regex.exec(str);
+  if (result && result.length == 3) {
+    return { userId: result[1], message: result[2] };
+  } else {
+    regex = new RegExp(/\x1b\[24;\d{2}H\x1b\[1;37;45m([^\x1b]+)(?:\x1b\[24;18H)?\x1b\[m/g);
+    result = regex.exec(str);
+    if (result && result.length == 2) {
+      return { message: result[1] };
+    }
+  }
+
+  return null;
+}
+
 String.prototype.ansiHalfColorConv = function() {
   var str = '';
   var regex = new RegExp('\x15\\[(([0-9]+)?;)+50m', 'g');
