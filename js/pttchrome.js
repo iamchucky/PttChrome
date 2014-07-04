@@ -122,6 +122,12 @@ pttchrome.App = function(onInitializedCallback, from) {
 
   window.addEventListener('focus', function(e) {
     self.appFocused = true;
+    if (self.view.titleTimer) {
+      self.view.titleTimer.cancel();
+      self.view.titleTimer = null;
+      document.title = self.connectedUrl;
+      self.view.notif.close();
+    }
   }, false);
 
   window.addEventListener('blur', function(e) {

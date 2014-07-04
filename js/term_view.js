@@ -64,6 +64,10 @@ function TermView(rowCount) {
   this.innerBounds = { width: 0, height: 0 };
   this.firstGridOffset = { top: 0, left: 0 };
 
+  // for notifications
+  this.titleTimer = null;
+  this.notif = null;
+
   this.htmlRowStrArray = [];
 
   var mainDiv = document.createElement('div');
@@ -988,7 +992,11 @@ TermView.prototype = {
     var app = this.bbscore;
     //console.log('message from ' + this.waterball.userId + ': ' + this.waterball.message); 
     var title = app.waterball.userId + ' ' + i18n('notification_said');
-    var timer = setTimer(true, function() {
+    if (this.titleTimer) {
+      this.titleTimer.cancel();
+      this.titleTimer = null;
+    }
+    this.titleTimer = setTimer(true, function() {
       if (document.title == app.connectedUrl) {
         document.title = title + ' ' + app.waterball.message;
       } else {
@@ -1000,12 +1008,9 @@ TermView.prototype = {
       body: app.waterball.message,
       tag: app.waterball.userId
     };
-    var notif = new Notification(title, options);
-    notif.onclick = function() {
+    this.notif = new Notification(title, options);
+    this.notif.onclick = function() {
       window.focus();
-      timer.cancel();
-      document.title = app.connectedUrl;
-      this.close();
     };
   }
 }
