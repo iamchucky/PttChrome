@@ -27,7 +27,6 @@
     "webview",
     "clipboardRead",
     "clipboardWrite",
-    "notifications",
     {"socket": [
       "tcp-connect:*:*"
     ]},
