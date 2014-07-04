@@ -139,6 +139,18 @@
   position: absolute;
 }
 
+#opt_blacklistedUsers {
+  margin-top: 20px;
+  margin-left: -5px;
+}
+
+#opt_blacklistedUsers li {
+  margin-left: 5px;
+  margin-bottom: 5px;
+  float: left;
+  width: 290px;
+}
+
 #prefModal > .modal-dialog {
   width: 70%;
   min-width: 730px;

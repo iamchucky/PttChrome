@@ -76,8 +76,8 @@ locale.en_US = {
   "options_autologin": {
     "message": "Auto login"
   },
-  "options_shortcuts": {
-    "message": "Shortcuts"
+  "options_blacklist": {
+    "message": "Blacklist"
   },
 
   // options
@@ -155,6 +155,9 @@ locale.en_US = {
   },
   "options_threadLastNext": {
     "message": "Controls thread previous / next"
+  },
+  "options_addBlacklistInputPlaceholder": {
+    "message": "Type in the username and press +"
   },
 
   // auto logins

@@ -76,8 +76,8 @@
   "options_autologin": {
     "message": "自動登入"
   },
-  "options_shortcuts": {
-    "message": "快捷鍵"
+  "options_blacklist": {
+    "message": "黑名單"
   },
 
   // options
@@ -152,6 +152,9 @@
   },
   "options_threadLastNext": {
     "message": "控制文章前篇 / 下篇"
+  },
+  "options_addBlacklistInputPlaceholder": {
+    "message": "請輸入欲加入黑名單的使用者後按 +"
   },
 
   // auto logins

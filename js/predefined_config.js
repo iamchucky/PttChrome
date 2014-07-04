@@ -1,5 +1,5 @@
 ﻿var PREFS_CATEGORIES = ['mouseBrowsing', 'appearance'];
-var PREFS_NAV = ['general', 'autologin' ];
+var PREFS_NAV = ['general', 'autologin', 'blacklist'];
 var DEFAULT_PREFS = {
 
   // general
@@ -23,6 +23,9 @@ var DEFAULT_PREFS = {
   fontFitWindowWidth: false,
   fontFace          : 'SymMingLiu,MingLiu,monospace',
   bbsMargin         : 0,
+
+  // blacklist
+  blacklistedUserIds  : '{}',
 
 };
 

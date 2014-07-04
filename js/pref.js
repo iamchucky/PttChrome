@@ -4,19 +4,27 @@ function PttChromePref(app, onInitializedCallback) {
   this.app = app;
   this.shouldResetToDefault = false;
 
+  this.blacklistedUserIds = {};
+
   //this.loadDefault(onInitializedCallback);
   this.onInitializedCallback = onInitializedCallback;
   this.initCallbackCalled = false;
-  this.blacklistedUserIds = {};
 }
 
 PttChromePref.prototype = {
 
   updateSettingsToUi: function() {
+    this.refreshBlacklistOnUi();
+
     var self = this;
     for (var i in this.values) {
       $('#opt_'+i).empty();
       var val = this.values[i];
+
+      // for blacklisted userids
+      if (i === 'blacklistedUserIds') {
+        continue;
+      }
       
       // for the color selection box
       if (i === 'mouseBrowsingHighlightColor') {
@@ -113,6 +121,14 @@ PttChromePref.prototype = {
     $('#modalHeader').text(i18n('options_'+currTab));
 
     $('#opt_autologinWarning').text(i18n('autologin_warning'));
+
+    $('#opt_addBlacklistInput').attr('placeholder', i18n('options_addBlacklistInputPlaceholder'));
+    $('#opt_addBlacklistButton').click(function(e) {
+      var username = $('#opt_addBlacklistInput').val().toLowerCase();
+      $('#opt_addBlacklistInput').val('');
+      self.app.doAddBlacklistUserId(username);
+      self.refreshBlacklistOnUi();
+    });
     
     $('#opt_tabs a').click(function(e) {
       e.preventDefault();
@@ -139,6 +155,7 @@ PttChromePref.prototype = {
       height -= 76;
       $('#prefModal .modal-body').css('height', height + 'px');
       $('#prefModal .modal-body').css('width', width + 'px');
+      self.refreshBlacklistOnUi();
     });
     $('#prefModal').on('shown.bs.modal', function(e) {
       self.app.modalShown = true;
@@ -147,8 +164,10 @@ PttChromePref.prototype = {
       if (self.shouldResetToDefault) {
         self.clearStorage();
         self.values = JSON.parse(JSON.stringify(DEFAULT_PREFS));
+        self.blacklistedUserIds = {};
         self.logins = ['',''];
         self.updateSettingsToUi();
+        self.app.view.redraw(true);
 
         self.shouldResetToDefault = false;
       } else {
@@ -156,6 +175,26 @@ PttChromePref.prototype = {
       }
       self.saveAndDoneWithIt();
     });
+  },
+
+  refreshBlacklistOnUi: function() {
+    var listNode = $('#opt_blacklistedUsers');
+    var listStr = '';
+
+    for (var user in this.blacklistedUserIds) {
+      listStr += '<li class="list-group-item"><i class="glyphicon glyphicon-remove" style="margin-right:10px;cursor:pointer;-webkit-user-select:none"></i>'+user+'</li>';
+    }
+    $('#opt_blacklistedUsers i').empty();
+    $('#opt_blacklistedUsers li').empty();
+    listNode[0].innerHTML = listStr;
+
+    var self = this;
+    $('#opt_blacklistedUsers i').click(function() {
+      var user = $(this).parent().text();
+      self.app.doRemoveBlacklistUserId(user);
+      $(this).parent().remove();
+    });
+
   },
 
   saveAndDoneWithIt: function() {
@@ -172,6 +211,10 @@ PttChromePref.prototype = {
 
   readValueFromUi: function() {
     for (var i in this.values) {
+      if (i === 'blacklistedUserIds') {
+        continue;
+      }
+
       if (i === 'mouseBrowsingHighlightColor') {
         var selectedVal = $('#opt_'+i+' select').val();
         this.values[i] = parseInt(selectedVal);
@@ -249,7 +292,11 @@ PttChromePref.prototype = {
         if (!(i in msg.data.values) || msg.data.values[i] === null) {
           this.values[i] = DEFAULT_PREFS[i];
         } else {
-          this.values[i] = msg.data.values[i];
+          if (i === 'blacklistedUserIds') {
+            this.blacklistedUserIds = JSON.parse(msg.data.values[i]);
+          } else {
+            this.values[i] = msg.data.values[i];
+          }
         }
       }
     }
@@ -273,6 +320,19 @@ PttChromePref.prototype = {
         values: DEFAULT_PREFS,
         logins: {'u':'', 'p':''}
       } });
+    }
+  },
+
+  setBlacklistStorage: function() {
+    if (this.app.appConn.isConnected) {
+      var blacklist = JSON.stringify(this.blacklistedUserIds);
+      this.values.blacklistedUserIds = blacklist;
+      var items = { 
+        values: {
+          blacklistedUserIds: blacklist
+        }
+      };
+      this.app.appConn.appPort.postMessage({ action: 'storage', type: 'set', data: items });
     }
   },
 

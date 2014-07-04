@@ -91,6 +91,7 @@
             <ul class="nav nav-pills nav-stacked" id="opt_tabs">
               <li><a id="optNav_general" href="#tabContentGeneral" name="general" data-toggle="pill">General</a></li>
               <li><a id="optNav_autologin" href="#tabContentAutologin" name="autologin" data-toggle="pill">Auto login</a></li>
+              <li><a id="optNav_blacklist" href="#tabContentBlacklist" name="blacklist" data-toggle="pill">Blacklist</a></li>
             </ul>
 
             <button id="opt_reset" type="button" class="btn btn-default"></button>
@@ -164,6 +165,19 @@
                 </div>
               </div>
 
+              <div class="tab-pane" id="tabContentBlacklist">
+                <div class="input-group">
+                  <span class="input-group-btn">
+                    <button id="opt_addBlacklistButton" class="btn btn-default" type="button"><i class="glyphicon glyphicon-plus"></i></button>
+                  </span>
+                  <input id="opt_addBlacklistInput" type="text" class="form-control" style="width:250px">
+                </div><!-- /input-group -->
+
+                <!-- blacklist item start -->
+                <ul id="opt_blacklistedUsers" class="list-group">
+                </ul>
+                <!-- blacklist item end -->
+              </div>
 
             </div>
 
