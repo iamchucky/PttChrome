@@ -12,7 +12,6 @@ function TermView(rowCount) {
   this.defineInputBufferSize = 12;
   this.hideInputBuffer = false;
   this.hotkeyForSelectAll = false;
-  this.useKeyWordTrack = false;
   this.highlightBG = 2;
   this.charset = 'big5';
   this.EnterChar = '\r';
@@ -23,7 +22,6 @@ function TermView(rowCount) {
   this.mouseWheelFunction1 = 1;
   this.mouseWheelFunction2 = 2;
   this.mouseWheelFunction3 = 3;
-  //this.shadowHighLight = false;
   //this.highlightFG = 7;
   this.DisplayBackground = false;
   this.BackgroundMD5 = '';
@@ -42,6 +40,13 @@ function TermView(rowCount) {
   // Cursor
   this.cursorX = 0;
   this.cursorY = 0;
+
+  this.deffg = 7;
+  this.defbg = 0;
+  this.curFg = 7;
+  this.curBg = 0;
+  this.curBlink = false;
+  this.openSpan = false;
 
   //this.DBDetection = false;
   this.blinkShow = false;
@@ -73,7 +78,7 @@ function TermView(rowCount) {
   var mainDiv = document.createElement('div');
   mainDiv.setAttribute('class', 'main');
   for (var i = 0; i < rowCount; ++i) {
-    this.htmlRowStrArray.push('<span type="bbsrow" srow="'+i+'"></span><br>');
+    this.htmlRowStrArray.push('<span type="bbsrow" srow="'+i+'"></span>');
   }
   mainDiv.innerHTML = this.htmlRowStrArray.join('');
   this.BBSWin.appendChild(mainDiv);
@@ -205,132 +210,165 @@ TermView.prototype = {
       return ' type="p"';
   },
 
-  createTwoColorWord: function(row, col, ch, ch2, char1, char2, fg, fg2, bg, bg2, panding) {
+  createTwoColorWord: function(row, col, ch, ch2, char1, char2, fg, fg2, bg, bg2, forceWidth) {
+    this.curFg = this.deffg;
+    this.curBg = this.defbg;
+    this.curBlink = false;
+    var s1 = '';
+    var s2 = '';
+    if (this.openSpan) {
+      s1 += '</span>';
+      this.openSpan = false;
+    }
     var col1 = col + 1;
     if (fg != fg2 && bg != bg2) {
-      if (!ch.isBlink() && !ch2.isBlink()) {
-        var s1 = '<span srow="'+row+'" scol="'+col+'" class="q' +fg+'q'+fg2+ '" t="'+char1+'"><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'b'+bg2+'"'+(panding==0?'':' style="display:inline-block;width:'+panding+'px;"')+'>'+char1+'</span></span>';
-        var s2 = '';
-        return {s1: s1, s2: s2};
-      } else if (ch.isBlink() && ch2.isBlink()) {
-        var s1 = '<span srow="'+row+'" scol="'+col+'" class="q' +fg+'q'+fg2+ '" t="'+char1+'"><x s="q'+fg+'q'+fg2+'" h="qq"></x><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'b'+bg2+'"'+(panding==0?'':' style="display:inline-block;width:'+panding+'px;"')+'>'+char1+'</span></span>';
-        var s2 = '';
-        return {s1: s1, s2: s2};
-      } else if (ch.isBlink() && !ch2.isBlink()) {
-        var s1 = '<span srow="'+row+'" scol="'+col+'" class="q' +fg+'q'+fg2+ '" t="'+char1+'"><x s="q'+fg+'q'+fg2+'" h="q'+bg+'q'+fg2+'"></x><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'b'+bg2+'"'+(panding==0?'':' style="display:inline-block;width:'+panding+'px;"')+'>'+char1+'</span></span>';
-        var s2 = '';
-        return {s1: s1, s2: s2};
-      } else {// if(!ch.isBlink() && ch2.isBlink())
-        var s1 = '<span srow="'+row+'" scol="'+col+'" class="q' +fg+'q'+fg2+ '" t="'+char1+'"><x s="q'+fg+'q'+fg2+'" h="q'+fg+'q'+bg2+'"></x><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'b'+bg2+'"'+(panding==0?'':' style="display:inline-block;width:'+panding+'px;"')+'>'+char1+'</span></span>';
-        var s2 = '';
-        return {s1: s1, s2: s2};
+      if (!ch.blink && !ch2.blink) {
+        s1 += '<span srow="'+row+'" scol="'+col+'" class="q' +fg+'q'+fg2+ '" t="'+char1+'"><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'b'+bg2+'"'+(forceWidth==0?'':' style="display:inline-block;width:'+forceWidth+'px;"')+'>'+char1+'</span></span>';
+      } else if (ch.blink && ch2.blink) {
+        s1 += '<span srow="'+row+'" scol="'+col+'" class="q' +fg+'q'+fg2+ '" t="'+char1+'"><x s="q'+fg+'q'+fg2+'" h="qq"></x><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'b'+bg2+'"'+(forceWidth==0?'':' style="display:inline-block;width:'+forceWidth+'px;"')+'>'+char1+'</span></span>';
+      } else if (ch.blink && !ch2.blink) {
+        s1 += '<span srow="'+row+'" scol="'+col+'" class="q' +fg+'q'+fg2+ '" t="'+char1+'"><x s="q'+fg+'q'+fg2+'" h="q'+bg+'q'+fg2+'"></x><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'b'+bg2+'"'+(forceWidth==0?'':' style="display:inline-block;width:'+forceWidth+'px;"')+'>'+char1+'</span></span>';
+      } else {// if(!ch.blink && ch2.blink)
+        s1 += '<span srow="'+row+'" scol="'+col+'" class="q' +fg+'q'+fg2+ '" t="'+char1+'"><x s="q'+fg+'q'+fg2+'" h="q'+fg+'q'+bg2+'"></x><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'b'+bg2+'"'+(forceWidth==0?'':' style="display:inline-block;width:'+forceWidth+'px;"')+'>'+char1+'</span></span>';
       }
     } else if (fg != fg2 && bg == bg2) {
-      if (!ch.isBlink() && !ch2.isBlink()) {
-        var s1 = '<span srow="'+row+'" scol="'+col+'" class="q' +fg+'q'+fg2+ '" t="'+char1+'"><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'"'+(panding==0?'':' style="display:inline-block;width:'+panding+'px;"')+'>'+char1+'</span></span>';
-        var s2 = '';
-        return {s1: s1, s2: s2};
-      } else if (ch.isBlink() && ch2.isBlink()) {
-        var s1 = '<span srow="'+row+'" scol="'+col+'" class="q' +fg+'q'+fg2+ '" t="'+char1+'"><x s="q'+fg+'q'+fg2+'" h="qq"></x><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'"'+(panding==0?'':' style="display:inline-block;width:'+panding+'px;"')+'>'+char1+'</span></span>';
-        var s2 = '';
-        return {s1: s1, s2: s2};
-      } else if (ch.isBlink() && !ch2.isBlink()) {
-        var s1 = '<span srow="'+row+'" scol="'+col+'" class="q' +fg+'q'+fg2+ '" t="'+char1+'"><x s="q'+fg+'q'+fg2+'" h="q'+bg+'q'+fg2+'"></x><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'"'+(panding==0?'':' style="display:inline-block;width:'+panding+'px;"')+'>'+char1+'</span></span>';
-        var s2 = '';
-        return {s1: s1, s2: s2};
-      } else {// if(!ch.isBlink() && ch2.isBlink())
-        var s1 = '<span srow="'+row+'" scol="'+col+'" class="q' +fg+'q'+fg2+ '" t="'+char1+'"><x s="q'+fg+'q'+fg2+'" h="q'+fg+'q'+bg+'"></x><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'"'+(panding==0?'':' style="display:inline-block;width:'+panding+'px;"')+'>'+char1+'</span></span>';
-        var s2 = '';
-        return {s1: s1, s2: s2};
+      if (!ch.blink && !ch2.blink) {
+        s1 += '<span srow="'+row+'" scol="'+col+'" class="q' +fg+'q'+fg2+ '" t="'+char1+'"><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'"'+(forceWidth==0?'':' style="display:inline-block;width:'+forceWidth+'px;"')+'>'+char1+'</span></span>';
+      } else if (ch.blink && ch2.blink) {
+        s1 += '<span srow="'+row+'" scol="'+col+'" class="q' +fg+'q'+fg2+ '" t="'+char1+'"><x s="q'+fg+'q'+fg2+'" h="qq"></x><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'"'+(forceWidth==0?'':' style="display:inline-block;width:'+forceWidth+'px;"')+'>'+char1+'</span></span>';
+      } else if (ch.blink && !ch2.blink) {
+        s1 += '<span srow="'+row+'" scol="'+col+'" class="q' +fg+'q'+fg2+ '" t="'+char1+'"><x s="q'+fg+'q'+fg2+'" h="q'+bg+'q'+fg2+'"></x><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'"'+(forceWidth==0?'':' style="display:inline-block;width:'+forceWidth+'px;"')+'>'+char1+'</span></span>';
+      } else {// if(!ch.blink && ch2.blink)
+        s1 += '<span srow="'+row+'" scol="'+col+'" class="q' +fg+'q'+fg2+ '" t="'+char1+'"><x s="q'+fg+'q'+fg2+'" h="q'+fg+'q'+bg+'"></x><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'"'+(forceWidth==0?'':' style="display:inline-block;width:'+forceWidth+'px;"')+'>'+char1+'</span></span>';
       }
     } else if (fg == fg2 && bg != bg2) {
-      if (!ch.isBlink() && !ch2.isBlink()) {
-        var s1 = '<span srow="'+row+'" scol="'+col+'" class="q' +fg+'" t="'+char1+'"><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'b'+bg2+'"'+(panding==0?'':' style="display:inline-block;width:'+panding+'px;"')+'>'+char1+'</span></span>';
-        var s2 = '';
-        return {s1: s1, s2: s2};
-      } else if (ch.isBlink() && ch2.isBlink()) {
-        var s1 = '<span srow="'+row+'" scol="'+col+'" class="q' +fg+'" t="'+char1+'"><x s="q'+fg+'" h="qq'+bg+'"></x><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'b'+bg2+'"'+(panding==0?'':' style="display:inline-block;width:'+panding+'px;"')+'>'+char1+'</span></span>';
-        var s2 = '';
-        return {s1: s1, s2: s2};
-      } else if (ch.isBlink() && !ch2.isBlink()) {
-        var s1 = '<span srow="'+row+'" scol="'+col+'" class="q' +fg+'" t="'+char1+'"><x s="q'+fg+'" h="q'+bg+'q'+fg+'"></x><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'b'+bg2+'"'+(panding==0?'':' style="display:inline-block;width:'+panding+'px;"')+'>'+char1+'</span></span>';
-        var s2 = '';
-        return {s1: s1, s2: s2};
-      } else {// if(!ch.isBlink() && ch2.isBlink())
-        var s1 = '<span srow="'+row+'" scol="'+col+'" class="q' +fg+'" t="'+char1+'"><x s="q'+fg+'" h="q'+fg+'q'+bg2+'"></x><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'b'+bg2+'"'+(panding==0?'':' style="display:inline-block;width:'+panding+'px;"')+'>'+char1+'</span></span>';
-        var s2 = '';
-        return {s1: s1, s2: s2};
+      if (!ch.blink && !ch2.blink) {
+        s1 += '<span srow="'+row+'" scol="'+col+'" class="q' +fg+'" t="'+char1+'"><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'b'+bg2+'"'+(forceWidth==0?'':' style="display:inline-block;width:'+forceWidth+'px;"')+'>'+char1+'</span></span>';
+      } else if (ch.blink && ch2.blink) {
+        s1 += '<span srow="'+row+'" scol="'+col+'" class="q' +fg+'" t="'+char1+'"><x s="q'+fg+'" h="qq'+bg+'"></x><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'b'+bg2+'"'+(forceWidth==0?'':' style="display:inline-block;width:'+forceWidth+'px;"')+'>'+char1+'</span></span>';
+      } else if (ch.blink && !ch2.blink) {
+        s1 += '<span srow="'+row+'" scol="'+col+'" class="q' +fg+'" t="'+char1+'"><x s="q'+fg+'" h="q'+bg+'q'+fg+'"></x><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'b'+bg2+'"'+(forceWidth==0?'':' style="display:inline-block;width:'+forceWidth+'px;"')+'>'+char1+'</span></span>';
+      } else {// if(!ch.blink && ch2.blink)
+        s1 += '<span srow="'+row+'" scol="'+col+'" class="q' +fg+'" t="'+char1+'"><x s="q'+fg+'" h="q'+fg+'q'+bg2+'"></x><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'b'+bg2+'"'+(forceWidth==0?'':' style="display:inline-block;width:'+forceWidth+'px;"')+'>'+char1+'</span></span>';
       }
     } else if (fg == fg2 && bg == bg2) {
-      if (ch.isBlink() && !ch2.isBlink()) {
-        var s1 = '<span srow="'+row+'" scol="'+col+'" class="q'+fg+'" t="'+char1+'"><x s="q'+fg+'" h="q'+bg+'q'+fg+'"></x><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'"'+(panding==0?'':' style="display:inline-block;width:'+panding+'px;"')+'>'+char1+'</span></span>';
-        var s2 = '';
-        return {s1: s1, s2: s2};
-      } else {// if(!ch.isBlink() && ch2.isBlink())
-        var s1 = '<span srow="'+row+'" scol="'+col+'" class="q'+fg+'" t="'+char1+'"><x s="q'+fg+'" h="q'+fg+'q'+bg+'"></x><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'"'+(panding==0?'':' style="display:inline-block;width:'+panding+'px;"')+'>'+char1+'</span></span>';
-        var s2 = '';
-        return {s1: s1, s2: s2};
+      if (ch.blink && !ch2.blink) {
+        s1 += '<span srow="'+row+'" scol="'+col+'" class="q'+fg+'" t="'+char1+'"><x s="q'+fg+'" h="q'+bg+'q'+fg+'"></x><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'"'+(forceWidth==0?'':' style="display:inline-block;width:'+forceWidth+'px;"')+'>'+char1+'</span></span>';
+      } else {// if(!ch.blink && ch2.blink)
+        s1 += '<span srow="'+row+'" scol="'+col+'" class="q'+fg+'" t="'+char1+'"><x s="q'+fg+'" h="q'+fg+'q'+bg+'"></x><span srow="'+row+'" scol="'+col1+'" class="b'+bg+'"'+(forceWidth==0?'':' style="display:inline-block;width:'+forceWidth+'px;"')+'>'+char1+'</span></span>';
       }
     }
+    return {s1: s1, s2: s2};
   },
 
-  createNormalWord: function(row, col, ch, ch2, char1, char2, fg, bg, panding, deffg, defbg) {
-    //var s1 = '<span class="q' +fg+ 'b' +bg+ (ch.isBlink()?"k":"") +'" ';
-    if (fg == deffg && bg == defbg && !ch.isBlink() && panding==0) {
-      if (panding == 0)
-        return {s1: char1, s2: char2};
-      else {
-        var s1 = '<span srow="'+row+'" scol="'+col+'" class="wpadding" style="display:inline-block;width:'+panding+'px;">' + char1 + '</span>';
-        return {s1: s1, s2: ''};
+  createNormalWord: function(row, col, ch, ch2, char1, char2, fg, bg, forceWidth) {
+    var s1 = '';
+    if ((this.openSpan && (fg == this.curFg && bg == this.curBg && ch.blink == this.curBlink)) && forceWidth == 0) {
+      return {s1: char1, s2: char2};
+    } else if (fg == this.deffg && bg == this.defbg && !ch.blink && forceWidth == 0) {
+      this.curFg = fg;
+      this.curBg = bg;
+      this.curBlink = false;
+      if (this.openSpan) {
+        s1 += '</span>';
+        this.openSpan = false;
       }
+      s1 += char1;
+    } else if (forceWidth == 0) {
+      this.curFg = fg;
+      this.curBg = bg;
+      this.curBlink = ch.blink;
+      if (this.openSpan) {
+        s1 += '</span>';
+        this.openSpan = false;
+      }
+      s1 += '<span srow="'+row+'" scol="'+col+'" class="q' +fg+ 'b' +bg+'">';
+      s1 += ((ch.blink?'<x s="q'+fg+'b'+bg+'" h="qq'+bg+'"></x>':'') + char1);
+      this.openSpan = true;
     } else {
-        var s1 = '<span srow="'+row+'" scol="'+col+'" class="wpadding q' +fg+ 'b' +bg+'" ';
-        s1 += ((panding==0?'':'style="display:inline-block;width:'+panding+'px;"') +'>' + (ch.isBlink()?'<x s="q'+fg+'b'+bg+'" h="qq'+bg+'"></x>':'') + char1 + '</span>');
-        return {s1: s1, s2: ''};
+      this.curFg = this.deffg;
+      this.curBg = this.defbg;
+      this.curBlink = false;
+      if (this.openSpan) {
+        s1 += '</span>';
+        this.openSpan = false;
+      }
+      s1 += '<span srow="'+row+'" scol="'+col+'" class="wpadding q' +fg+ 'b' +bg+'" ';
+      s1 += ((forceWidth==0?'':'style="display:inline-block;width:'+forceWidth+'px;"') +'>' + (ch.blink?'<x s="q'+fg+'b'+bg+'" h="qq'+bg+'"></x>':'') + char1 + '</span>');
     }
+    return {s1: s1, s2: ''};
   },
 
-  createNormalChar: function(row, col, ch, char1, fg, bg, deffg, defbg) {
+  createNormalChar: function(row, col, ch, char1, fg, bg) {
     var useHyperLink = this.useHyperLink;
     var s0 = '';
     var s1 = '';
     var s2 = '';
-    if (ch.isStartOfURL() && useHyperLink)
-      s0 = '<a class="y q'+deffg+'b'+defbg+'" href="' +ch.getFullURL() + '"' + this.prePicRel( ch.getFullURL()) + ' rel="noreferrer" target="_blank">';
-    if (ch.isEndOfURL() && useHyperLink)
+    if (ch.isStartOfURL() && useHyperLink) {
+      s0 += '<a srow="'+row+'" scol="'+col+'" class="y q'+this.curFg+'b'+this.curBg+'" href="' +ch.getFullURL() + '"' + this.prePicRel( ch.getFullURL()) + ' rel="noreferrer" target="_blank">';
+    }
+    if (ch.isEndOfURL() && useHyperLink) {
       s2 = '</a>';
-    if (bg==defbg && (fg == deffg || char1 <= ' ') && !ch.isBlink() ) {
+    }
+
+    if ((this.openSpan || (ch.isPartOfURL() && useHyperLink)) && (bg == this.curBg && (fg == this.curFg || char1 <= ' ') && ch.blink == this.curBlink)) {
       if(char1 <= ' ') // only display visible chars to speed up
-        return s0+'&nbsp;'+s2;//return ' ';
+        s1 += '&nbsp;';
       else if(char1 == '\x80') // 128, display ' ' or '?'
-        return s0+'&nbsp;'+s2;
+        s1 += '&nbsp;';
       else if(char1 == '\x3c')
-        return s0+'&lt;'+s2;
+        s1 += '&lt;';
       else if(char1 == '\x3e')
-        return s0+'&gt;'+s2;
+        s1 += '&gt;';
       else if(char1 == '\x26')
-        return s0+'&amp;'+s2;
+        s1 += '&amp;';
       else
-        return s0+char1+s2;
+        s1 += char1;
+    } else if (bg == this.defbg && (fg == this.deffg || char1 <= ' ') && !ch.blink) {
+      this.curFg = fg;
+      this.curBg = bg;
+      this.curBlink = false;
+      if (this.openSpan) {
+        s1 += '</span>';
+        this.openSpan = false;
+      }
+      if(char1 <= ' ') // only display visible chars to speed up
+        s1 += '&nbsp;';
+      else if(char1 == '\x80') // 128, display ' ' or '?'
+        s1 += '&nbsp;';
+      else if(char1 == '\x3c')
+        s1 += '&lt;';
+      else if(char1 == '\x3e')
+        s1 += '&gt;';
+      else if(char1 == '\x26')
+        s1 += '&amp;';
+      else
+        s1 += char1;
     } else {
-      s1 +='<span srow="'+row+'" scol="'+col+'" '+ (ch.isPartOfURL()?'link="true" ':'') +'class="q' +fg+ 'b' +bg+ '">'+ (ch.isBlink()?'<x s="q'+fg+'b'+bg+'" h="qq'+bg+'"></x>':'');
+      this.curFg = fg;
+      this.curBg = bg;
+      this.curBlink = ch.blink;
+      if (this.openSpan) {
+        s1 += '</span>';
+        this.openSpan = false;
+      }
+      s1 +='<span srow="'+row+'" scol="'+col+'" '+ (ch.isPartOfURL()?'link="true" ':'') +'class="q' +fg+ 'b' +bg+ '">'+ (ch.blink?'<x s="q'+fg+'b'+bg+'" h="qq'+bg+'"></x>':'');
+      this.openSpan = true;
       if(char1 <= ' ') // only display visible chars to speed up
         s1 += '&nbsp;';
       else if(char1 == '\x80') // 128, display ' ' or '?'
         s1 += '&nbsp;';
       else
         s1 += char1;
-      s1 += '</span>';
     }
     return s0+s1+s2;
   },
 
   redraw: function(force) {
 
+    var start = new Date().getTime();
     var cols = this.buf.cols;
     var rows = this.buf.rows;
-    //var useKeyWordTrack = this.bbscore.useKeyWordTrack;
-    //var ctx = this.ctx;
     var lineChangeds = this.buf.lineChangeds;
     var lineChangedCount = 0;
     var changedLineHtmlStr = '';
@@ -341,8 +379,11 @@ TermView.prototype = {
     var anylineUpdate = false;
     for (var row = 0; row < rows; ++row) {
       var chh = this.chh;
-      var deffg = 7;
-      var defbg = 0;
+      // resets color
+      this.curFg = this.deffg;
+      this.curBg = this.defbg;
+      this.curBlink = false;
+      this.defbg = 0;
       var line = lines[row];
       var outhtml = outhtmls[row];
       var lineChanged = lineChangeds[row];
@@ -354,17 +395,17 @@ TermView.prototype = {
 
       for (var col = 0; col < cols; ++col) {
         var ch = line[col];
+        var fg = ch.getFg();
+        var bg = ch.getBg();
         var outtemp = outhtml[col];
 
-        if (force || ch.needUpdate) {
+        //if (force || ch.needUpdate) {
+        // always check all because it's hard to know about openSpan when jump update
+        if (true) {
           lineUpdated = true;
-          var fg = ch.getFg();
-          var bg = ch.getBg();
-          if (doHighLight && !this.shadowHighLight) {
-            deffg = 7;
-            defbg = this.highlightBG;
+          if (doHighLight) {
+            this.defbg = this.highlightBG;
             bg = this.highlightBG;
-            //fg = 0;
           }
           outtemp.setHtml('');
           if (ch.isLeadByte) { // first byte of DBCS char
@@ -375,15 +416,14 @@ TermView.prototype = {
 
               var bg2 = ch2.getBg();
               var fg2 = ch2.getFg();
-              if (doHighLight && !this.shadowHighLight) {
+              if (doHighLight) {
                 bg2 = this.highlightBG;
-                //fg2 = 0;
               }
-              if (bg!=bg2 || fg!=fg2 || ch.isBlink()!=ch2.isBlink() ) {
+              if (bg!=bg2 || fg!=fg2 || ch.blink!=ch2.blink ) {
                 if(ch2.ch=='\x20') { //a LeadByte + ' ' //we set this in '?' + ' '
-                  var spanstr = this.createNormalChar(row, col-1, ch, '?', fg, bg, deffg, defbg);
+                  var spanstr = this.createNormalChar(row, col-1, ch, '?', fg, bg);
                   outtemp.setHtml(spanstr);
-                  spanstr = this.createNormalChar(row, col-1, ch, ' ', fg2, bg2, deffg, defbg);
+                  spanstr = this.createNormalChar(row, col-1, ch, ' ', fg2, bg2);
                   outtemp2.setHtml(spanstr);
                 } else { //maybe normal ...
                   var b5=ch.ch + ch2.ch; // convert char to UTF-8 before drawing
@@ -401,9 +441,9 @@ TermView.prototype = {
                         outtemp.setHtml(spanstr.s1);
                         outtemp2.setHtml(spanstr.s2);
                       } else if (code == 3) { //[4 code char]
-                        var spanstr = this.createNormalChar(row, col-1, ch, '?', fg2, bg2, deffg, defbg);
+                        var spanstr = this.createNormalChar(row, col-1, ch, '?', fg2, bg2);
                         outtemp.setHtml(spanstr);
-                        spanstr = this.createNormalChar(row, col-1, ch2, '?', fg2, bg2, deffg, defbg);
+                        spanstr = this.createNormalChar(row, col-1, ch2, '?', fg2, bg2);
                         outtemp2.setHtml(spanstr);
                       } else { //if(this.wordtest.offsetWidth==this.chh)
                         var spanstr = this.createTwoColorWord(row, col-1, ch, ch2, u, u, fg, fg2, bg, bg2, 0);
@@ -411,18 +451,18 @@ TermView.prototype = {
                         outtemp2.setHtml(spanstr.s2);
                       }
                     } else { //a <?> + one normal char // we set this in '?' + ch2
-                      var spanstr = this.createNormalChar(row, col-1, ch, '?', fg, bg, deffg, defbg);
+                      var spanstr = this.createNormalChar(row, col-1, ch, '?', fg, bg);
                       outtemp.setHtml(spanstr);
-                      spanstr = this.createNormalChar(row, col-1, ch, ch2.ch, fg2, bg2, deffg, defbg);
+                      spanstr = this.createNormalChar(row, col-1, ch, ch2.ch, fg2, bg2);
                       outtemp2.setHtml(spanstr);
                     }
                   }
                 }
               } else {
                 if(ch2.ch == '\x20') { //a LeadByte + ' ' //we set this in '?' + ' '
-                  var spanstr = this.createNormalChar(row, col-1, ch, '?', fg, bg, deffg, defbg);
+                  var spanstr = this.createNormalChar(row, col-1, ch, '?', fg, bg);
                   outtemp.setHtml(spanstr);
-                  spanstr = this.createNormalChar(row, col-1, ch, ' ', fg, bg, deffg, defbg);
+                  spanstr = this.createNormalChar(row, col-1, ch, ' ', fg, bg);
                   outtemp2.setHtml(spanstr);
                 } else { //maybe normal ...
                   var b5=ch.ch + ch2.ch; // convert char to UTF-8 before drawing
@@ -435,13 +475,13 @@ TermView.prototype = {
                     if (u.length == 1) { //normal chinese word
                       var code = this.symtable['x'+u.charCodeAt(0).toString(16)];
                       if (code == 1 || code == 2) {
-                        var spanstr = this.createNormalWord(row, col-1, ch, ch2, u, '', fg, bg, this.chh, deffg, defbg);
+                        var spanstr = this.createNormalWord(row, col-1, ch, ch2, u, '', fg, bg, this.chh);
                         outtemp.setHtml(spanstr.s1);
                         outtemp2.setHtml(spanstr.s2);
                       } else if(code == 3) { //[4 code char]
-                        var spanstr = this.createNormalChar(row, col-1, ch, '?', fg, bg, deffg, defbg);
+                        var spanstr = this.createNormalChar(row, col-1, ch, '?', fg, bg);
                         outtemp.setHtml(spanstr);
-                        spanstr = this.createNormalChar(row, col-1, ch2, '?', fg, bg, deffg, defbg);
+                        spanstr = this.createNormalChar(row, col-1, ch2, '?', fg, bg);
                         outtemp2.setHtml(spanstr);
                       } else { //normal case //if(this.wordtest.offsetWidth==this.chh)
                         //for font test - start
@@ -453,14 +493,14 @@ TermView.prototype = {
                         //  alert('!!!!! : '+ u.charCodeAt(0).toString(16)); //for debug.
 
                         //for font test - end
-                        var spanstr = this.createNormalWord(row, col-1, ch, ch2, u, '', fg, bg, 0, deffg, defbg);
+                        var spanstr = this.createNormalWord(row, col-1, ch, ch2, u, '', fg, bg, 0);
                         outtemp.setHtml(spanstr.s1);
                         outtemp2.setHtml(spanstr.s2);
                       }
                     } else { //a <?> + one normal char // we set this in '?' + ch2
-                      var spanstr = this.createNormalChar(row, col-1, ch, '?', fg, bg, deffg, defbg);
+                      var spanstr = this.createNormalChar(row, col-1, ch, '?', fg, bg);
                       outtemp.setHtml(spanstr);
-                      spanstr = this.createNormalChar(row, col-1, ch, ch2.ch, fg, bg, deffg, defbg);
+                      spanstr = this.createNormalChar(row, col-1, ch, ch2.ch, fg, bg);
                       outtemp2.setHtml(spanstr);
                     }
                   }
@@ -469,11 +509,24 @@ TermView.prototype = {
               line[col].needUpdate=false;
             }
           } else {//NOT LeadByte
-            var spanstr = this.createNormalChar(row, col, ch, ch.ch, fg, bg, deffg, defbg);
+            var spanstr = this.createNormalChar(row, col, ch, ch.ch, fg, bg);
             outtemp.setHtml(spanstr);
           }
           ch.needUpdate=false;
+        } else { // don't need update, get from current
+          var colHtmlStr = outtemp.getHtml();
+          var testOpenSpan = this.testIsOpenSpan(colHtmlStr);
+          if (testOpenSpan !== null) {
+            this.openSpan = testOpenSpan;
+          }
+          this.curFg = fg;
+          this.curBg = bg;
+          this.curBlink = ch.blink;
         }
+      }
+      if (this.openSpan) {
+        outhtml[col-1].addHtml('</span>');
+        this.openSpan = false;
       }
 
       if (lineUpdated) {
@@ -493,14 +546,10 @@ TermView.prototype = {
           shouldFade = true;
         }
 
-        //
-        if (doHighLight) {
-          if (this.shadowHighLight)
-            tmp.push('<span style="text-shadow: -1px 0 green, 0 1px green, 1px 0 green, 0 -1px green;">'); ////tmp.push('<span style="text-shadow: 0px -11px 10px #C60, 0px -3px 9px #FF0;">');
-          else
-            tmp.push('<span class="q'+deffg+'b'+defbg+'">');
-        }
-        for (var j=0 ;j<cols ;++j)
+        if (doHighLight) 
+          tmp.push('<span class="q'+this.deffg+'b'+this.defbg+'">');
+
+        for (var j = 0; j < cols; ++j)
           tmp.push(outhtml[j].getHtml());
 
         if (doHighLight)
@@ -508,7 +557,7 @@ TermView.prototype = {
 
         changedLineHtmlStr = tmp.join('');
         changedRow = row;
-        this.htmlRowStrArray[row] = '<span type="bbsrow" srow="'+row+'"'+ (shouldFade ? ' style="opacity:0.2"' : '') +'>' + changedLineHtmlStr + '</span><br>';
+        this.htmlRowStrArray[row] = '<span type="bbsrow" srow="'+row+'"'+ (shouldFade ? ' style="opacity:0.2"' : '') +'>' + changedLineHtmlStr + '</span>';
         anylineUpdate = true;
         lineChangeds[row] = false;
         lineChangedCount += 1;
@@ -549,7 +598,24 @@ TermView.prototype = {
         });
       }
     }
+    var time = new Date().getTime() - start;
+    console.log(time);
 
+  },
+
+  testIsOpenSpan: function(str) {
+    var spanStart = str.lastIndexOf('<span');
+    var spanEnd = str.lastIndexOf('</span>');
+    if (spanStart < 0 && spanEnd < 0) {
+      return null;
+    }
+    if (spanEnd >= 0 && spanStart < 0) {
+      return false;
+    }
+    if (spanStart >= 0 && spanEnd < 0) {
+      return true;
+    }
+    return (spanEnd < spanStart);
   },
 
   onTextInput: function(text, isPasting) {

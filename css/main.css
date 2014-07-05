@@ -322,7 +322,7 @@ a:link,a:visited,a:active,a:hover {
 }
 
 .main > span {
-  display:inline;
+  display:block;
   color:#C0C0C0;
   white-space: pre;
 }

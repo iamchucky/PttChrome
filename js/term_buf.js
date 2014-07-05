@@ -113,10 +113,6 @@ TermChar.prototype = {
     return this.invert ? this.fg : this.bg;
   },
 
-  isBlink: function() {
-    return this.blink;
-  },
-
   isUnderLine: function() {
     return this.underLine;
   },
@@ -193,9 +189,7 @@ function TermBuf(cols, rows) {
   this.pageState = 0;
   this.forceFullWidth = false;
 
-  //this.useKeyWordTrack = false;
   this.lines = new Array(rows);
-  //this.keyWordLine=new Array(rows);
   this.linesX = new Array(0);
   this.linesY = new Array(0);
 
