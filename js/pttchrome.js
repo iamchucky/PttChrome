@@ -833,10 +833,6 @@ pttchrome.App.prototype.resetMouseCursor = function(cX, cY) {
   this.buf.mouseCursor = 11;
 };
 
-pttchrome.App.prototype.clearHighlight = function() {
-  this.buf.clearHighlight();
-};
-
 pttchrome.App.prototype.onPrefChange = function(pref, name) {
   try {
     //var CiStr = Components.interfaces.nsISupportsString;

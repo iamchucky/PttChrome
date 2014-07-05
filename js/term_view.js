@@ -283,8 +283,8 @@ TermView.prototype = {
         s1 += '</span>';
         this.openSpan = false;
       }
-      s1 += '<span srow="'+row+'" scol="'+col+'" class="q' +fg+ 'b' +bg+'">';
-      s1 += ((ch.blink?'<x s="q'+fg+'b'+bg+'" h="qq'+bg+'"></x>':'') + char1);
+      s1 += '<span srow="'+row+'" scol="'+col+'" class="q' +fg+ ' b' +bg+'">';
+      s1 += ((ch.blink?'<x s="q'+fg+' b'+bg+'" h="qq'+bg+'"></x>':'') + char1);
       this.openSpan = true;
     } else {
       this.curFg = this.deffg;
@@ -294,8 +294,8 @@ TermView.prototype = {
         s1 += '</span>';
         this.openSpan = false;
       }
-      s1 += '<span srow="'+row+'" scol="'+col+'" class="wpadding q' +fg+ 'b' +bg+'" ';
-      s1 += ((forceWidth==0?'':'style="display:inline-block;width:'+forceWidth+'px;"') +'>' + (ch.blink?'<x s="q'+fg+'b'+bg+'" h="qq'+bg+'"></x>':'') + char1 + '</span>');
+      s1 += '<span srow="'+row+'" scol="'+col+'" class="wpadding q' +fg+ ' b' +bg+'" ';
+      s1 += ((forceWidth==0?'':'style="display:inline-block;width:'+forceWidth+'px;"') +'>' + (ch.blink?'<x s="q'+fg+' b'+bg+'" h="qq'+bg+'"></x>':'') + char1 + '</span>');
     }
     return {s1: s1, s2: ''};
   },
@@ -306,13 +306,17 @@ TermView.prototype = {
     var s1 = '';
     var s2 = '';
     if (ch.isStartOfURL() && useHyperLink) {
-      s0 += '<a srow="'+row+'" scol="'+col+'" class="y q'+this.curFg+'b'+this.curBg+'" href="' +ch.getFullURL() + '"' + this.prePicRel( ch.getFullURL()) + ' rel="noreferrer" target="_blank">';
+      if (this.openSpan) {
+        s0 += '</span>';
+        this.openSpan = false;
+      } 
+      s0 += '<a srow="'+row+'" scol="'+col+'" class="y q'+this.deffg+' b'+this.defbg+'" href="' +ch.getFullURL() + '"' + this.prePicRel( ch.getFullURL()) + ' rel="noreferrer" target="_blank">';
     }
     if (ch.isEndOfURL() && useHyperLink) {
       s2 = '</a>';
     }
 
-    if ((this.openSpan || (ch.isPartOfURL() && useHyperLink)) && (bg == this.curBg && (fg == this.curFg || char1 <= ' ') && ch.blink == this.curBlink)) {
+    if (!(ch.isPartOfURL() && useHyperLink) && this.openSpan && (bg == this.curBg && (fg == this.curFg || char1 <= ' ') && ch.blink == this.curBlink)) {
       if(char1 <= ' ') // only display visible chars to speed up
         s1 += '&nbsp;';
       else if(char1 == '\x80') // 128, display ' ' or '?'
@@ -353,7 +357,7 @@ TermView.prototype = {
         s1 += '</span>';
         this.openSpan = false;
       }
-      s1 +='<span srow="'+row+'" scol="'+col+'" '+ (ch.isPartOfURL()?'link="true" ':'') +'class="q' +fg+ 'b' +bg+ '">'+ (ch.blink?'<x s="q'+fg+'b'+bg+'" h="qq'+bg+'"></x>':'');
+      s1 +='<span srow="'+row+'" scol="'+col+'" '+ (ch.isPartOfURL()?'link="true" ':'') +'class="q' +fg+ ' b' +bg+ '">'+ (ch.blink?'<x s="q'+fg+' b'+bg+'" h="qq'+bg+'"></x>':'');
       this.openSpan = true;
       if(char1 <= ' ') // only display visible chars to speed up
         s1 += '&nbsp;';
@@ -361,6 +365,13 @@ TermView.prototype = {
         s1 += '&nbsp;';
       else
         s1 += char1;
+      if (ch.isPartOfURL()) {
+        s1 += '</span>';
+        this.openSpan = false;
+        this.curFg = this.deffg;
+        this.curBg = this.defbg;
+        this.curBlink = false;
+      }
     }
     return s0+s1+s2;
   },
@@ -550,7 +561,7 @@ TermView.prototype = {
         }
 
         if (doHighLight) 
-          tmp.push('<span class="q'+this.deffg+'b'+this.defbg+'">');
+          tmp.push('<span class="b'+this.defbg+'">');
 
         for (var j = 0; j < cols; ++j)
           tmp.push(outhtml[j].getHtml());
