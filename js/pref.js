@@ -32,7 +32,7 @@ PttChromePref.prototype = {
         var qName = '#opt_'+i;
         var htmlStr = i18n('options_highlightColor')+'<select class="form-control">';
         for (var n = 1; n < 16; ++n) {
-          htmlStr += '<option value="'+n+'" class="q'+n+'b'+n+'"></option>';
+          htmlStr += '<option value="'+n+'" class="b'+n+'"></option>';
         }
         htmlStr += '</select>';
         $(qName).html(htmlStr);
