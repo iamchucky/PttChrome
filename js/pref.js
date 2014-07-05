@@ -37,11 +37,11 @@ PttChromePref.prototype = {
         htmlStr += '</select>';
         $(qName).html(htmlStr);
         $(qName+' select').val(val);
-        var bg = $(qName+' .q'+val+'b'+val).css('background-color');
+        var bg = $(qName+' .b'+val).css('background-color');
         $(qName+' select').css('background-color', bg);
         $(qName+' select').on('change', function(e) {
           var val = $(qName+' select').val();
-          var bg = $(qName+' .q'+val+'b'+val).css('background-color');
+          var bg = $(qName+' .b'+val).css('background-color');
           $(qName+' select').css('background-color', bg);
         });
         continue;
