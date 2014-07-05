@@ -87,6 +87,9 @@
   "options_enablePicPreview": {
     "message": "當滑鼠在圖片連結上時顯示圖片預覽"
   },
+  "options_enableNotifications": {
+    "message": "啟用水球通知"
+  },
   "options_preferences": {
     "message": "設定"
   },
@@ -152,6 +155,9 @@
   },
   "options_threadLastNext": {
     "message": "控制文章前篇 / 下篇"
+  },
+  "options_enableBlacklist": {
+    "message": "啟用使用者黑名單功能"
   },
   "options_addBlacklistInputPlaceholder": {
     "message": "請輸入欲加入黑名單的使用者後按 +"

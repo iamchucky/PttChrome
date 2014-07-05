@@ -229,7 +229,7 @@ pttchrome.App.prototype.onData = function(data) {
 //dumpLog(DUMP_TYPE_LOG, "pttchrome onData");
   this.parser.feed(data);
 
-  if (!this.appFocused) {
+  if (!this.appFocused && this.view.enableNotifications) {
     // parse received data for waterball
     var wb = data.b2u().parseWaterball();
     if (wb) {
@@ -891,6 +891,9 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
     case 'enablePicPreview':
       this.view.enablePicPreview = pref.get(name);
       break;
+    case 'enableNotifications':
+      this.view.enableNotifications = pref.get(name);
+      break;
     case 'antiIdleTime':
       this.antiIdleTime = pref.get(name) * 1000;
       break;
@@ -919,6 +922,10 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
       var margin = pref.get(name);
       this.view.bbsViewMargin = margin;
       this.onWindowResize();
+      break;
+    case 'enableBlacklist':
+      this.pref.enableBlacklist = pref.get(name);
+      this.view.redraw(true);
       break;
     default:
       break;
@@ -1218,15 +1225,17 @@ pttchrome.App.prototype.setupContextMenus = function() {
     }
 
     // for getting push thread user id
-    var srow = target.attr('srow') 
-    if (srow == undefined || srow == null)
-      srow = target.parent().attr('srow');
-    srow = parseInt(srow);
-    var rowText = self.buf.getRowText(srow, 0, self.buf.cols);
-    if (self.buf.pageState == 3) {
-      contextOnUserId = rowText.parsePushthreadForUserId();
-    } else if (self.buf.pageState == 2) {
-      contextOnUserId = rowText.parseThreadForUserId();
+    if (self.pref.enableBlacklist) {
+      var srow = target.attr('srow') 
+      if (srow == undefined || srow == null)
+        srow = target.parent().attr('srow');
+      srow = parseInt(srow);
+      var rowText = self.buf.getRowText(srow, 0, self.buf.cols);
+      if (self.buf.pageState == 3) {
+        contextOnUserId = rowText.parsePushthreadForUserId();
+      } else if (self.buf.pageState == 2) {
+        contextOnUserId = rowText.parseThreadForUserId();
+      }
     }
 
     // replace the &nbsp;

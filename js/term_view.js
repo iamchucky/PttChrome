@@ -70,6 +70,7 @@ function TermView(rowCount) {
   this.firstGridOffset = { top: 0, left: 0 };
 
   // for notifications
+  this.enableNotifications = true;
   this.titleTimer = null;
   this.notif = null;
 
@@ -366,7 +367,7 @@ TermView.prototype = {
 
   redraw: function(force) {
 
-    var start = new Date().getTime();
+    //var start = new Date().getTime();
     var cols = this.buf.cols;
     var rows = this.buf.rows;
     var lineChangeds = this.buf.lineChangeds;
@@ -532,18 +533,20 @@ TermView.prototype = {
       if (lineUpdated) {
         lineUpdated = false;
         var tmp = [];
+        var shouldFade = false;
 
         // check blacklist for user and fade row
-        var rowText = this.buf.getRowText(row, 0, this.buf.cols);
-        var userid = '';
-        if (this.buf.pageState == 3) {
-          userid = rowText.parsePushthreadForUserId();
-        } else if (this.buf.pageState == 2) {
-          userid = rowText.parseThreadForUserId();
-        }
-        var shouldFade = false;
-        if (userid in this.bbscore.pref.blacklistedUserIds) {
-          shouldFade = true;
+        if (this.bbscore.pref.enableBlacklist) {
+          var rowText = this.buf.getRowText(row, 0, this.buf.cols);
+          var userid = '';
+          if (this.buf.pageState == 3) {
+            userid = rowText.parsePushthreadForUserId();
+          } else if (this.buf.pageState == 2) {
+            userid = rowText.parseThreadForUserId();
+          }
+          if (userid in this.bbscore.pref.blacklistedUserIds) {
+            shouldFade = true;
+          }
         }
 
         if (doHighLight) 
@@ -598,8 +601,8 @@ TermView.prototype = {
         });
       }
     }
-    var time = new Date().getTime() - start;
-    console.log(time);
+    //var time = new Date().getTime() - start;
+    //console.log(time);
 
   },
 
@@ -1055,6 +1058,9 @@ TermView.prototype = {
   },
 
   showWaterballNotification: function() {
+    if (!this.enableNotifications) {
+      return;
+    }
     var app = this.bbscore;
     //console.log('message from ' + this.waterball.userId + ': ' + this.waterball.message); 
     var title = app.waterball.userId + ' ' + i18n('notification_said');

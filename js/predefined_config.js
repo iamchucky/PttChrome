@@ -5,10 +5,11 @@ var DEFAULT_PREFS = {
   // general
   //closeQuery    : false,
   //dbcsDetect    : false,
-  openInPackagedApp : false,
-  enablePicPreview  : true,
-  antiIdleTime      : 0,
-  lineWrap          : 78,
+  openInPackagedApp   : false,
+  enablePicPreview    : true,
+  enableNotifications : true,
+  antiIdleTime        : 0,
+  lineWrap            : 78,
 
   // mouse browsing
   useMouseBrowsing            : false,
@@ -25,6 +26,7 @@ var DEFAULT_PREFS = {
   bbsMargin         : 0,
 
   // blacklist
+  enableBlacklist : false,
   blacklistedUserIds  : '{}',
 
 };

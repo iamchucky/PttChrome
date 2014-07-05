@@ -4,6 +4,7 @@ function PttChromePref(app, onInitializedCallback) {
   this.app = app;
   this.shouldResetToDefault = false;
 
+  this.enableBlacklist = false;
   this.blacklistedUserIds = {};
 
   //this.loadDefault(onInitializedCallback);

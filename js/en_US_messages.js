@@ -87,6 +87,9 @@ locale.en_US = {
   "options_enablePicPreview": {
     "message": "Enable preview when hover on image URLs."
   },
+  "options_enableNotifications": {
+    "message": "Enable notifications when a message is received."
+  },
   "options_preferences": {
     "message": "Preferences"
   },
@@ -155,6 +158,9 @@ locale.en_US = {
   },
   "options_threadLastNext": {
     "message": "Controls thread previous / next"
+  },
+  "options_enableBlacklist": {
+    "message": "Enable user blacklist feature"
   },
   "options_addBlacklistInputPlaceholder": {
     "message": "Type in the username and press +"
