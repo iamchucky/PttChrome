@@ -567,7 +567,7 @@ TermView.prototype = {
         }
 
         if (doHighLight) 
-          tmp.push('<span class="b'+this.defbg+'">');
+          tmp.push('<span type="highlight" srow="'+row+'" class="b'+this.defbg+'">');
 
         for (var j = 0; j < cols; ++j)
           tmp.push(outhtml[j].getHtml());
@@ -1031,13 +1031,13 @@ TermView.prototype = {
   },
 
   getSelectionColRow: function() {
-    var r = this.bbscore.lastSelectionRange;
+    var r = window.getSelection().getRangeAt(0);
     var b = r.startContainer;
     var e = r.endContainer;
 
     var selection = { start: { row: 0, col: 0 }, end: { row: 0, col: 0 } };
 
-    if (b.parentNode.getAttribute('type') === 'bbsrow') {
+    if (b.parentNode.getAttribute('type') === 'bbsrow' || b.parentNode.getAttribute('type') == 'highlight') {
       selection.start.row = parseInt(b.parentNode.getAttribute('srow'));
       if (b.previousSibling) {
         var textContent = b.previousSibling.textContent;
@@ -1053,7 +1053,7 @@ TermView.prototype = {
       substr = substr.replace(/\u00a0/g, " ");
       selection.start.col += substr.u2b().length;
     }
-    if (e.parentNode.getAttribute('type') === 'bbsrow') {
+    if (e.parentNode.getAttribute('type') === 'bbsrow' || e.parentNode.getAttribute('type') == 'highlight') {
       selection.end.row = parseInt(e.parentNode.getAttribute('srow'));
       if (e.previousSibling) {
         var textContent = e.previousSibling.textContent;
