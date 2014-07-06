@@ -84,6 +84,8 @@ pttchrome.App = function(onInitializedCallback, from) {
   this.navigationCanStart = false;
   this.navigationDone = false;
 
+  this.lastSelectionRange = null;
+
   this.waterball = { userId: '', message: '' };
   this.appFocused = true;
 
@@ -412,7 +414,7 @@ pttchrome.App.prototype.doCopy = function(str) {
 };
 
 pttchrome.App.prototype.doCopyAnsi = function() {
-  if (window.getSelection().isCollapsed)
+  if (!this.lastSelectionRange)
     return;
 
   var selection = this.view.getSelectionColRow();
@@ -1210,6 +1212,13 @@ pttchrome.App.prototype.setupContextMenus = function() {
     var target = $(e.target);
     contextOnUrl = '';
     contextOnUserId = '';
+
+    // just in case the selection get de-selected
+    if (window.getSelection().isCollapsed) {
+      self.lastSelectionRange = null;
+    } else {
+      self.lastSelectionRange = window.getSelection().getRangeAt(0);
+    }
 
     aElement = null;
     if (target.is('a')) {

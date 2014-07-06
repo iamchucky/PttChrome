@@ -1031,8 +1031,7 @@ TermView.prototype = {
   },
 
   getSelectionColRow: function() {
-    var sel = window.getSelection();
-    var r = sel.getRangeAt(0);
+    var r = this.bbscore.lastSelectionRange;
     var b = r.startContainer;
     var e = r.endContainer;
 
