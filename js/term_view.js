@@ -363,6 +363,12 @@ TermView.prototype = {
         s1 += '&nbsp;';
       else if(char1 == '\x80') // 128, display ' ' or '?'
         s1 += '&nbsp;';
+      else if(char1 == '\x3c')
+        s1 += '&lt;';
+      else if(char1 == '\x3e')
+        s1 += '&gt;';
+      else if(char1 == '\x26')
+        s1 += '&amp;';
       else
         s1 += char1;
       if (ch.isPartOfURL()) {
