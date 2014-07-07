@@ -216,19 +216,36 @@ TermView.prototype = {
 
     var s1 = '';
     var fwStyle = '';
-    var firstSpanClass = '';
-    var secondSpanClass = '';
-    var hasXNode = (ch.blink || ch2.blink);
+    var spanClass = '';
+    var bcValue = '';
+    var hasXNode = ((ch.blink && fg != bg) || (ch2.blink && fg2 != bg2));
     var xNodeStr = '';
-    var col1 = col + 1;
     if (forceWidth != 0) {
       fwStyle = ' style="display:inline-block;width:'+forceWidth+'px;"';
     }
 
     s1 += this.closeSpanIfIsOpen();
 
+    if (fg != fg2) {
+      spanClass = 'w'+fg+' q'+fg2+' o';
+    } else {
+      spanClass = 'q'+fg;
+    }
+    if (bg != bg2) {
+      bcValue = 'b'+bg+'b'+bg2;
+    } else {
+      bcValue = 'b'+bg;
+    }
+    spanClass += ' ' + bcValue;
+
     if (hasXNode) {
-      var xNodeAttrS = 'q'+fg+((fg == fg2)?'':'q'+fg2);
+      var xNodeAttrS = '';
+      if (fg != fg2) {
+        xNodeAttrS = 'w'+fg+' q'+fg2+' o';
+      } else {
+        xNodeAttrS = 'q'+fg;
+      }
+
       var xNodeAttrH = '';
       if (ch.blink && ch2.blink) {
         if (fg != fg2) {
@@ -236,23 +253,32 @@ TermView.prototype = {
         } else if (bg != bg2) {
           xNodeAttrH = 'qq'+bg;
         } else {
-          xNodeAttrH = 'q'+fg+'q'+bg;
+          // not possible
+          console.log('this is not possible');
         }
       } else if (ch.blink && !ch2.blink) {
-        xNodeAttrH = 'q'+bg+'q'+fg2;
+        if (fg2 == bg) {
+          xNodeAttrH = 'q'+bg;
+        } else {
+          xNodeAttrH = 'w'+bg+' q'+fg2+' o';
+        }
       } else {// if(!ch.blink && ch2.blink)
-        xNodeAttrH = 'q'+fg+'q'+bg2;
+        if (fg == bg2) {
+          xNodeAttrH = 'q'+fg;
+        } else {
+          xNodeAttrH = 'w'+fg+' q'+bg2+' o';
+        }
       }
+      xNodeAttrH += ' ' + bcValue;
+      xNodeAttrS += ' ' + bcValue;
       xNodeStr = '<x s="'+xNodeAttrS+'" h="'+xNodeAttrH+'"></x>';
     }
 
-    firstSpanClass = 'q'+fg+((fg == fg2)?'':'q'+fg2);
-    secondSpanClass = 'b'+bg+((bg == bg2)?'':'b'+bg2);
-    s1 += '<span srow="'+row+'" scol="'+col+'" class="'+firstSpanClass+'" t="'+char1+'">';
+    s1 += '<span srow="'+row+'" scol="'+col+'" class="'+spanClass+'" t="'+char1+'"'+fwStyle+'>';
     if (hasXNode) {
       s1 += xNodeStr;
     }
-    s1 += '<span srow="'+row+'" scol="'+col1+'" class="'+secondSpanClass+'"'+fwStyle+'>'+char1+'</span></span>';
+    s1 += char1+'</span>';
     return s1;
   },
 
