@@ -800,7 +800,6 @@ TermBuf.prototype = {
     if (!this.view) return;
 
     var charset = this.view.charset;
-    var conv = this.view.conv;
 
     // generate texts with ansi color
     if (color) {
@@ -812,7 +811,7 @@ TermBuf.prototype = {
           output += text[col].ch + this.ansiCmp(text[col], text[col+1]);
       }
       output += text[colEnd-1].ch + this.ansiCmp(text[colEnd-1], this.newChar);
-      return (isutf8 && charset != 'UTF-8' ? conv.convertStringToUTF8(output, charset, true) : output);
+      return (isutf8 && charset != 'UTF-8' ? output.b2u() : output);
     }
 
     text = text.slice(colStart, colEnd);
@@ -824,7 +823,7 @@ TermBuf.prototype = {
           if ((this.view && this.view.charset == 'UTF-8') || b5.length == 1)
             return b5;
           else
-            return conv.convertStringToUTF8(b5, charset, true);
+            return b5.b2u();
         } else
           return c.ch;
       }
@@ -861,7 +860,6 @@ TermBuf.prototype = {
     } else colEnd = this.cols;
 
     text = text.slice(colStart, colEnd);
-    var conv = this.view.conv;
     var charset = this.view.charset;
     return text.map( function(c, col, line) {
       if (!c.isLeadByte) {
@@ -871,7 +869,7 @@ TermBuf.prototype = {
           if ((this.view && this.view.charset == 'UTF-8') || b5.length == 1)
             return b5;
           else
-            return conv.convertStringToUTF8(b5, charset,  true);
+            return b5.b2u();
         } else
           return c.ch;
       }
