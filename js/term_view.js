@@ -48,6 +48,11 @@ function TermView(rowCount) {
   this.curBlink = false;
   this.openSpan = false;
 
+  this.doHighlightOnCurRow = false;
+
+  this.curRow = 0;
+  this.curCol = 0;
+
   //this.DBDetection = false;
   this.blinkShow = false;
   this.blinkOn = false;
@@ -60,8 +65,8 @@ function TermView(rowCount) {
   this.bbsCursor = document.getElementById('cursor');
   this.trackKeyWordList = document.getElementById('TrackKeyWordList');
   this.BBSWin = document.getElementById('BBSWindow');
-  this.picPreview = $('#picPreview');
-  this.picLoading = $('#picLoading');
+  this.picPreview = document.getElementById('picPreview');
+  this.picLoading = document.getElementById('picLoading');
   this.enablePicPreview = true;
   this.scaleX = 1;
 
@@ -203,12 +208,13 @@ TermView.prototype = {
       return ' type="p"';
   },
 
-  createTwoColorWord: function(row, col, ch, ch2, char1, char2, fg, fg2, bg, bg2, forceWidth) {
+  createTwoColorWord: function(ch, ch2, char1, fg, fg2, bg, bg2, forceWidth) {
+    var row = this.curRow;
+    var col = this.curCol;
     // set to default color so that it'll create span for next char that has different color from default
     this.setCurColorStyle(this.deffg, this.defbg, false);
 
     var s1 = '';
-    var s2 = '';
     var fwStyle = '';
     var firstSpanClass = '';
     var secondSpanClass = '';
@@ -247,13 +253,15 @@ TermView.prototype = {
       s1 += xNodeStr;
     }
     s1 += '<span srow="'+row+'" scol="'+col1+'" class="'+secondSpanClass+'"'+fwStyle+'>'+char1+'</span></span>';
-    return {s1: s1, s2: s2};
+    return s1;
   },
 
-  createNormalWord: function(row, col, ch, ch2, char1, char2, fg, bg, forceWidth) {
+  createNormalWord: function(ch, ch2, char1, fg, bg, forceWidth) {
+    var row = this.curRow;
+    var col = this.curCol;
     var s1 = '';
     if ((this.openSpan && (fg == this.curFg && bg == this.curBg && ch.blink == this.curBlink)) && forceWidth == 0) {
-      return {s1: char1, s2: char2};
+      return char1;
     }
 
     s1 += this.closeSpanIfIsOpen();
@@ -270,10 +278,12 @@ TermView.prototype = {
       s1 += '<span srow="'+row+'" scol="'+col+'" class="wpadding q' +fg+ ' b' +bg+'" ';
       s1 += 'style="display:inline-block;width:'+forceWidth+'px;"' +'>' + (ch.blink?'<x s="q'+fg+' b'+bg+'" h="qq'+bg+'"></x>':'') + char1 + '</span>';
     }
-    return {s1: s1, s2: ''};
+    return s1;
   },
 
-  createNormalChar: function(row, col, ch, char1, fg, bg) {
+  createNormalChar: function(ch, char1, fg, bg) {
+    var row = this.curRow;
+    var col = this.curCol;
     var useHyperLink = this.useHyperLink;
     var s0 = '';
     var s1 = '';
@@ -308,6 +318,73 @@ TermView.prototype = {
     return s0+s1+s2;
   },
 
+  determineAndSetHtmlForCol: function(line, outhtml) {
+    var ch = line[this.curCol];
+    var curColOutHtml = outhtml[this.curCol];
+
+    var fg = ch.getFg();
+    var bg = ch.getBg();
+
+    if (this.doHighlightOnCurRow) {
+      this.defbg = this.hightlightBG;
+      bg = this.hightlightBG;
+    }
+
+    if (ch.isLeadByte) { // first byte of DBCS char
+      var col2 = this.curCol + 1;
+      if (col2 < this.buf.cols) {
+        var ch2 = line[col2];
+        var curColOutHtml2 = outhtml[col2];
+        var fg2 = ch2.getFg();
+        var bg2 = ch2.getBg();
+        var spanstr1 = '';
+        var spanstr2 = '';
+        if (this.doHighlightOnCurRow) {
+          bg2 = this.hightlightBG;
+        }
+
+        if (ch2.ch=='\x20') { //a LeadByte + ' ' //we set this in '?' + ' '
+          spanstr1 = this.createNormalChar(ch, '?', fg, bg);
+          spanstr2 = this.createNormalChar(ch, ' ', fg2, bg2);
+        } else { //maybe normal ...
+          var b5 = ch.ch + ch2.ch; // convert char to UTF-8 before drawing
+          var u = (this.charset == 'UTF-8' || b5.length == 1) ? b5 : b5.b2u();
+          if (u) { // can be converted to valid UTF-8
+            if (u.length == 1) { //normal chinese word
+              var code = this.symtable['x'+u.charCodeAt(0).toString(16)];
+              if (code == 3) { //[4 code char]
+                spanstr1 = this.createNormalChar(ch, '?', fg2, bg2);
+                spanstr2 = this.createNormalChar(ch2, '?', fg2, bg2);
+              } else { 
+                var forceWidth = 0;
+                if (code == 1 || code == 2) {
+                  forceWidth = this.chh;
+                }
+                if (bg != bg2 || fg != fg2 || ch.blink != ch2.blink ) {
+                  spanstr1 = this.createTwoColorWord(ch, ch2, u, fg, fg2, bg, bg2, forceWidth);
+                } else {
+                  spanstr1 = this.createNormalWord(ch, ch2, u, fg, bg, forceWidth);
+                }
+              }
+            } else { //a <?> + one normal char // we set this in '?' + ch2
+              spanstr1 = this.createNormalChar(ch, '?', fg, bg);
+              spanstr2 = this.createNormalChar(ch, ch2.ch, fg2, bg2);
+            }
+          }
+        }
+        curColOutHtml.setHtml(spanstr1);
+        curColOutHtml2.setHtml(spanstr2);
+        ch2.needUpdate = false;
+      }
+      this.curCol = col2;
+    } else { // NOT LeadByte
+      var spanstr = this.createNormalChar(ch, ch.ch, fg, bg);
+      curColOutHtml.setHtml(spanstr);
+    }
+    ch.needUpdate = false;
+
+  },
+
   redraw: function(force) {
 
     //var start = new Date().getTime();
@@ -323,10 +400,9 @@ TermView.prototype = {
     var anylineUpdate = false;
     for (var row = 0; row < rows; ++row) {
       var chh = this.chh;
+      this.curRow = row;
       // resets color
-      this.curFg = this.deffg;
-      this.curBg = this.defbg;
-      this.curBlink = false;
+      this.setCurColorStyle(this.deffg, this.defbg, false);
       this.defbg = 0;
       var line = lines[row];
       var outhtml = outhtmls[row];
@@ -335,134 +411,15 @@ TermView.prototype = {
         continue;
       var lineUpdated = false;
       var chw = this.chw;
-      var doHighLight = (this.buf.highlightCursor && this.buf.nowHighlight != -1 && this.buf.nowHighlight == row);
+      this.doHighlightOnCurRow = (this.buf.highlightCursor && this.buf.nowHighlight != -1 && this.buf.nowHighlight == row);
 
-      for (var col = 0; col < cols; ++col) {
-        var ch = line[col];
-        var fg = ch.getFg();
-        var bg = ch.getBg();
-        var outtemp = outhtml[col];
-
-        //if (force || ch.needUpdate) {
+      for (this.curCol = 0; this.curCol < cols; ++this.curCol) {
         // always check all because it's hard to know about openSpan when jump update
-        if (true) {
-          lineUpdated = true;
-          if (doHighLight) {
-            this.defbg = this.highlightBG;
-            bg = this.highlightBG;
-          }
-          outtemp.setHtml('');
-          if (ch.isLeadByte) { // first byte of DBCS char
-            ++col;
-            if (col < cols) {
-              var ch2 = line[col]; // second byte of DBCS char
-              var outtemp2 = outhtml[col];
-
-              var bg2 = ch2.getBg();
-              var fg2 = ch2.getFg();
-              if (doHighLight) {
-                bg2 = this.highlightBG;
-              }
-              if (bg!=bg2 || fg!=fg2 || ch.blink!=ch2.blink ) {
-                if(ch2.ch=='\x20') { //a LeadByte + ' ' //we set this in '?' + ' '
-                  var spanstr = this.createNormalChar(row, col-1, ch, '?', fg, bg);
-                  outtemp.setHtml(spanstr);
-                  spanstr = this.createNormalChar(row, col-1, ch, ' ', fg2, bg2);
-                  outtemp2.setHtml(spanstr);
-                } else { //maybe normal ...
-                  var b5=ch.ch + ch2.ch; // convert char to UTF-8 before drawing
-                  var u='';
-                  if(this.charset == 'UTF-8' || b5.length == 1)
-                    u=b5;
-                  else
-                    //u=this.conn.socket.convToUTF8(b5.charCodeAt(0), b5.charCodeAt(1), 'big5');
-                    u = b5.b2u();
-                  if (u) { // can be converted to valid UTF-8
-                    if (u.length == 1) { //normal chinese word
-                      var code = this.symtable['x'+u.charCodeAt(0).toString(16)];
-                      if (code == 1 || code == 2) {
-                        var spanstr = this.createTwoColorWord(row, col-1, ch, ch2, u, u, fg, fg2, bg, bg2, this.chh);
-                        outtemp.setHtml(spanstr.s1);
-                        outtemp2.setHtml(spanstr.s2);
-                      } else if (code == 3) { //[4 code char]
-                        var spanstr = this.createNormalChar(row, col-1, ch, '?', fg2, bg2);
-                        outtemp.setHtml(spanstr);
-                        spanstr = this.createNormalChar(row, col-1, ch2, '?', fg2, bg2);
-                        outtemp2.setHtml(spanstr);
-                      } else { //if(this.wordtest.offsetWidth==this.chh)
-                        var spanstr = this.createTwoColorWord(row, col-1, ch, ch2, u, u, fg, fg2, bg, bg2, 0);
-                        outtemp.setHtml(spanstr.s1);
-                        outtemp2.setHtml(spanstr.s2);
-                      }
-                    } else { //a <?> + one normal char // we set this in '?' + ch2
-                      var spanstr = this.createNormalChar(row, col-1, ch, '?', fg, bg);
-                      outtemp.setHtml(spanstr);
-                      spanstr = this.createNormalChar(row, col-1, ch, ch2.ch, fg2, bg2);
-                      outtemp2.setHtml(spanstr);
-                    }
-                  }
-                }
-              } else {
-                if(ch2.ch == '\x20') { //a LeadByte + ' ' //we set this in '?' + ' '
-                  var spanstr = this.createNormalChar(row, col-1, ch, '?', fg, bg);
-                  outtemp.setHtml(spanstr);
-                  spanstr = this.createNormalChar(row, col-1, ch, ' ', fg, bg);
-                  outtemp2.setHtml(spanstr);
-                } else { //maybe normal ...
-                  var b5=ch.ch + ch2.ch; // convert char to UTF-8 before drawing
-                  var u='';
-                  if (this.charset == 'UTF-8' || b5.length == 1)
-                    u = b5;
-                  else
-                    u = b5.b2u();
-                  if (u) { // can be converted to valid UTF-8
-                    if (u.length == 1) { //normal chinese word
-                      var code = this.symtable['x'+u.charCodeAt(0).toString(16)];
-                      if (code == 1 || code == 2) {
-                        var spanstr = this.createNormalWord(row, col-1, ch, ch2, u, '', fg, bg, this.chh);
-                        outtemp.setHtml(spanstr.s1);
-                        outtemp2.setHtml(spanstr.s2);
-                      } else if(code == 3) { //[4 code char]
-                        var spanstr = this.createNormalChar(row, col-1, ch, '?', fg, bg);
-                        outtemp.setHtml(spanstr);
-                        spanstr = this.createNormalChar(row, col-1, ch2, '?', fg, bg);
-                        outtemp2.setHtml(spanstr);
-                      } else { //normal case //if(this.wordtest.offsetWidth==this.chh)
-                        //for font test - start
-
-                        //this.wordtest.innerHTML = u; // it's too slow Orz
-                        //if(this.wordtest.offsetWidth==this.chw)
-                        //  alert('1 : '+ u.charCodeAt(0).toString(16)); //for debug.
-                        //else if(this.wordtest.offsetWidth!=this.chh)
-                        //  alert('!!!!! : '+ u.charCodeAt(0).toString(16)); //for debug.
-
-                        //for font test - end
-                        var spanstr = this.createNormalWord(row, col-1, ch, ch2, u, '', fg, bg, 0);
-                        outtemp.setHtml(spanstr.s1);
-                        outtemp2.setHtml(spanstr.s2);
-                      }
-                    } else { //a <?> + one normal char // we set this in '?' + ch2
-                      var spanstr = this.createNormalChar(row, col-1, ch, '?', fg, bg);
-                      outtemp.setHtml(spanstr);
-                      spanstr = this.createNormalChar(row, col-1, ch, ch2.ch, fg, bg);
-                      outtemp2.setHtml(spanstr);
-                    }
-                  }
-                }
-              }
-              line[col].needUpdate=false;
-            }
-          } else {//NOT LeadByte
-            var spanstr = this.createNormalChar(row, col, ch, ch.ch, fg, bg);
-            outtemp.setHtml(spanstr);
-          }
-          ch.needUpdate=false;
-        }
+        this.determineAndSetHtmlForCol(line, outhtml);
+        lineUpdated = true;
       }
-      if (this.openSpan) {
-        outhtml[col-1].addHtml('</span>');
-        this.openSpan = false;
-      }
+      // after all cols, close the span if open
+      outhtml[this.curCol-1].addHtml(this.closeSpanIfIsOpen());
 
       if (lineUpdated) {
         lineUpdated = false;
@@ -483,13 +440,13 @@ TermView.prototype = {
           }
         }
 
-        if (doHighLight) 
+        if (this.doHighlightOnCurRow) 
           tmp.push('<span type="highlight" srow="'+row+'" class="b'+this.defbg+'">');
 
         for (var j = 0; j < cols; ++j)
           tmp.push(outhtml[j].getHtml());
 
-        if (doHighLight)
+        if (this.doHighlightOnCurRow)
           tmp.push('</span>');
 
         changedLineHtmlStr = tmp.join('');
@@ -505,40 +462,22 @@ TermView.prototype = {
       if (lineChangedCount > 1) {
         this.mainDisplay.innerHTML = this.htmlRowStrArray.join('');
       } else {
-        $('.main span[srow="'+changedRow+'"]')[0].innerHTML = changedLineHtmlStr;
+        document.querySelector('.main span[srow="'+changedRow+'"]').innerHTML = changedLineHtmlStr;
       }
 
       if (this.enablePicPreview) {
         // hide preview if any update
         this.picPreviewShouldShown = false;
-        this.picPreview.hide();
-        this.picLoading.hide();
-
-        var self = this;
-        $("a[href^='http://ppt\.cc/'], a[type='p'], a[href^='http://imgur\.com/']").hover(function(e) {
-          var elem = $(this);
-          var href = elem.attr('href');
-          var type = elem.attr('type');
-          var src = (type == 'p') ? href : (href.indexOf('imgur\.com') > 0) ? href.replace('http://imgur\.com', 'http://i\.imgur\.com') + '.jpg' : href + '@.jpg';
-          var currSrc = self.picPreview.attr('src');
-          if (src !== currSrc) {
-            self.picLoading.show();
-            self.picPreview.attr('src', src);
-          } else {
-            self.picPreview.show();
-          }
-          self.picPreviewShouldShown = true;
-        }, function(e) {
-          self.picPreviewShouldShown = false;
-          self.picPreview.hide();
-          self.picLoading.hide();
-        });
+        this.picPreview.style.display = 'none';
+        this.picLoading.style.display = 'none';
+        this.setupPicPreviewOnHover();
       }
     }
     //var time = new Date().getTime() - start;
     //console.log(time);
 
   },
+
 
   onTextInput: function(text, isPasting) {
     this.resetCursorBlink();
@@ -905,6 +844,7 @@ TermView.prototype = {
     var rows = this.buf ? this.buf.rows : 24;
 
     var innerBounds = this.innerBounds;
+    var fontWidth = this.bbsFontSize * 2;
 
     if (this.screenType == 0 || this.screenType == 1) {
       var width = this.bbsWidth ? this.bbsWidth : innerBounds.width;
@@ -925,10 +865,14 @@ TermView.prototype = {
       nowchh = i*2;
       nowchw = i;
       this.setTermFontSize(nowchw, nowchh);
-      $('.wpadding').css('width', nowchh);
+      fontWidth = nowchh;
     } else {
       this.setTermFontSize(this.bbsFontSize, this.bbsFontSize*2);
-      $('.wpadding').css('width', this.bbsFontSize*2);
+    }
+    var forceWidthElems = document.querySelectorAll('.wpadding');
+    for (var i = 0; i < forceWidthElems.length; ++i) {
+      var forceWidthElem = forceWidthElems[i];
+      forceWidthElem.style.width = fontWidth + 'px';
     }
   },
 
@@ -1001,6 +945,35 @@ TermView.prototype = {
       return '&amp;';
     else
       return inputChar;
+  },
+
+  setupPicPreviewOnHover: function() {
+    var self = this;
+    var aNodes = document.querySelectorAll("a[href^='http://ppt\.cc/'], a[type='p'], a[href^='http://imgur\.com/']");
+    var onover = function(elem) {
+      return function(e) {
+        var href = elem.getAttribute('href');
+        var type = elem.getAttribute('type');
+        var src = (type == 'p') ? href : (href.indexOf('imgur\.com') > 0) ? href.replace('http://imgur\.com', 'http://i\.imgur\.com') + '.jpg' : href + '@.jpg';
+        var currSrc = self.picPreview.getAttribute('src');
+        if (src !== currSrc) {
+          self.picLoading.style.display = 'block';
+          self.picPreview.setAttribute('src', src);
+        } else {
+          self.picPreview.style.display = 'block';
+        }
+        self.picPreviewShouldShown = true;
+      };
+    };
+    for (var i = 0; i < aNodes.length; ++i) {
+      var aNode = aNodes[i];
+      aNode.addEventListener('mouseover', onover(aNode));
+      aNode.addEventListener('mouseout', function(e) {
+        self.picPreviewShouldShown = false;
+        self.picPreview.style.display = 'none';
+        self.picLoading.style.display = 'none';
+      });
+    }
   },
 
   showWaterballNotification: function() {

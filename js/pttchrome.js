@@ -141,10 +141,10 @@ pttchrome.App = function(onInitializedCallback, from) {
   window.onresize = function() {
     self.onWindowResize();
   };
-  this.view.picPreview.load(function(e) {
+  this.view.picPreview.addEventListener('load', function(e) {
     if (self.view.picPreviewShouldShown) {
-      self.view.picPreview.show();
-      self.view.picLoading.hide();
+      self.view.picPreview.style.display = 'block';
+      self.view.picLoading.style.display = 'none';
       self.updatePicPreviewPosition();
     }
   });
@@ -1071,11 +1071,11 @@ pttchrome.App.prototype.mouse_move = function(e) {
   this.curX = e.clientX;
   this.curY = e.clientY;
 
-  if (this.view.enablePicPreview && this.view.picLoading.css('display') != 'none') {
-    this.view.picLoading.css({
-      left: e.clientX + 20,
-      top: e.clientY
-    });
+  if (this.view.enablePicPreview && this.view.picLoading.style.display != 'none') {
+    this.view.picLoading.style.cssText += [
+      'left:'+(e.clientX + 20)+'px',
+      'top:'+e.clientY+'px'
+      ].join(';');
   }
 
   //if we draging window, pass all detect.
@@ -1458,12 +1458,12 @@ pttchrome.App.prototype.setBBSCmd = function(cmd, cmdhandler) {
 };
 
 pttchrome.App.prototype.updatePicPreviewPosition = function() {
-  if (this.view.picPreview.css('display') == 'none')
+  if (this.view.picPreview.style.display == 'none')
     return;
   var mouseHeight = this.curY;
   var curX = this.curX;
   var pageHeight = $(window).height();
-  var imageHeight = this.view.picPreview.height();
+  var imageHeight = this.view.picPreview.clientHeight;
   var imgTop = 20;
 
   // opening image would pass the bottom of the page
@@ -1475,9 +1475,9 @@ pttchrome.App.prototype.updatePicPreviewPosition = function() {
     imgTop = mouseHeight - imageHeight / 2;
   }
   var fontSize = this.view.chh;
-  this.view.picPreview.css({
-    fontSize: fontSize,
-    left: curX + 20,
-    top: imgTop
-  });
+  this.view.picPreview.style.cssText += [
+    'font-size:'+fontSize+'px',
+    'left:'+(curX+20)+'px',
+    'top:'+imgTop+'px'
+    ].join(';');
 };
