@@ -326,8 +326,8 @@ TermView.prototype = {
     var bg = ch.getBg();
 
     if (this.doHighlightOnCurRow) {
-      this.defbg = this.hightlightBG;
-      bg = this.hightlightBG;
+      this.defbg = this.highlightBG;
+      bg = this.highlightBG;
     }
 
     if (ch.isLeadByte) { // first byte of DBCS char
@@ -340,7 +340,7 @@ TermView.prototype = {
         var spanstr1 = '';
         var spanstr2 = '';
         if (this.doHighlightOnCurRow) {
-          bg2 = this.hightlightBG;
+          bg2 = this.highlightBG;
         }
 
         if (ch2.ch=='\x20') { //a LeadByte + ' ' //we set this in '?' + ' '
@@ -462,7 +462,7 @@ TermView.prototype = {
       if (lineChangedCount > 1) {
         this.mainDisplay.innerHTML = this.htmlRowStrArray.join('');
       } else {
-        document.querySelector('.main span[srow="'+changedRow+'"]').innerHTML = changedLineHtmlStr;
+        this.mainDisplay.childNodes[changedRow].innerHTML = changedLineHtmlStr;
       }
 
       if (this.enablePicPreview) {
