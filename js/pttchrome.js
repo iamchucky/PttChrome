@@ -215,6 +215,7 @@ pttchrome.App.prototype.connect = function(url) {
 };
 
 pttchrome.App.prototype.onConnect = function() {
+  $('#connectionAlert').hide();
   dumpLog(DUMP_TYPE_LOG, "pttchrome onConnect");
   this.connectState = 1;
   this.updateTabIcon('connect');
@@ -1335,7 +1336,7 @@ pttchrome.App.prototype.setupContextMenus = function() {
   $('#cmenu_copy a').html(i18n('cmenu_copy')+'<span class="cmenuHotkey">Ctrl+C</span>');
   $('#cmenu_copyAnsi a').text(i18n('cmenu_copyAnsi'));
   $('#cmenu_paste a').html(i18n('cmenu_paste')+'<span class="cmenuHotkey">Ctrl+Shift+V</span>');
-  $('#cmenu_selectAll a').text(i18n('cmenu_selectAll'));
+  $('#cmenu_selectAll a').html(i18n('cmenu_selectAll')+'<span class="cmenuHotkey">Ctrl+A</span>');
   $('#cmenu_searchGoogle a').html(i18n('cmenu_searchGoogle')+' <span id="cmenuSearchContent"></span>');
   $('#cmenu_openUrlNewTab a').text(i18n('cmenu_openUrlNewTab'));
   $('#cmenu_copyLinkUrl a').text(i18n('cmenu_copyLinkUrl'));

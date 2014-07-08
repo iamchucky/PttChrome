@@ -123,6 +123,9 @@ function TermView(rowCount) {
       return; // Shift Ctrl Alt (19)
     if (self.bbscore.modalShown)
       return;
+    if (document.getElementById('connectionAlert').style.display != 'none' && e.keyCode == 13) {
+      return;
+    }
     self.onkeyDown(e);
   }, false);
 
@@ -131,6 +134,10 @@ function TermView(rowCount) {
       return; // Shift Ctrl Alt (19)
     if (self.bbscore.modalShown)
       return;
+    if (document.getElementById('connectionAlert').style.display != 'none' && e.keyCode == 13) {
+      document.getElementById('connectionAlertReconnect').click();
+      return;
+    }
     // set input area focus whenever key down even if there is selection
     self.bbscore.setInputAreaFocus();
   }, false);
@@ -646,11 +653,16 @@ TermView.prototype = {
       }
       return;
     } else if (e.ctrlKey && !e.altKey && !e.shiftKey) {
-      if ((e.keyCode == 99 || e.keyCode == 67) && !window.getSelection().isCollapsed) //^C , do copy
+      if ((e.keyCode == 99 || e.keyCode == 67) && !window.getSelection().isCollapsed) { //^C , do copy
         return;
-      else if (e.keyCode >= 65 && e.keyCode <= 90) // A-Z key
+      } else if (e.keyCode == 97 || e.keyCode == 65) {
+        this.bbscore.doSelectAll();
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      } else if (e.keyCode >= 65 && e.keyCode <= 90) { // A-Z key
         var charCode = e.keyCode - 64;
-      else if (e.keyCode >= 219 && e.keyCode <= 221) // [ \ ]
+      } else if (e.keyCode >= 219 && e.keyCode <= 221) // [ \ ]
         var charCode = e.keyCode - 192;
     } else if (!e.ctrlKey && e.altKey && !e.shiftKey) {
       if (e.keyCode == 87) {// alt+w
