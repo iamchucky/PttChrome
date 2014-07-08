@@ -324,29 +324,28 @@ TermView.prototype = {
     if (ch.isStartOfURL() && useHyperLink) {
       s0 += this.closeSpanIfIsOpen();
       s0 += '<a srow="'+row+'" scol="'+col+'" class="y q'+this.deffg+' b'+this.defbg+'" href="' +ch.getFullURL() + '"' + this.prePicRel( ch.getFullURL()) + ' rel="noreferrer" target="_blank">';
+      this.setCurColorStyle(this.deffg, this.defbg, false);
     }
     if (ch.isEndOfURL() && useHyperLink) {
       s2 = '</a>';
     }
 
-    if (!(ch.isPartOfURL() && useHyperLink) && this.openSpan && (bg == this.curBg && (fg == this.curFg || char1 <= ' ') && ch.blink == this.curBlink)) {
+    if (this.openSpan && (bg == this.curBg && (fg == this.curFg || char1 <= ' ') && ch.blink == this.curBlink)) {
       s1 += this.getHtmlEntitySafe(char1);
-      return s0+s1+s2;
-    }
-
-    s1 += this.closeSpanIfIsOpen();
-    if (bg == this.defbg && (fg == this.deffg || char1 <= ' ') && !ch.blink) {
+    } else if (bg == this.defbg && (fg == this.deffg || char1 <= ' ') && !ch.blink) {
+      s1 += this.closeSpanIfIsOpen();
       this.setCurColorStyle(fg, bg, false);
       s1 += this.getHtmlEntitySafe(char1);
     } else {
+      s1 += this.closeSpanIfIsOpen();
       this.setCurColorStyle(fg, bg, ch.blink);
       s1 +='<span '+ (ch.isPartOfURL()?'link="true" ':'') +'class="q' +fg+ ' b' +bg+ '">'+ (ch.blink?'<x s="q'+fg+' b'+bg+'" h="qq'+bg+'"></x>':'');
       this.openSpan = true;
       s1 += this.getHtmlEntitySafe(char1);
-      if (ch.isPartOfURL()) {
-        s1 += this.closeSpanIfIsOpen();
-        this.setCurColorStyle(this.deffg, this.defbg, false);
-      }
+    }
+    if (s2) {
+      this.setCurColorStyle(this.deffg, this.defbg, false);
+      s1 += this.closeSpanIfIsOpen();
     }
     return s0+s1+s2;
   },
