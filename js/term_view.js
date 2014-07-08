@@ -281,7 +281,7 @@ TermView.prototype = {
       xNodeStr = '<x s="'+xNodeAttrS+'" h="'+xNodeAttrH+'"></x>';
     }
 
-    s1 += '<span srow="'+row+'" scol="'+col+'" class="'+spanClass+'" t="'+char1+'"'+fwStyle+'>';
+    s1 += '<span class="'+spanClass+'" t="'+char1+'"'+fwStyle+'>';
     if (hasXNode) {
       s1 += xNodeStr;
     }
@@ -303,12 +303,12 @@ TermView.prototype = {
       s1 += char1;
     } else if (forceWidth == 0) { // different colors, so create span
       this.setCurColorStyle(fg, bg, ch.blink);
-      s1 += '<span srow="'+row+'" scol="'+col+'" class="q' +fg+ ' b' +bg+'">';
+      s1 += '<span class="q' +fg+ ' b' +bg+'">';
       s1 += (ch.blink?'<x s="q'+fg+' b'+bg+'" h="qq'+bg+'"></x>':'') + char1;
       this.openSpan = true;
     } else { // different colors, create span and set current color to default because forceWidth
       this.setCurColorStyle(this.deffg, this.defbg, false);
-      s1 += '<span srow="'+row+'" scol="'+col+'" class="wpadding q' +fg+ ' b' +bg+'" ';
+      s1 += '<span class="wpadding q' +fg+ ' b' +bg+'" ';
       s1 += 'style="display:inline-block;width:'+forceWidth+'px;"' +'>' + (ch.blink?'<x s="q'+fg+' b'+bg+'" h="qq'+bg+'"></x>':'') + char1 + '</span>';
     }
     return s1;
@@ -340,7 +340,7 @@ TermView.prototype = {
       s1 += this.getHtmlEntitySafe(char1);
     } else {
       this.setCurColorStyle(fg, bg, ch.blink);
-      s1 +='<span srow="'+row+'" scol="'+col+'" '+ (ch.isPartOfURL()?'link="true" ':'') +'class="q' +fg+ ' b' +bg+ '">'+ (ch.blink?'<x s="q'+fg+' b'+bg+'" h="qq'+bg+'"></x>':'');
+      s1 +='<span '+ (ch.isPartOfURL()?'link="true" ':'') +'class="q' +fg+ ' b' +bg+ '">'+ (ch.blink?'<x s="q'+fg+' b'+bg+'" h="qq'+bg+'"></x>':'');
       this.openSpan = true;
       s1 += this.getHtmlEntitySafe(char1);
       if (ch.isPartOfURL()) {
@@ -914,6 +914,33 @@ TermView.prototype = {
     }
   },
 
+  countColFromSiblings: function(elem) {
+    var rowCol = { row: 0, col: 0 };
+    var parent = elem.parentNode;
+    var parentType = parent.getAttribute('type');
+    while (!(parentType == 'bbsrow' || parentType == 'highlight' || parent.tagName == 'A')) {
+      parent = parent.parentNode; 
+      parentType = parent.getAttribute('type');
+    }
+
+    if (parent.tagName == 'A') {
+      rowCol.col += parseInt(parent.getAttribute('scol'));
+    }
+
+    rowCol.row = parseInt(parent.getAttribute('srow'));
+    var children = parent.childNodes;
+    for (var i = 0; i < children.length; ++i) {
+      var child = children[i];
+      if (child == elem.parentNode || child == elem) {
+        break;
+      }
+      var textContent = child.textContent;
+      textContent = textContent.replace(/\u00a0/g, " ");
+      rowCol.col += textContent.u2b().length;
+    }
+    return rowCol;
+  },
+
   getSelectionColRow: function() {
     var r = window.getSelection().getRangeAt(0);
     var b = r.startContainer;
@@ -921,33 +948,13 @@ TermView.prototype = {
 
     var selection = { start: { row: 0, col: 0 }, end: { row: 0, col: 0 } };
 
-    if (b.parentNode.getAttribute('type') === 'bbsrow' || b.parentNode.getAttribute('type') == 'highlight') {
-      selection.start.row = parseInt(b.parentNode.getAttribute('srow'));
-      if (b.previousSibling) {
-        var textContent = b.previousSibling.textContent;
-        textContent = textContent.replace(/\u00a0/g, " ");
-        selection.start.col = parseInt(b.previousSibling.getAttribute('scol')) + textContent.u2b().length;
-      }
-    } else {
-      selection.start.row = parseInt(b.parentNode.getAttribute('srow'));
-      selection.start.col = parseInt(b.parentNode.getAttribute('scol'));
-    }
+    selection.start = this.countColFromSiblings(b);
     if (r.startOffset != 0) {
       var substr = b.substringData(0, r.startOffset);
       substr = substr.replace(/\u00a0/g, " ");
       selection.start.col += substr.u2b().length;
     }
-    if (e.parentNode.getAttribute('type') === 'bbsrow' || e.parentNode.getAttribute('type') == 'highlight') {
-      selection.end.row = parseInt(e.parentNode.getAttribute('srow'));
-      if (e.previousSibling) {
-        var textContent = e.previousSibling.textContent;
-        textContent = textContent.replace(/\u00a0/g, " ");
-        selection.end.col = parseInt(e.previousSibling.getAttribute('scol')) + textContent.u2b().length;
-      }
-    } else {
-      selection.end.row = parseInt(e.parentNode.getAttribute('srow'));
-      selection.end.col = parseInt(e.parentNode.getAttribute('scol'));
-    }
+    selection.end = this.countColFromSiblings(e);
     if (r.endOffset != 1) {
       var substr = e.substringData(0, r.endOffset);
       substr = substr.replace(/\u00a0/g, " ");
