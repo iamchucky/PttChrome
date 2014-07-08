@@ -425,7 +425,9 @@ TermView.prototype = {
     var lineChangeds = this.buf.lineChangeds;
     var lineChangedCount = 0;
     var changedLineHtmlStr = '';
-    var changedRow = 0;
+    var changedLineHtmlStrs = [];
+    var changedRows = [];
+    var fullUpdateRowThreshold = 3;
 
     var lines = this.buf.lines;
     var outhtmls = this.buf.outputhtmls;
@@ -482,7 +484,10 @@ TermView.prototype = {
           tmp.push('</span>');
 
         changedLineHtmlStr = tmp.join('');
-        changedRow = row;
+        if (changedLineHtmlStrs.length < fullUpdateRowThreshold) { // only store up to the threshold
+          changedLineHtmlStrs.push(changedLineHtmlStr);
+          changedRows.push(row);
+        }
         this.htmlRowStrArray[row] = '<span type="bbsrow" srow="'+row+'"'+ (shouldFade ? ' style="opacity:0.2"' : '') +'>' + changedLineHtmlStr + '</span>';
         anylineUpdate = true;
         lineChangeds[row] = false;
@@ -491,10 +496,12 @@ TermView.prototype = {
     }
 
     if (anylineUpdate) {
-      if (lineChangedCount > 1) {
+      if (lineChangedCount > fullUpdateRowThreshold) {
         this.mainDisplay.innerHTML = this.htmlRowStrArray.join('');
       } else {
-        this.mainDisplay.childNodes[changedRow].innerHTML = changedLineHtmlStr;
+        for (var i = 0; i < changedRows.length; ++i) {
+          this.mainDisplay.childNodes[changedRows[i]].innerHTML = changedLineHtmlStrs[i];
+        }
       }
 
       if (this.enablePicPreview) {
