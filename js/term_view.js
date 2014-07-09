@@ -36,6 +36,7 @@ function TermView(rowCount) {
 
   this.buf = null;
   this.bbscore = null;
+  this.page = null;
 
   // Cursor
   this.cursorX = 0;
@@ -47,11 +48,16 @@ function TermView(rowCount) {
   this.curBg = 0;
   this.curBlink = false;
   this.openSpan = false;
+  this.prevPageState = 0;
+
+  this.useEasyReadingMode = false;
 
   this.doHighlightOnCurRow = false;
 
   this.curRow = 0;
   this.curCol = 0;
+
+  this.lastRowIndex = 0;
 
   //this.DBDetection = false;
   this.blinkShow = false;
@@ -497,7 +503,30 @@ TermView.prototype = {
 
     if (anylineUpdate) {
       if (lineChangedCount > fullUpdateRowThreshold) {
-        this.mainDisplay.innerHTML = this.htmlRowStrArray.join('');
+        if (!this.useEasyReadingMode) {
+          this.mainDisplay.innerHTML = this.htmlRowStrArray.join('');
+        } else {
+          if (this.buf.pageState == 3 && prevPageState == 3) {
+            this.mainDisplay.style.overflowY = 'auto';
+            var lastRowText = this.buf.getRowText(23, 0, this.buf.cols);
+            var result = lastRowText.parseStatusRow();
+            if (result) {
+              var beginIndex = this.lastRowIndex + 1 - result.rowIndexStart;
+              this.mainDisplay.innerHTML += this.htmlRowStrArray.slice(beginIndex, -1).join('');
+              this.lastRowIndex = result.rowIndexEnd;
+            }
+            prevPageState = 3;
+          } else {
+            this.lastRowIndex = 22;
+            this.mainDisplay.style.overflowY = 'hidden';
+            if (this.buf.pageState == 3) {
+              this.mainDisplay.innerHTML = this.htmlRowStrArray.slice(0, -1).join('');
+            } else {
+              this.mainDisplay.innerHTML = this.htmlRowStrArray.join('');
+            }
+            prevPageState = this.buf.pageState;
+          }
+        }
       } else {
         for (var i = 0; i < changedRows.length; ++i) {
           this.mainDisplay.childNodes[changedRows[i]].innerHTML = changedLineHtmlStrs[i];
@@ -578,16 +607,20 @@ TermView.prototype = {
         conn.send('\x1b');
         break;
       case 33: //Page Up
-        conn.send('\x1b[5~');
+        if (!(this.useEasyReadingMode && this.buf.autoPageDown))
+          conn.send('\x1b[5~');
         break;
       case 34: //Page Down
-        conn.send('\x1b[6~');
+        if (!(this.useEasyReadingMode && this.buf.autoPageDown))
+          conn.send('\x1b[6~');
         break;
       case 35: //End
-        conn.send('\x1b[4~');
+        if (!(this.useEasyReadingMode && this.buf.autoPageDown))
+          conn.send('\x1b[4~');
         break;
       case 36: //Home
-        conn.send('\x1b[1~');
+        if (!(this.useEasyReadingMode && this.buf.autoPageDown))
+          conn.send('\x1b[1~');
         break;
       case 37: //Arrow Left
         if(this.checkLeftDB())
@@ -596,16 +629,20 @@ TermView.prototype = {
           conn.send('\x1b[D');
         break;
       case 38: //Arrow Up
-        conn.send('\x1b[A');
+        if (!(this.useEasyReadingMode && this.buf.autoPageDown))
+          conn.send('\x1b[A');
         break;
       case 39: //Arrow Right
-        if(this.checkCurDB())
-          conn.send('\x1b[C\x1b[C');
-        else
-          conn.send('\x1b[C');
+        if (!(this.useEasyReadingMode && this.buf.autoPageDown)) {
+          if(this.checkCurDB())
+            conn.send('\x1b[C\x1b[C');
+          else
+            conn.send('\x1b[C');
+        }
         break;
       case 40: //Arrow Down
-        conn.send('\x1b[B');
+        if (!(this.useEasyReadingMode && this.buf.autoPageDown))
+          conn.send('\x1b[B');
         break;
       case 45: //Insert
         conn.send('\x1b[2~');

@@ -189,6 +189,8 @@ function TermBuf(cols, rows) {
   this.pageState = 0;
   this.forceFullWidth = false;
 
+  this.autoPageDown = false;
+
   this.lines = new Array(rows);
   this.linesX = new Array(0);
   this.linesY = new Array(0);
@@ -740,7 +742,7 @@ TermBuf.prototype = {
           } else {
             this.view.bbscore.navigationDone = true;
           }
-        } else if (this.pageState == 3) {
+        } else if (this.pageState == 3 || this.pageState == 5) {
           // send enter to pass the screen
           this.view.conn.send('\r');
         }
@@ -754,10 +756,41 @@ TermBuf.prototype = {
         */
       }
 
+      var sendPageDownAfterUpdate = false;
+
+      if (this.view.useEasyReadingMode) {
+        // dealing with page state jump to 0 because last row wasn't updated fully 
+        if (this.pageState == 3) {
+          this.autoPageDown = true;
+        } else if (this.pageState == 2 || this.pageState == 1) {
+          this.autoPageDown = false;
+        }
+        if (this.autoPageDown) {
+          if (!(this.lineChangeds[23] && this.cur_y == 23 && this.cur_x == 79)) {
+            // last line hasn't changed
+            return;
+          } else {
+            var lastRowText = this.getRowText(23, 0, this.cols);
+            var result = lastRowText.parseStatusRow();
+            if (result) {
+              // send page down
+              sendPageDownAfterUpdate = true;
+            } else {
+              this.pageState = 5;
+              this.autoPageDown = false;
+            }
+          }
+        }
+      }
+
       if (this.view) {
         this.view.update();
       }
       this.changed = false;
+
+      if (sendPageDownAfterUpdate) {
+        this.view.conn.send('\x1b[6~');
+      }
       //if (this.view.conn.autoLoginStage > 0)
       //  this.view.conn.checkAutoLogin();
     }

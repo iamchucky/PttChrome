@@ -128,6 +128,26 @@ String.prototype.b2u = function() {
     return str;
 };
 
+String.prototype.parseStatusRow = function() {
+  var str = this;
+  var regex = new RegExp(/  瀏覽 第 (\d{1,3})(?:\/(\d{1,3}))? 頁 *\( *(\d{1,3})%\)  目前顯示: 第 0*(\d+)~0*(\d+) 行 *\(y\)回應\(X\/?%\)推文(?:\(h\)說明)? *\(←\)離開 /g);
+  var result = regex.exec(str);
+  if (!result)
+    return null;
+
+  if (result.length == 6) {
+    return {
+      pageIndex:     parseInt(result[1]),
+      pageTotal:     parseInt(result[2]),
+      pagePercent:   parseInt(result[3]),
+      rowIndexStart: parseInt(result[4]),
+      rowIndexEnd:   parseInt(result[5])
+    }
+  }
+
+  return null;
+};
+
 String.prototype.parseWaterball = function() {
   var str = this;
   var regex = new RegExp(/\x1b\[1;33;46m\u2605(\w+)\x1b\[0;1;37;45m (.+) \x1b\[m\x1b\[K/g);
