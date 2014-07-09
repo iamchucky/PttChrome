@@ -716,7 +716,7 @@ TermBuf.prototype = {
     if (directupdate)
       this.timerUpdate = setTimeout(func, 1);
     else
-      this.timerUpdate = setTimeout(func, 20);
+      this.timerUpdate = setTimeout(func, 30);
   },
 
   notify: function(timer) {
