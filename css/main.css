@@ -322,7 +322,7 @@ a:link,a:visited,a:active,a:hover {
   text-decoration:none;
 }
 
-.main > span {
+.main > span, #mainContainer > span {
   display:block;
   color:#C0C0C0;
   white-space: pre;

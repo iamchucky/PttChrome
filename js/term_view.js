@@ -50,7 +50,7 @@ function TermView(rowCount) {
   this.openSpan = false;
   this.prevPageState = 0;
 
-  this.useEasyReadingMode = false;
+  this.useEasyReadingMode = true;
 
   this.doHighlightOnCurRow = false;
 
@@ -92,9 +92,10 @@ function TermView(rowCount) {
   for (var i = 0; i < rowCount; ++i) {
     this.htmlRowStrArray.push('<span type="bbsrow" srow="'+i+'"></span>');
   }
-  mainDiv.innerHTML = this.htmlRowStrArray.join('');
+  mainDiv.innerHTML = '<div id="mainContainer">'+this.htmlRowStrArray.join('')+'</div>';
   this.BBSWin.appendChild(mainDiv);
   this.mainDisplay = mainDiv;
+  this.mainContainer = document.getElementById('mainContainer');
   this.mainDisplay.style.border = '0px';
   this.setFontFace('MingLiu,monospace');
 
@@ -329,7 +330,7 @@ TermView.prototype = {
     var s2 = '';
     if (ch.isStartOfURL() && useHyperLink) {
       s0 += this.closeSpanIfIsOpen();
-      s0 += '<a srow="'+row+'" scol="'+col+'" class="y q'+this.deffg+' b'+this.defbg+'" href="' +ch.getFullURL() + '"' + this.prePicRel( ch.getFullURL()) + ' rel="noreferrer" target="_blank">';
+      s0 += '<a scol="'+col+'" class="y q'+this.deffg+' b'+this.defbg+'" href="' +ch.getFullURL() + '"' + this.prePicRel( ch.getFullURL()) + ' rel="noreferrer" target="_blank" srow="'+row+'">';
       this.setCurColorStyle(this.deffg, this.defbg, false);
     }
     if (ch.isEndOfURL() && useHyperLink) {
@@ -481,7 +482,7 @@ TermView.prototype = {
         }
 
         if (this.doHighlightOnCurRow) 
-          tmp.push('<span type="highlight" srow="'+row+'" class="b'+this.defbg+'">');
+          tmp.push('<span type="highlight" class="b'+this.defbg+'" srow="'+row+'">');
 
         for (var j = 0; j < cols; ++j)
           tmp.push(outhtml[j].getHtml());
@@ -494,7 +495,7 @@ TermView.prototype = {
           changedLineHtmlStrs.push(changedLineHtmlStr);
           changedRows.push(row);
         }
-        this.htmlRowStrArray[row] = '<span type="bbsrow" srow="'+row+'"'+ (shouldFade ? ' style="opacity:0.2"' : '') +'>' + changedLineHtmlStr + '</span>';
+        this.htmlRowStrArray[row] = '<span type="bbsrow"'+ (shouldFade ? ' style="opacity:0.2"' : '') +' srow="'+row+'">' + changedLineHtmlStr + '</span>';
         anylineUpdate = true;
         lineChangeds[row] = false;
         lineChangedCount += 1;
@@ -504,32 +505,13 @@ TermView.prototype = {
     if (anylineUpdate) {
       if (lineChangedCount > fullUpdateRowThreshold) {
         if (!this.useEasyReadingMode) {
-          this.mainDisplay.innerHTML = this.htmlRowStrArray.join('');
+          this.mainContainer.innerHTML = this.htmlRowStrArray.join('');
         } else {
-          if (this.buf.pageState == 3 && prevPageState == 3) {
-            this.mainDisplay.style.overflowY = 'auto';
-            var lastRowText = this.buf.getRowText(23, 0, this.buf.cols);
-            var result = lastRowText.parseStatusRow();
-            if (result) {
-              var beginIndex = this.lastRowIndex + 1 - result.rowIndexStart;
-              this.mainDisplay.innerHTML += this.htmlRowStrArray.slice(beginIndex, -1).join('');
-              this.lastRowIndex = result.rowIndexEnd;
-            }
-            prevPageState = 3;
-          } else {
-            this.lastRowIndex = 22;
-            this.mainDisplay.style.overflowY = 'hidden';
-            if (this.buf.pageState == 3) {
-              this.mainDisplay.innerHTML = this.htmlRowStrArray.slice(0, -1).join('');
-            } else {
-              this.mainDisplay.innerHTML = this.htmlRowStrArray.join('');
-            }
-            prevPageState = this.buf.pageState;
-          }
+          this.populateEasyReadingPage();
         }
       } else {
         for (var i = 0; i < changedRows.length; ++i) {
-          this.mainDisplay.childNodes[changedRows[i]].innerHTML = changedLineHtmlStrs[i];
+          this.mainContainer.childNodes[changedRows[i]].innerHTML = changedLineHtmlStrs[i];
         }
       }
 
@@ -607,20 +589,28 @@ TermView.prototype = {
         conn.send('\x1b');
         break;
       case 33: //Page Up
-        if (!(this.useEasyReadingMode && this.buf.autoPageDown))
+        if (!(this.useEasyReadingMode && this.buf.startedEasyReading))
           conn.send('\x1b[5~');
+        else
+          this.mainDisplay.scrollTop -= this.chh * 24;
         break;
       case 34: //Page Down
-        if (!(this.useEasyReadingMode && this.buf.autoPageDown))
+        if (!(this.useEasyReadingMode && this.buf.startedEasyReading))
           conn.send('\x1b[6~');
+        else 
+          this.mainDisplay.scrollTop += this.chh * 24;
         break;
       case 35: //End
-        if (!(this.useEasyReadingMode && this.buf.autoPageDown))
+        if (!(this.useEasyReadingMode && this.buf.startedEasyReading))
           conn.send('\x1b[4~');
+        else
+          this.mainDisplay.scrollTop = this.mainContainer.clientHeight;
         break;
       case 36: //Home
-        if (!(this.useEasyReadingMode && this.buf.autoPageDown))
+        if (!(this.useEasyReadingMode && this.buf.startedEasyReading))
           conn.send('\x1b[1~');
+        else
+          this.mainDisplay.scrollTop = 0;
         break;
       case 37: //Arrow Left
         if(this.checkLeftDB())
@@ -629,20 +619,38 @@ TermView.prototype = {
           conn.send('\x1b[D');
         break;
       case 38: //Arrow Up
-        if (!(this.useEasyReadingMode && this.buf.autoPageDown))
+        if (!(this.useEasyReadingMode && this.buf.startedEasyReading))
           conn.send('\x1b[A');
+        else if (this.mainDisplay.scrollTop == 0) {
+          this.prevPageState = 0;
+          conn.send('\x1b[D\x1b[A\x1b[C');
+        } else 
+          this.mainDisplay.scrollTop -= this.chh;
         break;
       case 39: //Arrow Right
-        if (!(this.useEasyReadingMode && this.buf.autoPageDown)) {
+        if (!(this.useEasyReadingMode && this.buf.startedEasyReading)) {
           if(this.checkCurDB())
             conn.send('\x1b[C\x1b[C');
           else
             conn.send('\x1b[C');
+        } else if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * 24) {
+          this.prevPageState = 0;
+          if(this.checkCurDB())
+            conn.send('\x1b[C\x1b[C');
+          else
+            conn.send('\x1b[C');
+        } else {
+          this.mainDisplay.scrollTop += this.chh * 24;
         }
         break;
       case 40: //Arrow Down
-        if (!(this.useEasyReadingMode && this.buf.autoPageDown))
+        if (!(this.useEasyReadingMode && this.buf.startedEasyReading))
           conn.send('\x1b[B');
+        else if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * 24) {
+          this.prevPageState = 0;
+          conn.send('\x1b[B');
+        } else
+          this.mainDisplay.scrollTop += this.chh;
         break;
       case 45: //Insert
         conn.send('\x1b[2~');
@@ -1091,5 +1099,42 @@ TermView.prototype = {
     this.notif.onclick = function() {
       window.focus();
     };
+  },
+
+  populateEasyReadingPage: function() {
+    if (this.buf.pageState == 3 && this.prevPageState == 3) {
+      this.mainDisplay.style.overflowY = 'auto';
+      var lastRowText = this.buf.getRowText(23, 0, this.buf.cols);
+      var result = lastRowText.parseStatusRow();
+      if (result) {
+        for (var i = 0; i < this.htmlRowStrArray.length; ++i) {
+          this.htmlRowStrArray[i] = this.htmlRowStrArray[i].replace(/ srow="\d+">/g, ' srow="'+(result.rowIndexStart+i)+'">');
+        }
+        // row index start with 4 or below will cause duplicated first row of next page
+        if (result.rowIndexStart < 5) {
+          result.rowIndexStart -= 1;
+        }
+        var beginIndex = this.lastRowIndex + 1 - result.rowIndexStart;
+        this.mainContainer.innerHTML += this.htmlRowStrArray.slice(beginIndex, -1).join('');
+        this.lastRowIndex = result.rowIndexEnd;
+        // deep clone lines for selection (getRowText and get ansi color)
+        this.buf.pageLines = this.buf.pageLines.concat(JSON.parse(JSON.stringify(this.buf.lines.slice(beginIndex, -1))));
+      }
+      this.prevPageState = 3;
+    } else {
+      this.lastRowIndex = 22;
+      this.mainDisplay.style.overflowY = 'hidden';
+      if (this.buf.pageState == 3) {
+        this.mainContainer.innerHTML = this.htmlRowStrArray.slice(0, -1).join('');
+        // deep clone lines for selection (getRowText and get ansi color)
+        this.buf.pageLines = this.buf.pageLines.concat(JSON.parse(JSON.stringify(this.buf.lines.slice(0, -1))));
+      } else {
+        // clear the deep cloned copy of lines
+        this.buf.pageLines = [];
+        this.mainContainer.innerHTML = this.htmlRowStrArray.join('');
+      }
+      this.prevPageState = this.buf.pageState;
+    }
   }
+
 }

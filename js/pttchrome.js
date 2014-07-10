@@ -419,10 +419,14 @@ pttchrome.App.prototype.doCopyAnsi = function() {
     return;
 
   var selection = this.lastSelection;
+  var pageLines = null;
+  if (this.view.useEasyReadingMode && this.buf.pageState == 3) {
+    pageLines = this.buf.pageLines;
+  }
 
   var ansiText = '';
   if (selection.start.row == selection.end.row) {
-    ansiText += this.buf.getText(selection.start.row, selection.start.col, selection.end.col+1, true, true, false);
+    ansiText += this.buf.getText(selection.start.row, selection.start.col, selection.end.col+1, true, true, false, pageLines);
   } else {
     for (var i = selection.start.row; i <= selection.end.row; ++i) {
       var scol = 0;
@@ -432,7 +436,7 @@ pttchrome.App.prototype.doCopyAnsi = function() {
       } else if (i == selection.end.row) {
         ecol = selection.end.col;
       }
-      ansiText += this.buf.getText(i, scol, ecol+1, true, true, false);
+      ansiText += this.buf.getText(i, scol, ecol+1, true, true, false, pageLines);
       if (i != selection.end.row ) {
         ansiText += '\r';
       }
@@ -1134,6 +1138,9 @@ pttchrome.App.prototype.mouse_over = function(e) {
 pttchrome.App.prototype.mouse_scroll = function(e) {
   if (this.modalShown) 
     return;
+
+  if (this.view.useEasyReadingMode && this.buf.startedEasyReading)
+    return;
   var cmdhandler = this.CmdHandler;
 
   // scroll = up/down
@@ -1236,7 +1243,12 @@ pttchrome.App.prototype.setupContextMenus = function() {
       if (srow == undefined || srow == null)
         srow = target.parent().attr('srow');
       srow = parseInt(srow);
-      var rowText = self.buf.getRowText(srow, 0, self.buf.cols);
+      var rowText = '';
+      if (self.view.useEasyReadingMode && self.buf.pageState == 3) {
+        rowText = self.buf.getRowText(srow, 0, self.buf.cols, self.buf.pageLines);
+      } else {
+        rowText = self.buf.getRowText(srow, 0, self.buf.cols);
+      }
       if (self.buf.pageState == 3) {
         contextOnUserId = rowText.parsePushthreadForUserId();
       } else if (self.buf.pageState == 2) {

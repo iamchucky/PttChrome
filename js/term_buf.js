@@ -177,7 +177,6 @@ function TermBuf(cols, rows) {
   this.mouseCursor = 0;
   this.highlightCursor = true;
   this.useMouseBrowsing = true;
-  this.useMouseBrowsingPtt = ((document.location.hostname == 'ptt.cc')||(document.location.hostname == 'bbs.ptt.cc')||(document.location.hostname == 'ptt.twbbs.org'));
   //this.scrollingTop=0;
   //this.scrollingBottom=23;
   this.attr = new TermChar(' ');
@@ -189,11 +188,13 @@ function TermBuf(cols, rows) {
   this.pageState = 0;
   this.forceFullWidth = false;
 
-  this.autoPageDown = false;
+  this.startedEasyReading = false;
 
   this.lines = new Array(rows);
   this.linesX = new Array(0);
   this.linesY = new Array(0);
+
+  this.pageLines = [];
 
   this.outputhtmls = new Array(rows);
   this.lineChangeds = new Array(rows);
@@ -724,11 +725,11 @@ TermBuf.prototype = {
     this.timerUpdate = null;
 
     if (this.changed) { // content changed
-      this.setPageState();
       if (this.useMouseBrowsing) {
         this.resetMousePos();
       }
       this.updateCharAttr();
+      this.setPageState();
 
       // support for url specified navigation
       if (this.view.bbscore.navigateTo.board != null && !this.view.bbscore.navigationDone) {
@@ -742,7 +743,7 @@ TermBuf.prototype = {
           } else {
             this.view.bbscore.navigationDone = true;
           }
-        } else if (this.pageState == 3 || this.pageState == 5) {
+        } else if (this.pageState == 5) {
           // send enter to pass the screen
           this.view.conn.send('\r');
         }
@@ -757,15 +758,16 @@ TermBuf.prototype = {
       }
 
       var sendPageDownAfterUpdate = false;
+      var sendHomeAfterUpdate = false;
 
       if (this.view.useEasyReadingMode) {
         // dealing with page state jump to 0 because last row wasn't updated fully 
         if (this.pageState == 3) {
-          this.autoPageDown = true;
-        } else if (this.pageState == 2 || this.pageState == 1) {
-          this.autoPageDown = false;
+          this.startedEasyReading = true;
+        } else {
+          this.startedEasyReading = false;
         }
-        if (this.autoPageDown) {
+        if (this.startedEasyReading) {
           if (!(this.lineChangeds[23] && this.cur_y == 23 && this.cur_x == 79)) {
             // last line hasn't changed
             return;
@@ -773,11 +775,15 @@ TermBuf.prototype = {
             var lastRowText = this.getRowText(23, 0, this.cols);
             var result = lastRowText.parseStatusRow();
             if (result) {
-              // send page down
-              sendPageDownAfterUpdate = true;
+              var lastRowFirstCh = this.lines[23][0];
+              if (lastRowFirstCh.getBg() == 4 && lastRowFirstCh.getFg() == 7) {
+              } else {
+                // send page down
+                sendPageDownAfterUpdate = true;
+              }
             } else {
               this.pageState = 5;
-              this.autoPageDown = false;
+              this.startedEasyReading = false;
             }
           }
         }
@@ -790,6 +796,8 @@ TermBuf.prototype = {
 
       if (sendPageDownAfterUpdate) {
         this.view.conn.send('\x1b[6~');
+      } else if (sendHomeAfterUpdate) {
+        this.view.conn.send('\x1b[1~');
       }
       //if (this.view.conn.autoLoginStage > 0)
       //  this.view.conn.checkAutoLogin();
@@ -814,8 +822,13 @@ TermBuf.prototype = {
     }
   },
 
-  getText: function(row, colStart, colEnd, color, isutf8, reset) {
-    var text = this.lines[row];
+  getText: function(row, colStart, colEnd, color, isutf8, reset, lines) {
+    var text = '';
+    if (lines) {
+      text = lines[row];
+    } else {
+      text = this.lines[row];
+    }
     // always start from leadByte, and end at second-byte of DBCS.
     // Note: this might change colStart and colEnd. But currently we don't return these changes.
     if (colStart == this.cols) return '';
@@ -879,9 +892,14 @@ TermBuf.prototype = {
     return result;
   },
 
-  getRowText: function(row, colStart, colEnd) {
+  getRowText: function(row, colStart, colEnd, lines) {
 
-    var text = this.lines[row];
+    var text = '';
+    if (lines) {
+      text = lines[row];
+    } else {
+      text = this.lines[row];
+    }
     // always start from leadByte, and end at second-byte of DBCS.
     // Note: this might change colStart and colEnd. But currently we don't return these changes.
     if ( colStart > 0 ){
@@ -1059,33 +1077,39 @@ TermBuf.prototype = {
   },
 
   setPageState: function() {
-    this.pageState = 0; //NORMAL
+    //this.pageState = 0; //NORMAL
     var m_ColsPerPage = 80;
+    var lastRowText = this.getRowText(23, 0, this.cols);
+    if (lastRowText.indexOf('請按任意鍵繼續') > 0 || lastRowText.indexOf('請按 空白鍵 繼續') > 0) {
+      console.log('pageState = 5 (PASS)')
+      this.pageState = 5; // some ansi drawing screen to pass
+      return;
+    }
+    var firstRowText = this.getRowText(0, 0, this.cols);
 
     if ( this.isUnicolor(0, 0, 29) && this.isUnicolor(0, 60, 70) ) {
-      if (this.isUnicolor(2, 0, 70) && !this.isLineEmpty(1) && (this.cur_x < 19 || this.cur_y == 23)) {
-        //console.log('pageState = 2 (LIST)')
+      var main = firstRowText.indexOf('【主功能表】');
+      if (main == 0) {
+        console.log('pageState = 1 (MENU)')
+        this.pageState = 1; // MENU
+      } if (this.isUnicolor(2, 0, 70) && !this.isLineEmpty(1) && (this.cur_x < 19 || this.cur_y == 23)) {
+        console.log('pageState = 2 (LIST)')
         this.pageState = 2; // LIST
-      } else {
-        if (this.useMouseBrowsingPtt) {
-          if (this.isLineEmpty(22) && this.isPttZArea() && (this.cur_x < 19 || this.cur_y == 23))
-            this.pageState = 4; // PTT-Z
-          else
-            this.pageState = 1; // MENU
-        } else {
-          //console.log('pageState = 1 (MENU)')
-          this.pageState = 1; // MENU
-        }
       }
     } else {
-      if ( this.isUnicolor(23, 28, 53) && this.cur_y == 23) {
-        //console.log('pageState = 3 (READING)')
-        this.pageState = 3; // READING
+      if ( this.isUnicolor(23, 28, 53) && this.cur_y == 23 && this.cur_x == 79) {
+        if (lastRowText.parseStatusRow()) {
+          console.log('pageState = 3 (READING)')
+          this.pageState = 3; // READING
+        } else {
+          console.log('pageState = 5 (PASS)')
+          this.pageState = 5; // some ansi drawing screen to pass
+        }
       }
     }
 
     if (this.pageState == 0) {
-      //console.log('pageState = 0 (NORMAL)')
+      console.log('pageState = 0 (NORMAL)')
     }
   },
 
