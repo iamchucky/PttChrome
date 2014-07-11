@@ -189,6 +189,8 @@ function TermBuf(cols, rows) {
   this.forceFullWidth = false;
 
   this.startedEasyReading = false;
+  this.easyReadingShowReplyText = false;
+  this.easyReadingShowPushInitText = false;
 
   this.lines = new Array(rows);
   this.linesX = new Array(0);
@@ -765,13 +767,12 @@ TermBuf.prototype = {
         if (this.pageState == 3) {
           this.startedEasyReading = true;
         } else {
+          this.easyReadingShowReplyText = false;
+          this.easyReadingShowPushInitText = false;
           this.startedEasyReading = false;
         }
         if (this.startedEasyReading) {
-          if (!(this.lineChangeds[23] && this.cur_y == 23 && this.cur_x == 79)) {
-            // last line hasn't changed
-            return;
-          } else {
+          if (this.cur_y == 23 && this.cur_x == 79) {
             var lastRowText = this.getRowText(23, 0, this.cols);
             var result = lastRowText.parseStatusRow();
             if (result) {
@@ -785,6 +786,29 @@ TermBuf.prototype = {
               this.pageState = 5;
               this.startedEasyReading = false;
             }
+          } else if (this.cur_y == 23) {
+            if (!this.easyReadingShowPushInitText) {
+              var lastRowText = this.getRowText(23, 0, this.cols);
+              var result = lastRowText.parsePushInitText();
+              if (result) {
+                this.easyReadingShowPushInitText = true;
+              } else {
+                this.easyReadingShowPushInitText = false;
+                return;
+              }
+            }
+          } else if (this.cur_y == 22) {
+            var secondToLastRowText = this.getRowText(22, 0, this.cols);
+            var result = secondToLastRowText.parseReplyText();
+            if (result) {
+              this.easyReadingShowReplyText = true;
+            } else {
+              this.easyReadingShowReplyText = false;
+              return;
+            }
+          } else {
+            // last line hasn't changed
+            return;
           }
         }
       }
@@ -1081,8 +1105,14 @@ TermBuf.prototype = {
     var m_ColsPerPage = 80;
     var lastRowText = this.getRowText(23, 0, this.cols);
     if (lastRowText.indexOf('請按任意鍵繼續') > 0 || lastRowText.indexOf('請按 空白鍵 繼續') > 0) {
-      console.log('pageState = 5 (PASS)')
+      //console.log('pageState = 5 (PASS)');
       this.pageState = 5; // some ansi drawing screen to pass
+      return;
+    }
+
+    if (this.isLineEmpty(23)) {
+      //console.log('pageState = 0 (NORMAL)');
+      this.pageState = 0;
       return;
     }
     var firstRowText = this.getRowText(0, 0, this.cols);
@@ -1090,26 +1120,26 @@ TermBuf.prototype = {
     if ( this.isUnicolor(0, 0, 29) && this.isUnicolor(0, 60, 70) ) {
       var main = firstRowText.indexOf('【主功能表】');
       if (main == 0) {
-        console.log('pageState = 1 (MENU)')
+        //console.log('pageState = 1 (MENU)');
         this.pageState = 1; // MENU
       } if (this.isUnicolor(2, 0, 70) && !this.isLineEmpty(1) && (this.cur_x < 19 || this.cur_y == 23)) {
-        console.log('pageState = 2 (LIST)')
+        //console.log('pageState = 2 (LIST)');
         this.pageState = 2; // LIST
       }
     } else {
       if ( this.isUnicolor(23, 28, 53) && this.cur_y == 23 && this.cur_x == 79) {
         if (lastRowText.parseStatusRow()) {
-          console.log('pageState = 3 (READING)')
+          //console.log('pageState = 3 (READING)');
           this.pageState = 3; // READING
         } else {
-          console.log('pageState = 5 (PASS)')
+          //console.log('pageState = 5 (PASS)');
           this.pageState = 5; // some ansi drawing screen to pass
         }
       }
     }
 
     if (this.pageState == 0) {
-      console.log('pageState = 0 (NORMAL)')
+      //console.log('pageState = 0 (NORMAL)');
     }
   },
 

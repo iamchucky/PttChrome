@@ -510,8 +510,14 @@ TermView.prototype = {
           this.populateEasyReadingPage();
         }
       } else {
-        for (var i = 0; i < changedRows.length; ++i) {
-          this.mainContainer.childNodes[changedRows[i]].innerHTML = changedLineHtmlStrs[i];
+        if (this.useEasyReadingMode && this.buf.startedEasyReading && this.buf.easyReadingShowReplyText) {
+          this.updateEasyReadingReplyTextWithHtmlStr(changedLineHtmlStrs[changedLineHtmlStrs.length-1]);
+        } else if (this.useEasyReadingMode && this.buf.startedEasyReading && this.buf.easyReadingShowPushInitText) {
+          this.updateEasyReadingPushInitTextWithHtmlStr(changedLineHtmlStrs[changedLineHtmlStrs.length-1]);
+        } else {
+          for (var i = 0; i < changedRows.length; ++i) {
+            this.mainContainer.childNodes[changedRows[i]].innerHTML = changedLineHtmlStrs[i];
+          }
         }
       }
 
@@ -552,6 +558,12 @@ TermView.prototype = {
     var conn = this.conn;
     this.resetCursorBlink();
 
+    if (this.useEasyReadingMode && this.buf.startedEasyReading && 
+        !this.buf.easyReadingShowReplyText && !this.buf.easyReadingShowPushInitText) {
+      this.easyReadingOnKeyDown(e);
+      return;
+    }
+
     if (e.charCode) {
       // Control characters
       if (e.ctrlKey && !e.altKey && !e.shiftKey) {
@@ -569,10 +581,6 @@ TermView.prototype = {
         }
       }
     } else if (!e.ctrlKey && !e.altKey && !e.shiftKey) {
-      if (this.useEasyReadingMode && this.buf.startedEasyReading) {
-        this.easyReadingOnKeyDown(e);
-        return;
-      }
 
       switch (e.keyCode) {
       case 8:
@@ -1074,7 +1082,9 @@ TermView.prototype = {
   },
 
   populateEasyReadingPage: function() {
+    var statusRowHtmlStr = '<div id="easyReadingLastRow"><div style="margin-left:27.5em;"><span class="q1">(y)</span><span class="q0">回應</span><span class="q1">(X%)</span><span class="q0">推文</span><span class="q1">(←)</span><span class="q0">離開&nbsp;</span>&nbsp;</div></div>';
     if (this.buf.pageState == 3 && this.prevPageState == 3) {
+      this.mainContainer.style.paddingBottom = '1em';
       var lastRowText = this.buf.getRowText(23, 0, this.buf.cols);
       var result = lastRowText.parseStatusRow();
       if (result) {
@@ -1093,9 +1103,13 @@ TermView.prototype = {
       }
       this.prevPageState = 3;
     } else {
+      this.mainContainer.style.paddingBottom = '';
       this.lastRowIndex = 22;
       if (this.buf.pageState == 3) {
-        this.mainContainer.innerHTML = this.htmlRowStrArray.slice(0, -1).join('');
+        this.mainContainer.innerHTML = statusRowHtmlStr+'<div id="easyReadingReplyText"></div>' + this.htmlRowStrArray.slice(0, -1).join('');
+        var lastRowNode = document.getElementById('easyReadingLastRow');
+        var marginTop = this.mainDisplay.style.marginTop;
+        lastRowNode.style.bottom = marginTop;
         // deep clone lines for selection (getRowText and get ansi color)
         this.buf.pageLines = this.buf.pageLines.concat(JSON.parse(JSON.stringify(this.buf.lines.slice(0, -1))));
       } else {
@@ -1109,80 +1123,228 @@ TermView.prototype = {
 
   easyReadingOnKeyDown: function(e) {
     var conn = this.conn;
-    switch (e.keyCode) {
-      case 8:
-        if (this.checkLeftDB())
-          conn.send('\b\b');
-        else
-          conn.send('\b');
-        break;
-      case 9:
-        conn.send('\t');
-        // don't move input focus to next control
+    var pageLines = 24;
+
+    if (!e.ctrlKey && !e.altKey && !e.shiftKey) {
+      if ((e.keyCode > 48 && e.keyCode < 58) || e.location == 3) { // 1 ~ 9 or num pad keys
         e.preventDefault();
         e.stopPropagation();
-        break;
-      case 13:
-        conn.send('\r');
-        break;
-      case 27: //ESC
-        conn.send('\x1b');
-        break;
-      case 33: //Page Up
-        this.mainDisplay.scrollTop -= this.chh * 24;
-        break;
-      case 34: //Page Down
-        this.mainDisplay.scrollTop += this.chh * 24;
-        break;
-      case 35: //End
-        this.mainDisplay.scrollTop = this.mainContainer.clientHeight;
-        break;
-      case 36: //Home
-        this.mainDisplay.scrollTop = 0;
-        break;
-      case 37: //Arrow Left
-        if(this.checkLeftDB())
-          conn.send('\x1b[D\x1b[D');
-        else
-          conn.send('\x1b[D');
-        break;
-      case 38: //Arrow Up
+        return;
+      }
+
+      switch (e.keyCode) {
+        case 8: // backspace
+          if (this.mainDisplay.scrollTop == 0) {
+            this.prevPageState = 0;
+            conn.send('\x1b[D\x1b[A\x1b[C');
+          } else {
+            this.mainDisplay.scrollTop -= this.chh * pageLines;
+          }
+          break;
+        case 27: //ESC
+          conn.send('\x1b');
+          break;
+        case 32: //Spacebar
+          if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * pageLines) {
+            this.prevPageState = 0;
+          } else {
+            this.mainDisplay.scrollTop += this.chh * pageLines;
+            e.preventDefault();
+            e.stopPropagation();
+          }
+          break;
+        case 33: //Page Up
+          this.mainDisplay.scrollTop -= this.chh * pageLines;
+          break;
+        case 34: //Page Down
+          this.mainDisplay.scrollTop += this.chh * pageLines;
+          break;
+        case 35: //End
+          this.mainDisplay.scrollTop = this.mainContainer.clientHeight;
+          break;
+        case 36: //Home
+          this.mainDisplay.scrollTop = 0;
+          break;
+        case 37: //Arrow Left
+          if(this.checkLeftDB())
+            conn.send('\x1b[D\x1b[D');
+          else
+            conn.send('\x1b[D');
+          break;
+        case 38: //Arrow Up
+          if (this.mainDisplay.scrollTop == 0) {
+            this.prevPageState = 0;
+            conn.send('\x1b[D\x1b[A\x1b[C');
+          } else {
+            this.mainDisplay.scrollTop -= this.chh;
+          }
+          break;
+        case 39: //Arrow Right
+          if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * pageLines) {
+            this.prevPageState = 0;
+            if(this.checkCurDB())
+              conn.send('\x1b[C\x1b[C');
+            else
+              conn.send('\x1b[C');
+          } else {
+            this.mainDisplay.scrollTop += this.chh * pageLines;
+          }
+          break;
+        case 13: //Enter
+        case 40: //Arrow Down
+          if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * pageLines) {
+            this.prevPageState = 0;
+            conn.send('\x1b[B');
+          } else {
+            this.mainDisplay.scrollTop += this.chh;
+          }
+          break;
+        case 45: //Insert
+          conn.send('\x1b[2~');
+          break;
+        case 46: //DEL
+          if (this.checkCurDB())
+            conn.send('\x1b[3~\x1b[3~');
+          else
+            conn.send('\x1b[3~');
+          break;
+        case 84: // t
+          if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * pageLines) {
+            this.prevPageState = 0;
+          } else {
+            this.mainDisplay.scrollTop += this.chh * pageLines;
+            e.preventDefault();
+            e.stopPropagation();
+          }
+          break;
+
+        case 65: // a
+        case 66: // b
+        case 70: // f
+        case 187: // =
+        case 189: // -
+        case 219: // [
+        case 221: // ]
+          this.prevPageState = 0;
+          break;
+        case 48: // 0
+        case 71: // g
+          this.mainDisplay.scrollTop = 0;
+          e.preventDefault();
+          e.stopPropagation();
+          break;
+        case 74: // j
+          this.mainDisplay.scrollTop += this.chh;
+          e.preventDefault();
+          e.stopPropagation();
+          break;
+        case 75: // k
+          this.mainDisplay.scrollTop -= this.chh;
+          e.stopPropagation();
+          e.preventDefault();
+          break;
+
+        // block
+        case 72:  // h
+          // block help view
+          // optionally show my own help
+        case 9:   // tab
+        case 79:  // o (options setting)
+        case 80:  // p (playing animation)
+        case 83:  // s
+        case 186: // ; (go to page)
+        case 188: // , (shift left)
+        case 190: // . (shift right)
+        case 191: // / (search)
+        case 220: // \ (setup color display mode)
+          e.preventDefault();
+          e.stopPropagation();
+          break;
+
+      }
+    } else if (e.ctrlKey && !e.altKey && !e.shiftKey) {
+      // Control characters
+      // Ctrl + @, NUL, is not handled here
+      if ((e.keyCode == 99 || e.keyCode == 67) && !window.getSelection().isCollapsed) { //^C , do copy
+        return;
+      } else if (e.keyCode == 97 || e.keyCode == 65) {    // ^A
+        this.bbscore.doSelectAll();
+      } else if ( e.keyCode == 70 || e.keyCode == 102 ) { // ^F 
+        this.mainDisplay.scrollTop += this.chh * pageLines;
+      } else if ( e.keyCode == 66 || e.keyCode == 98 ) {  // ^B 
+        this.mainDisplay.scrollTop -= this.chh * pageLines;
+      } else if ( e.keyCode == 72 || e.keyCode == 104 ) { // ^H
         if (this.mainDisplay.scrollTop == 0) {
           this.prevPageState = 0;
           conn.send('\x1b[D\x1b[A\x1b[C');
         } else {
-          this.mainDisplay.scrollTop -= this.chh;
+          this.mainDisplay.scrollTop -= this.chh * pageLines;
         }
-        break;
-      case 39: //Arrow Right
-        if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * 24) {
+      }
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    } else if (!e.ctrlKey && !e.altKey && e.shiftKey) {
+      switch(e.keyCode) {
+        case 65: // A
+        case 66: // B
+        case 70: // F
           this.prevPageState = 0;
-          if(this.checkCurDB())
-            conn.send('\x1b[C\x1b[C');
-          else
-            conn.send('\x1b[C');
-        } else {
-          this.mainDisplay.scrollTop += this.chh * 24;
-        }
-        break;
-      case 40: //Arrow Down
-        if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * 24) {
+          break;
+        case 52: // $
+        case 71: // G
+          this.mainDisplay.scrollTop = this.mainContainer.clientHeight;
+          e.preventDefault();
+          e.stopPropagation();
+          break;
+        case 187: // +
           this.prevPageState = 0;
-          conn.send('\x1b[B');
-        } else {
-          this.mainDisplay.scrollTop += this.chh;
-        }
+          break;
+        // block
+        case 72: // H
+          // block help view
+          // optionally show my own help
+        case 9:   // tab
+        case 51:  // #
+        case 79:  // O (options setting)
+        case 80:  // P (playing animation)
+        case 186: // : (go to line)
+        case 188: // < (shift left)
+        case 190: // > (shift right)
+          e.preventDefault();
+          e.stopPropagation();
+          break;
+      }
+    } else if (e.ctrlKey && !e.altKey && e.shiftKey) {
+      switch(e.keyCode) {
+      case 50: // @
+      case 54: // ^
+      case 109: // _
+      case 191: // ?
+        e.preventDefault();
+        e.stopPropagation();
         break;
-      case 45: //Insert
-        conn.send('\x1b[2~');
+      case 86: //ctrl+shift+v
+        this.bbscore.doPaste();
+        e.preventDefault();
+        e.stopPropagation();
         break;
-      case 46: //DEL
-        if (this.checkCurDB())
-          conn.send('\x1b[3~\x1b[3~');
-        else
-          conn.send('\x1b[3~');
-        break;
+      }
     }
+  },
+
+  updateEasyReadingReplyTextWithHtmlStr: function(htmlStr) {
+    var replyNode = document.getElementById('easyReadingReplyText');
+    var marginTop = this.mainDisplay.style.marginTop;
+    var botOffset = parseInt(marginTop) + this.chh;
+    replyNode.innerHTML = htmlStr;
+    replyNode.style.cssText += 'display:block; bottom:'+botOffset+'px;';
+  },
+
+  updateEasyReadingPushInitTextWithHtmlStr: function(htmlStr) {
+    var pushNode = document.getElementById('easyReadingLastRow');
+    pushNode.style.backgroundColor = 'black';
+    pushNode.innerHTML = htmlStr;
   }
 
 }

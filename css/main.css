@@ -328,6 +328,26 @@ a:link,a:visited,a:active,a:hover {
   white-space: pre;
 }
 
+#easyReadingLastRow {
+  position: absolute;
+  bottom: 1em;
+  -webkit-user-select: none;
+  z-index: 1;
+  white-space: pre;
+  background-color: #c0c0c0;
+  width: 39.5em;
+}
+#easyReadingReplyText {
+  display: none;
+  position: absolute;
+  bottom: 1em;
+  -webkit-user-select: none;
+  z-index: 1;
+  color: #c0c0c0;
+  white-space: pre;
+  background-color: black;
+}
+
 .terminal_display {
   font-family : MingLiu, monospace;
   font-size    : 26px;
