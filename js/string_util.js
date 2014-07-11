@@ -188,7 +188,7 @@ String.prototype.parseThreadForUserId = function() {
 
 String.prototype.parsePushthreadForUserId = function() {
   var str = this;
-  var regex = new RegExp(/[\u2192\u63a8\u5653] (\w+):.+ \d{2}\/\d{2} \d{2}:\d{2}/g);
+  var regex = new RegExp(/[\u2192\u63a8\u5653] (\w+) *:.+ \d{2}\/\d{2} \d{2}:\d{2}/g);
   var result = regex.exec(str);
   if (result && result.length == 2) {
     return result[1].toLowerCase();
