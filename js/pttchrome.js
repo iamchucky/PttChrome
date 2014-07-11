@@ -544,7 +544,6 @@ pttchrome.App.prototype.switchMouseBrowsing = function() {
     this.buf.tempMouseCol=0;
     this.buf.tempMouseRow=0;
   } else {
-    this.buf.setPageState();
     this.buf.resetMousePos();
     this.view.redraw(true);
     this.view.updateCursorPos();
@@ -731,13 +730,11 @@ pttchrome.App.prototype.overlayCommandListener = function (e) {
           this.telnetCore.send('\x1b[6~');
           break;
         case "previousThread":
-          this.buf.setPageState();
           if (this.buf.pageState==2 || this.buf.pageState==3 || this.buf.pageState==4) {
             this.telnetCore.send('[');
           }
           break;
         case "nextThread":
-          this.buf.setPageState();
           if (this.buf.pageState==2 || this.buf.pageState==3 || this.buf.pageState==4) {
             this.telnetCore.send(']');
           }
@@ -866,7 +863,6 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
         this.buf.tempMouseCol = 0;
         this.buf.tempMouseRow = 0;
       }
-      this.buf.setPageState();
       this.buf.resetMousePos();
       this.view.redraw(true);
       this.view.updateCursorPos();
@@ -958,6 +954,9 @@ pttchrome.App.prototype.checkClass = function(cn) {
 pttchrome.App.prototype.mouse_click = function(e) {
   if (this.modalShown)
     return;
+  if (this.view.useEasyReadingMode && this.buf.startedEasyReading) 
+    return;
+
   var skipMouseClick = (this.CmdHandler.getAttribute('SkipMouseClick') == '1');
   this.CmdHandler.setAttribute('SkipMouseClick','0');
 
@@ -995,7 +994,6 @@ pttchrome.App.prototype.mouse_click = function(e) {
     if (this.view.middleButtonFunction == 1)
       this.telnetCore.send('\r');
     else if (this.view.middleButtonFunction == 2) {
-      this.buf.setPageState();
       if (this.buf.pageState == 2 || this.buf.pageState == 3 || this.buf.pageState == 4)
         this.telnetCore.send('\x1b[D');
     }
@@ -1090,36 +1088,7 @@ pttchrome.App.prototype.mouse_move = function(e) {
       'top:'+e.clientY+'px'
       ].join(';');
   }
-
-  //if we draging window, pass all detect.
-  if (this.playerMgr && this.playerMgr.dragingWindow) {
-    var dW = this.playerMgr.dragingWindow;
-    if (this.CmdHandler.getAttribute("DragingWindow") == '1') {
-      dW.playerDiv.style.left = dW.tempCurX + (e.pageX - dW.offX) + 'px';
-      dW.playerDiv.style.top = dW.tempCurY + (e.pageY - dW.offY) + 'px';
-      e.preventDefault();
-      return;
-    } else if (this.CmdHandler.getAttribute("DragingWindow") == '2') {
-      dW.playerDiv2.style.left = dW.tempCurX + (e.pageX - dW.offX) + 'px';
-      dW.playerDiv2.style.top = dW.tempCurY + (e.pageY - dW.offY) + 'px';
-      e.preventDefault();
-      return;
-    }
-  } else if (this.picViewerMgr && this.picViewerMgr.dragingWindow) {
-    var dW = this.picViewerMgr.dragingWindow;
-    dW.viewerDiv.style.left = dW.tempCurX + (e.pageX - dW.offX) + 'px';
-    dW.viewerDiv.style.top = dW.tempCurY + (e.pageY - dW.offY) + 'px';
-    e.preventDefault();
-    return;
-  } else if (this.symbolinput && this.symbolinput.dragingWindow) {
-    var dW = this.symbolinput.dragingWindow;
-    if (this.CmdHandler.getAttribute("DragingWindow") == '3') {
-      dW.mainDiv.style.left = dW.tempCurX + (e.pageX - dW.offX) + 'px';
-      dW.mainDiv.style.top = dW.tempCurY + (e.pageY - dW.offY) + 'px';
-      e.preventDefault();
-      return;
-    }
-  }
+  this.updatePicPreviewPosition();
 
   if (this.buf.useMouseBrowsing) {
     if (window.getSelection().isCollapsed) {
@@ -1129,7 +1098,6 @@ pttchrome.App.prototype.mouse_move = function(e) {
       this.resetMouseCursor();
   }
 
-  this.updatePicPreviewPosition();
 };
 
 pttchrome.App.prototype.mouse_over = function(e) {

@@ -727,11 +727,11 @@ TermBuf.prototype = {
     this.timerUpdate = null;
 
     if (this.changed) { // content changed
+      this.updateCharAttr();
+      this.setPageState();
       if (this.useMouseBrowsing) {
         this.resetMousePos();
       }
-      this.updateCharAttr();
-      this.setPageState();
 
       // support for url specified navigation
       if (this.view.bbscore.navigateTo.board != null && !this.view.bbscore.navigationDone) {
@@ -1110,16 +1110,12 @@ TermBuf.prototype = {
       return;
     }
 
-    if (this.isLineEmpty(23)) {
-      //console.log('pageState = 0 (NORMAL)');
-      this.pageState = 0;
-      return;
-    }
     var firstRowText = this.getRowText(0, 0, this.cols);
 
     if ( this.isUnicolor(0, 0, 29) && this.isUnicolor(0, 60, 70) ) {
       var main = firstRowText.indexOf('【主功能表】');
-      if (main == 0) {
+      var classList = firstRowText.indexOf('【分類看板】');
+      if (main == 0 || classList == 0) {
         //console.log('pageState = 1 (MENU)');
         this.pageState = 1; // MENU
       } if (this.isUnicolor(2, 0, 70) && !this.isLineEmpty(1) && (this.cur_x < 19 || this.cur_y == 23)) {
@@ -1137,9 +1133,9 @@ TermBuf.prototype = {
         }
       }
     }
-
-    if (this.pageState == 0) {
+    if (this.pageState != 1 && this.isLineEmpty(23)) {
       //console.log('pageState = 0 (NORMAL)');
+      this.pageState = 0;
     }
   },
 
