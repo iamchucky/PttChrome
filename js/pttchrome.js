@@ -747,7 +747,7 @@ pttchrome.App.prototype.onMouse_click = function (cX, cY) {
 pttchrome.App.prototype.overlayCommandListener = function (e) {
   var elm = e.target;
   var cmd = elm.getAttribute("pttChromeCommand");
-  dumpLog(DUMP_TYPE_LOG, cmd);
+  //dumpLog(DUMP_TYPE_LOG, cmd);
   if (elm) {
     if (elm.id == 'cmdHandler') {
       switch (cmd) {

@@ -197,6 +197,17 @@ String.prototype.parsePushthreadForUserId = function() {
   return null;
 }
 
+String.prototype.parseYoutubeUrl = function() {
+  var str = this;
+  var regex = new RegExp(/https?:\/\/(?:(?:youtu\.be\/)|(?:www.youtube.com\/watch\?v=))(\w+)/g);
+  var result = regex.exec(str);
+  if (result && result.length == 2) {
+    return result[1];
+  }
+
+  return null;
+}
+
 String.prototype.ansiHalfColorConv = function() {
   var str = '';
   var regex = new RegExp('\x15\\[(([0-9]+)?;)+50m', 'g');

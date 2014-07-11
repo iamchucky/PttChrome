@@ -348,6 +348,18 @@ a:link,a:visited,a:active,a:hover {
   background-color: black;
 }
 
+.easyReadingImg {
+  max-height: 14em;
+  max-width: 39em;
+  margin: 0.5em auto;
+  display: block;
+}
+.easyReadingVideo {
+  margin: 0.5em auto;
+  width: 640px;
+  display: block;
+}
+
 .terminal_display {
   font-family : MingLiu, monospace;
   font-size    : 26px;

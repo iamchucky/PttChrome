@@ -1026,7 +1026,7 @@ TermView.prototype = {
 
   setupPicPreviewOnHover: function() {
     var self = this;
-    var aNodes = document.querySelectorAll("a[href^='http://ppt\.cc/'], a[type='p'], a[href^='http://imgur\.com/']");
+    var aNodes = document.querySelectorAll(".main a[href^='http://ppt\.cc/'], .main a[type='p'], .main a[href^='http://imgur\.com/']");
     var onover = function(elem) {
       return function(e) {
         var href = elem.getAttribute('href');
@@ -1099,6 +1099,7 @@ TermView.prototype = {
         var beginIndex = this.lastRowIndex + 1 - result.rowIndexStart;
         this.mainContainer.innerHTML += this.htmlRowStrArray.slice(beginIndex, -1).join('');
         this.lastRowIndex = result.rowIndexEnd;
+        this.embedPicAndVideo();
         // deep clone lines for selection (getRowText and get ansi color)
         this.buf.pageLines = this.buf.pageLines.concat(JSON.parse(JSON.stringify(this.buf.lines.slice(beginIndex, -1))));
       }
@@ -1111,6 +1112,7 @@ TermView.prototype = {
         var lastRowNode = document.getElementById('easyReadingLastRow');
         var marginTop = this.mainDisplay.style.marginTop;
         lastRowNode.style.bottom = marginTop;
+        this.embedPicAndVideo();
         // deep clone lines for selection (getRowText and get ansi color)
         this.buf.pageLines = this.buf.pageLines.concat(JSON.parse(JSON.stringify(this.buf.lines.slice(0, -1))));
       } else {
@@ -1119,6 +1121,47 @@ TermView.prototype = {
         this.mainContainer.innerHTML = this.htmlRowStrArray.join('');
       }
       this.prevPageState = this.buf.pageState;
+    }
+  },
+
+  embedPicAndVideo: function() {
+    var aNodes = document.querySelectorAll(".main a[type='p'], .main a[href^='http://imgur\.com/']");
+    for (var i = 0; i < aNodes.length; ++i) {
+      var aNode = aNodes[i];
+      if (aNode.getAttribute('view_shown')) {
+        continue;
+      }
+      var href = aNode.getAttribute('href');
+      var type = aNode.getAttribute('type');
+      var src = (type == 'p') ? href : (href.indexOf('imgur\.com') > 0) ? href.replace('http://imgur\.com', 'http://i\.imgur\.com') + '.jpg' : '';
+      if (src) {
+        var imgNode = document.createElement('img');
+        imgNode.setAttribute('class', 'easyReadingImg');
+        imgNode.setAttribute('src', src);
+        aNode.parentNode.appendChild(imgNode);
+      }
+
+      aNode.setAttribute('view_shown', 'true');
+    }
+
+    var vNodes = document.querySelectorAll(".main a");
+    for (var i = 0; i < vNodes.length; ++i) {
+      var vNode = vNodes[i];
+      if (vNode.getAttribute('view_shown')) {
+        continue;
+      }
+      var href = vNode.getAttribute('href');
+      if (!href)
+        continue;
+      var youtubeShortCode = href.parseYoutubeUrl();
+      if (youtubeShortCode) {
+        var divNode = document.createElement('div');
+        divNode.setAttribute('class', 'easyReadingVideo');
+        divNode.innerHTML = '<iframe width="640" height="385" src="//www.youtube-nocookie.com/embed/'+youtubeShortCode+'?rel=0" frameborder="0" allowfullscreen></iframe>';
+        vNode.parentNode.appendChild(divNode);
+      }
+
+      vNode.setAttribute('view_shown', 'true');
     }
   },
 
