@@ -641,16 +641,32 @@ pttchrome.App.prototype.onMouse_click = function (cX, cY) {
       this.telnetCore.send('\x1b[D');  //Arrow Left
       break;
     case 2:
-      this.telnetCore.send('\x1b[5~'); //Page Up
+      if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
+        this.view.mainDisplay.scrollTop -= this.view.chh * this.view.easyReadingTurnPageLines;
+      } else {
+        this.telnetCore.send('\x1b[5~'); //Page Up
+      }
       break;
     case 3:
-      this.telnetCore.send('\x1b[6~'); //Page Down
+      if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
+        this.view.mainDisplay.scrollTop += this.view.chh * this.view.easyReadingTurnPageLines;
+      } else {
+        this.telnetCore.send('\x1b[6~'); //Page Down
+      }
       break;
     case 4:
-      this.telnetCore.send('\x1b[1~'); //Home
+      if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
+        this.view.mainDisplay.scrollTop = 0;
+      } else {
+        this.telnetCore.send('\x1b[1~'); //Home
+      }
       break;
     case 5:
-      this.telnetCore.send('\x1b[4~'); //End
+      if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
+        this.view.mainDisplay.scrollTop = this.view.mainContainer.clientHeight;
+      } else {
+        this.telnetCore.send('\x1b[4~'); //End
+      }
       break;
     case 6:
       if (this.buf.nowHighlight != -1) {
@@ -687,21 +703,39 @@ pttchrome.App.prototype.onMouse_click = function (cX, cY) {
       this.telnetCore.send('\x1b[D'); //Arrow Left
       break;
     case 8:
+      if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
+        this.view.prevPageState = 0;
+      } 
       this.telnetCore.send('['); //Previous post with the same title
       break;
     case 9:
+      if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
+        this.view.prevPageState = 0;
+      } 
       this.telnetCore.send(']'); //Next post with the same title
       break;
     case 10:
+      if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
+        this.view.prevPageState = 0;
+      } 
       this.telnetCore.send('='); //First post with the same title
       break;
     case 12:
+      if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
+        this.view.prevPageState = 0;
+      } 
       this.telnetCore.send('\x1b[D\r\x1b[4~'); //Refresh post / pushed texts
       break;
     case 13:
+      if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
+        this.view.prevPageState = 0;
+      } 
       this.telnetCore.send('\x1b[D\r\x1b[4~[]'); //Last post with the same title (LIST)
       break;
     case 14:
+      if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
+        this.view.prevPageState = 0;
+      } 
       this.telnetCore.send('\x1b[D\x1b[4~[]\r'); //Last post with the same title (READING)
       break;
     default:
@@ -718,24 +752,56 @@ pttchrome.App.prototype.overlayCommandListener = function (e) {
     if (elm.id == 'cmdHandler') {
       switch (cmd) {
         case "doArrowUp":
-          this.telnetCore.send('\x1b[A');
+          if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
+            if (this.view.mainDisplay.scrollTop == 0) {
+              this.view.prevPageState = 0;
+              this.telnetCore.send('\x1b[D\x1b[A\x1b[C');
+            } else {
+              this.view.mainDisplay.scrollTop -= this.view.chh;
+            }
+          } else {
+            this.telnetCore.send('\x1b[A');
+          }
           break;
         case "doArrowDown":
-          this.telnetCore.send('\x1b[B');
+          if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
+            if (this.view.mainDisplay.scrollTop >= this.view.mainContainer.clientHeight - this.view.chh * this.view.easyReadingTurnPageLines) {
+              this.view.prevPageState = 0;
+              this.telnetCore.send('\x1b[B');
+            } else {
+              this.view.mainDisplay.scrollTop += this.view.chh;
+            }
+          } else {
+            this.telnetCore.send('\x1b[B');
+          }
           break;
         case "doPageUp":
-          this.telnetCore.send('\x1b[5~');
+          if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
+            this.view.mainDisplay.scrollTop -= this.view.chh * this.view.easyReadingTurnPageLines;
+          } else {
+            this.telnetCore.send('\x1b[5~');
+          }
           break;
         case "doPageDown":
-          this.telnetCore.send('\x1b[6~');
+          if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
+            this.view.mainDisplay.scrollTop += this.view.chh * this.view.easyReadingTurnPageLines;
+          } else {
+            this.telnetCore.send('\x1b[6~');
+          }
           break;
         case "previousThread":
-          if (this.buf.pageState==2 || this.buf.pageState==3 || this.buf.pageState==4) {
+          if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
+            this.view.prevPageState = 0;
+            this.telnetCore.send('[');
+          } else if (this.buf.pageState==2 || this.buf.pageState==3 || this.buf.pageState==4) {
             this.telnetCore.send('[');
           }
           break;
         case "nextThread":
-          if (this.buf.pageState==2 || this.buf.pageState==3 || this.buf.pageState==4) {
+          if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
+            this.view.prevPageState = 0;
+            this.telnetCore.send(']');
+          } else if (this.buf.pageState==2 || this.buf.pageState==3 || this.buf.pageState==4) {
             this.telnetCore.send(']');
           }
           break;
@@ -954,8 +1020,6 @@ pttchrome.App.prototype.checkClass = function(cn) {
 pttchrome.App.prototype.mouse_click = function(e) {
   if (this.modalShown)
     return;
-  if (this.view.useEasyReadingMode && this.buf.startedEasyReading) 
-    return;
 
   var skipMouseClick = (this.CmdHandler.getAttribute('SkipMouseClick') == '1');
   this.CmdHandler.setAttribute('SkipMouseClick','0');
@@ -1115,8 +1179,6 @@ pttchrome.App.prototype.mouse_scroll = function(e) {
   if (this.modalShown) 
     return;
 
-  if (this.view.useEasyReadingMode && this.buf.startedEasyReading)
-    return;
   var cmdhandler = this.CmdHandler;
 
   // scroll = up/down

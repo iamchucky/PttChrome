@@ -51,6 +51,7 @@ function TermView(rowCount) {
   this.prevPageState = 0;
 
   this.useEasyReadingMode = true;
+  this.easyReadingTurnPageLines = 24;
 
   this.doHighlightOnCurRow = false;
 
@@ -1123,7 +1124,6 @@ TermView.prototype = {
 
   easyReadingOnKeyDown: function(e) {
     var conn = this.conn;
-    var pageLines = 24;
 
     if (!e.ctrlKey && !e.altKey && !e.shiftKey) {
       if ((e.keyCode > 48 && e.keyCode < 58) || e.location == 3) { // 1 ~ 9 or num pad keys
@@ -1138,26 +1138,26 @@ TermView.prototype = {
             this.prevPageState = 0;
             conn.send('\x1b[D\x1b[A\x1b[C');
           } else {
-            this.mainDisplay.scrollTop -= this.chh * pageLines;
+            this.mainDisplay.scrollTop -= this.chh * this.easyReadingTurnPageLines;
           }
           break;
         case 27: //ESC
           conn.send('\x1b');
           break;
         case 32: //Spacebar
-          if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * pageLines) {
+          if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * this.easyReadingTurnPageLines) {
             this.prevPageState = 0;
           } else {
-            this.mainDisplay.scrollTop += this.chh * pageLines;
+            this.mainDisplay.scrollTop += this.chh * this.easyReadingTurnPageLines;
             e.preventDefault();
             e.stopPropagation();
           }
           break;
         case 33: //Page Up
-          this.mainDisplay.scrollTop -= this.chh * pageLines;
+          this.mainDisplay.scrollTop -= this.chh * this.easyReadingTurnPageLines;
           break;
         case 34: //Page Down
-          this.mainDisplay.scrollTop += this.chh * pageLines;
+          this.mainDisplay.scrollTop += this.chh * this.easyReadingTurnPageLines;
           break;
         case 35: //End
           this.mainDisplay.scrollTop = this.mainContainer.clientHeight;
@@ -1180,19 +1180,19 @@ TermView.prototype = {
           }
           break;
         case 39: //Arrow Right
-          if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * pageLines) {
+          if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * this.easyReadingTurnPageLines) {
             this.prevPageState = 0;
             if(this.checkCurDB())
               conn.send('\x1b[C\x1b[C');
             else
               conn.send('\x1b[C');
           } else {
-            this.mainDisplay.scrollTop += this.chh * pageLines;
+            this.mainDisplay.scrollTop += this.chh * this.easyReadingTurnPageLines;
           }
           break;
         case 13: //Enter
         case 40: //Arrow Down
-          if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * pageLines) {
+          if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * this.easyReadingTurnPageLines) {
             this.prevPageState = 0;
             conn.send('\x1b[B');
           } else {
@@ -1209,10 +1209,10 @@ TermView.prototype = {
             conn.send('\x1b[3~');
           break;
         case 84: // t
-          if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * pageLines) {
+          if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * this.easyReadingTurnPageLines) {
             this.prevPageState = 0;
           } else {
-            this.mainDisplay.scrollTop += this.chh * pageLines;
+            this.mainDisplay.scrollTop += this.chh * this.easyReadingTurnPageLines;
             e.preventDefault();
             e.stopPropagation();
           }
@@ -1270,15 +1270,15 @@ TermView.prototype = {
       } else if (e.keyCode == 97 || e.keyCode == 65) {    // ^A
         this.bbscore.doSelectAll();
       } else if ( e.keyCode == 70 || e.keyCode == 102 ) { // ^F 
-        this.mainDisplay.scrollTop += this.chh * pageLines;
+        this.mainDisplay.scrollTop += this.chh * this.easyReadingTurnPageLines;
       } else if ( e.keyCode == 66 || e.keyCode == 98 ) {  // ^B 
-        this.mainDisplay.scrollTop -= this.chh * pageLines;
+        this.mainDisplay.scrollTop -= this.chh * this.easyReadingTurnPageLines;
       } else if ( e.keyCode == 72 || e.keyCode == 104 ) { // ^H
         if (this.mainDisplay.scrollTop == 0) {
           this.prevPageState = 0;
           conn.send('\x1b[D\x1b[A\x1b[C');
         } else {
-          this.mainDisplay.scrollTop -= this.chh * pageLines;
+          this.mainDisplay.scrollTop -= this.chh * this.easyReadingTurnPageLines;
         }
       }
       e.preventDefault();
