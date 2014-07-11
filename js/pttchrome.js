@@ -485,13 +485,21 @@ pttchrome.App.prototype.doGoToOtherSite = function() {
 pttchrome.App.prototype.doAddBlacklistUserId = function(userid) {
   this.pref.blacklistedUserIds[userid] = true;
   this.pref.setBlacklistStorage();
-  this.view.redraw(true);
+  if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
+    $('.blu_'+userid).css('opacity', '0.2');
+  } else {
+    this.view.redraw(true);
+  }
 };
 
 pttchrome.App.prototype.doRemoveBlacklistUserId = function(userid) {
   delete this.pref.blacklistedUserIds[userid];
   this.pref.setBlacklistStorage();
-  this.view.redraw(true);
+  if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
+    $('.blu_'+userid).css('opacity', '');
+  } else {
+    this.view.redraw(true);
+  }
 };
 
 pttchrome.App.prototype.doSettings = function() {

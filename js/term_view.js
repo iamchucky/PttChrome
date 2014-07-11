@@ -466,11 +466,11 @@ TermView.prototype = {
         lineUpdated = false;
         var tmp = [];
         var shouldFade = false;
+        var userid = '';
 
         // check blacklist for user and fade row
         if (this.bbscore.pref.enableBlacklist) {
           var rowText = this.buf.getRowText(row, 0, this.buf.cols);
-          var userid = '';
           if (this.buf.pageState == 3) {
             userid = rowText.parsePushthreadForUserId();
           } else if (this.buf.pageState == 2) {
@@ -495,7 +495,7 @@ TermView.prototype = {
           changedLineHtmlStrs.push(changedLineHtmlStr);
           changedRows.push(row);
         }
-        this.htmlRowStrArray[row] = '<span type="bbsrow"'+ (shouldFade ? ' style="opacity:0.2"' : '') +' srow="'+row+'">' + changedLineHtmlStr + '</span>';
+        this.htmlRowStrArray[row] = '<span type="bbsrow" class="'+(userid?'blu_'+userid:'')+'"'+ (shouldFade ? ' style="opacity:0.2"' : '') +' srow="'+row+'">' + changedLineHtmlStr + '</span>';
         anylineUpdate = true;
         lineChangeds[row] = false;
         lineChangedCount += 1;
@@ -569,6 +569,11 @@ TermView.prototype = {
         }
       }
     } else if (!e.ctrlKey && !e.altKey && !e.shiftKey) {
+      if (this.useEasyReadingMode && this.buf.startedEasyReading) {
+        this.easyReadingOnKeyDown(e);
+        return;
+      }
+
       switch (e.keyCode) {
       case 8:
         if (this.checkLeftDB())
@@ -589,28 +594,16 @@ TermView.prototype = {
         conn.send('\x1b');
         break;
       case 33: //Page Up
-        if (!(this.useEasyReadingMode && this.buf.startedEasyReading))
-          conn.send('\x1b[5~');
-        else
-          this.mainDisplay.scrollTop -= this.chh * 24;
+        conn.send('\x1b[5~');
         break;
       case 34: //Page Down
-        if (!(this.useEasyReadingMode && this.buf.startedEasyReading))
-          conn.send('\x1b[6~');
-        else 
-          this.mainDisplay.scrollTop += this.chh * 24;
+        conn.send('\x1b[6~');
         break;
       case 35: //End
-        if (!(this.useEasyReadingMode && this.buf.startedEasyReading))
-          conn.send('\x1b[4~');
-        else
-          this.mainDisplay.scrollTop = this.mainContainer.clientHeight;
+        conn.send('\x1b[4~');
         break;
       case 36: //Home
-        if (!(this.useEasyReadingMode && this.buf.startedEasyReading))
-          conn.send('\x1b[1~');
-        else
-          this.mainDisplay.scrollTop = 0;
+        conn.send('\x1b[1~');
         break;
       case 37: //Arrow Left
         if(this.checkLeftDB())
@@ -619,38 +612,16 @@ TermView.prototype = {
           conn.send('\x1b[D');
         break;
       case 38: //Arrow Up
-        if (!(this.useEasyReadingMode && this.buf.startedEasyReading))
-          conn.send('\x1b[A');
-        else if (this.mainDisplay.scrollTop == 0) {
-          this.prevPageState = 0;
-          conn.send('\x1b[D\x1b[A\x1b[C');
-        } else 
-          this.mainDisplay.scrollTop -= this.chh;
+        conn.send('\x1b[A');
         break;
       case 39: //Arrow Right
-        if (!(this.useEasyReadingMode && this.buf.startedEasyReading)) {
-          if(this.checkCurDB())
-            conn.send('\x1b[C\x1b[C');
-          else
-            conn.send('\x1b[C');
-        } else if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * 24) {
-          this.prevPageState = 0;
-          if(this.checkCurDB())
-            conn.send('\x1b[C\x1b[C');
-          else
-            conn.send('\x1b[C');
-        } else {
-          this.mainDisplay.scrollTop += this.chh * 24;
-        }
+        if(this.checkCurDB())
+          conn.send('\x1b[C\x1b[C');
+        else
+          conn.send('\x1b[C');
         break;
       case 40: //Arrow Down
-        if (!(this.useEasyReadingMode && this.buf.startedEasyReading))
-          conn.send('\x1b[B');
-        else if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * 24) {
-          this.prevPageState = 0;
-          conn.send('\x1b[B');
-        } else
-          this.mainDisplay.scrollTop += this.chh;
+        conn.send('\x1b[B');
         break;
       case 45: //Insert
         conn.send('\x1b[2~');
@@ -775,9 +746,10 @@ TermView.prototype = {
     this.mainDisplay.style.lineHeight = this.chh + 'px';
     this.bbsCursor.style.fontSize = this.chh + 'px';
     this.bbsCursor.style.lineHeight = this.chh + 'px';
-    this.mainDisplay.style.overflow = 'hidden';
+    this.mainDisplay.style.overflowX = 'hidden';
+    this.mainDisplay.style.overflowY = 'auto';
     this.mainDisplay.style.textAlign = 'left';
-    this.mainDisplay.style.width = this.chw*this.buf.cols + 'px';
+    this.mainDisplay.style.width = this.chw*this.buf.cols+10 + 'px';
     if (this.verticalAlignCenter && this.chh*this.buf.rows < innerBounds.height)
       this.mainDisplay.style.marginTop = ((innerBounds.height-this.chh*this.buf.rows)/2) + this.bbsViewMargin + 'px';
     else
@@ -807,7 +779,7 @@ TermView.prototype = {
     var origin;
     var w = this.innerBounds.width;
     if(this.horizontalAlignCenter && this.scaleX!=1)
-      origin = [((w - (this.chw*this.buf.cols)*this.scaleX)/2) + this.bbsViewMargin, this.firstGridOffset.top];
+      origin = [((w - (this.chw*this.buf.cols+10)*this.scaleX)/2) + this.bbsViewMargin, this.firstGridOffset.top];
     else
       origin = [this.firstGridOffset.left, this.firstGridOffset.top];
     var realX = origin[0] + (cx) * this.chw * this.scaleX;
@@ -1103,7 +1075,6 @@ TermView.prototype = {
 
   populateEasyReadingPage: function() {
     if (this.buf.pageState == 3 && this.prevPageState == 3) {
-      this.mainDisplay.style.overflowY = 'auto';
       var lastRowText = this.buf.getRowText(23, 0, this.buf.cols);
       var result = lastRowText.parseStatusRow();
       if (result) {
@@ -1123,7 +1094,6 @@ TermView.prototype = {
       this.prevPageState = 3;
     } else {
       this.lastRowIndex = 22;
-      this.mainDisplay.style.overflowY = 'hidden';
       if (this.buf.pageState == 3) {
         this.mainContainer.innerHTML = this.htmlRowStrArray.slice(0, -1).join('');
         // deep clone lines for selection (getRowText and get ansi color)
@@ -1134,6 +1104,84 @@ TermView.prototype = {
         this.mainContainer.innerHTML = this.htmlRowStrArray.join('');
       }
       this.prevPageState = this.buf.pageState;
+    }
+  },
+
+  easyReadingOnKeyDown: function(e) {
+    var conn = this.conn;
+    switch (e.keyCode) {
+      case 8:
+        if (this.checkLeftDB())
+          conn.send('\b\b');
+        else
+          conn.send('\b');
+        break;
+      case 9:
+        conn.send('\t');
+        // don't move input focus to next control
+        e.preventDefault();
+        e.stopPropagation();
+        break;
+      case 13:
+        conn.send('\r');
+        break;
+      case 27: //ESC
+        conn.send('\x1b');
+        break;
+      case 33: //Page Up
+        this.mainDisplay.scrollTop -= this.chh * 24;
+        break;
+      case 34: //Page Down
+        this.mainDisplay.scrollTop += this.chh * 24;
+        break;
+      case 35: //End
+        this.mainDisplay.scrollTop = this.mainContainer.clientHeight;
+        break;
+      case 36: //Home
+        this.mainDisplay.scrollTop = 0;
+        break;
+      case 37: //Arrow Left
+        if(this.checkLeftDB())
+          conn.send('\x1b[D\x1b[D');
+        else
+          conn.send('\x1b[D');
+        break;
+      case 38: //Arrow Up
+        if (this.mainDisplay.scrollTop == 0) {
+          this.prevPageState = 0;
+          conn.send('\x1b[D\x1b[A\x1b[C');
+        } else {
+          this.mainDisplay.scrollTop -= this.chh;
+        }
+        break;
+      case 39: //Arrow Right
+        if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * 24) {
+          this.prevPageState = 0;
+          if(this.checkCurDB())
+            conn.send('\x1b[C\x1b[C');
+          else
+            conn.send('\x1b[C');
+        } else {
+          this.mainDisplay.scrollTop += this.chh * 24;
+        }
+        break;
+      case 40: //Arrow Down
+        if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * 24) {
+          this.prevPageState = 0;
+          conn.send('\x1b[B');
+        } else {
+          this.mainDisplay.scrollTop += this.chh;
+        }
+        break;
+      case 45: //Insert
+        conn.send('\x1b[2~');
+        break;
+      case 46: //DEL
+        if (this.checkCurDB())
+          conn.send('\x1b[3~\x1b[3~');
+        else
+          conn.send('\x1b[3~');
+        break;
     }
   }
 
