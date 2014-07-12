@@ -102,6 +102,13 @@ pttchrome.App = function(onInitializedCallback, from) {
     self.mouse_down(e);
   }, false);
 
+  $(window).mousedown(function(e) {
+    var ret = self.middleMouse_down(e);
+    if (ret == false) {
+      return false;
+    }
+  });
+
   window.addEventListener('mouseup', function(e) {
     self.mouse_up(e);
   }, false);
@@ -1052,18 +1059,26 @@ pttchrome.App.prototype.mouse_click = function(e) {
       }
     }
   } else if (e.button == 1) { //middle button
-    if ($(e.target).is('a') || $(e.target).parent().is('a')) {
-      return;
-    }
-    if (this.view.middleButtonFunction == 1)
-      this.telnetCore.send('\r');
-    else if (this.view.middleButtonFunction == 2) {
-      if (this.buf.pageState == 2 || this.buf.pageState == 3 || this.buf.pageState == 4)
-        this.telnetCore.send('\x1b[D');
-    }
   } else {
   }
 };
+
+pttchrome.App.prototype.middleMouse_down = function(e) {
+  // moved to here because middle click works better with jquery
+  if (e.button == 1) {
+    if ($(e.target).is('a') || $(e.target).parent().is('a')) {
+      return;
+    }
+    if (this.view.middleButtonFunction == 1) {
+      this.telnetCore.send('\r');
+      return false;
+    } else if (this.view.middleButtonFunction == 2) {
+      if (this.buf.pageState == 2 || this.buf.pageState == 3 || this.buf.pageState == 4)
+        this.telnetCore.send('\x1b[D');
+      return false;
+    }
+  }
+}
 
 pttchrome.App.prototype.mouse_down = function(e) {
   if (this.modalShown)

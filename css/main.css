@@ -331,28 +331,26 @@ a:link,a:visited,a:active,a:hover {
   white-space: pre;
 }
 
-#easyReadingLastRow {
+#easyReadingLastRow, #easyReadingReplyRow {
+  position: relative;
   display: none;
   overflow: hidden;
-  margin-top: -1em;
   -webkit-user-select: none;
   z-index: 1;
   height: 1em;
   background-color: transparent;
+}
+
+#easyReadingLastRow {
+  margin-top: -1em;
 }
 
 #easyReadingReplyRow {
-  display: none;
-  overflow: hidden;
   margin-top: -2em;
-  -webkit-user-select: none;
-  z-index: 1;
-  height: 1em;
-  background-color: transparent;
 }
 
 .easyReadingImg {
-  max-height: 14em;
+  max-height: 19em;
   max-width: 39em;
   margin: 0.5em auto;
   display: block;
@@ -381,6 +379,10 @@ img {
   background:white; 
   color:black; 
   padding:5px 5px;
+}
+
+.main img {
+  padding: 0px;
 }
 
 body {

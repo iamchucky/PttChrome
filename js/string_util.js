@@ -199,7 +199,7 @@ String.prototype.parsePushthreadForUserId = function() {
 
 String.prototype.parseYoutubeUrl = function() {
   var str = this;
-  var regex = new RegExp(/https?:\/\/(?:(?:youtu\.be\/)|(?:www.youtube.com\/watch\?v=))(\w+)/g);
+  var regex = new RegExp(/https?:\/\/(?:(?:youtu\.be\/)|(?:www.youtube.com\/watch\?v=))([\w-]+)/g);
   var result = regex.exec(str);
   if (result && result.length == 2) {
     return result[1];

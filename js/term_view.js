@@ -51,7 +51,7 @@ function TermView(rowCount) {
   this.prevPageState = 0;
 
   this.useEasyReadingMode = true;
-  this.easyReadingTurnPageLines = 24;
+  this.easyReadingTurnPageLines = 22;
 
   this.doHighlightOnCurRow = false;
 
