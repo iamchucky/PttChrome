@@ -96,6 +96,15 @@ function TermView(rowCount) {
   mainDiv.innerHTML = '<div id="mainContainer">'+this.htmlRowStrArray.join('')+'</div>';
   this.BBSWin.appendChild(mainDiv);
   this.mainDisplay = mainDiv;
+
+  var lastRowDiv = document.createElement('div');
+  lastRowDiv.setAttribute('id', 'easyReadingLastRow');
+  this.lastRowDivContent = '<span align="left"><span class="q0 b7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="q1 b7">(y)</span><span class="q0 b7">回應</span><span class="q1 b7">(X%)</span><span class="q0 b7">推文</span><span class="q1 b7">(←)</span><span class="q0 b7">離開&nbsp;</span>&nbsp;</span>';
+  lastRowDiv.innerHTML = this.lastRowDivContent;
+  this.lastRowDiv = lastRowDiv;
+  this.BBSWin.appendChild(lastRowDiv);
+
+
   this.mainContainer = document.getElementById('mainContainer');
   this.mainDisplay.style.border = '0px';
   this.setFontFace('MingLiu,monospace');
@@ -209,6 +218,7 @@ TermView.prototype = {
   setFontFace: function(fontFace) {
     this.fontFace = fontFace;
     this.mainDisplay.style.fontFamily = this.fontFace;
+    this.lastRowDiv.style.fontFamily = this.fontFace;
     document.getElementById('cursor').style.fontFamily = this.fontFace;
   },
 
@@ -759,6 +769,9 @@ TermView.prototype = {
     this.mainDisplay.style.overflowY = 'auto';
     this.mainDisplay.style.textAlign = 'left';
     this.mainDisplay.style.width = this.chw*this.buf.cols+10 + 'px';
+
+    this.lastRowDiv.style.fontSize = this.chh + 'px';
+    this.lastRowDiv.style.width = this.chw*this.buf.cols+10 + 'px';
     if (this.verticalAlignCenter && this.chh*this.buf.rows < innerBounds.height)
       this.mainDisplay.style.marginTop = ((innerBounds.height-this.chh*this.buf.rows)/2) + this.bbsViewMargin + 'px';
     else
@@ -770,16 +783,18 @@ TermView.prototype = {
 
     if (this.scaleX == 1) {
       this.mainDisplay.style.webkitTransform = 'none';
+      this.lastRowDiv.style.webkitTransform = 'none';
     } else {
       //this.mainDisplay.style.transform = 'scaleX('+this.scaleX+')'; // chrome not stable support yet!
-      if (this.useEasyReadingMode && this.buf.startedEasyReading)
-        this.mainDisplay.style.webkitTransform = 'perspective(1px) scaleX('+this.scaleX+')';
-      else 
-        this.mainDisplay.style.webkitTransform = 'scaleX('+this.scaleX+')';
-      if(this.horizontalAlignCenter)
+      this.mainDisplay.style.webkitTransform = 'scaleX('+this.scaleX+')';
+      this.lastRowDiv.style.webkitTransform = 'scaleX('+this.scaleX+')';
+      if(this.horizontalAlignCenter) {
         this.mainDisplay.style.webkitTransformOriginX = 'center';
-      else
+        this.lastRowDiv.style.webkitTransformOriginX = 'center';
+      } else {
         this.mainDisplay.style.webkitTransformOriginX = 'left';
+        this.lastRowDiv.style.webkitTransformOriginX = 'left';
+      }
     }
 
     this.firstGridOffset = this.bbscore.getFirstGridOffsets();
@@ -837,10 +852,13 @@ TermView.prototype = {
     if (this.scaleX == 1) {
       this.bbsCursor.style.webkitTransform = 'none';
     } else {
-      if (this.useEasyReadingMode && this.buf.startedEasyReading)
+      if (this.useEasyReadingMode && this.buf.startedEasyReading) {
         this.mainDisplay.style.webkitTransform = 'perspective(1px) scaleX('+this.scaleX+')';
-      else 
+        this.lastRowDiv.style.webkitTransform = 'perspective(1px) scaleX('+this.scaleX+')';
+      } else {
         this.mainDisplay.style.webkitTransform = 'scaleX('+this.scaleX+')';
+        this.lastRowDiv.style.webkitTransform = 'scaleX('+this.scaleX+')';
+      }
       this.bbsCursor.style.webkitTransformOriginX = 'left';
     }
 
@@ -1089,7 +1107,6 @@ TermView.prototype = {
   },
 
   populateEasyReadingPage: function() {
-    var statusRowHtmlStr = '<div id="easyReadingLastRow"><div style="margin-left:27.5em;"><span class="q1">(y)</span><span class="q0">回應</span><span class="q1">(X%)</span><span class="q0">推文</span><span class="q1">(←)</span><span class="q0">離開&nbsp;</span>&nbsp;</div></div>';
     if (this.buf.pageState == 3 && this.prevPageState == 3) {
       this.mainContainer.style.paddingBottom = '1em';
       var lastRowText = this.buf.getRowText(23, 0, this.buf.cols);
@@ -1114,14 +1131,14 @@ TermView.prototype = {
       this.mainContainer.style.paddingBottom = '';
       this.lastRowIndex = 22;
       if (this.buf.pageState == 3) {
-        this.mainContainer.innerHTML = statusRowHtmlStr+'<div id="easyReadingReplyText"></div>' + this.htmlRowStrArray.slice(0, -1).join('');
-        var lastRowNode = document.getElementById('easyReadingLastRow');
-        var marginTop = this.mainDisplay.style.marginTop;
-        lastRowNode.style.bottom = marginTop;
+        this.mainContainer.innerHTML = '<div id="easyReadingReplyText"></div>' + this.htmlRowStrArray.slice(0, -1).join('');
+        this.lastRowDiv.innerHTML = this.lastRowDivContent;
+        this.lastRowDiv.style.display = 'block';
         this.embedPicAndVideo();
         // deep clone lines for selection (getRowText and get ansi color)
         this.buf.pageLines = this.buf.pageLines.concat(JSON.parse(JSON.stringify(this.buf.lines.slice(0, -1))));
       } else {
+        this.lastRowDiv.style.display = 'none';
         // clear the deep cloned copy of lines
         this.buf.pageLines = [];
         this.mainContainer.innerHTML = this.htmlRowStrArray.join('');
@@ -1391,9 +1408,8 @@ TermView.prototype = {
   },
 
   updateEasyReadingPushInitTextWithHtmlStr: function(htmlStr) {
-    var pushNode = document.getElementById('easyReadingLastRow');
-    pushNode.style.backgroundColor = 'black';
-    pushNode.innerHTML = htmlStr;
+    var pushNode = this.lastRowDiv.childNodes[0];
+    pushNode.innerHTML = '<span style="background-color:black;">'+htmlStr+'</span>';
   }
 
 }

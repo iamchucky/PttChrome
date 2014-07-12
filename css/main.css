@@ -291,7 +291,7 @@
   z-index:1;
 }
 
-.main {
+.main, #easyReadingLastRow {
   font-family: MingLiu, monospace;
   font-size: 26px;
   line-height: 100%;
@@ -322,21 +322,22 @@ a:link,a:visited,a:active,a:hover {
   text-decoration:none;
 }
 
-.main > span, #mainContainer > span {
+.main > span, #mainContainer > span, #easyReadingLastRow > span {
   display:block;
   color:#C0C0C0;
   white-space: pre;
 }
 
 #easyReadingLastRow {
-  position: absolute;
-  bottom: 1em;
+  display: none;
+  overflow: hidden;
+  margin-top: -1em;
   -webkit-user-select: none;
   z-index: 1;
-  white-space: pre;
-  background-color: #c0c0c0;
-  width: 39.5em;
+  height: 1em;
+  background-color: transparent;
 }
+
 #easyReadingReplyText {
   display: none;
   position: absolute;
