@@ -1094,8 +1094,7 @@ pttchrome.App.prototype.middleMouse_down = function(e) {
       this.telnetCore.send('\r');
       return false;
     } else if (this.view.middleButtonFunction == 2) {
-      if (this.buf.pageState == 2 || this.buf.pageState == 3 || this.buf.pageState == 4)
-        this.telnetCore.send('\x1b[D');
+      this.telnetCore.send('\x1b[D');
       return false;
     }
   }
