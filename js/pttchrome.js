@@ -179,6 +179,7 @@ pttchrome.App = function(onInitializedCallback, from) {
   this.appConn = null;
   // load the settings after the app connection is made
   this.setupAppConnection(function() {
+    self.appConn.appPort.postMessage({ action: 'getSymFont' });
     // call getStorage to trigger load setting
     self.pref.getStorage();
   });
@@ -195,7 +196,8 @@ pttchrome.App.prototype.setupAppConnection = function(callback) {
     onReceive: self.telnetCore.onDataAvailable.bind(self.telnetCore),
     onSent: null,
     onPasteDone: self.onPasteDone.bind(self),
-    onStorageDone: self.pref.onStorageDone.bind(self.pref)
+    onStorageDone: self.pref.onStorageDone.bind(self.pref),
+    onSymFont: self.onSymFont.bind(self)
   });
   this.appConn.connect(callback);
 }
@@ -471,6 +473,14 @@ pttchrome.App.prototype.doPaste = function() {
 pttchrome.App.prototype.onPasteDone = function(content) {
   //this.telnetCore.convSend(content);
   this.view.onTextInput(content, true);
+};
+
+pttchrome.App.prototype.onSymFont = function(content) {
+  var css = '@font-face { font-family: "symmingliu"; src: url('+content.data+'); }';
+  var style = document.createElement('style');
+  style.type = 'text/css';
+  style.innerHTML = css;
+  document.getElementsByTagName('head')[0].appendChild(style);
 };
 
 pttchrome.App.prototype.doSelectAll = function() {

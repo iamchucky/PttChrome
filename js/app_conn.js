@@ -17,6 +17,7 @@ lib.AppConnection = function(spec) {
     sent: spec.onSent,               // Called when client sends data to server.
     paste: spec.onPasteDone,
     storage: spec.onStorageDone,
+    font: spec.onSymFont
   };
 
   this.isConnected = false;
@@ -75,6 +76,10 @@ lib.AppConnection.prototype.connect = function(callback) {
           break;
         case "onStorageDone":
           self.callbacks.storage(msg);
+          break;
+        case "onSymFont":
+          self.callbacks.font(msg);
+          break;
         default:
           break;
       }
