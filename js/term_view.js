@@ -764,7 +764,7 @@ TermView.prototype = {
     else
       this.mainDisplay.style.marginTop =  this.bbsViewMargin + 'px';
     if (this.fontFitWindowWidth)
-      this.scaleX = Math.floor(innerBounds.width / (this.chw*this.buf.cols) * 100)/100;
+      this.scaleX = Math.floor(innerBounds.width / (this.chw*this.buf.cols+10) * 100)/100;
     else
       this.scaleX = 1;
 
@@ -772,7 +772,10 @@ TermView.prototype = {
       this.mainDisplay.style.webkitTransform = 'none';
     } else {
       //this.mainDisplay.style.transform = 'scaleX('+this.scaleX+')'; // chrome not stable support yet!
-      this.mainDisplay.style.webkitTransform = 'scaleX('+this.scaleX+')';
+      if (this.useEasyReadingMode && this.buf.startedEasyReading)
+        this.mainDisplay.style.webkitTransform = 'perspective(1px) scaleX('+this.scaleX+')';
+      else 
+        this.mainDisplay.style.webkitTransform = 'scaleX('+this.scaleX+')';
       if(this.horizontalAlignCenter)
         this.mainDisplay.style.webkitTransformOriginX = 'center';
       else
@@ -834,7 +837,10 @@ TermView.prototype = {
     if (this.scaleX == 1) {
       this.bbsCursor.style.webkitTransform = 'none';
     } else {
-      this.bbsCursor.style.webkitTransform = 'scaleX('+this.scaleX+')';
+      if (this.useEasyReadingMode && this.buf.startedEasyReading)
+        this.mainDisplay.style.webkitTransform = 'perspective(1px) scaleX('+this.scaleX+')';
+      else 
+        this.mainDisplay.style.webkitTransform = 'scaleX('+this.scaleX+')';
       this.bbsCursor.style.webkitTransformOriginX = 'left';
     }
 
