@@ -104,6 +104,12 @@ function TermView(rowCount) {
   this.lastRowDiv = lastRowDiv;
   this.BBSWin.appendChild(lastRowDiv);
 
+  var replyRowDiv = document.createElement('div');
+  replyRowDiv.setAttribute('id', 'easyReadingReplyRow');
+  this.replyRowDivContent = '<span align="left"></span>';
+  replyRowDiv.innerHTML = this.replyRowDivContent;
+  this.replyRowDiv = replyRowDiv;
+  this.BBSWin.appendChild(replyRowDiv);
 
   this.mainContainer = document.getElementById('mainContainer');
   this.mainDisplay.style.border = '0px';
@@ -219,6 +225,7 @@ TermView.prototype = {
     this.fontFace = fontFace;
     this.mainDisplay.style.fontFamily = this.fontFace;
     this.lastRowDiv.style.fontFamily = this.fontFace;
+    this.replyRowDiv.style.fontFamily = this.fontFace;
     document.getElementById('cursor').style.fontFamily = this.fontFace;
   },
 
@@ -761,17 +768,22 @@ TermView.prototype = {
     var innerBounds = this.innerBounds;
     this.chw = cw;
     this.chh = ch;
-    this.mainDisplay.style.fontSize = this.chh + 'px';
-    this.mainDisplay.style.lineHeight = this.chh + 'px';
-    this.bbsCursor.style.fontSize = this.chh + 'px';
-    this.bbsCursor.style.lineHeight = this.chh + 'px';
+    var fontSize = this.chh + 'px';
+    var mainWidth = this.chw*this.buf.cols+10 + 'px';
+    this.mainDisplay.style.fontSize = fontSize;
+    this.mainDisplay.style.lineHeight = fontSize;
+    this.bbsCursor.style.fontSize = fontSize;
+    this.bbsCursor.style.lineHeight = fontSize;
     this.mainDisplay.style.overflowX = 'hidden';
     this.mainDisplay.style.overflowY = 'auto';
     this.mainDisplay.style.textAlign = 'left';
-    this.mainDisplay.style.width = this.chw*this.buf.cols+10 + 'px';
+    this.mainDisplay.style.width = mainWidth;
 
-    this.lastRowDiv.style.fontSize = this.chh + 'px';
-    this.lastRowDiv.style.width = this.chw*this.buf.cols+10 + 'px';
+    this.lastRowDiv.style.fontSize = fontSize;
+    this.lastRowDiv.style.width = mainWidth;
+
+    this.replyRowDiv.style.fontSize = fontSize;
+    this.replyRowDiv.style.width = mainWidth;
     if (this.verticalAlignCenter && this.chh*this.buf.rows < innerBounds.height)
       this.mainDisplay.style.marginTop = ((innerBounds.height-this.chh*this.buf.rows)/2) + this.bbsViewMargin + 'px';
     else
@@ -781,21 +793,21 @@ TermView.prototype = {
     else
       this.scaleX = 1;
 
-    if (this.scaleX == 1) {
-      this.mainDisplay.style.webkitTransform = 'none';
-      this.lastRowDiv.style.webkitTransform = 'none';
-    } else {
+    var scaleCss = 'none';
+    if (this.scaleX != 1) {
       //this.mainDisplay.style.transform = 'scaleX('+this.scaleX+')'; // chrome not stable support yet!
-      this.mainDisplay.style.webkitTransform = 'scaleX('+this.scaleX+')';
-      this.lastRowDiv.style.webkitTransform = 'scaleX('+this.scaleX+')';
+      scaleCss = 'scaleX('+this.scaleX+')';
+      var transOrigin = 'left';
       if(this.horizontalAlignCenter) {
-        this.mainDisplay.style.webkitTransformOriginX = 'center';
-        this.lastRowDiv.style.webkitTransformOriginX = 'center';
-      } else {
-        this.mainDisplay.style.webkitTransformOriginX = 'left';
-        this.lastRowDiv.style.webkitTransformOriginX = 'left';
+        transOrigin = 'center';
       }
+      this.mainDisplay.style.webkitTransformOriginX = transOrigin;
+      this.lastRowDiv.style.webkitTransformOriginX = transOrigin;
+      this.replyRowDiv.style.webkitTransformOriginX = transOrigin;
     }
+    this.mainDisplay.style.webkitTransform = scaleCss;
+    this.lastRowDiv.style.webkitTransform = scaleCss;
+    this.replyRowDiv.style.webkitTransform = scaleCss;
 
     this.firstGridOffset = this.bbscore.getFirstGridOffsets();
 
@@ -852,13 +864,13 @@ TermView.prototype = {
     if (this.scaleX == 1) {
       this.bbsCursor.style.webkitTransform = 'none';
     } else {
+      var scaleCss = 'scaleX('+this.scaleX+')';
       if (this.useEasyReadingMode && this.buf.startedEasyReading) {
-        this.mainDisplay.style.webkitTransform = 'perspective(1px) scaleX('+this.scaleX+')';
-        this.lastRowDiv.style.webkitTransform = 'perspective(1px) scaleX('+this.scaleX+')';
-      } else {
-        this.mainDisplay.style.webkitTransform = 'scaleX('+this.scaleX+')';
-        this.lastRowDiv.style.webkitTransform = 'scaleX('+this.scaleX+')';
+        scaleCss = 'perspective(1px) '+scaleCss;
       }
+      this.mainDisplay.style.webkitTransform = scaleCss;
+      this.lastRowDiv.style.webkitTransform = scaleCss;
+      this.replyRowDiv.style.webkitTransform = scaleCss;
       this.bbsCursor.style.webkitTransformOriginX = 'left';
     }
 
@@ -1131,14 +1143,15 @@ TermView.prototype = {
       this.mainContainer.style.paddingBottom = '';
       this.lastRowIndex = 22;
       if (this.buf.pageState == 3) {
-        this.mainContainer.innerHTML = '<div id="easyReadingReplyText"></div>' + this.htmlRowStrArray.slice(0, -1).join('');
+        this.mainContainer.innerHTML = this.htmlRowStrArray.slice(0, -1).join('');
         this.lastRowDiv.innerHTML = this.lastRowDivContent;
         this.lastRowDiv.style.display = 'block';
         this.embedPicAndVideo();
         // deep clone lines for selection (getRowText and get ansi color)
         this.buf.pageLines = this.buf.pageLines.concat(JSON.parse(JSON.stringify(this.buf.lines.slice(0, -1))));
       } else {
-        this.lastRowDiv.style.display = 'none';
+        this.lastRowDiv.style.display = '';
+        this.replyRowDiv.style.display = '';
         // clear the deep cloned copy of lines
         this.buf.pageLines = [];
         this.mainContainer.innerHTML = this.htmlRowStrArray.join('');
@@ -1400,11 +1413,9 @@ TermView.prototype = {
   },
 
   updateEasyReadingReplyTextWithHtmlStr: function(htmlStr) {
-    var replyNode = document.getElementById('easyReadingReplyText');
-    var marginTop = this.mainDisplay.style.marginTop;
-    var botOffset = parseInt(marginTop) + this.chh;
-    replyNode.innerHTML = htmlStr;
-    replyNode.style.cssText += 'display:block; bottom:'+botOffset+'px;';
+    var replyNode = this.replyRowDiv.childNodes[0];
+    replyNode.innerHTML = '<span style="background-color:black;">'+htmlStr+'</span>';
+    this.replyRowDiv.style.display = 'block';
   },
 
   updateEasyReadingPushInitTextWithHtmlStr: function(htmlStr) {

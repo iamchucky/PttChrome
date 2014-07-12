@@ -291,7 +291,7 @@
   z-index:1;
 }
 
-.main, #easyReadingLastRow {
+.main, #easyReadingLastRow, #easyReadingReplyRow {
   font-family: MingLiu, monospace;
   font-size: 26px;
   line-height: 100%;
@@ -322,7 +322,10 @@ a:link,a:visited,a:active,a:hover {
   text-decoration:none;
 }
 
-.main > span, #mainContainer > span, #easyReadingLastRow > span {
+.main > span, 
+#mainContainer > span, 
+#easyReadingLastRow > span,
+#easyReadingReplyRow > span {
   display:block;
   color:#C0C0C0;
   white-space: pre;
@@ -338,15 +341,14 @@ a:link,a:visited,a:active,a:hover {
   background-color: transparent;
 }
 
-#easyReadingReplyText {
+#easyReadingReplyRow {
   display: none;
-  position: absolute;
-  bottom: 1em;
+  overflow: hidden;
+  margin-top: -2em;
   -webkit-user-select: none;
   z-index: 1;
-  color: #c0c0c0;
-  white-space: pre;
-  background-color: black;
+  height: 1em;
+  background-color: transparent;
 }
 
 .easyReadingImg {
