@@ -90,6 +90,9 @@
   "options_enableNotifications": {
     "message": "啟用水球通知"
   },
+  "options_enableEasyReading": {
+    "message": "啟用文章好讀模式, 須重新整理 (測試階段)"
+  },
   "options_preferences": {
     "message": "設定"
   },
@@ -125,6 +128,9 @@
   },
   "options_highlightColor": {
     "message": "底色"
+  },
+  "options_mouseLeftFunction": {
+    "message": "滑鼠左鍵送出 ENTER"
   },
   "options_mouseMiddleFunction": {
     "message": "滑鼠中鍵"
@@ -182,10 +188,10 @@
     "message": "現在要重新連線還是離開?"
   },
   "alert_connectionReconnect": {
-    "message": "重新連線"
+    "message": "重新連線 (ENTER)"
   },
   "alert_connectionExitAll": {
-    "message": "離開"
+    "message": "離開 (ESC)"
   },
 
   // notifications

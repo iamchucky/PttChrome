@@ -201,6 +201,8 @@ pttchrome.App.prototype.setupAppConnection = function(callback) {
 }
 
 pttchrome.App.prototype.connect = function(url) {
+  this.view.useEasyReadingMode = this.pref.get('enableEasyReading');
+
   var self = this;
   var port = 23;
   var splits = url.split(/:/g);
@@ -812,6 +814,18 @@ pttchrome.App.prototype.overlayCommandListener = function (e) {
             this.telnetCore.send(']');
           }
           break;
+        case "doEnter":
+          if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
+            if (this.view.mainDisplay.scrollTop >= this.view.mainContainer.clientHeight - this.view.chh * this.view.easyReadingTurnPageLines) {
+              this.view.prevPageState = 0;
+              this.telnetCore.send('\r');
+            } else {
+              this.view.mainDisplay.scrollTop += this.view.chh;
+            }
+          } else {
+            this.telnetCore.send('\r');
+          }
+          break;
         case "reloadTabIconDelay":
           this.doReloadTabIcon(100);
           break;
@@ -950,6 +964,9 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
       this.view.redraw(true);
       this.view.updateCursorPos();
       break;
+    case 'mouseLeftFunction':
+      this.view.leftButtonFunction = pref.get(name);
+      break;
     case 'mouseMiddleFunction':
       this.view.middleButtonFunction = pref.get(name);
       break;
@@ -1056,6 +1073,10 @@ pttchrome.App.prototype.mouse_click = function(e) {
           e.preventDefault();
           this.setInputAreaFocus();
         }
+      } else if (this.view.leftButtonFunction) {
+        this.setBBSCmd('doEnter', this.CmdHandler);
+        e.preventDefault();
+        this.setInputAreaFocus();
       }
     }
   } else if (e.button == 1) { //middle button

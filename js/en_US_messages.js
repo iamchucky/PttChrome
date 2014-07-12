@@ -90,6 +90,9 @@ locale.en_US = {
   "options_enableNotifications": {
     "message": "Enable notifications when a message is received."
   },
+  "options_enableEasyReading": {
+    "message": "Enable easy reading article view, restart needed. (Experimental)"
+  },
   "options_preferences": {
     "message": "Preferences"
   },
@@ -128,6 +131,9 @@ locale.en_US = {
   },
   "options_highlightColor": {
     "message": "Color"
+  },
+  "options_mouseLeftFunction": {
+    "message": "Mouse left click send ENTER"
   },
   "options_mouseMiddleFunction": {
     "message": "Mouse middle button"
@@ -185,10 +191,10 @@ locale.en_US = {
     "message": "Would you like to reconnect to the site or quit the app?"
   },
   "alert_connectionReconnect": {
-    "message": "Reconnect"
+    "message": "Reconnect (ENTER)"
   },
   "alert_connectionExitAll": {
-    "message": "Quit"
+    "message": "Quit (ESC)"
   },
 
   // notifications

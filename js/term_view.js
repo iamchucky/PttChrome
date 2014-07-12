@@ -19,6 +19,7 @@ function TermView(rowCount) {
   this.ctrlPicturePreview = false;
   this.picturePreviewInfo = false;
   this.middleButtonFunction = 0;
+  this.leftButtonFunction = false;
   this.mouseWheelFunction1 = 1;
   this.mouseWheelFunction2 = 2;
   this.mouseWheelFunction3 = 3;
@@ -146,7 +147,8 @@ function TermView(rowCount) {
       return; // Shift Ctrl Alt (19)
     if (self.bbscore.modalShown)
       return;
-    if (document.getElementById('connectionAlert').style.display != 'none' && e.keyCode == 13) {
+    if (document.getElementById('connectionAlert').style.display != 'none' && 
+      (e.keyCode == 13 || e.keyCode == 27)) {
       return;
     }
     self.onkeyDown(e);
@@ -157,8 +159,11 @@ function TermView(rowCount) {
       return; // Shift Ctrl Alt (19)
     if (self.bbscore.modalShown)
       return;
-    if (document.getElementById('connectionAlert').style.display != 'none' && e.keyCode == 13) {
-      document.getElementById('connectionAlertReconnect').click();
+    if (document.getElementById('connectionAlert').style.display != 'none') {
+      if (e.keyCode == 13)
+        document.getElementById('connectionAlertReconnect').click();
+      if (e.keyCode == 27)
+        document.getElementById('connectionAlertExitAll').click();
       return;
     }
     // set input area focus whenever key down even if there is selection

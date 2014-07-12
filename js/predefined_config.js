@@ -8,6 +8,7 @@ var DEFAULT_PREFS = {
   openInPackagedApp   : false,
   enablePicPreview    : true,
   enableNotifications : true,
+  enableEasyReading   : false,
   antiIdleTime        : 0,
   lineWrap            : 78,
 
@@ -15,6 +16,7 @@ var DEFAULT_PREFS = {
   useMouseBrowsing            : false,
   mouseBrowsingHighlight      : true,
   mouseBrowsingHighlightColor : 2,
+  mouseLeftFunction           : false,
   mouseMiddleFunction         : 0,
   mouseWheelFunction1         : 1,
   mouseWheelFunction2         : 2,
