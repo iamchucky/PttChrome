@@ -344,6 +344,11 @@ a:link,a:visited,a:active,a:hover {
   margin-top: -2em;
 }
 
+#fbSharing {
+  position: absolute;
+  margin-left: 10px;
+}
+
 .easyReadingImg {
   max-height: 19em;
   max-width: 39em;

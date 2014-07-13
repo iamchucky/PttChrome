@@ -111,6 +111,13 @@ function TermView(rowCount) {
   replyRowDiv.innerHTML = this.replyRowDivContent;
   this.replyRowDiv = replyRowDiv;
   this.BBSWin.appendChild(replyRowDiv);
+  
+  var fbSharingDiv = document.createElement('div');
+  fbSharingDiv.setAttribute('id', 'fbSharing');
+  fbSharingDiv.setAttribute('align', 'left');
+  fbSharingDiv.innerHTML = '<div class="fb-like" data-href="" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>';
+  this.fbSharingDiv = fbSharingDiv;
+  this.curPttWebUrl = '';
 
   this.mainContainer = document.getElementById('mainContainer');
   this.mainDisplay.style.border = '0px';
@@ -1139,6 +1146,7 @@ TermView.prototype = {
         var beginIndex = this.lastRowIndex + 1 - result.rowIndexStart;
         this.mainContainer.innerHTML += this.htmlRowStrArray.slice(beginIndex, -1).join('');
         this.lastRowIndex = result.rowIndexEnd;
+        this.findPttWebUrlAndInitFbSharing();
         this.embedPicAndVideo();
         // deep clone lines for selection (getRowText and get ansi color)
         this.buf.pageLines = this.buf.pageLines.concat(JSON.parse(JSON.stringify(this.buf.lines.slice(beginIndex, -1))));
@@ -1150,7 +1158,10 @@ TermView.prototype = {
       if (this.buf.pageState == 3) {
         this.mainContainer.innerHTML = this.htmlRowStrArray.slice(0, -1).join('');
         this.lastRowDiv.innerHTML = this.lastRowDivContent;
+        this.lastRowDiv.childNodes[0].appendChild(this.fbSharingDiv);
+        this.curPttWebUrl = '';
         this.lastRowDiv.style.display = 'block';
+        this.findPttWebUrlAndInitFbSharing();
         this.embedPicAndVideo();
         // deep clone lines for selection (getRowText and get ansi color)
         this.buf.pageLines = this.buf.pageLines.concat(JSON.parse(JSON.stringify(this.buf.lines.slice(0, -1))));
@@ -1162,6 +1173,26 @@ TermView.prototype = {
         this.mainContainer.innerHTML = this.htmlRowStrArray.join('');
       }
       this.prevPageState = this.buf.pageState;
+    }
+  },
+
+  updateFbSharing: function(pttUrl) {
+    var self = this;
+    var marginTop = -((this.chh - 20) / 2 + this.chh) + 'px';
+    this.fbSharingDiv.childNodes[0].setAttribute('data-href', pttUrl);
+    FB.XFBML.parse(document.getElementById('fbSharing'), function() {
+      self.fbSharingDiv.style.marginTop = marginTop;
+    });
+  },
+
+  findPttWebUrlAndInitFbSharing: function() {
+    if (this.curPttWebUrl)
+      return;
+
+    var aNode = document.querySelector(".main a[href^='http://www\.ptt\.cc/bbs/']");
+    if (aNode) {
+      var href = aNode.getAttribute('href');
+      this.updateFbSharing(href);
     }
   },
 

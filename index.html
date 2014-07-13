@@ -34,6 +34,15 @@
   </head>
 
   <body>
+  <div id="fb-root"></div>
+  <script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+  </script>
     <div id="sideMenus" class="menu" style="display:none">
       <!--<a href="//iamchucky.github.io/PttChrome/" target="_self"><div id="logo"></div></a>-->
       <div id="menu_goToOtherSite" class="font_btn"><i class="fa fa-globe fa-2x"></i><br/><span></span></div>
