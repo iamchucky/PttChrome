@@ -1260,7 +1260,7 @@ TermView.prototype = {
           conn.send('\x1b');
           break;
         case 32: //Spacebar
-          if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * this.easyReadingTurnPageLines) {
+          if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * this.buf.rows) {
             this.prevPageState = 0;
           } else {
             this.mainDisplay.scrollTop += this.chh * this.easyReadingTurnPageLines;
@@ -1295,7 +1295,7 @@ TermView.prototype = {
           }
           break;
         case 39: //Arrow Right
-          if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * this.easyReadingTurnPageLines) {
+          if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * this.buf.rows) {
             this.prevPageState = 0;
             if(this.checkCurDB())
               conn.send('\x1b[C\x1b[C');
@@ -1307,7 +1307,7 @@ TermView.prototype = {
           break;
         case 13: //Enter
         case 40: //Arrow Down
-          if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * this.easyReadingTurnPageLines) {
+          if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * this.buf.rows) {
             this.prevPageState = 0;
             conn.send('\x1b[B');
           } else {
@@ -1324,7 +1324,7 @@ TermView.prototype = {
             conn.send('\x1b[3~');
           break;
         case 84: // t
-          if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * this.easyReadingTurnPageLines) {
+          if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * this.buf.rows) {
             this.prevPageState = 0;
           } else {
             this.mainDisplay.scrollTop += this.chh * this.easyReadingTurnPageLines;

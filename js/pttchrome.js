@@ -784,7 +784,7 @@ pttchrome.App.prototype.overlayCommandListener = function (e) {
           break;
         case "doArrowDown":
           if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
-            if (this.view.mainDisplay.scrollTop >= this.view.mainContainer.clientHeight - this.view.chh * this.view.easyReadingTurnPageLines) {
+            if (this.view.mainDisplay.scrollTop >= this.view.mainContainer.clientHeight - this.view.chh * this.buf.rows) {
               this.view.prevPageState = 0;
               this.telnetCore.send('\x1b[B');
             } else {
@@ -826,7 +826,7 @@ pttchrome.App.prototype.overlayCommandListener = function (e) {
           break;
         case "doEnter":
           if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
-            if (this.view.mainDisplay.scrollTop >= this.view.mainContainer.clientHeight - this.view.chh * this.view.easyReadingTurnPageLines) {
+            if (this.view.mainDisplay.scrollTop >= this.view.mainContainer.clientHeight - this.view.chh * this.buf.rows) {
               this.view.prevPageState = 0;
               this.telnetCore.send('\r');
             } else {
