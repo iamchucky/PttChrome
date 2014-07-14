@@ -346,7 +346,12 @@ a:link,a:visited,a:active,a:hover {
 
 #fbSharing {
   position: absolute;
-  margin-left: 10px;
+  display: none;
+  z-index: 2;
+}
+
+#fbSharing .fb_iframe_widget span iframe {
+  bottom: 0!important;
 }
 
 .easyReadingImg {

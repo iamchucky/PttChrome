@@ -98,6 +98,15 @@ function TermView(rowCount) {
   this.BBSWin.appendChild(mainDiv);
   this.mainDisplay = mainDiv;
 
+  var fbSharingDiv = document.createElement('div');
+  fbSharingDiv.setAttribute('id', 'fbSharing');
+  fbSharingDiv.setAttribute('align', 'left');
+  fbSharingDiv.innerHTML = '<div class="fb-like" data-href="" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>';
+  this.fbSharingDiv = fbSharingDiv;
+  this.BBSWin.appendChild(fbSharingDiv);
+  this.hideFbSharing = false;
+  this.curPttWebUrl = '';
+
   var lastRowDiv = document.createElement('div');
   lastRowDiv.setAttribute('id', 'easyReadingLastRow');
   this.lastRowDivContent = '<span align="left"><span class="q0 b7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="q1 b7">(y)</span><span class="q0 b7">回應</span><span class="q1 b7">(X%)</span><span class="q0 b7">推文</span><span class="q1 b7">(←)</span><span class="q0 b7">離開&nbsp;</span>&nbsp;</span>';
@@ -111,13 +120,6 @@ function TermView(rowCount) {
   replyRowDiv.innerHTML = this.replyRowDivContent;
   this.replyRowDiv = replyRowDiv;
   this.BBSWin.appendChild(replyRowDiv);
-  
-  var fbSharingDiv = document.createElement('div');
-  fbSharingDiv.setAttribute('id', 'fbSharing');
-  fbSharingDiv.setAttribute('align', 'left');
-  fbSharingDiv.innerHTML = '<div class="fb-like" data-href="" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>';
-  this.fbSharingDiv = fbSharingDiv;
-  this.curPttWebUrl = '';
 
   this.mainContainer = document.getElementById('mainContainer');
   this.mainDisplay.style.border = '0px';
@@ -1158,7 +1160,6 @@ TermView.prototype = {
       if (this.buf.pageState == 3) {
         this.mainContainer.innerHTML = this.htmlRowStrArray.slice(0, -1).join('');
         this.lastRowDiv.innerHTML = this.lastRowDivContent;
-        this.lastRowDiv.childNodes[0].appendChild(this.fbSharingDiv);
         this.curPttWebUrl = '';
         this.lastRowDiv.style.display = 'block';
         this.findPttWebUrlAndInitFbSharing();
@@ -1168,6 +1169,8 @@ TermView.prototype = {
       } else {
         this.lastRowDiv.style.display = '';
         this.replyRowDiv.style.display = '';
+        this.fbSharingDiv.style.display = '';
+        this.hideFbSharing = false;
         // clear the deep cloned copy of lines
         this.buf.pageLines = [];
         this.mainContainer.innerHTML = this.htmlRowStrArray.join('');
@@ -1177,15 +1180,26 @@ TermView.prototype = {
   },
 
   updateFbSharing: function(pttUrl) {
+    if (this.hideFbSharing) 
+      return;
     var self = this;
-    var marginTop = -((this.chh - 20) / 2 + this.chh) + 'px';
+    var firstGridOffset = this.firstGridOffset;
+    var bottomOffset = firstGridOffset.top + (this.chh - 20) /2 + 'px';
+    var marginLeft = this.firstGridOffset.left + 10 + 'px';
     this.fbSharingDiv.childNodes[0].setAttribute('data-href', pttUrl);
     FB.XFBML.parse(document.getElementById('fbSharing'), function() {
-      self.fbSharingDiv.style.marginTop = marginTop;
+      if (self.hideFbSharing) {
+        return;
+      }
+      self.fbSharingDiv.style.bottom = bottomOffset;
+      self.fbSharingDiv.style.marginLeft = marginLeft;
+      self.fbSharingDiv.style.display = 'block';
     });
   },
 
   findPttWebUrlAndInitFbSharing: function() {
+    if (this.hideFbSharing)
+      return;
     if (this.curPttWebUrl)
       return;
 
@@ -1455,6 +1469,8 @@ TermView.prototype = {
   },
 
   updateEasyReadingPushInitTextWithHtmlStr: function(htmlStr) {
+    this.hideFbSharing = true;
+    this.fbSharingDiv.style.display = '';
     var pushNode = this.lastRowDiv.childNodes[0];
     pushNode.innerHTML = '<span style="background-color:black;">'+htmlStr+'</span>';
   }
