@@ -49,7 +49,6 @@ function TermView(rowCount) {
   this.curBg = 0;
   this.curBlink = false;
   this.openSpan = false;
-  this.prevPageState = 0;
 
   this.useEasyReadingMode = true;
   this.easyReadingTurnPageLines = 22;
@@ -1134,7 +1133,7 @@ TermView.prototype = {
   },
 
   populateEasyReadingPage: function() {
-    if (this.buf.pageState == 3 && this.prevPageState == 3) {
+    if (this.buf.pageState == 3 && this.buf.prevPageState == 3) {
       this.mainContainer.style.paddingBottom = '1em';
       var lastRowText = this.buf.getRowText(23, 0, this.buf.cols);
       var result = lastRowText.parseStatusRow();
@@ -1154,7 +1153,7 @@ TermView.prototype = {
         // deep clone lines for selection (getRowText and get ansi color)
         this.buf.pageLines = this.buf.pageLines.concat(JSON.parse(JSON.stringify(this.buf.lines.slice(beginIndex, -1))));
       }
-      this.prevPageState = 3;
+      this.buf.prevPageState = 3;
     } else {
       this.mainContainer.style.paddingBottom = '';
       this.lastRowIndex = 22;
@@ -1176,7 +1175,7 @@ TermView.prototype = {
         this.buf.pageLines = [];
         this.mainContainer.innerHTML = this.htmlRowStrArray.join('');
       }
-      this.prevPageState = this.buf.pageState;
+      this.buf.prevPageState = this.buf.pageState;
     }
   },
 
@@ -1272,7 +1271,7 @@ TermView.prototype = {
       switch (e.keyCode) {
         case 8: // backspace
           if (this.mainDisplay.scrollTop == 0) {
-            this.prevPageState = 0;
+            this.buf.cancelPageDownAndResetPrevPageState();
             conn.send('\x1b[D\x1b[A\x1b[C');
           } else {
             this.mainDisplay.scrollTop -= this.chh * this.easyReadingTurnPageLines;
@@ -1283,7 +1282,7 @@ TermView.prototype = {
           break;
         case 32: //Spacebar
           if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * this.buf.rows) {
-            this.prevPageState = 0;
+            this.buf.cancelPageDownAndResetPrevPageState();
           } else {
             this.mainDisplay.scrollTop += this.chh * this.easyReadingTurnPageLines;
             e.preventDefault();
@@ -1303,6 +1302,7 @@ TermView.prototype = {
           this.mainDisplay.scrollTop = 0;
           break;
         case 37: //Arrow Left
+          this.buf.sendCommandAfterUpdate = 'skipOne';
           if(this.checkLeftDB())
             conn.send('\x1b[D\x1b[D');
           else
@@ -1310,7 +1310,7 @@ TermView.prototype = {
           break;
         case 38: //Arrow Up
           if (this.mainDisplay.scrollTop == 0) {
-            this.prevPageState = 0;
+            this.buf.cancelPageDownAndResetPrevPageState();
             conn.send('\x1b[D\x1b[A\x1b[C');
           } else {
             this.mainDisplay.scrollTop -= this.chh;
@@ -1318,7 +1318,7 @@ TermView.prototype = {
           break;
         case 39: //Arrow Right
           if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * this.buf.rows) {
-            this.prevPageState = 0;
+            this.buf.cancelPageDownAndResetPrevPageState();
             if(this.checkCurDB())
               conn.send('\x1b[C\x1b[C');
             else
@@ -1330,7 +1330,7 @@ TermView.prototype = {
         case 13: //Enter
         case 40: //Arrow Down
           if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * this.buf.rows) {
-            this.prevPageState = 0;
+            this.buf.cancelPageDownAndResetPrevPageState();
             conn.send('\x1b[B');
           } else {
             this.mainDisplay.scrollTop += this.chh;
@@ -1347,7 +1347,7 @@ TermView.prototype = {
           break;
         case 84: // t
           if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * this.buf.rows) {
-            this.prevPageState = 0;
+            this.buf.cancelPageDownAndResetPrevPageState();
           } else {
             this.mainDisplay.scrollTop += this.chh * this.easyReadingTurnPageLines;
             e.preventDefault();
@@ -1362,7 +1362,7 @@ TermView.prototype = {
         case 189: // -
         case 219: // [
         case 221: // ]
-          this.prevPageState = 0;
+          this.buf.cancelPageDownAndResetPrevPageState();
           break;
         case 48: // 0
         case 71: // g
@@ -1412,7 +1412,7 @@ TermView.prototype = {
         this.mainDisplay.scrollTop -= this.chh * this.easyReadingTurnPageLines;
       } else if ( e.keyCode == 72 || e.keyCode == 104 ) { // ^H
         if (this.mainDisplay.scrollTop == 0) {
-          this.prevPageState = 0;
+          this.buf.cancelPageDownAndResetPrevPageState();
           conn.send('\x1b[D\x1b[A\x1b[C');
         } else {
           this.mainDisplay.scrollTop -= this.chh * this.easyReadingTurnPageLines;
@@ -1426,7 +1426,7 @@ TermView.prototype = {
         case 65: // A
         case 66: // B
         case 70: // F
-          this.prevPageState = 0;
+          this.buf.cancelPageDownAndResetPrevPageState();
           break;
         case 52: // $
         case 71: // G
@@ -1435,7 +1435,7 @@ TermView.prototype = {
           e.stopPropagation();
           break;
         case 187: // +
-          this.prevPageState = 0;
+          this.buf.cancelPageDownAndResetPrevPageState();
           break;
         // block
         case 72: // H

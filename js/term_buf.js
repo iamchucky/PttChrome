@@ -191,6 +191,10 @@ function TermBuf(cols, rows) {
   this.startedEasyReading = false;
   this.easyReadingShowReplyText = false;
   this.easyReadingShowPushInitText = false;
+  this.easyReadingReachedPageEnd = false;
+  this.sendCommandAfterUpdate = '';
+  this.ignoreOneUpdate = false;
+  this.prevPageState = 0;
 
   this.lines = new Array(rows);
   this.linesX = new Array(0);
@@ -728,6 +732,7 @@ TermBuf.prototype = {
 
     if (this.changed) { // content changed
       this.updateCharAttr();
+
       this.setPageState();
       if (this.useMouseBrowsing) {
         this.resetMousePos();
@@ -759,9 +764,6 @@ TermBuf.prototype = {
         */
       }
 
-      var sendPageDownAfterUpdate = false;
-      var sendHomeAfterUpdate = false;
-
       if (this.view.useEasyReadingMode) {
         // dealing with page state jump to 0 because last row wasn't updated fully 
         if (this.pageState == 3) {
@@ -773,14 +775,22 @@ TermBuf.prototype = {
         }
         if (this.startedEasyReading) {
           if (this.cur_y == 23 && this.cur_x == 79) {
+            if (this.ignoreOneUpdate) {
+              this.ignoreOneUpdate = false;
+              return;
+            }
             var lastRowText = this.getRowText(23, 0, this.cols);
             var result = lastRowText.parseStatusRow();
             if (result) {
               var lastRowFirstCh = this.lines[23][0];
               if (lastRowFirstCh.getBg() == 4 && lastRowFirstCh.getFg() == 7) {
+                this.easyReadingReachedPageEnd = true;
               } else {
-                // send page down
-                sendPageDownAfterUpdate = true;
+                this.easyReadingReachedPageEnd = false;
+                if (!this.sendCommandAfterUpdate) {
+                  // send page down
+                  this.sendCommandAfterUpdate = '\x1b[6~';
+                }
               }
             } else {
               this.pageState = 5;
@@ -818,10 +828,11 @@ TermBuf.prototype = {
       }
       this.changed = false;
 
-      if (sendPageDownAfterUpdate) {
-        this.view.conn.send('\x1b[6~');
-      } else if (sendHomeAfterUpdate) {
-        this.view.conn.send('\x1b[1~');
+      if (this.sendCommandAfterUpdate) {
+        if (this.sendCommandAfterUpdate != 'skipOne') {
+          this.view.conn.send(this.sendCommandAfterUpdate);
+        }
+        this.sendCommandAfterUpdate = '';
       }
       //if (this.view.conn.autoLoginStage > 0)
       //  this.view.conn.checkAutoLogin();
@@ -1403,5 +1414,12 @@ TermBuf.prototype = {
       conn.send('#'+aid+'\r\r');
     }
   },
+
+  cancelPageDownAndResetPrevPageState: function() {
+    if (!this.easyReadingReachedPageEnd) {
+      this.ignoreOneUpdate = true;
+    }
+    this.prevPageState = 0;
+  }
 
 }
