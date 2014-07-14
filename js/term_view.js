@@ -826,6 +826,7 @@ TermView.prototype = {
     this.firstGridOffset = this.bbscore.getFirstGridOffsets();
 
     this.updateCursorPos();
+    this.updateFbSharingPos();
   },
 
   convertMN2XYEx: function(cx, cy) {
@@ -1183,18 +1184,25 @@ TermView.prototype = {
     if (this.hideFbSharing) 
       return;
     var self = this;
-    var firstGridOffset = this.firstGridOffset;
-    var bottomOffset = firstGridOffset.top + (this.chh - 20) /2 + 'px';
-    var marginLeft = this.firstGridOffset.left + 10 + 'px';
     this.fbSharingDiv.childNodes[0].setAttribute('data-href', pttUrl);
     FB.XFBML.parse(document.getElementById('fbSharing'), function() {
       if (self.hideFbSharing) {
         return;
       }
-      self.fbSharingDiv.style.bottom = bottomOffset;
-      self.fbSharingDiv.style.marginLeft = marginLeft;
+      self.updateFbSharingPos();
       self.fbSharingDiv.style.display = 'block';
     });
+  },
+
+  updateFbSharingPos: function() {
+    var firstGridOffset = this.firstGridOffset;
+    var bottomOffset = firstGridOffset.top + (this.chh - 20) /2 -1 + 'px';
+    var marginLeft = this.firstGridOffset.left + 10 + 'px';
+    if (this.scaleX != 1) {
+      marginLeft = this.bbsViewMargin + 10 + 'px';
+    }
+    this.fbSharingDiv.style.bottom = bottomOffset;
+    this.fbSharingDiv.style.marginLeft = marginLeft;
   },
 
   findPttWebUrlAndInitFbSharing: function() {
