@@ -104,7 +104,6 @@ function TermView(rowCount) {
   this.fbSharingDiv = fbSharingDiv;
   this.BBSWin.appendChild(fbSharingDiv);
   this.hideFbSharing = false;
-  this.curPttWebUrl = '';
 
   var lastRowDiv = document.createElement('div');
   lastRowDiv.setAttribute('id', 'easyReadingLastRow');
@@ -1162,7 +1161,6 @@ TermView.prototype = {
       if (this.buf.pageState == 3) {
         this.mainContainer.innerHTML = this.htmlRowStrArray.slice(0, -1).join('');
         this.lastRowDiv.innerHTML = this.lastRowDivContent;
-        this.curPttWebUrl = '';
         this.lastRowDiv.style.display = 'block';
         this.findPttWebUrlAndInitFbSharing();
         this.embedPicAndVideo();
@@ -1209,13 +1207,14 @@ TermView.prototype = {
   findPttWebUrlAndInitFbSharing: function() {
     if (this.hideFbSharing)
       return;
-    if (this.curPttWebUrl)
-      return;
 
-    var aNode = document.querySelector(".main a[href^='http://www\.ptt\.cc/bbs/']");
-    if (aNode) {
-      var href = aNode.getAttribute('href');
-      this.updateFbSharing(href);
+    var aNodes = document.querySelectorAll(".main a[href^='http://www\.ptt\.cc/bbs/']");
+    for (var i = 0; i < aNodes.length; ++i) {
+      var aNode = aNodes[i];
+      if (aNode.previousSibling && aNode.previousSibling.textContent.replace(/\u00a0/g, ' ') == '※ 文章網址: ') {
+        var href = aNode.getAttribute('href');
+        this.updateFbSharing(href);
+      }
     }
   },
 
@@ -1333,7 +1332,7 @@ TermView.prototype = {
         case 40: //Arrow Down
           if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * this.buf.rows) {
             this.buf.cancelPageDownAndResetPrevPageState();
-            conn.send('\x1b[B');
+            conn.send('\x1b[D\x1b[B\x1b[C');
           } else {
             this.mainDisplay.scrollTop += this.chh;
           }
