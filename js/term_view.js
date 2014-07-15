@@ -1162,6 +1162,7 @@ TermView.prototype = {
         this.mainContainer.innerHTML = this.htmlRowStrArray.slice(0, -1).join('');
         this.lastRowDiv.innerHTML = this.lastRowDivContent;
         this.lastRowDiv.style.display = 'block';
+        this.hideFbSharing = false;
         this.findPttWebUrlAndInitFbSharing();
         this.embedPicAndVideo();
         // deep clone lines for selection (getRowText and get ansi color)
@@ -1170,7 +1171,7 @@ TermView.prototype = {
         this.lastRowDiv.style.display = '';
         this.replyRowDiv.style.display = '';
         this.fbSharingDiv.style.display = '';
-        this.hideFbSharing = false;
+        this.hideFbSharing = true;
         // clear the deep cloned copy of lines
         this.buf.pageLines = [];
         this.mainContainer.innerHTML = this.htmlRowStrArray.join('');
