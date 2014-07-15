@@ -174,6 +174,7 @@ pttchrome.App = function(onInitializedCallback, from) {
   this.setupOtherSiteInput();
   this.setupSideMenus();
   this.setupContextMenus();
+  this.contextMenuShown = false;
 
   this.pref = new PttChromePref(this, onInitializedCallback);
   this.appConn = null;
@@ -1428,6 +1429,38 @@ pttchrome.App.prototype.setupContextMenus = function() {
     selectedText = '';
     self.contextMenuShown = false;
   };
+
+  // for menuitem shortkey
+  $(window).keyup(function(e) {
+    if (!self.contextMenuShown)
+      return;
+    if (!e.altKey && !e.ctrlKey && !e.shiftKey) {
+      switch (e.keyCode) {
+        case 67: // C
+          self.doCopy(selectedText);
+          hideContextMenu();
+          break;
+        case 69: // E
+          self.doCopy(contextOnUrl);
+          hideContextMenu();
+          break;
+        case 80: // P
+          self.doPaste();
+          hideContextMenu();
+          break;
+        case 83: // S
+          self.doSearchGoogle(selectedText);
+          hideContextMenu();
+          break;
+        case 84: // T
+          self.doOpenUrlNewTab(aElement);
+          hideContextMenu();
+          break;
+      }
+    }
+    e.preventDefault();
+    e.stopPropagation();
+  });
 
   //make sure menu closes on any click
   $(window).click(function() {

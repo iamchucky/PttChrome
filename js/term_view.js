@@ -153,7 +153,7 @@ function TermView(rowCount) {
   addEventListener('keydown', function(e) {
     if(e.keyCode > 15 && e.keyCode < 19)
       return; // Shift Ctrl Alt (19)
-    if (self.bbscore.modalShown)
+    if (self.bbscore.modalShown || self.bbscore.contextMenuShown)
       return;
     if (document.getElementById('connectionAlert').style.display != 'none' && 
       (e.keyCode == 13 || e.keyCode == 27)) {
@@ -165,7 +165,7 @@ function TermView(rowCount) {
   addEventListener('keyup', function(e) {
     if(e.keyCode > 15 && e.keyCode < 19)
       return; // Shift Ctrl Alt (19)
-    if (self.bbscore.modalShown)
+    if (self.bbscore.modalShown || self.bbscore.contextMenuShown)
       return;
     if (document.getElementById('connectionAlert').style.display != 'none') {
       if (e.keyCode == 13)
@@ -179,6 +179,8 @@ function TermView(rowCount) {
   }, false);
 
   this.input.addEventListener('input', function(e) {
+    if (self.bbscore.modalShown || self.bbscore.contextMenuShown)
+      return;
     if (self.isComposition)
       return;
     if (e.target.value) {
