@@ -902,7 +902,7 @@ TermView.prototype = {
     }
 
     this.bbsCursor.style.left = pos[0] + 'px';
-    this.bbsCursor.style.top = (pos[1] - 1) + 'px';
+    this.bbsCursor.style.top = (pos[1] - this.scaleY) + 'px';
     // if you want to set cursor color by now background, use this.
     this.bbsCursor.style.color = termInvColors[bg];
     this.updateInputBufferPos();
