@@ -631,14 +631,18 @@ pttchrome.App.prototype.getFirstGridOffsets = function() {
 
 pttchrome.App.prototype.clientToPos = function(cX, cY) {
   var x;
+  var y;
   var w = this.view.innerBounds.width;
-  if (this.view.horizontalAlignCenter && this.view.scaleX != 1)
+  var h = this.view.innerBounds.height;
+  if (this.view.horizontalAlignCenter && (this.view.scaleX != 1 || this.view.scaleY != 1)) {
     x = cX - ((w - (this.view.chw * this.buf.cols) * this.view.scaleX) / 2);
-  else
+    y = cY - ((h - (this.view.chh * this.buf.rows) * this.view.scaleY) / 2);
+  } else {
     x = cX - parseFloat(this.view.firstGridOffset.left);
-  var y = cY - parseFloat(this.view.firstGridOffset.top);
+    y = cY - parseFloat(this.view.firstGridOffset.top);
+  }
   var col = Math.floor(x / (this.view.chw * this.view.scaleX));
-  var row = Math.floor(y / this.view.chh);
+  var row = Math.floor(y / (this.view.chh * this.view.scaleY));
 
   if (row < 0)
     row = 0;

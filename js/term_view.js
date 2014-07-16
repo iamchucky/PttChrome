@@ -76,6 +76,7 @@ function TermView(rowCount) {
   this.picLoading = document.getElementById('picLoading');
   this.enablePicPreview = true;
   this.scaleX = 1;
+  this.scaleY = 1;
 
   // for cpu efficiency
   this.innerBounds = { width: 0, height: 0 };
@@ -802,15 +803,18 @@ TermView.prototype = {
       this.mainDisplay.style.marginTop = ((innerBounds.height-this.chh*this.buf.rows)/2) + this.bbsViewMargin + 'px';
     else
       this.mainDisplay.style.marginTop =  this.bbsViewMargin + 'px';
-    if (this.fontFitWindowWidth)
+    if (this.fontFitWindowWidth) {
       this.scaleX = Math.floor(innerBounds.width / (this.chw*this.buf.cols+10) * 100)/100;
-    else
+      this.scaleY = Math.floor(innerBounds.height / (this.chh*this.buf.rows) * 100)/100;
+    } else {
       this.scaleX = 1;
+      this.scaleY = 1;
+    }
 
     var scaleCss = 'none';
-    if (this.scaleX != 1) {
+    if (this.scaleX != 1 || this.scaleY != 1) {
       //this.mainDisplay.style.transform = 'scaleX('+this.scaleX+')'; // chrome not stable support yet!
-      scaleCss = 'scaleX('+this.scaleX+')';
+      scaleCss = 'scale('+this.scaleX+','+this.scaleY+')';
       var transOrigin = 'left';
       if(this.horizontalAlignCenter) {
         transOrigin = 'center';
@@ -818,6 +822,11 @@ TermView.prototype = {
       this.mainDisplay.style.webkitTransformOriginX = transOrigin;
       this.lastRowDiv.style.webkitTransformOriginX = transOrigin;
       this.replyRowDiv.style.webkitTransformOriginX = transOrigin;
+      this.lastRowDiv.style.webkitTransformOriginY = '-1100%'; // somehow these are the right value
+      this.replyRowDiv.style.webkitTransformOriginY = '-1010%';
+    } else {
+      this.lastRowDiv.style.webkitTransformOriginY = '';
+      this.replyRowDiv.style.webkitTransformOriginY = '';
     }
     this.mainDisplay.style.webkitTransform = scaleCss;
     this.lastRowDiv.style.webkitTransform = scaleCss;
@@ -832,12 +841,13 @@ TermView.prototype = {
   convertMN2XYEx: function(cx, cy) {
     var origin;
     var w = this.innerBounds.width;
-    if(this.horizontalAlignCenter && this.scaleX!=1)
-      origin = [((w - (this.chw*this.buf.cols+10)*this.scaleX)/2) + this.bbsViewMargin, this.firstGridOffset.top];
+    var h = this.innerBounds.height;
+    if(this.horizontalAlignCenter && (this.scaleX!=1 || this.scaleY!=1))
+      origin = [((w - (this.chw*this.buf.cols+10)*this.scaleX)/2) + this.bbsViewMargin, ((h - (this.chh*this.buf.rows)*this.scaleY)/2) + this.bbsViewMargin];
     else
       origin = [this.firstGridOffset.left, this.firstGridOffset.top];
     var realX = origin[0] + (cx) * this.chw * this.scaleX;
-    var realY = origin[1] + (cy) * this.chh +1;
+    var realY = origin[1] + (cy) * this.chh * this.scaleY +1;
     return [realX, realY];
   },
 
@@ -876,17 +886,19 @@ TermView.prototype = {
     var ch = line[this.buf.cur_x];
     var bg = ch.getBg();
 
-    if (this.scaleX == 1) {
+    if (this.scaleX == 1 && this.scaleY == 1) {
       this.bbsCursor.style.webkitTransform = 'none';
+      this.lastRowDiv.style.webkitTransformOriginY = '';
+      this.replyRowDiv.style.webkitTransformOriginY = '';
     } else {
-      var scaleCss = 'scaleX('+this.scaleX+')';
-      if (this.useEasyReadingMode && this.buf.startedEasyReading) {
-        scaleCss = 'perspective(1px) '+scaleCss;
-      }
+      var scaleCss = 'scale('+this.scaleX+','+this.scaleY+')';
       this.mainDisplay.style.webkitTransform = scaleCss;
       this.lastRowDiv.style.webkitTransform = scaleCss;
       this.replyRowDiv.style.webkitTransform = scaleCss;
+      this.bbsCursor.style.webkitTransform = scaleCss;
       this.bbsCursor.style.webkitTransformOriginX = 'left';
+      this.lastRowDiv.style.webkitTransformOriginY = '-1100%';
+      this.replyRowDiv.style.webkitTransformOriginY = '-1010%';
     }
 
     this.bbsCursor.style.left = pos[0] + 'px';
@@ -1198,8 +1210,9 @@ TermView.prototype = {
     var firstGridOffset = this.firstGridOffset;
     var bottomOffset = firstGridOffset.top + (this.chh - 20) /2 -1 + 'px';
     var marginLeft = this.firstGridOffset.left + 10 + 'px';
-    if (this.scaleX != 1) {
+    if (this.scaleX != 1 || this.scaleY != 1) {
       marginLeft = this.bbsViewMargin + 10 + 'px';
+      bottomOffset  = this.bbsViewMargin + (this.chh * this.scaleY - 20)/2 + 'px';
     }
     this.fbSharingDiv.style.bottom = bottomOffset;
     this.fbSharingDiv.style.marginLeft = marginLeft;
