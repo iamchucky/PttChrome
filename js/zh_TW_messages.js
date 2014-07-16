@@ -112,7 +112,7 @@
     "message": "BBS 周圍邊距 (像素)"
   },
   "options_fontFitWindowWidth": {
-    "message": "把字體拉寬來補滿畫面"
+    "message": "把字體拉大來補滿畫面"
   },
   "options_fontFace": {
     "message": "字型"

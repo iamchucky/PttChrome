@@ -112,7 +112,7 @@ locale.en_US = {
     "message": "Margins around BBS view (px)"
   },
   "options_fontFitWindowWidth": {
-    "message": "Stretch font width to fill the view"
+    "message": "Stretch font to fill the view"
   },
   "options_fontFace": {
     "message": "Font face"
