@@ -52,6 +52,7 @@ function TermView(rowCount) {
 
   this.useEasyReadingMode = true;
   this.easyReadingTurnPageLines = 22;
+  this.easyReadingKeyDownKeyCode = 0;
 
   this.doHighlightOnCurRow = false;
 
@@ -174,6 +175,12 @@ function TermView(rowCount) {
         document.getElementById('connectionAlertExitAll').click();
       return;
     }
+    if (self.useEasyReadingMode && self.buf.startedEasyReading && 
+        !self.buf.easyReadingShowReplyText && !self.buf.easyReadingShowPushInitText &&
+        self.easyReadingKeyDownKeyCode == 229) { // only use on chinese IME
+      self.easyReadingOnKeyUp(e);
+      return;
+    }
     // set input area focus whenever key down even if there is selection
     self.bbscore.setInputAreaFocus();
   }, false);
@@ -183,6 +190,12 @@ function TermView(rowCount) {
       return;
     if (self.isComposition)
       return;
+    if (self.useEasyReadingMode && self.buf.startedEasyReading && 
+        !self.buf.easyReadingShowReplyText && !self.buf.easyReadingShowPushInitText &&
+        self.easyReadingKeyDownKeyCode == 229) { // only use on chinese IME
+      e.target.value = '';
+      return;
+    }
     if (e.target.value) {
       self.onTextInput(e.target.value);
     }
@@ -1276,11 +1289,56 @@ TermView.prototype = {
     }
   },
 
+  easyReadingOnKeyUp: function(e) {
+    var conn = this.conn;
+    if (!e.ctrlKey && !e.altKey && !e.shiftKey) {
+      switch (e.keyCode) {
+        case 187: // =
+          this.buf.cancelPageDownAndResetPrevPageState();
+          conn.send('=');
+          break;
+        case 189: // -
+          this.buf.cancelPageDownAndResetPrevPageState();
+          conn.send('-');
+          break;
+        case 219: // [
+          this.buf.cancelPageDownAndResetPrevPageState();
+          conn.send('[');
+          break;
+        case 221: // ]
+          this.buf.cancelPageDownAndResetPrevPageState();
+          conn.send(']');
+          break;
+        default: 
+          e.preventDefault();
+          e.stopPropagation();
+          break;
+      }
+    } else if (!e.ctrlKey && !e.altKey && e.shiftKey) {
+      if (e.keyCode == 187) { // +
+        this.buf.cancelPageDownAndResetPrevPageState();
+        conn.send('+');
+      } else {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    } else {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  },
+
   easyReadingOnKeyDown: function(e) {
     var conn = this.conn;
+    this.easyReadingKeyDownKeyCode = e.keyCode;
 
     if (!e.ctrlKey && !e.altKey && !e.shiftKey) {
       if ((e.keyCode > 48 && e.keyCode < 58) || e.location == 3) { // 1 ~ 9 or num pad keys
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+      if (e.keyCode == 229) { // in chinese IME mode
         e.preventDefault();
         e.stopPropagation();
         return;
