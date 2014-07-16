@@ -14,7 +14,9 @@ module.exports = function(grunt) {
     },
     concat: {
       options: {
-        separator: ';',
+        process: function(src, filepath) {
+          return '// Source: ' + filepath + '\n' + src;
+        }
       },
       dist: {
         src: [
