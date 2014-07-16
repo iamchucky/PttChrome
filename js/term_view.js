@@ -983,6 +983,7 @@ TermView.prototype = {
       var width = this.bbsWidth ? this.bbsWidth : innerBounds.width;
       var height = this.bbsHeight ? this.bbsHeight : innerBounds.height;
       if (width == 0 || height == 0) return; // errors for openning in a new window
+      width -= 10; // for scroll bar
 
       var o_h, o_w, i = 4;
       var nowchh = this.chh;
