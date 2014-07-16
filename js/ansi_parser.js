@@ -1,5 +1,4 @@
 // Parser for ANSI escape sequence
-'use strict';
 
 lib.AnsiParser = function(termbuf) {
   this.termbuf = termbuf;

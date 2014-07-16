@@ -18,6 +18,15 @@ PttChromePref.prototype = {
     this.refreshBlacklistOnUi();
 
     var self = this;
+    var htmlStr = '';
+    var n = 0;
+    var onMouseBrowsingHighlightColorChange = function(e) {
+      var qName = '#opt_mouseBrowsingHighlightColor';
+      var val = $(qName+' select').val();
+      var bg = $(qName+' .b'+val).css('background-color');
+      $(qName+' select').css('background-color', bg);
+    };
+
     for (var i in this.values) {
       $('#opt_'+i).empty();
       var val = this.values[i];
@@ -30,8 +39,8 @@ PttChromePref.prototype = {
       // for the color selection box
       if (i === 'mouseBrowsingHighlightColor') {
         var qName = '#opt_'+i;
-        var htmlStr = i18n('options_highlightColor')+'<select class="form-control">';
-        for (var n = 1; n < 16; ++n) {
+        htmlStr = i18n('options_highlightColor')+'<select class="form-control">';
+        for (n = 1; n < 16; ++n) {
           htmlStr += '<option value="'+n+'" class="b'+n+'"></option>';
         }
         htmlStr += '</select>';
@@ -39,20 +48,16 @@ PttChromePref.prototype = {
         $(qName+' select').val(val);
         var bg = $(qName+' .b'+val).css('background-color');
         $(qName+' select').css('background-color', bg);
-        $(qName+' select').on('change', function(e) {
-          var val = $(qName+' select').val();
-          var bg = $(qName+' .b'+val).css('background-color');
-          $(qName+' select').css('background-color', bg);
-        });
+        $(qName+' select').on('change', onMouseBrowsingHighlightColorChange);
         continue;
       }
 
       // for options that's predefined
       if (i in PREF_OPTIONS) {
         var optName = '#opt_'+i;
-        var htmlStr = i18n('options_'+i) + '<select class="form-control">';
+        htmlStr = i18n('options_'+i) + '<select class="form-control">';
         var options = PREF_OPTIONS[i];
-        for (var n = 0; n < options.length; ++n) {
+        for (n = 0; n < options.length; ++n) {
           htmlStr += '<option value="'+n+'">'+i18n(options[n])+'</option>';
         }
         htmlStr += '</select>';
@@ -67,7 +72,6 @@ PttChromePref.prototype = {
           $('#opt_'+i).html(
             '<label style="font-weight:normal;">'+i18n('options_'+i)+'</label>'+
             '<input type="number" class="form-control" value="'+val+'">');
-          break;
           break;
         case 'string':
           $('#opt_'+i).html(
@@ -93,6 +97,7 @@ PttChromePref.prototype = {
 
   setupSettingsUi: function() {
     var self = this;
+    var i;
     $('#opt_title').text(i18n('menu_settings'));
 
     $('#opt_reset').off();
@@ -108,12 +113,13 @@ PttChromePref.prototype = {
       $('#opt_reset').css('marginLeft', '-10px');
     }
 
-    for (var i in PREFS_CATEGORIES) {
-      var cat = PREFS_CATEGORIES[i];
+    var cat = '';
+    for (i in PREFS_CATEGORIES) {
+      cat = PREFS_CATEGORIES[i];
       $('#opt_'+cat).text(i18n('options_'+cat));
     }
-    for (var i in PREFS_NAV) {
-      var cat = PREFS_NAV[i];
+    for (i in PREFS_NAV) {
+      cat = PREFS_NAV[i];
       $('#optNav_'+cat).text(i18n('options_'+cat));
     }
 
@@ -211,19 +217,20 @@ PttChromePref.prototype = {
   },
 
   readValueFromUi: function() {
+    var selectedVal;
     for (var i in this.values) {
       if (i === 'blacklistedUserIds') {
         continue;
       }
 
       if (i === 'mouseBrowsingHighlightColor') {
-        var selectedVal = $('#opt_'+i+' select').val();
+        selectedVal = $('#opt_'+i+' select').val();
         this.values[i] = parseInt(selectedVal);
         continue;
       }
 
       if (i in PREF_OPTIONS) {
-        var selectedVal = $('#opt_'+i+' select').val();
+        selectedVal = $('#opt_'+i+' select').val();
         this.values[i] = parseInt(selectedVal);
         continue;
       }
@@ -303,12 +310,12 @@ PttChromePref.prototype = {
     }
     if (msg.data && msg.data.logins) {
       var data = msg.data.logins;
-      this.logins = [data['u'], data['p']];
+      this.logins = [data.u, data.p];
     }
     this.updateToApp();
     this.populateSettingsToUi();
     if (!this.initCallbackCalled) {
-      if (this.values != null && this.logins != null) {
+      if (this.values !== null && this.logins !== null) {
         this.initCallbackCalled = true;
         this.onInitializedCallback(this.app);
       }
@@ -349,4 +356,4 @@ PttChromePref.prototype = {
     }
   }
 
-}
+};

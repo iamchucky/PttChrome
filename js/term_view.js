@@ -267,7 +267,7 @@ TermView.prototype = {
     var bcValue = '';
     var hasXNode = ((ch.blink && fg != bg) || (ch2.blink && fg2 != bg2));
     var xNodeStr = '';
-    if (forceWidth != 0) {
+    if (forceWidth !== 0) {
       fwStyle = ' style="display:inline-block;width:'+forceWidth+'px;"';
     }
 
@@ -333,15 +333,15 @@ TermView.prototype = {
     var row = this.curRow;
     var col = this.curCol;
     var s1 = '';
-    if ((this.openSpan && (fg == this.curFg && bg == this.curBg && ch.blink == this.curBlink)) && forceWidth == 0) {
+    if ((this.openSpan && (fg == this.curFg && bg == this.curBg && ch.blink == this.curBlink)) && forceWidth === 0) {
       return char1;
     }
 
     s1 += this.closeSpanIfIsOpen();
-    if (fg == this.deffg && bg == this.defbg && !ch.blink && forceWidth == 0) { // default colors
+    if (fg == this.deffg && bg == this.defbg && !ch.blink && forceWidth === 0) { // default colors
       this.setCurColorStyle(fg, bg, false);
       s1 += char1;
-    } else if (forceWidth == 0) { // different colors, so create span
+    } else if (forceWidth === 0) { // different colors, so create span
       this.setCurColorStyle(fg, bg, ch.blink);
       s1 += '<span class="q' +fg+ ' b' +bg+'">';
       s1 += (ch.blink?'<x s="q'+fg+' b'+bg+'" h="qq'+bg+'"></x>':'') + char1;
@@ -481,7 +481,7 @@ TermView.prototype = {
       var line = lines[row];
       var outhtml = outhtmls[row];
       var lineChanged = lineChangeds[row];
-      if (lineChanged == false && !force)
+      if (lineChanged === false && !force)
         continue;
       var lineUpdated = false;
       var chw = this.chw;
@@ -589,6 +589,7 @@ TermView.prototype = {
   onkeyDown: function(e) {
     // dump('onKeyPress:'+e.charCode + ', '+e.keyCode+'\n');
     var conn = this.conn;
+    var charCode;
     this.resetCursorBlink();
 
     if (this.useEasyReadingMode && this.buf.startedEasyReading && 
@@ -724,9 +725,9 @@ TermView.prototype = {
         e.stopPropagation();
         return;
       } else if (e.keyCode >= 65 && e.keyCode <= 90) { // A-Z key
-        var charCode = e.keyCode - 64;
+        charCode = e.keyCode - 64;
       } else if (e.keyCode >= 219 && e.keyCode <= 221) // [ \ ]
-        var charCode = e.keyCode - 192;
+        charCode = e.keyCode - 192;
     } else if (!e.ctrlKey && e.altKey && !e.shiftKey) {
       if (e.keyCode == 87) {// alt+w
         conn.send('^W'.unescapeStr());
@@ -737,22 +738,22 @@ TermView.prototype = {
     } else if (e.ctrlKey && !e.altKey && e.shiftKey) {
       switch(e.keyCode) {
       case 50: // @
-        var charCode = 0;
+        charCode = 0;
         break;
       case 54: // ^
-        var charCode = 30;
+        charCode = 30;
         break;
       case 109: // _
-        var charCode = 31;
+        charCode = 31;
         break;
       case 191: // ?
-        var charCode = 127;
+        charCode = 127;
         break;
       case 86: //ctrl+shift+v
         this.bbscore.doPaste();
         e.preventDefault();
         e.stopPropagation();
-        var charCode = 0;
+        charCode = 0;
         break;
       }
     }
@@ -915,7 +916,7 @@ TermView.prototype = {
       if (!this.hideInputBuffer) {
         this.input.style.opacity = '1';
         this.input.style.border = 'double';
-        if (this.inputBufferSizeType == 0) {
+        if (this.inputBufferSizeType === 0) {
           //this.input.style.width  = (this.chh-4)*10 + 'px';
           this.input.style.fontSize = this.chh-4 + 'px';
           //this.input.style.lineHeight = this.chh+4 + 'px';
@@ -979,10 +980,10 @@ TermView.prototype = {
     var innerBounds = this.innerBounds;
     var fontWidth = this.bbsFontSize * 2;
 
-    if (this.screenType == 0 || this.screenType == 1) {
+    if (this.screenType === 0 || this.screenType == 1) {
       var width = this.bbsWidth ? this.bbsWidth : innerBounds.width;
       var height = this.bbsHeight ? this.bbsHeight : innerBounds.height;
-      if (width == 0 || height == 0) return; // errors for openning in a new window
+      if (width === 0 || height === 0) return; // errors for openning in a new window
       width -= 10; // for scroll bar
 
       var o_h, o_w, i = 4;
@@ -1045,7 +1046,7 @@ TermView.prototype = {
     var selection = { start: { row: 0, col: 0 }, end: { row: 0, col: 0 } };
 
     selection.start = this.countColFromSiblings(b);
-    if (r.startOffset != 0) {
+    if (r.startOffset !== 0) {
       var substr = b.substringData(0, r.startOffset);
       substr = substr.replace(/\u00a0/g, " ");
       selection.start.col += substr.u2b().length;
@@ -1090,12 +1091,12 @@ TermView.prototype = {
 
   setupPicPreviewOnHover: function() {
     var self = this;
-    var aNodes = document.querySelectorAll(".main a[href^='http://ppt\.cc/'], .main a[type='p'], .main a[href^='http://imgur\.com/']");
+    var aNodes = document.querySelectorAll(".main a[href^='http://ppt.cc/'], .main a[type='p'], .main a[href^='http://imgur.com/']");
     var onover = function(elem) {
       return function(e) {
         var href = elem.getAttribute('href');
         var type = elem.getAttribute('type');
-        var src = (type == 'p') ? href : (href.indexOf('imgur\.com') > 0) ? href.replace('http://imgur\.com', 'http://i\.imgur\.com') + '.jpg' : href + '@.jpg';
+        var src = (type == 'p') ? href : (href.indexOf('imgur.com') > 0) ? href.replace('http://imgur.com', 'http://i.imgur.com') + '.jpg' : href + '@.jpg';
         var currSrc = self.picPreview.getAttribute('src');
         if (src !== currSrc) {
           self.picLoading.style.display = 'block';
@@ -1106,14 +1107,15 @@ TermView.prototype = {
         self.picPreviewShouldShown = true;
       };
     };
+    var onout = function(e) {
+      self.picPreviewShouldShown = false;
+      self.picPreview.style.display = 'none';
+      self.picLoading.style.display = 'none';
+    };
     for (var i = 0; i < aNodes.length; ++i) {
       var aNode = aNodes[i];
       aNode.addEventListener('mouseover', onover(aNode));
-      aNode.addEventListener('mouseout', function(e) {
-        self.picPreviewShouldShown = false;
-        self.picPreview.style.display = 'none';
-        self.picLoading.style.display = 'none';
-      });
+      aNode.addEventListener('mouseout', onout);
     }
   },
 
@@ -1223,7 +1225,7 @@ TermView.prototype = {
     if (this.hideFbSharing)
       return;
 
-    var aNodes = document.querySelectorAll(".main a[href^='http://www\.ptt\.cc/bbs/']");
+    var aNodes = document.querySelectorAll(".main a[href^='http://www.ptt.cc/bbs/']");
     for (var i = 0; i < aNodes.length; ++i) {
       var aNode = aNodes[i];
       if (aNode.previousSibling && aNode.previousSibling.textContent.replace(/\u00a0/g, ' ') == '※ 文章網址: ') {
@@ -1234,7 +1236,7 @@ TermView.prototype = {
   },
 
   embedPicAndVideo: function() {
-    var aNodes = document.querySelectorAll(".main a[type='p'], .main a[href^='http://imgur\.com/']");
+    var aNodes = document.querySelectorAll(".main a[type='p'], .main a[href^='http://imgur.com/']");
     for (var i = 0; i < aNodes.length; ++i) {
       var aNode = aNodes[i];
       if (aNode.getAttribute('view_shown')) {
@@ -1242,7 +1244,7 @@ TermView.prototype = {
       }
       var href = aNode.getAttribute('href');
       var type = aNode.getAttribute('type');
-      var src = (type == 'p') ? href : (href.indexOf('imgur\.com') > 0) ? href.replace('http://imgur\.com', 'http://i\.imgur\.com') + '.jpg' : '';
+      var src = (type == 'p') ? href : (href.indexOf('imgur.com') > 0) ? href.replace('http://imgur.com', 'http://i.imgur.com') + '.jpg' : '';
       if (src) {
         var imgNode = document.createElement('img');
         imgNode.setAttribute('class', 'easyReadingImg');
@@ -1286,7 +1288,7 @@ TermView.prototype = {
 
       switch (e.keyCode) {
         case 8: // backspace
-          if (this.mainDisplay.scrollTop == 0) {
+          if (this.mainDisplay.scrollTop === 0) {
             this.buf.cancelPageDownAndResetPrevPageState();
             conn.send('\x1b[D\x1b[A\x1b[C');
           } else {
@@ -1325,7 +1327,7 @@ TermView.prototype = {
             conn.send('\x1b[D');
           break;
         case 38: //Arrow Up
-          if (this.mainDisplay.scrollTop == 0) {
+          if (this.mainDisplay.scrollTop === 0) {
             this.buf.cancelPageDownAndResetPrevPageState();
             conn.send('\x1b[D\x1b[A\x1b[C');
           } else {
@@ -1427,7 +1429,7 @@ TermView.prototype = {
       } else if ( e.keyCode == 66 || e.keyCode == 98 ) {  // ^B 
         this.mainDisplay.scrollTop -= this.chh * this.easyReadingTurnPageLines;
       } else if ( e.keyCode == 72 || e.keyCode == 104 ) { // ^H
-        if (this.mainDisplay.scrollTop == 0) {
+        if (this.mainDisplay.scrollTop === 0) {
           this.buf.cancelPageDownAndResetPrevPageState();
           conn.send('\x1b[D\x1b[A\x1b[C');
         } else {
@@ -1499,4 +1501,4 @@ TermView.prototype = {
     pushNode.innerHTML = '<span style="background-color:black;">'+htmlStr+'</span>';
   }
 
-}
+};

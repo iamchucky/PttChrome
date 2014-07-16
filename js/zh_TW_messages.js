@@ -205,4 +205,4 @@
   "input_sitePlaceholder": {
     "message": "在此輸入站台地址後按 ENTER"
   }
-}
+};

@@ -1,5 +1,3 @@
-'use strict';
-
 if (typeof lib != 'undefined')
   throw new Error('Global "lib" object already exists.');
 
@@ -106,7 +104,7 @@ lib.AppConnection.prototype.connectTelnet = function(host, port) {
 };
 
 lib.AppConnection.prototype.sendTelnet = function(str) {
-  if (this.appPort == null) {
+  if (this.appPort === null) {
     return;
   }
   if (!this.isConnected) {

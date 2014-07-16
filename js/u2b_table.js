@@ -25915,5 +25915,5 @@ xFFEB:'\xA1\xF7',
 xFFEC:'\xA1\xF5',
 xFFED:'\xA1\xBD',
 xFFEE:'\xA1\xB3'
-}
+};
 

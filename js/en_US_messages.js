@@ -209,4 +209,4 @@ locale.en_US = {
     "message": "input URL here and then press ENTER"
   }
 
-}
+};

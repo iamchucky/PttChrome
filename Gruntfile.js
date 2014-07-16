@@ -61,6 +61,8 @@ module.exports = function(grunt) {
         ],
       options: {
         // options here to override JSHint defaults
+        shadow: true,
+        esnext: true,
         globals: {
           jQuery: true,
           console: true,

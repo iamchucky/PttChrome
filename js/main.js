@@ -22,14 +22,14 @@ function setTimer(repeat, func, timelimit) {
 		  cancel: function() {
 			  clearInterval(this.timer);
 		  }
-	  }
+	  };
   } else {
 	  return {
 		  timer: setTimeout(func, timelimit),
 		  cancel: function() {
 			  clearTimeout(this.timer);
 		  }
-	  }
+	  };
   }
 }
 

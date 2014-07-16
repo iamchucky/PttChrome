@@ -140,7 +140,7 @@ TermChar.prototype = {
   getFullURL: function() {
     return this.fullurl;
   }
-}
+};
 
 function TermHtml() {
   this.html='';
@@ -159,7 +159,7 @@ TermHtml.prototype = {
   getHtml: function() {
     return this.html;
   }
-}
+};
 
 function TermBuf(cols, rows) {
   this.cols = cols;
@@ -374,8 +374,8 @@ TermBuf.prototype = {
         var res;
         var uris = null;
         // pairs of URI start and end positions are stored in line.uri.
-        while ( (res = this.uriRegEx.exec(s)) != null ) {
-          if (!uris)   uris = new Array();
+        while ( (res = this.uriRegEx.exec(s)) !== null ) {
+          if (!uris)   uris = [];
           var uri = [res.index, res.index+res[0].length];
           uris.push(uri);
           // dump('found URI: ' + res[0] + '\n');
@@ -635,7 +635,7 @@ TermBuf.prototype = {
       if(scrollEnd<1) scrollEnd=this.rows-1;
     }
     if(n>=this.rows) // scroll more than 1 page = clear
-      this.clear(2)
+      this.clear(2);
     else if(n >= scrollEnd-scrollStart+1) {
       for(row=scrollStart; row <= scrollEnd; ++row) {
         for(col=0; col< cols; ++col) {
@@ -719,7 +719,7 @@ TermBuf.prototype = {
     var _this = this;
     var func = function() {
       _this.notify();
-    }
+    };
     if (directupdate)
       this.timerUpdate = setTimeout(func, 1);
     else
@@ -739,12 +739,12 @@ TermBuf.prototype = {
       }
 
       // support for url specified navigation
-      if (this.view.bbscore.navigateTo.board != null && !this.view.bbscore.navigationDone) {
+      if (this.view.bbscore.navigateTo.board !== null && !this.view.bbscore.navigationDone) {
         if (this.pageState == 1 && !this.view.bbscore.navigationCanStart) {
           this.view.bbscore.navigationCanStart = true;
           this.sendNavigateToBoardCmd();
         } else if (this.pageState == 2) {
-          if (this.view.bbscore.navigateTo.aid != null) {
+          if (this.view.bbscore.navigateTo.aid !== null) {
             this.view.bbscore.navigationDone = true;
             this.sendNavigateToArticleCmd();
           } else {
@@ -912,7 +912,7 @@ TermBuf.prototype = {
   },
 
   findText: function(text, searchrow) {
-    var result = {col: -1, row: -1}
+    var result = {col: -1, row: -1};
     var searchStart = 0;
     var searchEnd = this.cols - 1;
     if (searchrow >= 0) searchStart = searchEnd = searchrow;
@@ -1009,15 +1009,15 @@ TermBuf.prototype = {
       if (code > 0x7f) return true;
       else return false;
     }
-    if ((code >= 0x1100 && code <= 0x115f)
-    || (code >= 0x2329 && code <= 0x232a)
-    || (code >= 0x2e80 && code <= 0x303e)
-    || (code >= 0x3040 && code <= 0xa4cf)
-    || (code >= 0xac00 && code <= 0xd7a3)
-    || (code >= 0xf900 && code <= 0xfaff)
-    || (code >= 0xfe30 && code <= 0xfe6f)
-    || (code >= 0xff00 && code <= 0xff60)
-    || (code >= 0xffe0 && code <= 0xffe6)) {
+    if ((code >= 0x1100 && code <= 0x115f) || 
+        (code >= 0x2329 && code <= 0x232a) || 
+        (code >= 0x2e80 && code <= 0x303e) || 
+        (code >= 0x3040 && code <= 0xa4cf) || 
+        (code >= 0xac00 && code <= 0xd7a3) || 
+        (code >= 0xf900 && code <= 0xfaff) || 
+        (code >= 0xfe30 && code <= 0xfe6f) || 
+        (code >= 0xff00 && code <= 0xff60) || 
+        (code >= 0xffe0 && code <= 0xffe6)) {
       return true;
     } else {
       return false;
@@ -1127,7 +1127,7 @@ TermBuf.prototype = {
       var main = firstRowText.indexOf('【主功能表】');
       var classList = firstRowText.indexOf('【分類看板】');
       var archiveList = firstRowText.indexOf('【精華文章】');
-      if (main == 0 || classList == 0 || archiveList == 0) {
+      if (main === 0 || classList === 0 || archiveList === 0) {
         //console.log('pageState = 1 (MENU)');
         this.pageState = 1; // MENU
       } if (this.isUnicolor(2, 0, 70) && !this.isLineEmpty(1) && (this.cur_x < 19 || this.cur_y == 23)) {
@@ -1194,7 +1194,7 @@ TermBuf.prototype = {
     // a dirty hacking, because of the difference between maple and firebird bbs.
     for (var i = start; i < end; i++) {
       var clr1 = line[i].getBg();
-      if (clr1 != clr || clr1 == 0)
+      if (clr1 != clr || clr1 === 0)
         return false;
     }
     return true;
@@ -1261,7 +1261,7 @@ TermBuf.prototype = {
           }
         } else if ( trow == 1 || trow == 2 ) {
           this.mouseCursor = 2;
-        } else if ( trow == 0 ) {
+        } else if ( trow === 0 ) {
           this.mouseCursor = 4;
         } else { // if ( trow == 23)
           this.mouseCursor = 5;
@@ -1305,7 +1305,7 @@ TermBuf.prototype = {
             this.mouseCursor = 9;
           else
             this.mouseCursor = 2;
-        } else if ( trow == 0 ) {
+        } else if ( trow === 0 ) {
           if ( tcol < 2 )//=
             this.mouseCursor = 10;
           else if ( tcol >75 )//]
@@ -1330,7 +1330,7 @@ TermBuf.prototype = {
             this.mouseCursor = 14;
           else
             this.mouseCursor = 5;
-        } else if ( trow == 0) {
+        } else if ( trow === 0) {
           if (tcol < 2)//=
             this.mouseCursor = 10;
           else if ( tcol >75 )//]
@@ -1423,4 +1423,4 @@ TermBuf.prototype = {
     this.prevPageState = 0;
   }
 
-}
+};

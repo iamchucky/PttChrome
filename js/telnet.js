@@ -1,7 +1,7 @@
 // Handle Telnet Connections according to RFC 854
 
 // Telnet commands
-const SE = '\xf0'
+const SE = '\xf0';
 const NOP = '\xf1';
 const DATA_MARK = '\xf2';
 const BREAK = '\xf3';

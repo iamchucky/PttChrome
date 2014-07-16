@@ -38,7 +38,7 @@ var PREF_OPTIONS = {
   mouseWheelFunction1 : [ 'options_none', 'options_upDown' , 'options_pageUpDown', 'options_threadLastNext' ],
   mouseWheelFunction2 : [ 'options_none', 'options_upDown' , 'options_pageUpDown', 'options_threadLastNext' ],
   mouseWheelFunction3 : [ 'options_none', 'options_upDown' , 'options_pageUpDown', 'options_threadLastNext' ],
-}
+};
 
 // DUMP_TYPE
 var DUMP_TYPE_LOG 	= 0;

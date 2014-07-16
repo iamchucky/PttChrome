@@ -104,7 +104,7 @@ pttchrome.App = function(onInitializedCallback, from) {
 
   $(window).mousedown(function(e) {
     var ret = self.middleMouse_down(e);
-    if (ret == false) {
+    if (ret === false) {
       return false;
     }
   });
@@ -201,7 +201,7 @@ pttchrome.App.prototype.setupAppConnection = function(callback) {
     onSymFont: self.onSymFont.bind(self)
   });
   this.appConn.connect(callback);
-}
+};
 
 pttchrome.App.prototype.connect = function(url) {
   this.view.useEasyReadingMode = this.pref.get('enableEasyReading');
@@ -572,11 +572,11 @@ pttchrome.App.prototype.switchMouseBrowsing = function() {
 
 pttchrome.App.prototype.antiIdle = function() {
   if (this.antiIdleTime && this.idleTime > this.antiIdleTime) {
-    if (this.antiIdleStr!='' && this.connectState==1)
+    if (this.antiIdleStr !== '' && this.connectState == 1)
       this.telnetCore.send(this.antiIdleStr);
   } else {
-    if (this.connectState==1)
-      this.idleTime+=1000;
+    if (this.connectState == 1)
+      this.idleTime += 1000;
   }
 };
 
@@ -595,7 +595,9 @@ pttchrome.App.prototype.updateTabIcon = function(aStatus) {
       break;
     case 'connecting':  // Not used yet
       icon =  'icon/connecting.gif';
+      break;
     default:
+      break;
   }
 
   var link = document.querySelector("link[rel~='icon']");
@@ -783,7 +785,7 @@ pttchrome.App.prototype.overlayCommandListener = function (e) {
       switch (cmd) {
         case "doArrowUp":
           if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
-            if (this.view.mainDisplay.scrollTop == 0) {
+            if (this.view.mainDisplay.scrollTop === 0) {
               this.buf.cancelPageDownAndResetPrevPageState();
               this.telnetCore.send('\x1b[D\x1b[A\x1b[C');
             } else {
@@ -1055,11 +1057,11 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
 };
 
 pttchrome.App.prototype.checkClass = function(cn) {
-  return (  cn.indexOf("closeSI") >=0  || cn.indexOf("EPbtn") >= 0
-          || cn.indexOf("closePP") >= 0 || cn.indexOf("picturePreview") >= 0
-          || cn.indexOf("drag") >= 0    || cn.indexOf("floatWindowClientArea") >= 0
-          || cn.indexOf("WinBtn") >= 0  || cn.indexOf("sBtn") >= 0
-          || cn.indexOf("nonspan") >= 0 );
+  return (  cn.indexOf("closeSI") >= 0  || cn.indexOf("EPbtn") >= 0 || 
+      cn.indexOf("closePP") >= 0 || cn.indexOf("picturePreview") >= 0 || 
+      cn.indexOf("drag") >= 0    || cn.indexOf("floatWindowClientArea") >= 0 || 
+      cn.indexOf("WinBtn") >= 0  || cn.indexOf("sBtn") >= 0 || 
+      cn.indexOf("nonspan") >= 0 );
 };
 
 pttchrome.App.prototype.mouse_click = function(e) {
@@ -1070,7 +1072,7 @@ pttchrome.App.prototype.mouse_click = function(e) {
   this.CmdHandler.setAttribute('SkipMouseClick','0');
 
   if (e.button == 2) { //right button
-  } else if (e.button == 0) { //left button
+  } else if (e.button === 0) { //left button
     if ($(e.target).is('a') || $(e.target).parent().is('a')) {
       return;
     }
@@ -1119,13 +1121,13 @@ pttchrome.App.prototype.middleMouse_down = function(e) {
       return false;
     }
   }
-}
+};
 
 pttchrome.App.prototype.mouse_down = function(e) {
   if (this.modalShown)
     return;
   //0=left button, 1=middle button, 2=right button
-  if (e.button == 0) {
+  if (e.button === 0) {
     if (this.buf.useMouseBrowsing) {
       if (this.dblclickTimer) { //skip
         e.preventDefault();
@@ -1155,7 +1157,7 @@ pttchrome.App.prototype.mouse_up = function(e) {
   if (this.modalShown)
     return;
   //0=left button, 1=middle button, 2=right button
-  if (e.button == 0) {
+  if (e.button === 0) {
     this.setMbTimer();
     //this.CmdHandler.setAttribute('MouseLeftButtonDown', '0');
     this.mouseLeftButtonDown = false;
@@ -1164,13 +1166,13 @@ pttchrome.App.prototype.mouse_up = function(e) {
     //this.CmdHandler.setAttribute('MouseRightButtonDown', '0');
   }
 
-  if (e.button == 0 || e.button == 2) { //left or right button
+  if (e.button === 0 || e.button == 2) { //left or right button
     if (window.getSelection().isCollapsed) { //no anything be select
       if (this.buf.useMouseBrowsing)
         this.onMouse_move(e.clientX, e.clientY);
 
       this.setInputAreaFocus();
-      if (e.button == 0) {
+      if (e.button === 0) {
         var preventDefault = true;
         if (e.target.className)
           if (this.checkClass(e.target.className))
@@ -1333,8 +1335,8 @@ pttchrome.App.prototype.setupContextMenus = function() {
 
     // for getting push thread user id
     if (self.pref.enableBlacklist) {
-      var srow = target.attr('srow') 
-      if (srow == undefined || srow == null)
+      var srow = target.attr('srow');
+      if (srow === undefined || srow === null)
         srow = target.parent().attr('srow');
       srow = parseInt(srow);
       var rowText = '';

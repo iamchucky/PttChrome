@@ -130,12 +130,12 @@ String.prototype.b2u = function() {
 
 String.prototype.parseReplyText = function() {
   var str = this;
-  return (str.indexOf('▲ 回應至 (F)看板 (M)作者信箱 (B)二者皆是 (Q)取消？[F] ') == 0);
+  return (str.indexOf('▲ 回應至 (F)看板 (M)作者信箱 (B)二者皆是 (Q)取消？[F] ') === 0);
 };
 
 String.prototype.parsePushInitText = function() {
   var str = this;
-  return (str.indexOf('您覺得這篇文章 1.值得推薦 2.給它噓聲 3.只加→註解 [1]?') == 0 || str.search(/→ \w+: +/) == 0);
+  return (str.indexOf('您覺得這篇文章 1.值得推薦 2.給它噓聲 3.只加→註解 [1]?') === 0 || str.search(/→ \w+: +/) === 0);
 };
 
 String.prototype.parseStatusRow = function() {
@@ -152,7 +152,7 @@ String.prototype.parseStatusRow = function() {
       pagePercent:   parseInt(result[3]),
       rowIndexStart: parseInt(result[4]),
       rowIndexEnd:   parseInt(result[5])
-    }
+    };
   }
 
   return null;
@@ -173,7 +173,7 @@ String.prototype.parseWaterball = function() {
   }
 
   return null;
-}
+};
 
 String.prototype.parseThreadForUserId = function() {
   var str = this;
@@ -184,7 +184,7 @@ String.prototype.parseThreadForUserId = function() {
   }
 
   return null;
-}
+};
 
 String.prototype.parsePushthreadForUserId = function() {
   var str = this;
@@ -195,7 +195,7 @@ String.prototype.parsePushthreadForUserId = function() {
   }
 
   return null;
-}
+};
 
 String.prototype.parseYoutubeUrl = function() {
   var str = this;
@@ -206,7 +206,7 @@ String.prototype.parseYoutubeUrl = function() {
   }
 
   return null;
-}
+};
 
 String.prototype.ansiHalfColorConv = function() {
   var str = '';
@@ -217,7 +217,7 @@ String.prototype.ansiHalfColorConv = function() {
     indices.push(result.index + result[0].length - 4);
   }
 
-  if (indices.length == 0) {
+  if (indices.length === 0) {
     return this;
   }
 
