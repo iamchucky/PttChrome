@@ -172,7 +172,6 @@ pttchrome.App = function(onInitializedCallback, from) {
   this.onWindowResize();
   this.setupConnectionAlert();
   this.setupOtherSiteInput();
-  this.setupSideMenus();
   this.setupContextMenus();
   this.contextMenuShown = false;
 
@@ -378,42 +377,6 @@ pttchrome.App.prototype.setupOtherSiteInput = function() {
 
 };
 
-pttchrome.App.prototype.setupSideMenus = function() {
-  // i18n
-  $('#menu_goToOtherSite span').text(i18n('menu_goToOtherSite'));
-  $('#menu_paste span').text(i18n('menu_paste'));
-  $('#menu_selectAll span').text(i18n('menu_selectAll'));
-  $('#menu_mouseBrowsing span').text(i18n('menu_mouseBrowsing'));
-  $('#menu_settings span').text(i18n('menu_settings'));
-
-  // tie the methods up to the buttons
-  var self = this;
-  $('#menu_goToOtherSite').click(function(e) {
-    self.doGoToOtherSite();
-    e.stopPropagation();
-  });
-  $('#menu_paste').click(function(e) {
-    self.doPaste();
-    e.stopPropagation();
-  });
-  $('#menu_selectAll').click(function(e) {
-    self.doSelectAll();
-    e.stopPropagation();
-  });
-  $('#menu_mouseBrowsing').click(function(e) {
-    self.switchMouseBrowsing();
-    e.stopPropagation();
-  });
-  $('#menu_settings').click(function(e) {
-    self.doSettings();
-    e.stopPropagation();
-  });
-  $('#sideMenus').on('contextmenu', function(e) {
-    e.stopPropagation();
-    e.preventDefault();
-  });
-};
-
 pttchrome.App.prototype.doCopy = function(str) {
   var port = this.appConn.appPort;
   if (!port)
@@ -529,11 +492,6 @@ pttchrome.App.prototype.doSettings = function() {
 pttchrome.App.prototype.onWindowResize = function() {
   this.view.innerBounds = this.getWindowInnerBounds();
   this.view.fontResize();
-  if (this.view.fontFitWindowWidth || this.view.firstGridOffset.left <= 100) {
-    $('#sideMenus').addClass('menuHidden');
-  } else {
-    $('#sideMenus').removeClass('menuHidden');
-  }
 
   if (this.modalShown) {
     var width = document.documentElement.clientWidth * 0.7;
