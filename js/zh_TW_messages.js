@@ -56,6 +56,9 @@
   "cmenu_goToOtherSite": {
     "message": "去其他站台 ..."
   },
+  "cmenu_showInputHelper": {
+    "message": "開啟輸入小幫手 ..."
+  },
   "cmenu_addBlacklistUserId": {
     "message": "在黑名單裡加入使用者"
   },
@@ -204,5 +207,25 @@
   },
   "input_sitePlaceholder": {
     "message": "在此輸入站台地址後按 ENTER"
+  },
+
+  "inputHelperTitle": {
+    "message": "輸入小幫手"
+  },
+  "colorHelperSend": {
+    "message": "送出 ANSI 顏色字元"
+  },
+  "colorHelperBlink": {
+    "message": "閃爍"
+  },
+  "colorHelperPreview": {
+    "message": "▅ 預 覽 ▅"
+  },
+  "colorHelperTooltip1": {
+    "message": '點滑鼠"左"鍵選"前景"顏色'
+  },
+  "colorHelperTooltip2": {
+    "message": '點滑鼠"右"鍵選"背景"顏色'
   }
+
 };

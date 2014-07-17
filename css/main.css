@@ -9,6 +9,57 @@
   font-family: symmingliu, MingLiU, monospace;
 }
 
+#colorHelperContainer {
+  height: 156px;
+}
+#colorHelperInstruction {
+  font-size: 12px;
+}
+#colorHelperList {
+  list-style-type: none;
+  width: 256px;
+  height: 64px;
+  padding: 0px;
+  background-color: black;
+}
+#colorHelperList li {
+  display: block;
+  float: left;
+  width: 32px;
+  height: 32px;
+}
+#colorHelperList li:hover {
+  -webkit-transform: scale(1.2, 1.2);
+  box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.4);
+}
+#colorHelperPreview {
+  font-family: symmingliu, MingLiU, monospace;
+  font-size: 22px;
+  line-height: 22px;
+}
+#colorHelperSend {
+  float: right;
+}
+#colorHelperBlink {
+  width: 80px;
+  float: left;
+  margin-top: 7px;
+  margin-bottom: 7px;
+}
+
+#inputHelper {
+  position: absolute;
+  color: black;
+  width: 300px;
+  top: 20px;
+  left: 20px;
+  margin: 0px;
+  z-index: 100;
+  display: none;
+  -webkit-user-select: none;
+  cursor: default;
+}
+
 #picPreview {
   position: absolute;
   display: none;

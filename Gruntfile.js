@@ -20,10 +20,12 @@ module.exports = function(grunt) {
       },
       dist: {
         src: [
+          'js/app_conn.js', 
           'js/predefined_config.js', 
           'js/pref.js', 
+          'js/symbols.js',
           'js/emoticon.js',
-          'js/app_conn.js', 
+          'js/input_helper.js',
           'js/telnet.js', 
           'js/b2u_table.js',
           'js/u2b_table.js',
@@ -43,10 +45,12 @@ module.exports = function(grunt) {
     },
     jshint: {
       files: [
+          'js/app_conn.js', 
           'js/predefined_config.js', 
           'js/pref.js', 
+          'js/symbols.js',
           'js/emoticon.js',
-          'js/app_conn.js', 
+          'js/input_helper.js',
           'js/telnet.js', 
           'js/b2u_table.js',
           'js/u2b_table.js',

@@ -56,6 +56,9 @@ locale.en_US = {
   "cmenu_goToOtherSite": {
     "message": "Go to other site ..."
   },
+  "cmenu_showInputHelper": {
+    "message": "Show input helper ..."
+  },
   "cmenu_addBlacklistUserId": {
     "message": "Add blacklist user"
   },
@@ -207,6 +210,26 @@ locale.en_US = {
   },
   "input_sitePlaceholder": {
     "message": "input URL here and then press ENTER"
+  },
+
+  "inputHelperTitle": {
+    "message": "Input helper"
+  },
+  "colorHelperSend": {
+    "message": "Send ANSI color code"
+  },
+  "colorHelperBlink": {
+    "message": "Blink"
+  },
+  "colorHelperPreview": {
+    "message": "▅ PREVIEW ▅"
+  },
+  "colorHelperTooltip1": {
+    "message": "Left click: foreground color"
+  },
+  "colorHelperTooltip2": {
+    "message": "Right click: background color"
   }
+
 
 };

@@ -13,10 +13,12 @@
     
     <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/app_conn.js"></script>
     <script type="text/javascript" src="js/predefined_config.js"></script>
     <script type="text/javascript" src="js/pref.js"></script>
     <script type="text/javascript" src="js/emoticon.js"></script>
-    <script type="text/javascript" src="js/app_conn.js"></script>
+    <script type="text/javascript" src="js/symbols.js"></script>
+    <script type="text/javascript" src="js/input_helper.js"></script>
     <script type="text/javascript" src="js/telnet.js"></script>
     <script type="text/javascript" src="js/b2u_table.js"></script>
     <script type="text/javascript" src="js/u2b_table.js"></script>
@@ -53,6 +55,7 @@
       <li id="cmenu_selectAll" class="cmenuItem contextNormal"><a></a></li>
       <li id="cmenu_mouseBrowsing" class="cmenuItem contextNormal"><a></a></li>
       <li id="cmenu_goToOtherSite" class="cmenuItem contextNormal"><a></a></li>
+      <li id="cmenu_showInputHelper" class="cmenuItem contextNormal"><a></a></li>
       <li id="cmenu_addBlacklistUserId" class="cmenuItem"><a></a></li>
       <li id="cmenu_removeBlacklistUserId" class="cmenuItem"><a></a></li>
       <li id="cmenu_divider2" class="divider contextNormal"></li>
@@ -216,5 +219,49 @@
     <img id="picLoading" src='icon/connecting.gif' style="display:none; position:absolute; z-index:2"></img>
     <ul id="emoticonList">
     </ul>
+
+    <div id="inputHelper" class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <button id="inputHelperClose" type="button" class="close"><span>&times;</span></button>
+          <h4 class="modal-title">Modal title</h4>
+        </div>
+
+        <div class="modal-body">
+          <div id="colorHelperContainer">
+            <ul id="colorHelperList" data-toggle="tooltip" data-placement="top">
+              <li class="b1" value="1"></li>
+              <li class="b2" value="2"></li>
+              <li class="b3" value="3"></li>
+              <li class="b4" value="4"></li>
+              <li class="b5" value="5"></li>
+              <li class="b6" value="6"></li>
+              <li class="b7" value="7"></li>
+              <li class="b8" value="8"></li>
+              <li class="b9" value="9"></li>
+              <li class="b10" value="10"></li>
+              <li class="b11" value="11"></li>
+              <li class="b12" value="12"></li>
+              <li class="b13" value="13"></li>
+              <li class="b14" value="14"></li>
+              <li class="b15" value="15"></li>
+              <li style="background-color:black" value="0"></li>
+            </ul>
+            <div align="center" style="color:#c0c0c0; background-color:black; width:256px; height:38px; margin-bottom:10px; padding-top:8px;">
+              <span id="colorHelperPreview" class="q7 b0">▅ PREVIEW ▅</span>
+            </div>
+            <div id="colorHelperBlink" class="checkbox">
+            </div>
+            <button id="colorHelperSend" type="button" class="btn btn-default">Send</button>
+          </div>
+          <div id="symbolsContainer">
+          </div>
+          <div id="emoticonContainer">
+          </div>
+        </div>
+
+      </div> <!-- /.modal-content -->
+    </div> <!-- /.modal-dialog -->
   </body>
 </html>

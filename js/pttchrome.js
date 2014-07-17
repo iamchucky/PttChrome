@@ -79,7 +79,8 @@ pttchrome.App = function(onInitializedCallback, from) {
   this.alertBeforeUnload = false;
   this.modalShown = false;
 
-  this.emoticon = new Emoticon();
+  this.inputHelper = new InputHelper(this);
+
   this.navigateTo = { board: getQueryVariable('board'), aid: getQueryVariable('aid') };
   this.navigationCanStart = false;
   this.navigationDone = false;
@@ -1446,6 +1447,7 @@ pttchrome.App.prototype.setupContextMenus = function() {
   $('#cmenu_copyLinkUrl a').text(i18n('cmenu_copyLinkUrl'));
   $('#cmenu_mouseBrowsing a').html('<i id="mouseBrowsingCheck" class="fa fa-check"></i>'+i18n('cmenu_mouseBrowsing'));
   $('#cmenu_goToOtherSite a').text(i18n('cmenu_goToOtherSite'));
+  $('#cmenu_showInputHelper a').text(i18n('cmenu_showInputHelper'));
   $('#cmenu_addBlacklistUserId a').html(i18n('cmenu_addBlacklistUserId')+' <span id="cmenuAddBlacklistUserIdContent"></span>');
   $('#cmenu_removeBlacklistUserId a').html(i18n('cmenu_removeBlacklistUserId')+' <span id="cmenuRemoveBlacklistUserIdContent"></span>');
   $('#cmenu_settings a').text(i18n('cmenu_settings'));
@@ -1492,6 +1494,11 @@ pttchrome.App.prototype.setupContextMenus = function() {
   });
   $('#cmenu_goToOtherSite').click(function(e) {
     self.doGoToOtherSite();
+    e.stopPropagation();
+    hideContextMenu();
+  });
+  $('#cmenu_showInputHelper').click(function(e) {
+    self.inputHelper.showHelper();
     e.stopPropagation();
     hideContextMenu();
   });
