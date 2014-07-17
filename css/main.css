@@ -300,6 +300,12 @@
   //box-shadow: 0 0 60px 50px black;
 }
 
+.main *,
+#easyReadingLastRow *,
+#easyReadingReplyRow * {
+  font-family: inherit!important;
+}
+
 .linkurl {
   text-decoration:underline;
   color:#FF00FF;

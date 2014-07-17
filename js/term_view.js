@@ -251,10 +251,10 @@ TermView.prototype = {
 
   setFontFace: function(fontFace) {
     this.fontFace = fontFace;
-    this.mainDisplay.style.fontFamily = this.fontFace;
-    this.lastRowDiv.style.fontFamily = this.fontFace;
-    this.replyRowDiv.style.fontFamily = this.fontFace;
-    document.getElementById('cursor').style.fontFamily = this.fontFace;
+    this.mainDisplay.style.setProperty('font-family', this.fontFace, 'important');
+    this.lastRowDiv.style.setProperty('font-family', this.fontFace, 'important');
+    this.replyRowDiv.style.setProperty('font-family', this.fontFace, 'important');
+    document.getElementById('cursor').style.setProperty('font-family', this.fontFace, 'important');
   },
 
   update: function() {
@@ -1262,6 +1262,7 @@ TermView.prototype = {
         var imgNode = document.createElement('img');
         imgNode.setAttribute('class', 'easyReadingImg');
         imgNode.setAttribute('src', src);
+        imgNode.style.webkitTransform = 'scale('+Math.floor(1/this.scaleX*100)/100+','+Math.floor(1/this.scaleY*100)/100+')';
         aNode.parentNode.appendChild(imgNode);
       }
 
@@ -1281,6 +1282,7 @@ TermView.prototype = {
       if (youtubeShortCode) {
         var divNode = document.createElement('div');
         divNode.setAttribute('class', 'easyReadingVideo');
+        divNode.style.webkitTransform = 'scale('+Math.floor(1/this.scaleX*100)/100+','+Math.floor(1/this.scaleY*100)/100+')';
         divNode.innerHTML = '<iframe width="640" height="385" src="//www.youtube-nocookie.com/embed/'+youtubeShortCode+'?rel=0" frameborder="0" allowfullscreen></iframe>';
         vNode.parentNode.appendChild(divNode);
       }
