@@ -731,6 +731,10 @@ TermView.prototype = {
       return;
     } else if (e.ctrlKey && !e.altKey && !e.shiftKey) {
       if ((e.keyCode == 99 || e.keyCode == 67) && !window.getSelection().isCollapsed) { //^C , do copy
+        var selectedText = window.getSelection().toString().replace(/\u00a0/g, " ");
+        this.bbscore.doCopy(selectedText);
+        e.preventDefault();
+        e.stopPropagation();
         return;
       } else if (e.keyCode == 97 || e.keyCode == 65) {
         this.bbscore.doSelectAll();
@@ -1481,6 +1485,10 @@ TermView.prototype = {
       // Control characters
       // Ctrl + @, NUL, is not handled here
       if ((e.keyCode == 99 || e.keyCode == 67) && !window.getSelection().isCollapsed) { //^C , do copy
+        var selectedText = window.getSelection().toString().replace(/\u00a0/g, " ");
+        this.bbscore.doCopy(selectedText);
+        e.preventDefault();
+        e.stopPropagation();
         return;
       } else if (e.keyCode == 97 || e.keyCode == 65) {    // ^A
         this.bbscore.doSelectAll();

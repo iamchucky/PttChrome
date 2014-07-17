@@ -381,6 +381,12 @@ pttchrome.App.prototype.doCopy = function(str) {
   var port = this.appConn.appPort;
   if (!port)
     return;
+
+  if (str.indexOf('\x1b') < 0) {
+    str = str.replace(/\r\n/g, '\r');
+    str = str.replace(/\n/g, '\r');
+    str = str.replace(/ +\r/g, '\r');
+  }
   
   // Doing copy by having the launch.js read message
   // and then copy onto clipboard
