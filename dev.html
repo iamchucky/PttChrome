@@ -229,6 +229,7 @@
         </div>
 
         <div class="modal-body">
+
           <div id="colorHelperContainer">
             <ul id="colorHelperList">
               <li style="background-color:black" value="0"></li>
@@ -257,7 +258,6 @@
               <button id="colorHelperSend" type="button" class="btn btn-default">Send</button>
               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                 <span class="caret"></span>
-                <span class="sr-only">Toggle Dropdown</span>
               </button>
               <ul id="colorHelperSendMenu" class="dropdown-menu" role="menu">
                 <li><a id="colorHelperSendMenuFore" type="foreground">Send foreground only</a></li>
@@ -267,7 +267,21 @@
               </ul>
             </div>
           </div>
+
           <div id="symbolsContainer">
+            <ul id="symbolsTabTitle" class="nav nav-tabs" role="tablist">
+              <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown">
+                  Symbols <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                </ul>
+              </li>
+            </ul>
+            <!-- Tab panes -->
+            <div id="symbolsTab" class="tab-content">
+            </div>
+
           </div>
           <div id="emoticonContainer">
           </div>

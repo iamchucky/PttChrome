@@ -212,6 +212,7 @@ locale.en_US = {
     "message": "input URL here and then press ENTER"
   },
 
+  // input helper
   "inputHelperTitle": {
     "message": "Input helper"
   },
@@ -238,7 +239,41 @@ locale.en_US = {
   },
   "colorHelperTooltip2": {
     "message": "Right click: background color, upper row only"
-  }
+  },
 
+  // symbols
+  "symTitle_general": {
+    "message": "General symbols"
+  },
+  "symTitle_lineBorders": {
+    "message": "Line borders"
+  },
+  "symTitle_blocks": {
+    "message": "Blocks"
+  },
+  "symTitle_lines": {
+    "message": "Lines"
+  },
+  "symTitle_special": {
+    "message": "Special symbols"
+  },
+  "symTitle_brackets": {
+    "message": "Brackets"
+  },
+  "symTitle_greek": {
+    "message": "Greek symbols"
+  },
+  "symTitle_phonetic": {
+    "message": "Phonetic symbols"
+  },
+  "symTitle_math": {
+    "message": "Math symbols"
+  },
+  "symTitle_hiragana": {
+    "message": "Hiragana"
+  },
+  "symTitle_katakana": {
+    "message": "Katakana"
+  }
 
 };

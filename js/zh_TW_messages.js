@@ -235,6 +235,41 @@
   },
   "colorHelperTooltip2": {
     "message": '點滑鼠"右"鍵選"背景"顏色 (上排)'
+  },
+
+  // symbols
+  "symTitle_general": {
+    "message": "一般符號"
+  },
+  "symTitle_lineBorders": {
+    "message": "線條邊框"
+  },
+  "symTitle_blocks": {
+    "message": "方塊符號"
+  },
+  "symTitle_lines": {
+    "message": "線條符號"
+  },
+  "symTitle_special": {
+    "message": "特殊符號"
+  },
+  "symTitle_brackets": {
+    "message": "括弧符號"
+  },
+  "symTitle_greek": {
+    "message": "希臘符號"
+  },
+  "symTitle_phonetic": {
+    "message": "注音符號"
+  },
+  "symTitle_math": {
+    "message": "數學符號"
+  },
+  "symTitle_hiragana": {
+    "message": "平假名符號"
+  },
+  "symTitle_katakana": {
+    "message": "片假名符號"
   }
 
 };
