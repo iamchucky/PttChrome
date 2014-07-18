@@ -3,6 +3,7 @@ function InputHelper(app) {
   this.node = document.getElementById('inputHelper');
   this.nodeOffsetTop = 20;
   this.nodeOffsetLeft = 20;
+  this.mouseDrag = false;
 
   this.closeButton = document.getElementById('inputHelperClose');
 
@@ -101,17 +102,25 @@ InputHelper.prototype.setupUi = function() {
     e.stopPropagation();
   });
 
-  this.node.addEventListener('mousemove', function(e) {
-    if (e.which == 1) {
-      self.nodeOffsetTop += e.webkitMovementY;
-      self.nodeOffsetLeft += e.webkitMovementX;
-      self.node.style.cssText += 'top:'+self.nodeOffsetTop+'px;left:'+self.nodeOffsetLeft+'px;';
-    }
+  this.node.addEventListener('mousedown', function(e) {
+    self.mouseDrag = true;
+    self.app.view.mainDisplay.style.webkitUserSelect = 'none';
   });
+  this.node.addEventListener('mouseup', function(e) {
+    self.mouseDrag = false;
+    self.app.view.mainDisplay.style.webkitUserSelect = '';
+  });
+
   this.node.addEventListener('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
   });
+};
+
+InputHelper.prototype.onMouseDrag = function(e) {
+  this.nodeOffsetTop += e.webkitMovementY;
+  this.nodeOffsetLeft += e.webkitMovementX;
+  this.node.style.cssText += 'top:'+this.nodeOffsetTop+'px;left:'+this.nodeOffsetLeft+'px;';
 };
 
 InputHelper.prototype.sendColorCommand = function(type) {
