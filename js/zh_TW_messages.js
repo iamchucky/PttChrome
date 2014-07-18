@@ -215,6 +215,15 @@
   "colorHelperSend": {
     "message": "送出 ANSI 顏色字元"
   },
+  "colorHelperSendMenuFore": {
+    "message": "只送出前景色彩"
+  },
+  "colorHelperSendMenuBack": {
+    "message": "只送出背景色彩"
+  },
+  "colorHelperSendMenuReset": {
+    "message": "送出色彩還原碼"
+  },
   "colorHelperBlink": {
     "message": "閃爍"
   },
@@ -225,7 +234,7 @@
     "message": '點滑鼠"左"鍵選"前景"顏色'
   },
   "colorHelperTooltip2": {
-    "message": '點滑鼠"右"鍵選"背景"顏色'
+    "message": '點滑鼠"右"鍵選"背景"顏色 (上排)'
   }
 
 };

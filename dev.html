@@ -230,7 +230,8 @@
 
         <div class="modal-body">
           <div id="colorHelperContainer">
-            <ul id="colorHelperList" data-toggle="tooltip" data-placement="top">
+            <ul id="colorHelperList">
+              <li style="background-color:black" value="0"></li>
               <li class="b1" value="1"></li>
               <li class="b2" value="2"></li>
               <li class="b3" value="3"></li>
@@ -246,14 +247,25 @@
               <li class="b13" value="13"></li>
               <li class="b14" value="14"></li>
               <li class="b15" value="15"></li>
-              <li style="background-color:black" value="0"></li>
             </ul>
             <div align="center" style="color:#c0c0c0; background-color:black; width:256px; height:38px; margin-bottom:10px; padding-top:8px;">
               <span id="colorHelperPreview" class="q7 b0">▅ PREVIEW ▅</span>
             </div>
             <div id="colorHelperBlink" class="checkbox">
             </div>
-            <button id="colorHelperSend" type="button" class="btn btn-default">Send</button>
+            <div class="btn-group dropdown" style="float:right">
+              <button id="colorHelperSend" type="button" class="btn btn-default">Send</button>
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+              </button>
+              <ul id="colorHelperSendMenu" class="dropdown-menu" role="menu">
+                <li><a id="colorHelperSendMenuFore" type="foreground">Send foreground only</a></li>
+                <li><a id="colorHelperSendMenuBack" type="background">Send background only</a></li>
+                <li class="divider"></li>
+                <li><a id="colorHelperSendMenuReset" type="reset">Send reset code</a></li>
+              </ul>
+            </div>
           </div>
           <div id="symbolsContainer">
           </div>

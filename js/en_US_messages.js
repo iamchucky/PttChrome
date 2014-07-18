@@ -218,6 +218,15 @@ locale.en_US = {
   "colorHelperSend": {
     "message": "Send ANSI color code"
   },
+  "colorHelperSendMenuFore": {
+    "message": "Send foreground only"
+  },
+  "colorHelperSendMenuBack": {
+    "message": "Send background only"
+  },
+  "colorHelperSendMenuReset": {
+    "message": "Send reset code"
+  },
   "colorHelperBlink": {
     "message": "Blink"
   },
@@ -228,7 +237,7 @@ locale.en_US = {
     "message": "Left click: foreground color"
   },
   "colorHelperTooltip2": {
-    "message": "Right click: background color"
+    "message": "Right click: background color, upper row only"
   }
 
 

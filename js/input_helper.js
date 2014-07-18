@@ -9,6 +9,7 @@ function InputHelper(app) {
   this.colorHelperList = document.getElementById('colorHelperList');
   this.colorHelperBlink = document.getElementById('colorHelperBlink');
   this.colorHelperSend = document.getElementById('colorHelperSend');
+  this.colorHelperSendMenu = document.getElementById('colorHelperSendMenu');
   this.colorHelperPreview = document.getElementById('colorHelperPreview');
   this.colorHelperPreviewFgShown = true;
   this.colorHelperFg = 7;
@@ -56,8 +57,21 @@ InputHelper.prototype.setupUi = function() {
   this.closeButton.addEventListener('click', function(e) {
     self.hideHelper();
   });
+
+  $('#colorHelperSendMenuFore').text(i18n('colorHelperSendMenuFore'));
+  $('#colorHelperSendMenuBack').text(i18n('colorHelperSendMenuBack'));
+  $('#colorHelperSendMenuReset').text(i18n('colorHelperSendMenuReset'));
+  $('#colorHelperContainer .dropdown-toggle').dropdown();
   this.colorHelperSend.addEventListener('click', function(e) {
+    self.sendColorCommand();
   });
+  this.colorHelperSendMenu.addEventListener('click', function(e) {
+    if (!e.target.hasAttribute('type'))
+      return;
+    self.sendColorCommand(e.target.getAttribute('type'));
+    $('#colorHelperContainer .dropdown-toggle').dropdown('toggle');
+  });
+
   this.colorHelperList.addEventListener('click', function(e) {
     if (!e.target.hasAttribute('value'))
       return;
@@ -73,8 +87,15 @@ InputHelper.prototype.setupUi = function() {
     if (!e.target.hasAttribute('value'))
       return;
 
+    var bg = parseInt(e.target.getAttribute('value'));
+    if (bg > 7) {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+
     // right click, background
-    self.colorHelperBg = parseInt(e.target.getAttribute('value'));
+    self.colorHelperBg = bg;
     self.colorHelperPreview.setAttribute('class', 'q'+self.colorHelperFg+' b'+self.colorHelperBg);
     e.preventDefault();
     e.stopPropagation();
@@ -91,6 +112,37 @@ InputHelper.prototype.setupUi = function() {
     e.preventDefault();
     e.stopPropagation();
   });
+};
+
+InputHelper.prototype.sendColorCommand = function(type) {
+  if (type == 'reset') {
+    this.app.telnetCore.send('\x15[m');
+    return;
+  }
+
+  var fg = this.colorHelperFg;
+  var lightColor = '0;';
+  if (fg > 7) {
+    fg %= 8;
+    lightColor = '1;';
+  }
+  fg += 30;
+  var bg = this.colorHelperBg;
+  bg += 40;
+  var isBlink = this.colorHelperIsBlink;
+  var blink = '';
+  if (isBlink) {
+    blink = '5;';
+  }
+  var cmd = '\x15[';
+  if (type == 'foreground') {
+    cmd += lightColor+blink+fg+'m';
+  } else if (type == 'background') {
+    cmd += bg+'m';
+  } else {
+    cmd += lightColor+blink+fg+';'+bg+'m';
+  }
+  this.app.telnetCore.send(cmd);
 };
 
 InputHelper.prototype.showHelper = function() {
