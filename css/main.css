@@ -44,35 +44,60 @@
   margin-bottom: 7px;
 }
 
-#symbolsContainer {
+#symbolsContainer,
+#emoticonsContainer {
   margin-top: 20px;
 }
 #symbolsContainer .dropdown-toggle,
-#symbolsContainer .dropdown-menu a {
+#symbolsContainer .dropdown-menu a, 
+#emoticonsContainer .dropdown-toggle,
+#emoticonsContainer .dropdown-menu a {
   cursor: pointer;
 }
-#symbolsTab > ul {
+#symbolsTab > ul,
+#emoticonsTab > ul {
   list-style-type: none;
   padding: 0 4px;
   margin-top: 5px;
 }
 #symbolsTab > ul > li {
   font-family: symmingliu, MingLiU, monospace;
+  width: 100%;
+  border: 1px solid #ccc;
   font-size: 25px;
   line-height: 25px;
   padding: 2px;
+  background-color: white;
+  margin-bottom: -1px;
+  height: 32px;
+  cursor: pointer;
   display: block;
   float: left;
   width: 32px;
-  height: 32px;
-  cursor: pointer;
-  border: 1px solid #ccc;
-  background-color: white;
   margin-right: -1px;
-  margin-bottom: -1px;
 }
 #symbolsTab > ul > li:hover {
   -webkit-transform: scale(1.4, 1.4);
+  border: 2px solid black;
+}
+
+#emoticonsTab > ul > li {
+  font-family: symmingliu, MingLiU, monospace;
+  width: 100%;
+  border: 1px solid #ccc;
+  font-size: 21px;
+  line-height: 21px;
+  padding: 2px;
+  background-color: white;
+  margin-bottom: -1px;
+  height: 28px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#emoticonsTab > ul > li:hover {
+  -webkit-transform: scale(1.1, 1.1);
   border: 2px solid black;
 }
 

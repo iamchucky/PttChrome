@@ -209,8 +209,18 @@
     "message": "在此輸入站台地址後按 ENTER"
   },
 
+  // input helper
   "inputHelperTitle": {
     "message": "輸入小幫手"
+  },
+  "colorHelperTitle": {
+    "message": "上色小幫手"
+  },
+  "symbolsHelperTitle": {
+    "message": "符號小幫手"
+  },
+  "emoticonsHelperTitle": {
+    "message": "表情小幫手"
   },
   "colorHelperSend": {
     "message": "送出 ANSI 顏色字元"
@@ -239,37 +249,54 @@
 
   // symbols
   "symTitle_general": {
-    "message": "一般符號"
+    "message": "一般"
   },
   "symTitle_lineBorders": {
     "message": "線條邊框"
   },
   "symTitle_blocks": {
-    "message": "方塊符號"
+    "message": "方塊"
   },
   "symTitle_lines": {
-    "message": "線條符號"
+    "message": "線條"
   },
   "symTitle_special": {
-    "message": "特殊符號"
+    "message": "特殊"
   },
   "symTitle_brackets": {
-    "message": "括弧符號"
+    "message": "括弧"
   },
   "symTitle_greek": {
-    "message": "希臘符號"
+    "message": "希臘"
   },
   "symTitle_phonetic": {
-    "message": "注音符號"
+    "message": "注音"
   },
   "symTitle_math": {
-    "message": "數學符號"
+    "message": "數學"
   },
   "symTitle_hiragana": {
-    "message": "平假名符號"
+    "message": "平假名"
   },
   "symTitle_katakana": {
-    "message": "片假名符號"
+    "message": "片假名"
+  },
+
+  // emoticons
+  "emoTitle_angry": {
+    "message": "生氣"
+  },
+  "emoTitle_meh": {
+    "message": "酸民"
+  },
+  "emoTitle_sweat": {
+    "message": "汗顏加三條線"
+  },
+  "emoTitle_happy": {
+    "message": "開心"
+  },
+  "emoTitle_other": {
+    "message": "其他"
   }
 
 };

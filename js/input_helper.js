@@ -18,8 +18,9 @@ function InputHelper(app) {
   this.colorHelperIsBlink = false;
   this.blinkTimer = null;
 
-  this.symbols = new lib.Symbols(app);
   this.setupUi();
+  this.symbols = new lib.Symbols(app);
+  this.emoticons = new lib.Emoticons(app);
 }
 
 InputHelper.prototype.setupUi = function() {
@@ -62,7 +63,6 @@ InputHelper.prototype.setupUi = function() {
   $('#colorHelperSendMenuFore').text(i18n('colorHelperSendMenuFore'));
   $('#colorHelperSendMenuBack').text(i18n('colorHelperSendMenuBack'));
   $('#colorHelperSendMenuReset').text(i18n('colorHelperSendMenuReset'));
-  $('#colorHelperContainer .dropdown-toggle').dropdown();
   this.colorHelperSend.addEventListener('click', function(e) {
     self.sendColorCommand();
   });
@@ -70,7 +70,6 @@ InputHelper.prototype.setupUi = function() {
     if (!e.target.hasAttribute('type'))
       return;
     self.sendColorCommand(e.target.getAttribute('type'));
-    $('#colorHelperContainer .dropdown-toggle').dropdown('toggle');
   });
 
   this.colorHelperList.addEventListener('click', function(e) {
@@ -112,8 +111,6 @@ InputHelper.prototype.setupUi = function() {
   });
 
   this.node.addEventListener('click', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
   });
 };
 

@@ -216,6 +216,15 @@ locale.en_US = {
   "inputHelperTitle": {
     "message": "Input helper"
   },
+  "colorHelperTitle": {
+    "message": "Color helper"
+  },
+  "symbolsHelperTitle": {
+    "message": "Symbols helper"
+  },
+  "emoticonsHelperTitle": {
+    "message": "Emoticons helper"
+  },
   "colorHelperSend": {
     "message": "Send ANSI color code"
   },
@@ -243,7 +252,7 @@ locale.en_US = {
 
   // symbols
   "symTitle_general": {
-    "message": "General symbols"
+    "message": "General"
   },
   "symTitle_lineBorders": {
     "message": "Line borders"
@@ -255,25 +264,42 @@ locale.en_US = {
     "message": "Lines"
   },
   "symTitle_special": {
-    "message": "Special symbols"
+    "message": "Special"
   },
   "symTitle_brackets": {
     "message": "Brackets"
   },
   "symTitle_greek": {
-    "message": "Greek symbols"
+    "message": "Greek"
   },
   "symTitle_phonetic": {
-    "message": "Phonetic symbols"
+    "message": "Phonetic"
   },
   "symTitle_math": {
-    "message": "Math symbols"
+    "message": "Math"
   },
   "symTitle_hiragana": {
     "message": "Hiragana"
   },
   "symTitle_katakana": {
     "message": "Katakana"
+  },
+
+  // emoticons
+  "emoTitle_angry": {
+    "message": "Angry"
+  },
+  "emoTitle_meh": {
+    "message": "Meh"
+  },
+  "emoTitle_sweat": {
+    "message": "Sweat & awkward"
+  },
+  "emoTitle_happy": {
+    "message": "Happy"
+  },
+  "emoTitle_other": {
+    "message": "Others"
   }
 
 };

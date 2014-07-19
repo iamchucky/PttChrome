@@ -92,7 +92,6 @@ lib.Symbols.prototype.setupUi = function() {
   // setup dropdown menu
   document.querySelector('#symbolsTabTitle .dropdown-menu').innerHTML = dropdownHtmlStr;
   var dropdownToggle = $('#symbolsContainer .dropdown-toggle');
-  dropdownToggle.dropdown();
 
   $('#symbolsTabTitle .dropdown-menu a').click(function (e) {
     e.preventDefault();
