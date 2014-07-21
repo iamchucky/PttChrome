@@ -202,10 +202,11 @@
   -webkit-user-select: none;
 }
 
-.dropdown-menu li > a > i {
+.dropdown-menu .checked:before {
+  content:"\e013";
+  font-family: 'Glyphicons Halflings';
   position: absolute;
   left: 10px;
-  margin-top: 3px;
 }
 
 .dropdown-menu li > a {
