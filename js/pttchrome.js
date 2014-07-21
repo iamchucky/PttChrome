@@ -627,6 +627,10 @@ pttchrome.App.prototype.clientToPos = function(cX, cY) {
 pttchrome.App.prototype.onMouse_click = function (cX, cY) {
   if (!this.telnetCore.isConnected)
     return;
+  if (this.inputHelper.clickedOn) {
+    this.inputHelper.clickedOn = false;
+    return;
+  }
   switch (this.buf.mouseCursor) {
     case 1:
       if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {

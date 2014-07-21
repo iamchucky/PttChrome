@@ -4,6 +4,7 @@ function InputHelper(app) {
   this.nodeOffsetTop = 20;
   this.nodeOffsetLeft = 20;
   this.mouseDrag = false;
+  this.clickedOn = false;
 
   this.closeButton = document.getElementById('inputHelperClose');
 
@@ -111,6 +112,7 @@ InputHelper.prototype.setupUi = function() {
   });
 
   this.node.addEventListener('click', function(e) {
+    self.clickedOn = true;
   });
 };
 
