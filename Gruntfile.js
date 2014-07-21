@@ -12,13 +12,26 @@ module.exports = function(grunt) {
         dest: 'js/<%= pkg.name %>.min.js'
       }
     },
+    cssmin: {
+      build: {
+        src: 'css/<%= pkg.name %>.concat.css',
+        dest: 'css/<%= pkg.name %>.min.css'
+      }
+    },
     concat: {
-      options: {
-        process: function(src, filepath) {
-          return '// Source: ' + filepath + '\n' + src;
-        }
+      css: {
+        src: [
+          'css/main.css',
+          'css/color.css'
+        ],
+        dest: 'css/<%= pkg.name %>.concat.css'
       },
-      dist: {
+      js: {
+        options: {
+          process: function(src, filepath) {
+            return '// Source: ' + filepath + '\n' + src;
+          }
+        },
         src: [
           'js/app_conn.js', 
           'js/predefined_config.js', 
@@ -83,8 +96,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
 
   // Default task(s).
-  grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
+  grunt.registerTask('default', ['jshint', 'concat:css', 'cssmin', 'concat:js', 'uglify']);
 
 };

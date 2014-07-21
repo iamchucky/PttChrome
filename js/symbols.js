@@ -97,7 +97,7 @@ lib.Symbols.prototype.setupUi = function() {
     e.preventDefault();
     $(this).tab('show');
     dropdownToggle.dropdown('toggle');
-  })
+  });
   $('#symbolsTabTitle .dropdown-menu a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     var title = e.target.textContent;
     dropdownToggle.html(title+' <span class="caret"></span>');
@@ -107,4 +107,4 @@ lib.Symbols.prototype.setupUi = function() {
   $('#symbolsTab > .tab-pane > li').click(function(e) {
     self.app.telnetCore.convSend(e.target.textContent);
   });
-}
+};

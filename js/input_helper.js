@@ -54,7 +54,7 @@ InputHelper.prototype.setupUi = function() {
     e.stopPropagation();
   });
   this.colorHelperPreview.textContent = i18n('colorHelperPreview');
-  var tooltipHtml = '<div>'+i18n('colorHelperTooltip1')+'</div><div>'+i18n('colorHelperTooltip2')+'</div>'
+  var tooltipHtml = '<div>'+i18n('colorHelperTooltip1')+'</div><div>'+i18n('colorHelperTooltip2')+'</div>';
   $(this.colorHelperList).tooltip({html:true, title:tooltipHtml});
 
   this.closeButton.addEventListener('click', function(e) {

@@ -71,7 +71,7 @@ lib.Emoticons = function(app) {
   this.node = document.getElementById('emoticonsContainer');
   this.tab = document.getElementById('emoticonsTab');
   this.setupUi();
-}
+};
 
 lib.Emoticons.prototype.setupUi = function() {
   var self = this;
@@ -95,7 +95,7 @@ lib.Emoticons.prototype.setupUi = function() {
   $('#emoticonsTabTitle .dropdown-menu a').click(function (e) {
     e.preventDefault();
     $(this).tab('show');
-  })
+  });
   $('#emoticonsTabTitle .dropdown-menu a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     var title = e.target.textContent;
     dropdownToggle.html(title+' <span class="caret"></span>');
