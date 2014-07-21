@@ -1120,6 +1120,10 @@ TermBuf.prototype = {
       this.pageState = 5; // some ansi drawing screen to pass
       return;
     }
+    if (lastRowText.indexOf(' 編輯文章  (^Z/F1)說明 (^P/^G)插入符號/範本 (^X/^Q)離開') == 0) {
+      this.pageState = 6;
+      return;
+    }
 
     var firstRowText = this.getRowText(0, 0, this.cols);
 

@@ -253,3 +253,7 @@ String.prototype.trimRight = function() {
 String.prototype.trimBoth = function() {
   return this.trimLeft(this.trimRight());
 };
+
+String.prototype.repeat = function( num ) {
+  return new Array( num + 1 ).join( this );
+};

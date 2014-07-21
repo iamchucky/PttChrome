@@ -148,6 +148,34 @@ InputHelper.prototype.sendColorCommand = function(type) {
   } else {
     cmd += lightColor+blink+fg+';'+bg+'m';
   }
+
+  if (!window.getSelection().isCollapsed && this.app.buf.pageState == 6) {
+    // something selected
+    var sel = this.app.view.getSelectionColRow();
+    var y = this.app.buf.cur_y;
+    var selCmd = '';
+    // move cursor to end and send reset code
+    selCmd += '\x1b[H';
+    if (y > sel.end.row) {
+      selCmd += '\x1b[A'.repeat(y - sel.end.row);
+    } else if (y < sel.end.row) {
+      selCmd += '\x1b[B'.repeat(sel.end.row - y);
+    }
+    var repeats = this.app.buf.getRowText(sel.end.row, 0, sel.end.col+1).length;
+    selCmd += '\x1b[C'.repeat(repeats) + '\x15[m';
+
+    // move cursor to start and send color code
+    y = sel.end.row;
+    selCmd += '\x1b[H';
+    if (y > sel.start.row) {
+      selCmd += '\x1b[A'.repeat(y - sel.start.row);
+    } else if (y < sel.start.row) {
+      selCmd += '\x1b[B'.repeat(sel.start.row - y);
+    }
+    repeats = this.app.buf.getRowText(sel.start.row, 0, sel.start.col).length;
+    selCmd += '\x1b[C'.repeat(repeats);
+    cmd = selCmd + cmd;
+  }
   this.app.telnetCore.send(cmd);
 };
 
