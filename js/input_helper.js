@@ -3,7 +3,7 @@ function InputHelper(app) {
   this.node = document.getElementById('inputHelper');
   this.nodeOffsetTop = 20;
   this.nodeOffsetLeft = 20;
-  this.mouseDrag = false;
+  this.mouseDown = false;
   this.clickedOn = false;
 
   this.closeButton = document.getElementById('inputHelperClose');
@@ -103,12 +103,12 @@ InputHelper.prototype.setupUi = function() {
   });
 
   this.node.addEventListener('mousedown', function(e) {
-    self.mouseDrag = true;
-    self.app.view.mainDisplay.style.webkitUserSelect = 'none';
+    if (e.which == 1)
+      self.mouseDown = true;
   });
   this.node.addEventListener('mouseup', function(e) {
-    self.mouseDrag = false;
-    self.app.view.mainDisplay.style.webkitUserSelect = '';
+    if (e.which == 1)
+      self.mouseDown = false;
   });
 
   this.node.addEventListener('click', function(e) {
@@ -117,6 +117,7 @@ InputHelper.prototype.setupUi = function() {
 };
 
 InputHelper.prototype.onMouseDrag = function(e) {
+  window.getSelection().removeAllRanges();
   this.nodeOffsetTop += e.webkitMovementY;
   this.nodeOffsetLeft += e.webkitMovementX;
   this.node.style.cssText += 'top:'+this.nodeOffsetTop+'px;left:'+this.nodeOffsetLeft+'px;';

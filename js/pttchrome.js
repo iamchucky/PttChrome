@@ -1172,11 +1172,9 @@ pttchrome.App.prototype.mouse_up = function(e) {
 pttchrome.App.prototype.mouse_move = function(e) {
   this.curX = e.clientX;
   this.curY = e.clientY;
-  if (e.which == 1) {
-    if (this.inputHelper.mouseDrag) {
-      this.inputHelper.onMouseDrag(e);
-      return;
-    }
+  if (this.inputHelper.mouseDown) {
+    this.inputHelper.onMouseDrag(e);
+    return;
   }
 
   if (this.view.enablePicPreview && this.view.picLoading.style.display != 'none') {
