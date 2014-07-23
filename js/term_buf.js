@@ -740,10 +740,11 @@ TermBuf.prototype = {
 
       // support for url specified navigation
       if (this.view.bbscore.navigateTo.board !== null && !this.view.bbscore.navigationDone) {
-        if (this.pageState == 1 && !this.view.bbscore.navigationCanStart) {
-          this.view.bbscore.navigationCanStart = true;
+        if (this.pageState == 1 || this.pageState == 2) {
+          if (this.pageState == 2) {
+            this.view.conn.send('\x1b[D\x1b[D');
+          }
           this.sendNavigateToBoardCmd();
-        } else if (this.pageState == 2) {
           if (this.view.bbscore.navigateTo.aid !== null) {
             this.view.bbscore.navigationDone = true;
             this.sendNavigateToArticleCmd();
@@ -1408,7 +1409,7 @@ TermBuf.prototype = {
     var conn = this.view.conn;
     var board = this.view.bbscore.navigateTo.board;
     // navigate to board
-    conn.send('s'+board+'\r');
+    conn.send('s'+board+'\r\r');
   },
 
   sendNavigateToArticleCmd: function() {
@@ -1416,7 +1417,7 @@ TermBuf.prototype = {
     var aid = this.view.bbscore.navigateTo.aid;
     // navigate to article
     if (aid) {
-      conn.send('#'+aid+'\r\r');
+      conn.send('#'+aid+'\r\r\x1b[1~');
     }
   },
 

@@ -82,7 +82,6 @@ pttchrome.App = function(onInitializedCallback, from) {
   this.inputHelper = new InputHelper(this);
 
   this.navigateTo = { board: getQueryVariable('board'), aid: getQueryVariable('aid') };
-  this.navigationCanStart = false;
   this.navigationDone = false;
 
   this.lastSelection = null;
@@ -158,14 +157,16 @@ pttchrome.App = function(onInitializedCallback, from) {
   });
 
   this.isFromApp = (from === 'app');
-  if (this.isFromApp) {
-    window.addEventListener('message', function(e) {
-      var msg = e.data;
-      if (msg.action === 'newwindow' && self.appConn && self.appConn.isConnected) {
-        self.appConn.appPort.postMessage({ action: 'newWindow', data: msg.data });
-      }
-    });
-  }
+  window.addEventListener('message', function(e) {
+    var msg = e.data;
+    if (self.isFromApp && msg.action === 'newwindow' && self.appConn && self.appConn.isConnected) {
+      self.appConn.appPort.postMessage({ action: 'newWindow', data: msg.data });
+    } else if (msg.action == 'navigate') {
+      self.navigationDone = false;
+      self.navigateTo = msg.data;
+      self.telnetCore.send('\x1b[D\x1b[D\x1b[D\x1b[D\x1b[D\x1b[D');
+    }
+  });
 
   this.dblclickTimer=null;
   this.mbTimer=null;
