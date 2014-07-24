@@ -216,14 +216,8 @@ locale.en_US = {
   "inputHelperTitle": {
     "message": "Input helper"
   },
-  "colorHelperTitle": {
-    "message": "Color helper"
-  },
-  "symbolsHelperTitle": {
-    "message": "Symbols helper"
-  },
-  "emoticonsHelperTitle": {
-    "message": "Emoticons helper"
+  "colorTitle": {
+    "message": "Color"
   },
   "colorHelperSend": {
     "message": "Send ANSI color code"
@@ -251,6 +245,9 @@ locale.en_US = {
   },
 
   // symbols
+  "symTitle": {
+    "message": "Symbols"
+  },
   "symTitle_general": {
     "message": "General"
   },
@@ -286,6 +283,9 @@ locale.en_US = {
   },
 
   // emoticons
+  "emoTitle": {
+    "message": "Emoticons"
+  },
   "emoTitle_angry": {
     "message": "Angry"
   },

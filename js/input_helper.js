@@ -6,32 +6,57 @@ function InputHelper(app) {
   this.mouseDown = false;
   this.clickedOn = false;
 
-  this.closeButton = document.getElementById('inputHelperClose');
-
-  this.colorHelperList = document.getElementById('colorHelperList');
-  this.colorHelperBlink = document.getElementById('colorHelperBlink');
-  this.colorHelperSend = document.getElementById('colorHelperSend');
-  this.colorHelperSendMenu = document.getElementById('colorHelperSendMenu');
-  this.colorHelperPreview = document.getElementById('colorHelperPreview');
+  this.colorHelperBlinkCheckbox = null;
+  this.colorHelperPreview = null;
   this.colorHelperPreviewFgShown = true;
   this.colorHelperFg = 7;
   this.colorHelperBg = 0;
   this.colorHelperIsBlink = false;
   this.blinkTimer = null;
 
+  this.symbols = null;
+  this.emoticons = null;
   this.setupUi();
-  this.symbols = new lib.Symbols(app);
-  this.emoticons = new lib.Emoticons(app);
+  this.registerHandlers();
 }
 
 InputHelper.prototype.setupUi = function() {
   var self = this;
   var modalTitle = document.querySelector('#inputHelper .modal-title');
   modalTitle.textContent = i18n('inputHelperTitle');
-  this.colorHelperSend.textContent = i18n('colorHelperSend');
-  this.colorHelperBlink.innerHTML = '<label><input id="colorHelperBlinkCheckbox" type="checkbox">'+i18n('colorHelperBlink')+'</label>';
+  document.getElementById('colorHelperSend').textContent = i18n('colorHelperSend');
+  document.getElementById('colorHelperBlink').innerHTML = '<label><input id="colorHelperBlinkCheckbox" type="checkbox">'+i18n('colorHelperBlink')+'</label>';
+  document.getElementById('colorHelperPreview').textContent = i18n('colorHelperPreview');
+
+  document.getElementById('inputHelperClose').addEventListener('click', function(e) {
+    self.hideHelper();
+  });
+
+  document.querySelector('#colorsTabTitle a').textContent = i18n('colorTitle');
+  $('#colorHelperSendMenuFore').text(i18n('colorHelperSendMenuFore'));
+  $('#colorHelperSendMenuBack').text(i18n('colorHelperSendMenuBack'));
+  $('#colorHelperSendMenuReset').text(i18n('colorHelperSendMenuReset'));
+
+  this.symbols = new lib.Symbols(this.app);
+  this.emoticons = new lib.Emoticons(this.app);
+};
+
+InputHelper.prototype.onMouseDrag = function(e) {
+  window.getSelection().removeAllRanges();
+  this.nodeOffsetTop += e.webkitMovementY;
+  this.nodeOffsetLeft += e.webkitMovementX;
+  this.node.style.cssText += 'top:'+this.nodeOffsetTop+'px;left:'+this.nodeOffsetLeft+'px;';
+};
+
+InputHelper.prototype.registerHandlers = function() {
+  var self = this;
+  var colorHelperList = document.getElementById('colorHelperList');
+  var tooltipHtml = '<div>'+i18n('colorHelperTooltip1')+'</div><div>'+i18n('colorHelperTooltip2')+'</div>';
+  $(colorHelperList).tooltip({html:true, title:tooltipHtml});
+
   this.colorHelperBlinkCheckbox = document.getElementById('colorHelperBlinkCheckbox');
-  this.colorHelperBlink.addEventListener('click', function(e) {
+  this.colorHelperPreview = document.getElementById('colorHelperPreview');
+  document.getElementById('colorHelperBlink').addEventListener('click', function(e) {
     var checked = self.colorHelperBlinkCheckbox.checked;
     if (checked != self.colorHelperIsBlink) {
       self.colorHelperIsBlink = checked;
@@ -53,27 +78,16 @@ InputHelper.prototype.setupUi = function() {
     }
     e.stopPropagation();
   });
-  this.colorHelperPreview.textContent = i18n('colorHelperPreview');
-  var tooltipHtml = '<div>'+i18n('colorHelperTooltip1')+'</div><div>'+i18n('colorHelperTooltip2')+'</div>';
-  $(this.colorHelperList).tooltip({html:true, title:tooltipHtml});
-
-  this.closeButton.addEventListener('click', function(e) {
-    self.hideHelper();
-  });
-
-  $('#colorHelperSendMenuFore').text(i18n('colorHelperSendMenuFore'));
-  $('#colorHelperSendMenuBack').text(i18n('colorHelperSendMenuBack'));
-  $('#colorHelperSendMenuReset').text(i18n('colorHelperSendMenuReset'));
-  this.colorHelperSend.addEventListener('click', function(e) {
+  document.getElementById('colorHelperSend').addEventListener('click', function(e) {
     self.sendColorCommand();
   });
-  this.colorHelperSendMenu.addEventListener('click', function(e) {
+  document.getElementById('colorHelperSendMenu').addEventListener('click', function(e) {
     if (!e.target.hasAttribute('type'))
       return;
     self.sendColorCommand(e.target.getAttribute('type'));
   });
 
-  this.colorHelperList.addEventListener('click', function(e) {
+  colorHelperList.addEventListener('click', function(e) {
     if (!e.target.hasAttribute('value'))
       return;
 
@@ -84,7 +98,7 @@ InputHelper.prototype.setupUi = function() {
     e.preventDefault();
     e.stopPropagation();
   });
-  this.colorHelperList.addEventListener('contextmenu', function(e) {
+  colorHelperList.addEventListener('contextmenu', function(e) {
     if (!e.target.hasAttribute('value'))
       return;
 
@@ -114,13 +128,9 @@ InputHelper.prototype.setupUi = function() {
   this.node.addEventListener('click', function(e) {
     self.clickedOn = true;
   });
-};
 
-InputHelper.prototype.onMouseDrag = function(e) {
-  window.getSelection().removeAllRanges();
-  this.nodeOffsetTop += e.webkitMovementY;
-  this.nodeOffsetLeft += e.webkitMovementX;
-  this.node.style.cssText += 'top:'+this.nodeOffsetTop+'px;left:'+this.nodeOffsetLeft+'px;';
+  this.symbols.registerHandlers();
+  this.emoticons.registerHandlers();
 };
 
 InputHelper.prototype.sendColorCommand = function(type) {

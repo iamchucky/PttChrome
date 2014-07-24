@@ -213,14 +213,8 @@
   "inputHelperTitle": {
     "message": "輸入小幫手"
   },
-  "colorHelperTitle": {
-    "message": "上色小幫手"
-  },
-  "symbolsHelperTitle": {
-    "message": "符號小幫手"
-  },
-  "emoticonsHelperTitle": {
-    "message": "表情小幫手"
+  "colorTitle": {
+    "message": "上色"
   },
   "colorHelperSend": {
     "message": "送出 ANSI 顏色字元"
@@ -248,6 +242,9 @@
   },
 
   // symbols
+  "symTitle": {
+    "message": "符號"
+  },
   "symTitle_general": {
     "message": "一般"
   },
@@ -283,6 +280,9 @@
   },
 
   // emoticons
+  "emoTitle": {
+    "message": "表情"
+  },
   "emoTitle_angry": {
     "message": "生氣"
   },

@@ -1,32 +1,18 @@
-#emoticonList {
-  position: absolute;
-  display: none;
-  list-style-type: none;
-}
-
-#emoticonList li {
-  padding: 5px;
-  font-family: symmingliu, MingLiU, monospace;
-}
-
-#colorHelperContainer {
-  height: 156px;
-}
 #colorHelperInstruction {
   font-size: 12px;
 }
 #colorHelperList {
   list-style-type: none;
-  width: 256px;
-  height: 64px;
+  width: 296px;
+  height: 74px;
   padding: 0px;
   background-color: black;
 }
 #colorHelperList li {
   display: block;
   float: left;
-  width: 32px;
-  height: 32px;
+  width: 37px;
+  height: 37px;
 }
 #colorHelperList li:hover {
   -webkit-transform: scale(1.2, 1.2);
@@ -44,44 +30,38 @@
   margin-bottom: 7px;
 }
 
-#symbolsContainer,
-#emoticonsContainer {
-  margin-top: 20px;
-}
-#symbolsContainer .dropdown-toggle,
-#symbolsContainer .dropdown-menu a, 
-#emoticonsContainer .dropdown-toggle,
-#emoticonsContainer .dropdown-menu a {
+#inputHelperTabTitle .dropdown-toggle,
+#inputHelperTabTitle .dropdown-menu a {
   cursor: pointer;
 }
-#symbolsTab > ul,
-#emoticonsTab > ul {
+.symList,
+.emoList {
   list-style-type: none;
   padding: 0 4px;
   margin-top: 5px;
 }
-#symbolsTab > ul > li {
+.symList > li {
   font-family: symmingliu, MingLiU, monospace;
   width: 100%;
   border: 1px solid #ccc;
-  font-size: 25px;
-  line-height: 25px;
+  font-size: 30px;
+  line-height: 30px;
   padding: 2px;
   background-color: white;
   margin-bottom: -1px;
-  height: 32px;
+  height: 37px;
   cursor: pointer;
   display: block;
   float: left;
-  width: 32px;
+  width: 37px;
   margin-right: -1px;
 }
-#symbolsTab > ul > li:hover {
+.symList > li:hover {
   -webkit-transform: scale(1.4, 1.4);
   border: 2px solid black;
 }
 
-#emoticonsTab > ul > li {
+.emoList > li {
   font-family: symmingliu, MingLiU, monospace;
   width: 100%;
   border: 1px solid #ccc;
@@ -96,15 +76,20 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-#emoticonsTab > ul > li:hover {
+.emoList > li:hover {
   -webkit-transform: scale(1.1, 1.1);
   border: 2px solid black;
+}
+
+.tab-pane {
+  margin-top: 20px;
+  margin-bottom: 0px;
 }
 
 #inputHelper {
   position: absolute;
   color: black;
-  width: 300px;
+  width: 340px;
   top: 20px;
   left: 20px;
   margin: 0px;

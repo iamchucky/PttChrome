@@ -69,42 +69,38 @@ lib.symbols = {
 lib.Symbols = function(app) {
   this.app = app;
 
-  this.node = document.getElementById('symbolsContainer');
-  this.tab = document.getElementById('symbolsTab');
+  this.tab = document.getElementById('inputHelperTabContent');
   this.setupUi();
 };
 
 lib.Symbols.prototype.setupUi = function() {
-  var self = this;
   var htmlStr = '';
   var dropdownHtmlStr = '';
   for (var i in lib.symbols) {
     var title = i18n('symTitle_'+i);
     dropdownHtmlStr += '<li><a href="#sym_'+i+'_list" name="'+i+'" data-toggle="tab">'+title+'</a></li>';
     var sym = lib.symbols[i];
-    var height = Math.ceil(sym.length / 8) * 32; // find height by having 8 element each row
-    htmlStr += '<ul id="sym_'+i+'_list" class="tab-pane" style="height:'+height+'px;"><li>' + lib.symbols[i].join('</li><li>') + '</li></ul>';
+    var height = Math.ceil(sym.length / 8) * 37; // find height by having 8 element each row
+    htmlStr += '<ul id="sym_'+i+'_list" class="tab-pane symList" style="height:'+height+'px;"><li>' + lib.symbols[i].join('</li><li>') + '</li></ul>';
   }
 
   // setup tab content
-  this.tab.innerHTML = htmlStr;
+  this.tab.innerHTML += htmlStr;
   
   // setup dropdown menu
   document.querySelector('#symbolsTabTitle .dropdown-menu').innerHTML = dropdownHtmlStr;
-  var dropdownToggle = $('#symbolsContainer .dropdown-toggle');
+  document.querySelector('#symbolsTabTitle .dropdown-toggle').innerHTML = i18n('symTitle')+' <span class="caret"></span>';
+};
+
+lib.Symbols.prototype.registerHandlers = function() {
+  var self = this;
 
   $('#symbolsTabTitle .dropdown-menu a').click(function (e) {
     e.preventDefault();
     $(this).tab('show');
-    dropdownToggle.dropdown('toggle');
   });
-  $('#symbolsTabTitle .dropdown-menu a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    var title = e.target.textContent;
-    dropdownToggle.html(title+' <span class="caret"></span>');
-  });
-  $('#symbolsTabTitle .dropdown-menu a:first').tab('show');
 
-  $('#symbolsTab > .tab-pane > li').click(function(e) {
+  $('.symList > li').click(function(e) {
     self.app.telnetCore.convSend(e.target.textContent);
   });
 };
