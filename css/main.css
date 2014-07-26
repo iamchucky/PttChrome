@@ -19,7 +19,7 @@
   box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.4);
 }
 #colorHelperPreview {
-  font-family: symmingliu, MingLiU, monospace;
+  font-family: MingLiU, symmingliu, monospace;
   font-size: 22px;
   line-height: 22px;
 }
@@ -41,7 +41,7 @@
   margin-top: 5px;
 }
 .symList > li {
-  font-family: symmingliu, MingLiU, monospace;
+  font-family: MingLiU, symmingliu, monospace;
   width: 100%;
   border: 1px solid #ccc;
   font-size: 30px;
@@ -62,7 +62,7 @@
 }
 
 .emoList > li {
-  font-family: symmingliu, MingLiU, monospace;
+  font-family: MingLiU, symmingliu, monospace;
   width: 100%;
   border: 1px solid #ccc;
   font-size: 21px;
