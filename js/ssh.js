@@ -151,6 +151,13 @@ SecureShellConnection.prototype.convSend = function(unicode_str) {
   }
 };
 
+// not tested
+SecureShellConnection.prototype.sendNaws = function() {
+  var cols = this.app.buf ? this.app.buf.cols : 80;
+  var rows = this.app.buf ? this.app.buf.rows : 24;
+  this.shell.resize_pty(cols, rows);
+};
+
 SecureShellConnection.prototype.checkAutoLogin = function(row) {
   if (this.autoLoginStage > 3 || this.autoLoginStage < 1) {
     this.autoLoginStage = 0;
