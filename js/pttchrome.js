@@ -332,29 +332,14 @@ pttchrome.App.prototype.setInputAreaFocus = function() {
 
 pttchrome.App.prototype.setupConnectionAlert = function() {
   $('#connectionAlertReconnect').empty();
-  $('#connectionAlertExitAll').empty();
   $('#connectionAlertHeader').text(i18n('alert_connectionHeader'));
   $('#connectionAlertText').text(i18n('alert_connectionText'));
   $('#connectionAlertReconnect').text(i18n('alert_connectionReconnect'));
-  $('#connectionAlertExitAll').text(i18n('alert_connectionExitAll'));
 
   var self = this;
   $('#connectionAlertReconnect').click(function(e) {
     self.connect(self.connectedUrl);
     $('#connectionAlert').hide();
-  });
-  $('#connectionAlertExitAll').click(function(e) {
-    window.open('','_self');
-    window.close();
-
-    if (self.isFromApp) {
-      var port = self.appConn.appPort;
-      if (!port)
-        return;
-      if (self.appConn.isConnected) {
-        port.postMessage({ action: 'closeAppWindow' });
-      }
-    }
   });
 };
 

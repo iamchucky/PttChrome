@@ -191,13 +191,10 @@ locale.en_US = {
     "message": "You are disconnected!"
   },
   "alert_connectionText": {
-    "message": "Would you like to reconnect to the site or quit the app?"
+    "message": "Would you like to reconnect to the site?"
   },
   "alert_connectionReconnect": {
     "message": "Reconnect (ENTER)"
-  },
-  "alert_connectionExitAll": {
-    "message": "Quit (ESC)"
   },
 
   // notifications

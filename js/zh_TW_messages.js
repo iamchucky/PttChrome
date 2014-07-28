@@ -188,13 +188,10 @@
     "message": "你斷線了!"
   },
   "alert_connectionText": {
-    "message": "現在要重新連線還是離開?"
+    "message": "現在要重新連線嗎?"
   },
   "alert_connectionReconnect": {
     "message": "重新連線 (ENTER)"
-  },
-  "alert_connectionExitAll": {
-    "message": "離開 (ESC)"
   },
 
   // notifications
