@@ -135,7 +135,7 @@ InputHelper.prototype.registerHandlers = function() {
 
 InputHelper.prototype.sendColorCommand = function(type) {
   if (type == 'reset') {
-    this.app.telnetCore.send('\x15[m');
+    this.app.conn.send('\x15[m');
     return;
   }
 
@@ -189,7 +189,7 @@ InputHelper.prototype.sendColorCommand = function(type) {
     selCmd += '\x1b[C'.repeat(repeats);
     cmd = selCmd + cmd;
   }
-  this.app.telnetCore.send(cmd);
+  this.app.conn.send(cmd);
 };
 
 InputHelper.prototype.showHelper = function() {

@@ -37,7 +37,7 @@ const STATE_DO=4;
 const STATE_DONT=5;
 const STATE_SB=6;
 
-function TelnetCore(app) {
+function TelnetConnection(app) {
   this.app = app;
 
   this.host = 'ptt.cc';
@@ -45,11 +45,10 @@ function TelnetCore(app) {
 
   this.state = STATE_DATA;
   this.iac_sb = '';
-  //this.b52k3uao = window.uaotable;
+
   this.EscChar = '\x15'; // Ctrl-U
   this.termType = 'VT100';
   this.lineWrap = 78;
-  this.initial = true;
 
   //AutoLogin - start
   this.autoLoginStage = 0;
@@ -59,7 +58,7 @@ function TelnetCore(app) {
   this.isConnected = false;
 }
 
-TelnetCore.prototype.connect = function(host, port) {
+TelnetConnection.prototype.connect = function(host, port) {
   if (host) {
     this.host = host;
     this.port = port;
@@ -75,11 +74,11 @@ TelnetCore.prototype.connect = function(host, port) {
     this.autoLoginStage = 0;
 
   //this.initialAutoLogin();
-  this.isConnected = true;
-  this.app.appConn.connectTelnet(this.host, this.port);
+  this.isConnected = false;
+  this.app.appConn.connectTcp(this.host, this.port);
 };
 
-TelnetCore.prototype.onDataAvailable = function(str) {
+TelnetConnection.prototype.onDataAvailable = function(str) {
   var data='';
   var count = str.length;
   while (count > 0) {
@@ -175,16 +174,16 @@ TelnetCore.prototype.onDataAvailable = function(str) {
   }
 };
 
-TelnetCore.prototype.send = function(str) {
+TelnetConnection.prototype.send = function(str) {
   if (str) {
     if (this.app && this.app.appConn) {
       this.app.idleTime = 0;
-      this.app.appConn.sendTelnet(str);
+      this.app.appConn.sendTcp(str);
     }
   }
 };
 
-TelnetCore.prototype.convSend = function(unicode_str) {
+TelnetConnection.prototype.convSend = function(unicode_str) {
   // supports UAO
   // when converting unicode to big5, use UAO.
 
@@ -196,7 +195,7 @@ TelnetCore.prototype.convSend = function(unicode_str) {
   }
 };
 
-TelnetCore.prototype.sendNaws = function() {
+TelnetConnection.prototype.sendNaws = function() {
   var cols = this.app.buf ? this.app.buf.cols : 80;
   var rows = this.app.buf ? this.app.buf.rows : 24;
   var nawsStr = String.fromCharCode(Math.floor(cols/256), cols%256, Math.floor(rows/256), rows%256).replace(/(\xff)/g,'\xff\xff');
@@ -204,7 +203,7 @@ TelnetCore.prototype.sendNaws = function() {
   this.send( rep );
 };
 
-TelnetCore.prototype.checkAutoLogin = function(row) {
+TelnetConnection.prototype.checkAutoLogin = function(row) {
   if (this.autoLoginStage > 3 || this.autoLoginStage < 1) {
     this.autoLoginStage = 0;
     return;

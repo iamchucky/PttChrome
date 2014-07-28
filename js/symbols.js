@@ -101,6 +101,6 @@ lib.Symbols.prototype.registerHandlers = function() {
   });
 
   $('.symList > li').click(function(e) {
-    self.app.telnetCore.convSend(e.target.textContent);
+    self.app.conn.convSend(e.target.textContent);
   });
 };

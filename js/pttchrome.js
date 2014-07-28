@@ -41,7 +41,12 @@ pttchrome.App = function(onInitializedCallback, from) {
   this.CmdHandler.setAttribute('SkipMouseClick','0');
   this.pref = null;
 
-  this.telnetCore = new TelnetCore(this);
+  var useSSH = getQueryVariable('ssh');
+  if (useSSH == 'true') {
+    this.conn = new SecureShellConnection(this);
+  } else {
+    this.conn = new TelnetConnection(this);
+  }
   this.view = new TermView(24);
   this.buf = new TermBuf(80, 24);
   this.buf.setView(this.view);
@@ -49,7 +54,7 @@ pttchrome.App = function(onInitializedCallback, from) {
   //this.buf.PTTZSTR1=this.getLM('PTTZArea1');
   //this.buf.PTTZSTR2=this.getLM('PTTZArea2');
   this.view.setBuf(this.buf);
-  this.view.setConn(this.telnetCore);
+  this.view.setConn(this.conn);
   this.view.setCore(this);
   this.parser = new lib.AnsiParser(this.buf);
 
@@ -164,7 +169,7 @@ pttchrome.App = function(onInitializedCallback, from) {
     } else if (msg.action == 'navigate') {
       self.navigationDone = false;
       self.navigateTo = msg.data;
-      self.telnetCore.send('\x1b[D\x1b[D\x1b[D\x1b[D\x1b[D\x1b[D');
+      self.conn.send('\x1b[D\x1b[D\x1b[D\x1b[D\x1b[D\x1b[D');
     }
   });
 
@@ -191,11 +196,11 @@ pttchrome.App = function(onInitializedCallback, from) {
 pttchrome.App.prototype.setupAppConnection = function(callback) {
   var self = this;
   this.appConn = new lib.AppConnection({
-    host: self.telnetCore.host,
-    port: self.telnetCore.port,
+    host: self.conn.host,
+    port: self.conn.port,
     onConnect: self.onConnect.bind(self),
     onDisconnect: self.onClose.bind(self),
-    onReceive: self.telnetCore.onDataAvailable.bind(self.telnetCore),
+    onReceive: self.conn.onDataAvailable.bind(self.conn),
     onSent: null,
     onPasteDone: self.onPasteDone.bind(self),
     onStorageDone: self.pref.onStorageDone.bind(self.pref),
@@ -219,15 +224,16 @@ pttchrome.App.prototype.connect = function(url) {
   if (!this.appConn.isConnected) {
     this.setupAppConnection(function() {
       dumpLog(DUMP_TYPE_LOG, "connect to " + url);
-      self.telnetCore.connect(url, port);
+      self.conn.connect(url, port);
     });
   } else {
     dumpLog(DUMP_TYPE_LOG, "connect to " + url);
-    this.telnetCore.connect(url, port);
+    this.conn.connect(url, port);
   }
 };
 
 pttchrome.App.prototype.onConnect = function() {
+  this.conn.isConnected = true;
   $('#connectionAlert').hide();
   dumpLog(DUMP_TYPE_LOG, "pttchrome onConnect");
   this.connectState = 1;
@@ -264,7 +270,7 @@ pttchrome.App.prototype.onClose = function() {
   dumpLog(DUMP_TYPE_LOG, "pttchrome onClose");
   this.timerEverySec.cancel();
   this.view.cursorBlinkTimer.cancel();
-  this.telnetCore.isConnected = false;
+  this.conn.isConnected = false;
 
   this.cancelMbTimer();
   this.unregExitAlert();
@@ -278,12 +284,12 @@ pttchrome.App.prototype.onClose = function() {
 
 pttchrome.App.prototype.sendData = function(str) {
   if (this.connectState == 1)
-    this.telnetCore.convSend(str);
+    this.conn.convSend(str);
 };
 
 pttchrome.App.prototype.sendCmdData = function(str) {
   if (this.connectState == 1)
-    this.telnetCore.send(str);
+    this.conn.send(str);
 };
 
 pttchrome.App.prototype.cancelMbTimer = function() {
@@ -443,7 +449,7 @@ pttchrome.App.prototype.doPaste = function() {
 };
 
 pttchrome.App.prototype.onPasteDone = function(content) {
-  //this.telnetCore.convSend(content);
+  //this.conn.convSend(content);
   this.view.onTextInput(content, true);
 };
 
@@ -539,7 +545,7 @@ pttchrome.App.prototype.switchMouseBrowsing = function() {
 pttchrome.App.prototype.antiIdle = function() {
   if (this.antiIdleTime && this.idleTime > this.antiIdleTime) {
     if (this.antiIdleStr !== '' && this.connectState == 1)
-      this.telnetCore.send(this.antiIdleStr);
+      this.conn.send(this.antiIdleStr);
   } else {
     if (this.connectState == 1)
       this.idleTime += 1000;
@@ -626,7 +632,7 @@ pttchrome.App.prototype.clientToPos = function(cX, cY) {
 };
 
 pttchrome.App.prototype.onMouse_click = function (cX, cY) {
-  if (!this.telnetCore.isConnected)
+  if (!this.conn.isConnected)
     return;
   if (this.inputHelper.clickedOn) {
     this.inputHelper.clickedOn = false;
@@ -637,34 +643,34 @@ pttchrome.App.prototype.onMouse_click = function (cX, cY) {
       if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
         this.buf.sendCommandAfterUpdate = 'skipOne';
       }
-      this.telnetCore.send('\x1b[D');  //Arrow Left
+      this.conn.send('\x1b[D');  //Arrow Left
       break;
     case 2:
       if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
         this.view.mainDisplay.scrollTop -= this.view.chh * this.view.easyReadingTurnPageLines;
       } else {
-        this.telnetCore.send('\x1b[5~'); //Page Up
+        this.conn.send('\x1b[5~'); //Page Up
       }
       break;
     case 3:
       if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
         this.view.mainDisplay.scrollTop += this.view.chh * this.view.easyReadingTurnPageLines;
       } else {
-        this.telnetCore.send('\x1b[6~'); //Page Down
+        this.conn.send('\x1b[6~'); //Page Down
       }
       break;
     case 4:
       if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
         this.view.mainDisplay.scrollTop = 0;
       } else {
-        this.telnetCore.send('\x1b[1~'); //Home
+        this.conn.send('\x1b[1~'); //Home
       }
       break;
     case 5:
       if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
         this.view.mainDisplay.scrollTop = this.view.mainContainer.clientHeight;
       } else {
-        this.telnetCore.send('\x1b[4~'); //End
+        this.conn.send('\x1b[4~'); //End
       }
       break;
     case 6:
@@ -680,7 +686,7 @@ pttchrome.App.prototype.onMouse_click = function (cX, cY) {
             sendstr += '\x1b[B'; //Arrow Down
         }
         sendstr += '\r';
-        this.telnetCore.send(sendstr);
+        this.conn.send(sendstr);
       }
       break;
     case 7:
@@ -696,49 +702,49 @@ pttchrome.App.prototype.onMouse_click = function (cX, cY) {
           sendstr += '\x1b[B'; //Arrow Down
       }
       sendstr += '\r';
-      this.telnetCore.send(sendstr);
+      this.conn.send(sendstr);
       break;
     case 0:
       if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
         this.buf.sendCommandAfterUpdate = 'skipOne';
       }
-      this.telnetCore.send('\x1b[D'); //Arrow Left
+      this.conn.send('\x1b[D'); //Arrow Left
       break;
     case 8:
       if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
         this.buf.cancelPageDownAndResetPrevPageState();
       } 
-      this.telnetCore.send('['); //Previous post with the same title
+      this.conn.send('['); //Previous post with the same title
       break;
     case 9:
       if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
         this.buf.cancelPageDownAndResetPrevPageState();
       } 
-      this.telnetCore.send(']'); //Next post with the same title
+      this.conn.send(']'); //Next post with the same title
       break;
     case 10:
       if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
         this.buf.cancelPageDownAndResetPrevPageState();
       } 
-      this.telnetCore.send('='); //First post with the same title
+      this.conn.send('='); //First post with the same title
       break;
     case 12:
       if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
         this.buf.cancelPageDownAndResetPrevPageState();
       } 
-      this.telnetCore.send('\x1b[D\r\x1b[4~'); //Refresh post / pushed texts
+      this.conn.send('\x1b[D\r\x1b[4~'); //Refresh post / pushed texts
       break;
     case 13:
       if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
         this.buf.cancelPageDownAndResetPrevPageState();
       } 
-      this.telnetCore.send('\x1b[D\r\x1b[4~[]'); //Last post with the same title (LIST)
+      this.conn.send('\x1b[D\r\x1b[4~[]'); //Last post with the same title (LIST)
       break;
     case 14:
       if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
         this.buf.cancelPageDownAndResetPrevPageState();
       } 
-      this.telnetCore.send('\x1b[D\x1b[4~[]\r'); //Last post with the same title (READING)
+      this.conn.send('\x1b[D\x1b[4~[]\r'); //Last post with the same title (READING)
       break;
     default:
       //do nothing
@@ -757,66 +763,66 @@ pttchrome.App.prototype.overlayCommandListener = function (e) {
           if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
             if (this.view.mainDisplay.scrollTop === 0) {
               this.buf.cancelPageDownAndResetPrevPageState();
-              this.telnetCore.send('\x1b[D\x1b[A\x1b[C');
+              this.conn.send('\x1b[D\x1b[A\x1b[C');
             } else {
               this.view.mainDisplay.scrollTop -= this.view.chh;
             }
           } else {
-            this.telnetCore.send('\x1b[A');
+            this.conn.send('\x1b[A');
           }
           break;
         case "doArrowDown":
           if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
             if (this.view.mainDisplay.scrollTop >= this.view.mainContainer.clientHeight - this.view.chh * this.buf.rows) {
               this.buf.cancelPageDownAndResetPrevPageState();
-              this.telnetCore.send('\x1b[B');
+              this.conn.send('\x1b[B');
             } else {
               this.view.mainDisplay.scrollTop += this.view.chh;
             }
           } else {
-            this.telnetCore.send('\x1b[B');
+            this.conn.send('\x1b[B');
           }
           break;
         case "doPageUp":
           if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
             this.view.mainDisplay.scrollTop -= this.view.chh * this.view.easyReadingTurnPageLines;
           } else {
-            this.telnetCore.send('\x1b[5~');
+            this.conn.send('\x1b[5~');
           }
           break;
         case "doPageDown":
           if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
             this.view.mainDisplay.scrollTop += this.view.chh * this.view.easyReadingTurnPageLines;
           } else {
-            this.telnetCore.send('\x1b[6~');
+            this.conn.send('\x1b[6~');
           }
           break;
         case "previousThread":
           if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
             this.buf.cancelPageDownAndResetPrevPageState();
-            this.telnetCore.send('[');
+            this.conn.send('[');
           } else if (this.buf.pageState==2 || this.buf.pageState==3 || this.buf.pageState==4) {
-            this.telnetCore.send('[');
+            this.conn.send('[');
           }
           break;
         case "nextThread":
           if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
             this.buf.cancelPageDownAndResetPrevPageState();
-            this.telnetCore.send(']');
+            this.conn.send(']');
           } else if (this.buf.pageState==2 || this.buf.pageState==3 || this.buf.pageState==4) {
-            this.telnetCore.send(']');
+            this.conn.send(']');
           }
           break;
         case "doEnter":
           if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
             if (this.view.mainDisplay.scrollTop >= this.view.mainContainer.clientHeight - this.view.chh * this.buf.rows) {
               this.buf.cancelPageDownAndResetPrevPageState();
-              this.telnetCore.send('\r');
+              this.conn.send('\r');
             } else {
               this.view.mainDisplay.scrollTop += this.view.chh;
             }
           } else {
-            this.telnetCore.send('\r');
+            this.conn.send('\r');
           }
           break;
         case "reloadTabIconDelay":
@@ -991,7 +997,7 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
       this.view.dbcsDetect = pref.get(name);
       break;
     case 'lineWrap':
-      this.telnetCore.lineWrap = pref.get(name);
+      this.conn.lineWrap = pref.get(name);
       break;
     case 'fontFitWindowWidth':
       this.view.fontFitWindowWidth = pref.get(name);
@@ -1084,10 +1090,10 @@ pttchrome.App.prototype.middleMouse_down = function(e) {
       return;
     }
     if (this.view.middleButtonFunction == 1) {
-      this.telnetCore.send('\r');
+      this.conn.send('\r');
       return false;
     } else if (this.view.middleButtonFunction == 2) {
-      this.telnetCore.send('\x1b[D');
+      this.conn.send('\x1b[D');
       return false;
     }
   }

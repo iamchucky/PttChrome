@@ -583,20 +583,20 @@ TermView.prototype = {
 
   onTextInput: function(text, isPasting) {
     this.resetCursorBlink();
-    var telnet = this.bbscore.telnetCore;
+    var conn = this.conn;
     if (isPasting) {
       text = text.replace(/\r\n/g, '\r');
       text = text.replace(/\n/g, '\r');
       text = text.replace(/\r/g, this.EnterChar);
 
-      if(text.indexOf('\x1b') < 0 && telnet.lineWrap > 0) {
-        text = text.wrapText(telnet.lineWrap, this.EnterChar);
+      if(text.indexOf('\x1b') < 0 && conn.lineWrap > 0) {
+        text = text.wrapText(conn.lineWrap, this.EnterChar);
       }
 
       //FIXME: stop user from pasting DBCS words with 2-color
-      text = text.replace(/\x1b/g, telnet.EscChar);
+      text = text.replace(/\x1b/g, conn.EscChar);
     }
-    this.conn.convSend(text);
+    conn.convSend(text);
   },
 
   onkeyDown: function(e) {

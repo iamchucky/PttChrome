@@ -92,7 +92,7 @@ lib.AppConnection.prototype.connect = function(callback) {
   });
 };
 
-lib.AppConnection.prototype.connectTelnet = function(host, port) {
+lib.AppConnection.prototype.connectTcp = function(host, port) {
   if (!this.isConnected) {
     return;
   }
@@ -103,7 +103,7 @@ lib.AppConnection.prototype.connectTelnet = function(host, port) {
   });
 };
 
-lib.AppConnection.prototype.sendTelnet = function(str) {
+lib.AppConnection.prototype.sendTcp = function(str) {
   if (this.appPort === null) {
     return;
   }

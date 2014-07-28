@@ -100,6 +100,6 @@ lib.Emoticons.prototype.registerHandlers = function() {
   });
 
   $('.emoList > li').click(function(e) {
-    self.app.telnetCore.convSend(e.target.textContent);
+    self.app.conn.convSend(e.target.textContent);
   });
 };

@@ -272,10 +272,10 @@ PttChromePref.prototype = {
       this.app.onPrefChange(this, i);
     }
     if (this.logins[0]) {
-      this.app.telnetCore.loginStr[1] = this.logins[0];
+      this.app.conn.loginStr[1] = this.logins[0];
     }
     if (this.logins[1]) {
-      this.app.telnetCore.loginStr[2] = this.logins[1];
+      this.app.conn.loginStr[2] = this.logins[1];
     }
   },
 
