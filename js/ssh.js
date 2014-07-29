@@ -104,6 +104,7 @@ SecureShellConnection.prototype.onDataAvailable = function(str) {
     }
   }
 
+  var data = '';
   try {
     if (!this.shell) {
       return;
@@ -112,7 +113,7 @@ SecureShellConnection.prototype.onDataAvailable = function(str) {
       this.disconnect();
       return;
     }
-    var data = this.shell.recv(65536);
+    data = this.shell.recv(65536);
   } catch(ex) {
     if (ex instanceof paramikojs.ssh_exception.WaitException) {
       // some times no data comes out, dont care
