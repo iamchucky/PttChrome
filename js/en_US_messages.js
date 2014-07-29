@@ -206,7 +206,7 @@ locale.en_US = {
     "message": "Version"
   },
   "about_version": {
-    "message": "1.3-webapp1 7/29/2014"
+    "message": "1.3-webapp2 7/29/2014"
   },
   "about_new_title": {
     "message": "What's new"
@@ -215,7 +215,8 @@ locale.en_US = {
     "message": [
       'Added SSH connection to PTT, append ?ssh=true to the URL',
       'Added the About page in the settings',
-      'Adjusted Input helper UI'
+      'Adjusted Input helper UI',
+      'Easy reading mode now scrolls like webpage'
     ]
   },
 

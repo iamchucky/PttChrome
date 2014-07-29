@@ -1201,6 +1201,10 @@ pttchrome.App.prototype.mouse_over = function(e) {
 pttchrome.App.prototype.mouse_scroll = function(e) {
   if (this.modalShown) 
     return;
+  // if in easyreading, use it like webpage
+  if (this.view.useEasyReadingMode && this.buf.pageState == 3) {
+    return;
+  }
 
   var cmdhandler = this.CmdHandler;
 
