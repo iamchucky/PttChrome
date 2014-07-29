@@ -44,7 +44,7 @@ lib.AppConnection.prototype.showJumbo = function() {
   $('#getAppBtn').off();
   $('#getAppBtn').click(function() {
     // turn it on when it works
-    chrome.webstore.install(,function() {
+    chrome.webstore.install(null, function() {
       // successfully installed
       location.reload();
     });
