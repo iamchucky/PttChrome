@@ -203,7 +203,7 @@
     "message": "版本"
   },
   "about_version": {
-    "message": "1.3-webapp1 7/29/2014"
+    "message": "1.3-webapp2 7/29/2014"
   },
   "about_new_title": {
     "message": "新功能"
