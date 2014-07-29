@@ -82,6 +82,9 @@ locale.en_US = {
   "options_blacklist": {
     "message": "Blacklist"
   },
+  "options_about": {
+    "message": "About"
+  },
 
   // options
   "options_openInPackagedApp": {
@@ -184,6 +187,36 @@ locale.en_US = {
   },
   "autologin_warning": {
     "message": "Login info is not encrypted, DO NOT use on a public machine"
+  },
+
+  // about page
+  "about_review": {
+    "message": "Review app"
+  },
+  "about_feedback": {
+    "message": "Send feedback"
+  },
+  "about_fbpage": {
+    "message": "Facebook"
+  },
+  "about_promote": {
+    "message": "If you like this app, also take a look at "
+  },
+  "about_version_title": {
+    "message": "Version"
+  },
+  "about_version": {
+    "message": "1.3-webapp1 7/29/2014"
+  },
+  "about_new_title": {
+    "message": "What's new"
+  },
+  "about_new_content": {
+    "message": [
+      'Added SSH connection to PTT, append ?ssh=true to the URL',
+      'Added the About page in the settings',
+      'Adjusted Input helper UI'
+    ]
   },
 
   // alerts

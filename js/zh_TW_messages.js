@@ -82,6 +82,9 @@
   "options_blacklist": {
     "message": "黑名單"
   },
+  "options_about": {
+    "message": "關於"
+  },
 
   // options
   "options_openInPackagedApp": {
@@ -181,6 +184,36 @@
   },
   "autologin_warning": {
     "message": "帳號密碼沒有加密儲存, 千萬不要在公用電腦上使用"
+  },
+
+  // about page
+  "about_review": {
+    "message": "給評分"
+  },
+  "about_feedback": {
+    "message": "客服信箱"
+  },
+  "about_fbpage": {
+    "message": "粉絲頁"
+  },
+  "about_promote": {
+    "message": "喜歡這個 APP 的話也請看看鄉民朝聖套件 "
+  },
+  "about_version_title": {
+    "message": "版本"
+  },
+  "about_version": {
+    "message": "1.3-webapp1 7/29/2014"
+  },
+  "about_new_title": {
+    "message": "新功能"
+  },
+  "about_new_content": {
+    "message": [
+      '加入了 SSH 連到 PTT 的功能, 只要在網址後面加上 ?ssh=true',
+      '在設定頁面加入了關於頁面, 使用者可以在上面找到連絡資訊',
+      '調整了輸入小幫手的使用介面'
+    ]
   },
 
   // alerts

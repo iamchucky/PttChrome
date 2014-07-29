@@ -136,6 +136,8 @@ PttChromePref.prototype = {
       self.app.doAddBlacklistUserId(username);
       self.refreshBlacklistOnUi();
     });
+
+    this.setupAboutPage();
     
     $('#opt_tabs a').click(function(e) {
       e.preventDefault();
@@ -182,6 +184,22 @@ PttChromePref.prototype = {
       }
       self.saveAndDoneWithIt();
     });
+  },
+
+  setupAboutPage: function() {
+    var contents = [
+        'review', 'feedback', 'fbpage', 
+        'promote',
+        'version_title', 'version',
+        'new_title'
+      ];
+    for (var i in contents) {
+      var content = contents[i];
+      $('#about_'+content).text(i18n('about_'+content));
+    }
+
+    var whatsNewListHtml = '<li>' + i18n('about_new_content').join('</li><li>') + '</li>';
+    $('#about_new').html(whatsNewListHtml);
   },
 
   refreshBlacklistOnUi: function() {
