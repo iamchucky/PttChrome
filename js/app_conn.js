@@ -44,7 +44,10 @@ lib.AppConnection.prototype.showJumbo = function() {
   $('#getAppBtn').off();
   $('#getAppBtn').click(function() {
     // turn it on when it works
-    chrome.webstore.install();
+    chrome.webstore.install(,function() {
+      // successfully installed
+      location.reload();
+    });
     //window.open('https://chrome.google.com/webstore/detail/pttchrome/'+self.appId, '_self');
   });
   console.log('app is not running or installed');
