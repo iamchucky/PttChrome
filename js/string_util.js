@@ -135,7 +135,7 @@ String.prototype.parseReplyText = function() {
 
 String.prototype.parsePushInitText = function() {
   var str = this;
-  return (str.indexOf('您覺得這篇文章 1.值得推薦 2.給它噓聲 3.只加→註解 [1]?') === 0 || str.search(/→ \w+: +/) === 0);
+  return (str.indexOf('您覺得這篇文章 ') === 0 || str.search(/→ \w+ *: +/) === 0);
 };
 
 String.prototype.parseStatusRow = function() {
