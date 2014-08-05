@@ -129,13 +129,8 @@ PttChromePref.prototype = {
 
     $('#opt_autologinWarning').text(i18n('autologin_warning'));
 
-    $('#opt_addBlacklistInput').attr('placeholder', i18n('options_addBlacklistInputPlaceholder'));
-    $('#opt_addBlacklistButton').click(function(e) {
-      var username = $('#opt_addBlacklistInput').val().toLowerCase();
-      $('#opt_addBlacklistInput').val('');
-      self.app.doAddBlacklistUserId(username);
-      self.refreshBlacklistOnUi();
-    });
+    // blacklist
+    $('#opt_blacklistInstruction').text(i18n('options_blacklistInstruction'));
 
     this.setupAboutPage();
     
@@ -164,6 +159,7 @@ PttChromePref.prototype = {
       height -= 76;
       $('#prefModal .modal-body').css('height', height + 'px');
       $('#prefModal .modal-body').css('width', width + 'px');
+      $('#opt_blacklistedUsers').css('height', height-120 + 'px');
       self.refreshBlacklistOnUi();
     });
     $('#prefModal').on('shown.bs.modal', function(e) {
@@ -204,22 +200,24 @@ PttChromePref.prototype = {
 
   refreshBlacklistOnUi: function() {
     var listNode = $('#opt_blacklistedUsers');
-    var listStr = '';
+    var listStr = Object.keys(this.blacklistedUserIds).join('\n');
+    listNode.val(listStr);
+  },
 
-    for (var user in this.blacklistedUserIds) {
-      listStr += '<li class="list-group-item"><i class="glyphicon glyphicon-remove" style="margin-right:10px;cursor:pointer;-webkit-user-select:none"></i>'+user+'</li>';
+  readBlacklistValues: function() {
+    var listNode = $('#opt_blacklistedUsers');
+    var listStr = listNode.val();
+    var blacklistArray = listStr.split('\n');
+
+    this.blacklistedUserIds = {};
+
+    for (var i in blacklistArray) {
+      var b = blacklistArray[i];
+      if (!b) continue;
+      this.blacklistedUserIds[b] = true;
     }
-    $('#opt_blacklistedUsers i').empty();
-    $('#opt_blacklistedUsers li').empty();
-    listNode[0].innerHTML = listStr;
-
-    var self = this;
-    $('#opt_blacklistedUsers i').click(function() {
-      var user = $(this).parent().text();
-      self.app.doRemoveBlacklistUserId(user);
-      $(this).parent().remove();
-    });
-
+    this.setBlacklistStorage();
+    this.app.view.redraw(true);
   },
 
   saveAndDoneWithIt: function() {
@@ -235,6 +233,7 @@ PttChromePref.prototype = {
   },
 
   readValueFromUi: function() {
+    this.readBlacklistValues();
     var selectedVal;
     for (var i in this.values) {
       if (i === 'blacklistedUserIds') {

@@ -171,8 +171,8 @@
   "options_enableBlacklist": {
     "message": "啟用使用者黑名單功能"
   },
-  "options_addBlacklistInputPlaceholder": {
-    "message": "請輸入欲加入黑名單的使用者後按 +"
+  "options_blacklistInstruction": {
+    "message": "請在下面輸入所有欲加入黑名單的使用者ID, 每行一個"
   },
 
   // auto logins
@@ -203,7 +203,7 @@
     "message": "版本"
   },
   "about_version": {
-    "message": "1.3-webapp2 7/30/2014"
+    "message": "1.3-webapp3 8/5/2014"
   },
   "about_new_title": {
     "message": "新功能"
@@ -214,7 +214,8 @@
       '在設定頁面加入了關於頁面, 使用者可以在上面找到連絡資訊',
       '調整了輸入小幫手的使用介面',
       '在好讀模式下的滑鼠滾輪不會跳到下篇文章',
-      '修正了在好讀模式下推文無反應的問題'
+      '修正了在好讀模式下推文無反應的問題',
+      '更改了黑名單編輯頁面介面'
     ]
   },
 

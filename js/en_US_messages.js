@@ -174,8 +174,8 @@ locale.en_US = {
   "options_enableBlacklist": {
     "message": "Enable user blacklist feature"
   },
-  "options_addBlacklistInputPlaceholder": {
-    "message": "Type in the username and press +"
+  "options_blacklistInstruction": {
+    "message": "Type in the usernames in the textarea below, one per line"
   },
 
   // auto logins
@@ -206,7 +206,7 @@ locale.en_US = {
     "message": "Version"
   },
   "about_version": {
-    "message": "1.3-webapp2 7/30/2014"
+    "message": "1.3-webapp3 8/5/2014"
   },
   "about_new_title": {
     "message": "What's new"
@@ -217,7 +217,8 @@ locale.en_US = {
       'Added the About page in the settings',
       'Adjusted Input helper UI',
       'Easy reading mode now scrolls like webpage',
-      'Fixed easy reading mode pushthread hangups'
+      'Fixed easy reading mode pushthread hangups',
+      'Changed edit blacklist settings UI to textarea'
     ]
   },
 

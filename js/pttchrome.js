@@ -501,6 +501,7 @@ pttchrome.App.prototype.onWindowResize = function() {
     height -= 76;
     $('#prefModal .modal-body').css('height', height + 'px');
     $('#prefModal .modal-body').css('width', width + 'px');
+    $('#opt_blacklistedUsers').css('height', height-120 + 'px');
   }
 };
 

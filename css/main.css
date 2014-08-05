@@ -226,15 +226,7 @@
 }
 
 #opt_blacklistedUsers {
-  margin-top: 20px;
-  margin-left: -5px;
-}
-
-#opt_blacklistedUsers li {
-  margin-left: 5px;
-  margin-bottom: 5px;
-  float: left;
-  width: 290px;
+  margin-top: 5px;
 }
 
 #prefModal > .modal-dialog {
