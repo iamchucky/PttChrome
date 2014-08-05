@@ -214,7 +214,7 @@ PttChromePref.prototype = {
     for (var i in blacklistArray) {
       var b = blacklistArray[i];
       if (!b) continue;
-      this.blacklistedUserIds[b] = true;
+      this.blacklistedUserIds[b.toLowerCase()] = true;
     }
     this.setBlacklistStorage();
     this.app.view.redraw(true);
