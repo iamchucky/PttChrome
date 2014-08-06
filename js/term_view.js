@@ -1340,6 +1340,10 @@ TermView.prototype = {
 
     if (!e.ctrlKey && !e.altKey && !e.shiftKey) {
       if ((e.keyCode > 48 && e.keyCode < 58) || e.location == 3) { // 1 ~ 9 or num pad keys
+        if (e.keyCode == 109 || e.keyCode == 107) { // for the + or - at numpad
+          this.buf.cancelPageDownAndResetPrevPageState();
+          return;
+        }
         e.preventDefault();
         e.stopPropagation();
         return;
