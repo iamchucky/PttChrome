@@ -466,6 +466,7 @@ pttchrome.App.prototype.doGoToOtherSite = function() {
 
 pttchrome.App.prototype.doAddBlacklistUserId = function(userid) {
   this.pref.blacklistedUserIds[userid] = true;
+  this.pref.setBlacklistValue();
   this.pref.setBlacklistStorage();
   if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
     $('.blu_'+userid).css('opacity', '0.2');
@@ -476,6 +477,7 @@ pttchrome.App.prototype.doAddBlacklistUserId = function(userid) {
 
 pttchrome.App.prototype.doRemoveBlacklistUserId = function(userid) {
   delete this.pref.blacklistedUserIds[userid];
+  this.pref.setBlacklistValue();
   this.pref.setBlacklistStorage();
   if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
     $('.blu_'+userid).css('opacity', '');

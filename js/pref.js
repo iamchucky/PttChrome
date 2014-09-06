@@ -216,7 +216,7 @@ PttChromePref.prototype = {
       if (!b) continue;
       this.blacklistedUserIds[b.toLowerCase()] = true;
     }
-    this.setBlacklistStorage();
+    this.setBlacklistValue();
     this.app.view.redraw(true);
   },
 
@@ -348,13 +348,16 @@ PttChromePref.prototype = {
     }
   },
 
+  setBlacklistValue: function() {
+    var blacklist = JSON.stringify(this.blacklistedUserIds);
+    this.values.blacklistedUserIds = blacklist;
+  },
+
   setBlacklistStorage: function() {
     if (this.app.appConn.isConnected) {
-      var blacklist = JSON.stringify(this.blacklistedUserIds);
-      this.values.blacklistedUserIds = blacklist;
       var items = { 
         values: {
-          blacklistedUserIds: blacklist
+          blacklistedUserIds: this.values.blacklistedUserIds
         }
       };
       this.app.appConn.appPort.postMessage({ action: 'storage', type: 'set', data: items });
