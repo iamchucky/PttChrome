@@ -210,8 +210,6 @@ pttchrome.App.prototype.setupAppConnection = function(callback) {
 };
 
 pttchrome.App.prototype.connect = function(url) {
-  this.view.useEasyReadingMode = this.pref.get('enableEasyReading');
-
   var self = this;
   var port = 23;
   var splits = url.split(/:/g);
@@ -221,6 +219,14 @@ pttchrome.App.prototype.connect = function(url) {
     url = splits[0];
     port = parseInt(splits[1]);
   }
+
+  // use easy reading mode only on ptt.cc
+  if (url == 'ptt.cc') {
+    this.view.useEasyReadingMode = this.pref.get('enableEasyReading');
+  } else {
+    this.view.useEasyReadingMode = false;
+  }
+
   if (!this.appConn.isConnected) {
     this.setupAppConnection(function() {
       dumpLog(DUMP_TYPE_LOG, "connect to " + url);
