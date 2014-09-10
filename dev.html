@@ -54,6 +54,12 @@
           loadButton.style.display = '';
           saveButton.style.display = '';
           // good to call api
+          gapi.client.load('drive', 'v2', function() {
+            var request = gapi.client.drive.files.get({ 'id': 'appfolder' });
+            request.execute(function(resp) {
+              console.log(resp);
+            });
+          });
         } else {
           // No access token could be retrieved, force the authorization flow.
           authorizeButton.style.display = '';
