@@ -12,6 +12,8 @@
     //$('#sideMenus').show();
     app.onWindowResize();
   }, from);
+  // calls the gapi onload
+  handleGapiClientLoad();
 });
 
 

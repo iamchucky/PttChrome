@@ -15,7 +15,7 @@
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/paramikojs_ssh.min.js"></script>
 
-    <script type="text/javascript" src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
+    <script type="text/javascript" src="https://apis.google.com/js/client.js?onload=handleGapiClientLoad"></script>
     <script type="text/javascript">
       var CLIENT_ID = '569657632946-sj5adbdvmssv2ghrf1cleb887j8rbelu.apps.googleusercontent.com';
       var SCOPES = [
@@ -26,7 +26,7 @@
       /**
        * Called when the client library is loaded.
        */
-      function handleClientLoad() {
+      function handleGapiClientLoad() {
         window.setTimeout(checkAuth, 1);
       }
 
