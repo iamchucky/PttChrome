@@ -19,6 +19,7 @@
     <script type="text/javascript">
       var CLIENT_ID = '569657632946-i88sl1555v27jaji65nppshj7svopn2a.apps.googleusercontent.com';
       var SCOPES = [
+          'https://www.googleapis.com/auth/drive.appfolder',
           'https://www.googleapis.com/auth/drive.appdata',
           // Add other scopes needed by your application.
         ];
@@ -55,7 +56,7 @@
           saveButton.style.display = '';
           // good to call api
           gapi.client.load('drive', 'v2', function() {
-            var request = gapi.client.drive.files.get({ 'fileId': 'appdata' });
+            var request = gapi.client.drive.files.get({ 'fileId': 'appfolder' });
             request.execute(function(resp) {
               console.log(resp);
             });
