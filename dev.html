@@ -27,7 +27,7 @@
        * Called when the client library is loaded.
        */
       function handleClientLoad() {
-        checkAuth();
+        window.setTimeout(checkAuth, 1);
       }
 
       /**
@@ -45,16 +45,29 @@
        * @param {Object} authResult Authorization result.
        */
       function handleAuthResult(authResult) {
+        var authorizeButton = document.getElementById('blacklist_driveAuthorize');
+        var loadButton = document.getElementById('blacklist_driveLoad');
+        var saveButton = document.getElementById('blacklist_driveSave');
         if (authResult && !authResult.error) {
           // Access token has been successfully retrieved, requests can be sent to the API
-          if (authResult.error) console.log(authResult.error);
-          if (authResult.error_subtype) console.log(authResult.error_subtype);
+          authorizeButton.style.display = 'none';
+          loadButton.style.display = '';
+          saveButton.style.display = '';
+          // good to call api
         } else {
           // No access token could be retrieved, force the authorization flow.
-          gapi.auth.authorize(
-              {'client_id': CLIENT_ID, 'scope': SCOPES, 'immediate': false},
-              handleAuthResult);
+          authorizeButton.style.display = '';
+          loadButton.style.display = 'none';
+          saveButton.style.display = 'none';
+          authorizeButton.onclick = handleAuthClick;
         }
+      }
+      
+      function handleAuthClick(e) {
+        gapi.auth.authorize(
+            {'client_id': CLIENT_ID, 'scope': SCOPES, 'immediate': false}, 
+            handleAuthResult);
+        return false;
       }
     </script>
 
@@ -227,8 +240,9 @@
 
                 <div id="blacklist_driveSync" style="margin-bottom:10px">
                   <span>Use Google Drive to Sync:</span>
-                  <a id="blacklist_driveLoad" href="" target="_blank" rel="noreferrer" class="btn btn-default">Load</a>
-                  <a id="blacklist_driveSave" href="" target="_blank" rel="noreferrer" class="btn btn-default">Save</a>
+                  <a id="blacklist_driveAuthorize" class="btn btn-default">Login</a>
+                  <a id="blacklist_driveLoad" class="btn btn-default">Load</a>
+                  <a id="blacklist_driveSave" class="btn btn-default">Save</a>
                 </div>
 
                 <span id="opt_blacklistInstruction"></span>
