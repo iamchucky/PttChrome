@@ -15,6 +15,51 @@
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/paramikojs_ssh.min.js"></script>
 
+    <script type="text/javascript" src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
+    <script type="text/javascript">
+      var CLIENT_ID = '569657632946-i88sl1555v27jaji65nppshj7svopn2a.apps.googleusercontent.com';
+      var SCOPES = [
+          'https://www.googleapis.com/auth/drive.file',
+          'https://www.googleapis.com/auth/userinfo.email',
+          'https://www.googleapis.com/auth/userinfo.profile',
+          // Add other scopes needed by your application.
+        ];
+
+      /**
+       * Called when the client library is loaded.
+       */
+      function handleClientLoad() {
+        checkAuth();
+      }
+
+      /**
+       * Check if the current user has authorized the application.
+       */
+      function checkAuth() {
+        gapi.auth.authorize(
+            {'client_id': CLIENT_ID, 'scope': SCOPES.join(' '), 'immediate': true},
+            handleAuthResult);
+      }
+
+      /**
+       * Called when authorization server replies.
+       *
+       * @param {Object} authResult Authorization result.
+       */
+      function handleAuthResult(authResult) {
+        if (authResult) {
+          // Access token has been successfully retrieved, requests can be sent to the API
+          if (authResult.error) console.log(authResult.error);
+          if (authResult.error_subtype) console.log(authResult.error_subtype);
+        } else {
+          // No access token could be retrieved, force the authorization flow.
+          gapi.auth.authorize(
+              {'client_id': CLIENT_ID, 'scope': SCOPES, 'immediate': false},
+              handleAuthResult);
+        }
+      }
+    </script>
+
     <script type="text/javascript" src="js/app_conn.js"></script>
     <script type="text/javascript" src="js/predefined_config.js"></script>
     <script type="text/javascript" src="js/pref.js"></script>
@@ -180,6 +225,12 @@
 
               <div class="tab-pane" id="tabContentBlacklist">
                 <div id="opt_enableBlacklist" class="checkbox">
+                </div>
+
+                <div id="blacklist_driveSync" style="margin-bottom:10px">
+                  <span>Use Google Drive to Sync:</span>
+                  <a id="blacklist_driveLoad" href="" target="_blank" rel="noreferrer" class="btn btn-default">Load</a>
+                  <a id="blacklist_driveSave" href="" target="_blank" rel="noreferrer" class="btn btn-default">Save</a>
                 </div>
 
                 <span id="opt_blacklistInstruction"></span>

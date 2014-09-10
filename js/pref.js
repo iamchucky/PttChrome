@@ -159,7 +159,7 @@ PttChromePref.prototype = {
       height -= 76;
       $('#prefModal .modal-body').css('height', height + 'px');
       $('#prefModal .modal-body').css('width', width + 'px');
-      $('#opt_blacklistedUsers').css('height', height-120 + 'px');
+      $('#opt_blacklistedUsers').css('height', height-150 + 'px');
       self.refreshBlacklistOnUi();
     });
     $('#prefModal').on('shown.bs.modal', function(e) {
@@ -351,6 +351,11 @@ PttChromePref.prototype = {
   setBlacklistValue: function() {
     var blacklist = JSON.stringify(this.blacklistedUserIds);
     this.values.blacklistedUserIds = blacklist;
+  },
+
+  syncBlacklistWithDriveApi: function() {
+    // use the Drive API to sync the blacklist data
+
   },
 
   setBlacklistStorage: function() {
