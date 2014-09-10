@@ -55,7 +55,7 @@
           saveButton.style.display = '';
           // good to call api
           gapi.client.load('drive', 'v2', function() {
-            var request = gapi.client.drive.files.get({ 'fileId': 'appfolder' });
+            var request = gapi.client.drive.files.get({ 'fileId': 'appdata' });
             request.execute(function(resp) {
               console.log(resp);
             });
