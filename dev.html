@@ -17,8 +17,8 @@
 
     <script type="text/javascript" src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
     <script type="text/javascript">
-      //var CLIENT_ID = '569657632946-i88sl1555v27jaji65nppshj7svopn2a.apps.googleusercontent.com';
-      var CLIENT_ID = '569657632946-sj5adbdvmssv2ghrf1cleb887j8rbelu.apps.googleusercontent.com';
+      var CLIENT_ID = '569657632946-i88sl1555v27jaji65nppshj7svopn2a.apps.googleusercontent.com';
+      //var CLIENT_ID = '569657632946-sj5adbdvmssv2ghrf1cleb887j8rbelu.apps.googleusercontent.com';
       var SCOPES = [
           'https://www.googleapis.com/auth/drive.file',
           'https://www.googleapis.com/auth/userinfo.email',
@@ -48,7 +48,7 @@
        * @param {Object} authResult Authorization result.
        */
       function handleAuthResult(authResult) {
-        if (authResult) {
+        if (authResult && !authResult.error) {
           // Access token has been successfully retrieved, requests can be sent to the API
           if (authResult.error) console.log(authResult.error);
           if (authResult.error_subtype) console.log(authResult.error_subtype);
