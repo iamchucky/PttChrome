@@ -56,9 +56,12 @@
           saveButton.style.display = '';
           // good to call api
           gapi.client.load('drive', 'v2', function() {
-            var request = gapi.client.drive.files.get({ 'fileId': 'appfolder' });
+            /*var request = gapi.client.drive.files.get({ 'fileId': 'appfolder' });
             request.execute(function(resp) {
               console.log(resp);
+            });*/
+            listFilesInApplicationDataFolder(function(result) {
+              console.log(result);
             });
           });
         } else {
@@ -68,6 +71,27 @@
           saveButton.style.display = 'none';
           authorizeButton.onclick = handleAuthClick;
         }
+      }
+
+      function listFilesInApplicationDataFolder(callback) {
+        var retrievePageOfFiles = function(request, result) {
+          request.execute(function(resp) {
+            result = result.concat(resp.items);
+            var nextPageToken = resp.nextPageToken;
+            if (nextPageToken) {
+              request = gapi.client.drive.files.list({
+                    'pageToken': nextPageToken
+              });
+              retrievePageOfFiles(request, result);
+            } else {
+              callback(result);
+            }
+          });
+        }
+        var initialRequest = gapi.client.drive.files.list({
+          'q': '\'appfolder\' in parents'
+        });
+        retrievePageOfFiles(initialRequest, []);
       }
       
       function handleAuthClick(e) {
