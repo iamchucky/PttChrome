@@ -149,8 +149,10 @@ PttChromePref.prototype = {
         request.execute(function(result) {
           if (result.downloadUrl) {
             downloadFile(result, function(content) {
-              if (content) console.log(content);
-              else console.log('no content');
+              if (content) {
+                console.log(content);
+                // load the string blacklist into the dict
+              } else console.log('no content');
             });
           } else {
             console.log(resp);
@@ -171,7 +173,8 @@ PttChromePref.prototype = {
         method = 'PUT';
       }
 
-      updateFileInApplicationDataFolder('test', fileId, method, function(result) {
+      var listStr = Object.keys(self.blacklistedUserIds).join('\n');
+      updateFileInApplicationDataFolder(listStr, fileId, method, function(result) {
         if (result.id) {
           self.blacklistFileId = result.id;
           printFile(result.id);
