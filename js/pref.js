@@ -164,6 +164,8 @@ PttChromePref.prototype = {
     });
 
     $('#blacklist_driveSave').click(function(e) {
+      // make sure the blacklistedUserIds is read
+      self.readBlacklistValues();
       var fileId = '';
       var method = 'POST';
 
