@@ -62,7 +62,7 @@
                 var result = results[r];
                 if (!result) continue;
                 if (result.downloadUrl && result.title == 'blacklist') {
-                  pttchrome.app.blacklistFileId = result.id;
+                  pttchrome.app.pref.blacklistFileId = result.id;
                   break;
                 }
               }
