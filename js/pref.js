@@ -151,7 +151,7 @@ PttChromePref.prototype = {
             downloadFile(result, function(content) {
               if (content) {
                 var ids = content.split('\n');
-                console.log(ids.length);
+                console.log('loaded ' + ids.length + ' ids from appfolder');
                 // load the string blacklist into the dict
                 self.blacklistedUserIds = {};
                 for (var i = 0; i < ids.length; ++i) {
