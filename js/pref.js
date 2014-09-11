@@ -6,6 +6,7 @@ function PttChromePref(app, onInitializedCallback) {
 
   this.enableBlacklist = false;
   this.blacklistedUserIds = {};
+  this.blacklistFileId = '';
 
   //this.loadDefault(onInitializedCallback);
   this.onInitializedCallback = onInitializedCallback;
@@ -144,17 +145,29 @@ PttChromePref.prototype = {
 
     $('#blacklist_driveLoad').click(function(e) {
       listFilesInApplicationDataFolder(function(results) {
+        console.log(results);
         for (var r in results) {
           var result = results[r];
-          downloadFile(result, function(content) {
-            if (content) console.log(content);
-            else console.log('no content');
-          });
+          if (result.downloadUrl) {
+            downloadFile(result, function(content) {
+              if (content) console.log(content);
+              else console.log('no content');
+            });
+          }
         }
       });
     });
     $('#blacklist_driveSave').click(function(e) {
-      insertFileInApplicationDataFolder('test', function(result) {
+      var fileId = '';
+      var method = 'POST';
+
+      if (self.blacklistFileId) {
+        // first time, create file
+        fileId = self.blacklistFileId;
+        method = 'PUT';
+      }
+
+      updateFileInApplicationDataFolder('test', fileId, method, function(result) {
         printFile(result.id);
       });
     });

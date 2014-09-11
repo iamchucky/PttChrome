@@ -56,14 +56,19 @@
           saveButton.style.display = '';
           // good to call api
           gapi.client.load('drive', 'v2', function() {
-            /*var request = gapi.client.drive.files.get({ 'fileId': 'appfolder' });
+            var request = gapi.client.drive.files.get({ 'fileId': 'appfolder' });
             request.execute(function(resp) {
               console.log(resp);
             });
-            listFilesInApplicationDataFolder(function(result) {
-              console.log(result);
-            });*/
             // optionally shows the loading complete icon
+            /*listFilesInApplicationDataFolder(function(results) {
+              console.log(results);
+              for (var r in results) {
+                var result = results[r];
+                if (result.downloadUrl) {
+                }
+              }
+            });*/
           });
         } else {
           // No access token could be retrieved, force the authorization flow.
@@ -75,12 +80,12 @@
       }
 	  
       /**
-      * Insert new file in the Application Data folder.
+      * update file in the Application Data folder. create new file if not exist
       *
       * @param {string} str String to store.
       * @param {Function} callback Function to call when the request is complete.
       */
-      function insertFileInApplicationDataFolder(str, callback) {
+      function updateFileInApplicationDataFolder(str, fileId, method, callback) {
         const boundary = '-------314159265358979323846';
         const delimiter = "\r\n--" + boundary + "\r\n";
         const close_delim = "\r\n--" + boundary + "--";
@@ -105,9 +110,11 @@
           base64Data +
           close_delim;
 
+        if (fileId) fileId = '/' + fileId;
+
         var request = gapi.client.request({
-          'path': '/upload/drive/v2/files',
-          'method': 'POST',
+          'path': '/upload/drive/v2/files' + fileId,
+          'method': method,
           'params': {'uploadType': 'multipart'},
           'headers': {
             'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
