@@ -146,8 +146,8 @@ PttChromePref.prototype = {
     $('#blacklist_driveLoad').click(function(e) {
       if (self.blacklistFileId) {
         var request = gapi.client.drive.files.get({'fileId': self.blacklistFileId});
-        request.execute(function(resp) {
-          if (resp.downloadUrl) {
+        request.execute(function(result) {
+          if (result.downloadUrl) {
             downloadFile(result, function(content) {
               if (content) console.log(content);
               else console.log('no content');
