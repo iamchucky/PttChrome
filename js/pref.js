@@ -150,8 +150,14 @@ PttChromePref.prototype = {
           if (result.downloadUrl) {
             downloadFile(result, function(content) {
               if (content) {
-                console.log(content);
+                var ids = content.split('\n');
+                console.log(ids.length);
                 // load the string blacklist into the dict
+                self.blacklistedUserIds = {};
+                for (var i = 0; i < ids.length; ++i) {
+                  self.blacklistedUserIds[ids[i]] = true;
+                }
+                self.refreshBlacklistOnUi();
               } else console.log('no content');
             });
           } else {
