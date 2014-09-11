@@ -147,7 +147,7 @@ PttChromePref.prototype = {
         for (var r in results) {
           var result = results[r];
           downloadFile(result, function(content) {
-            if (content) console.log(atob(content));
+            if (content) console.log(content);
             else console.log('no content');
           });
         }
