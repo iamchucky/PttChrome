@@ -35,6 +35,10 @@
        * Check if the current user has authorized the application.
        */
       function checkAuth() {
+        if (!gapi || !gapi.auth) {
+          // if client library has not been loaded
+          window.setTimeout(checkAuth, 200);
+        }
         gapi.auth.authorize(
             {'client_id': CLIENT_ID, 'scope': SCOPES.join(' '), 'immediate': true},
             handleAuthResult);
