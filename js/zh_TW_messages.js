@@ -186,6 +186,20 @@
     "message": "帳號密碼沒有加密儲存, 千萬不要在公用電腦上使用"
   },
 
+  // blacklist drive sync
+  "blacklist_driveSyncTitle": {
+    "message": "使用 Google Drive 存取黑名單:"
+  },
+  "blacklist_driveAuthorize": {
+    "message": "授權給 PttChrome 使用權限"
+  },
+  "blacklist_driveLoad": {
+    "message": "從 Drive 讀取"
+  },
+  "blacklist_driveSave": {
+    "message": "儲存至 Drive"
+  },
+
   // about page
   "about_review": {
     "message": "給評分"

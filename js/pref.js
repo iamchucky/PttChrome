@@ -143,6 +143,11 @@ PttChromePref.prototype = {
       $(this).tab('show');
     });
 
+    $('#blacklist_driveSyncTitle').text(i18n('blacklist_driveSyncTitle'));
+    $('#blacklist_driveAuthorize').text(i18n('blacklist_driveAuthorize'));
+    $('#blacklist_driveLoad').text(i18n('blacklist_driveLoad'));
+    $('#blacklist_driveSave').text(i18n('blacklist_driveSave'));
+
     $('#blacklist_driveLoad').click(function(e) {
       if (self.blacklistFileId) {
         var request = gapi.client.drive.files.get({'fileId': self.blacklistFileId});

@@ -189,6 +189,20 @@ locale.en_US = {
     "message": "Login info is not encrypted, DO NOT use on a public machine"
   },
 
+  // blacklist drive sync
+  "blacklist_driveSyncTitle": {
+    "message": "Connect with Google Drive:"
+  },
+  "blacklist_driveAuthorize": {
+    "message": "Authorize PttChrome"
+  },
+  "blacklist_driveLoad": {
+    "message": "Load from Drive"
+  },
+  "blacklist_driveSave": {
+    "message": "Save to Drive"
+  },
+
   // about page
   "about_review": {
     "message": "Review app"
