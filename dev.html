@@ -59,10 +59,11 @@
             /*var request = gapi.client.drive.files.get({ 'fileId': 'appfolder' });
             request.execute(function(resp) {
               console.log(resp);
-            });*/
+            });
             listFilesInApplicationDataFolder(function(result) {
               console.log(result);
-            });
+            });*/
+            // optionally shows the loading complete icon
           });
         } else {
           // No access token could be retrieved, force the authorization flow.
@@ -114,11 +115,10 @@
           'body': multipartRequestBody});
         if (!callback) {
           callback = function(file) {
-          console.log(file)
+            console.log(file)
           };
         }
         request.execute(callback);
-        }
       }
 
       function listFilesInApplicationDataFolder(callback) {

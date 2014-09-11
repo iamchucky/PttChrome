@@ -142,6 +142,15 @@ PttChromePref.prototype = {
       $(this).tab('show');
     });
 
+    $('#blacklist_driveLoad').click(function(e) {
+      listFilesInApplicationDataFolder(function(result) {
+        console.log(result);
+      });
+    });
+    $('#blacklist_driveSave').click(function(e) {
+      insertFileInApplicationDataFolder('test');
+    });
+
   },
 
   populateSettingsToUi: function() {
