@@ -56,19 +56,17 @@
           saveButton.style.display = '';
           // good to call api
           gapi.client.load('drive', 'v2', function() {
-            var request = gapi.client.drive.files.get({ 'fileId': 'appfolder' });
-            request.execute(function(resp) {
-              console.log(resp);
-            });
             // optionally shows the loading complete icon
-            /*listFilesInApplicationDataFolder(function(results) {
+            listFilesInApplicationDataFolder(function(results) {
               console.log(results);
               for (var r in results) {
                 var result = results[r];
-                if (result.downloadUrl) {
+                if (result.downloadUrl && result.title == 'blacklist') {
+                  pttchrome.app.blacklistFileId = result.id;
+                  break;
                 }
               }
-            });*/
+            });
           });
         } else {
           // No access token could be retrieved, force the authorization flow.
