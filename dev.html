@@ -56,8 +56,8 @@
         if (authResult && !authResult.error) {
           // Access token has been successfully retrieved, requests can be sent to the API
           authorizeButton.style.display = 'none';
-          loadButton.style.display = '';
-          saveButton.style.display = '';
+          loadButton.style.display = 'none';
+          saveButton.style.display = 'none';
           // good to call api
           gapi.client.load('drive', 'v2', function() {
             // optionally shows the loading complete icon
@@ -69,6 +69,14 @@
                   pttchrome.app.pref.blacklistFileId = result.id;
                   break;
                 }
+              }
+              
+              saveButton.style.display = '';
+              if (pttchrome.app.pref.blacklistFileId) {
+                // got the file already
+                loadButton.style.display = '';
+              } else {
+                loadButton.style.display = 'none';
               }
             });
           });

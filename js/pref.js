@@ -185,6 +185,7 @@ PttChromePref.prototype = {
       updateFileInApplicationDataFolder(listStr, fileId, method, function(result) {
         if (result.id) {
           self.blacklistFileId = result.id;
+          document.getElementById('blacklist_driveLoad').style.display = '';
           printFile(result.id);
         } else {
           console.log(result);
