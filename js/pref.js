@@ -143,12 +143,20 @@ PttChromePref.prototype = {
     });
 
     $('#blacklist_driveLoad').click(function(e) {
-      listFilesInApplicationDataFolder(function(result) {
-        console.log(result);
+      listFilesInApplicationDataFolder(function(results) {
+        for (var r in results) {
+          var result = results[r];
+          downloadFile(result, function(content) {
+            if (content) console.log(atob(content));
+            else console.log('no content');
+          });
+        }
       });
     });
     $('#blacklist_driveSave').click(function(e) {
-      insertFileInApplicationDataFolder('test');
+      insertFileInApplicationDataFolder('test', function(result) {
+        printFile(result.id);
+      });
     });
 
   },
