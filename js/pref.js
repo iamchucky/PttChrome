@@ -145,9 +145,9 @@ PttChromePref.prototype = {
 
     $('#blacklist_driveLoad').click(function(e) {
       listFilesInApplicationDataFolder(function(results) {
-        console.log(results);
         for (var r in results) {
           var result = results[r];
+          if (!result) continue;
           if (result.downloadUrl) {
             downloadFile(result, function(content) {
               if (content) console.log(content);
