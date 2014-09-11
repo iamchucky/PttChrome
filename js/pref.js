@@ -144,19 +144,23 @@ PttChromePref.prototype = {
     });
 
     $('#blacklist_driveLoad').click(function(e) {
-      listFilesInApplicationDataFolder(function(results) {
-        for (var r in results) {
-          var result = results[r];
-          if (!result) continue;
-          if (result.downloadUrl) {
+      if (self.blacklistFileId) {
+        var request = gapi.client.drive.files.get({'fileId': self.blacklistFileId});
+        request.execute(function(resp) {
+          if (resp.downloadUrl) {
             downloadFile(result, function(content) {
               if (content) console.log(content);
               else console.log('no content');
             });
+          } else {
+            console.log(resp);
           }
-        }
-      });
+        });
+      } else {
+        console.log('no blacklist file created');
+      }
     });
+
     $('#blacklist_driveSave').click(function(e) {
       var fileId = '';
       var method = 'POST';
@@ -168,7 +172,12 @@ PttChromePref.prototype = {
       }
 
       updateFileInApplicationDataFolder('test', fileId, method, function(result) {
-        printFile(result.id);
+        if (result.id) {
+          self.blacklistFileId = result.id;
+          printFile(result.id);
+        } else {
+          console.log(result);
+        }
       });
     });
 
