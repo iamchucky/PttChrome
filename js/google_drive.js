@@ -42,24 +42,24 @@ GoogleDrive.prototype.handleAuthResult = function(authResult) {
     // good to call api
     gapi.client.load('drive', 'v2', function() {
       // optionally shows the loading complete icon
-      self.listFiles(function(results) {
+      /*self.listFiles(function(results) {
         for (var r in results) {
           var result = results[r];
           if (!result) continue;
           if (result.downloadUrl && !result.explicitlyTrashed && result.title == 'PttChrome blacklist') {
-            self.app.pref.blacklistFileId = result.id;
+            self.app.pref.set('blacklistFileId', result.id);
             break;
           }
         }
         
         saveButton.style.display = '';
-        if (self.app.pref.blacklistFileId) {
+        if (self.app.pref.get('blacklistFileId')) {
           // got the file already
           loadButton.style.display = '';
         } else {
           loadButton.style.display = 'none';
         }
-      });
+      });*/
     });
   } else {
     // No access token could be retrieved, force the authorization flow.

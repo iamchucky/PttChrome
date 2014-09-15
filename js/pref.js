@@ -6,7 +6,6 @@ function PttChromePref(app, onInitializedCallback) {
 
   this.enableBlacklist = false;
   this.blacklistedUserIds = {};
-  this.blacklistFileId = '';
 
   //this.loadDefault(onInitializedCallback);
   this.onInitializedCallback = onInitializedCallback;
@@ -34,7 +33,8 @@ PttChromePref.prototype = {
       var val = this.values[i];
 
       // for blacklisted userids
-      if (i === 'blacklistedUserIds') {
+      if (i === 'blacklistedUserIds' ||
+          i === 'blacklistFileId') {
         continue;
       }
       
@@ -152,10 +152,10 @@ PttChromePref.prototype = {
     $('#blacklist_driveLoading').text(i18n('blacklist_driveLoading'));
 
     $('#blacklist_driveLoad').click(function(e) {
-      if (self.blacklistFileId) {
+      if (self.values.blacklistFileId) {
         $('#blacklist_driveLoading').css('display', '');
         $('#blacklist_driveDone').css('display', 'none');
-        var request = gapi.client.drive.files.get({'fileId': self.blacklistFileId});
+        var request = gapi.client.drive.files.get({'fileId': self.values.blacklistFileId});
         request.execute(function(result) {
           if (result.downloadUrl) {
             self.gdrive.downloadFile(result, function(content) {
@@ -187,9 +187,9 @@ PttChromePref.prototype = {
       var fileId = '';
       var method = 'POST';
 
-      if (self.blacklistFileId) {
+      if (self.values.blacklistFileId) {
         // first time, create file
-        fileId = self.blacklistFileId;
+        fileId = self.values.blacklistFileId;
         method = 'PUT';
       }
 
@@ -200,7 +200,14 @@ PttChromePref.prototype = {
         $('#blacklist_driveLoading').css('display', 'none');
         $('#blacklist_driveDone').css('display', '');
         if (result.id) {
-          self.blacklistFileId = result.id;
+          self.values.blacklistFileId = result.id;
+          // set blacklistFileId
+          var items = { 
+            values: {
+              blacklistFileId: self.values.blacklistFileId
+            }
+          };
+          self.setStorage(items);
           document.getElementById('blacklist_driveLoad').style.display = '';
           self.gdrive.printFile(result.id);
         } else {
@@ -303,7 +310,8 @@ PttChromePref.prototype = {
     this.readBlacklistValues();
     var selectedVal;
     for (var i in this.values) {
-      if (i === 'blacklistedUserIds') {
+      if (i === 'blacklistedUserIds' ||
+          i === 'blacklistFileId') {
         continue;
       }
 
