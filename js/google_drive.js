@@ -3,6 +3,7 @@ function GoogleDrive(app) {
 
   this.clientId = '569657632946-i88sl1555v27jaji65nppshj7svopn2a.apps.googleusercontent.com';
   this.permissionScopes = [
+      'https://www.googleapis.com/auth/drive',
       'https://www.googleapis.com/auth/drive.appfolder',
       'https://www.googleapis.com/auth/drive.appdata',
       // Add other scopes needed by your application.
@@ -41,11 +42,11 @@ GoogleDrive.prototype.handleAuthResult = function(authResult) {
     // good to call api
     gapi.client.load('drive', 'v2', function() {
       // optionally shows the loading complete icon
-      self.listFilesInApplicationDataFolder(function(results) {
+      self.listFiles(function(results) {
         for (var r in results) {
           var result = results[r];
           if (!result) continue;
-          if (result.downloadUrl && result.title == 'blacklist') {
+          if (result.downloadUrl && result.title == 'PttChrome blacklist') {
             self.app.pref.blacklistFileId = result.id;
             break;
           }
@@ -76,16 +77,15 @@ GoogleDrive.prototype.handleAuthResult = function(authResult) {
 * @param {string} str String to store.
 * @param {Function} callback Function to call when the request is complete.
 */
-GoogleDrive.prototype.updateFileInApplicationDataFolder = function(str, fileId, method, callback) {
+GoogleDrive.prototype.updateFile = function(str, fileId, method, callback) {
   const boundary = '-------314159265358979323846';
   const delimiter = "\r\n--" + boundary + "\r\n";
   const close_delim = "\r\n--" + boundary + "--";
 
   var contentType = 'application/octet-stream';
   var metadata = {
-    'title': 'blacklist',
-    'mimeType': contentType,
-    'parents': [{'id': 'appfolder'}]
+    'title': 'PttChrome blacklist',
+    'mimeType': contentType
   };
 
   // convert from string to base64 encoded data.
@@ -149,6 +149,11 @@ GoogleDrive.prototype.retrievePageOfFiles = function(callback, request, result) 
       callback(result);
     }
   });
+};
+
+GoogleDrive.prototype.listFiles = function(callback) {
+  var initialRequest = gapi.client.drive.files.list();
+  this.retrievePageOfFiles(callback, initialRequest, []);
 };
 
 GoogleDrive.prototype.listFilesInApplicationDataFolder = function(callback) {

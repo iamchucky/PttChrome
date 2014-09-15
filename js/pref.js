@@ -196,7 +196,7 @@ PttChromePref.prototype = {
       var listStr = Object.keys(self.blacklistedUserIds).join('\n');
       $('#blacklist_driveLoading').css('display', '');
       $('#blacklist_driveDone').css('display', 'none');
-      self.gdrive.updateFileInApplicationDataFolder(listStr, fileId, method, function(result) {
+      self.gdrive.updateFile(listStr, fileId, method, function(result) {
         $('#blacklist_driveLoading').css('display', 'none');
         $('#blacklist_driveDone').css('display', '');
         if (result.id) {
