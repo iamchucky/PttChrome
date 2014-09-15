@@ -46,7 +46,7 @@ GoogleDrive.prototype.handleAuthResult = function(authResult) {
         for (var r in results) {
           var result = results[r];
           if (!result) continue;
-          if (result.downloadUrl && result.title == 'PttChrome blacklist') {
+          if (result.downloadUrl && !result.explicitlyTrashed && result.title == 'PttChrome blacklist') {
             self.app.pref.blacklistFileId = result.id;
             break;
           }
