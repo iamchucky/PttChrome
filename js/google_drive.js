@@ -82,7 +82,7 @@ GoogleDrive.prototype.updateFile = function(str, fileId, method, callback) {
   const delimiter = "\r\n--" + boundary + "\r\n";
   const close_delim = "\r\n--" + boundary + "--";
 
-  var contentType = 'application/vnd.google-apps.document';
+  var contentType = 'text/plain';
   var metadata = {
     'title': 'PttChrome blacklist',
     'mimeType': contentType
