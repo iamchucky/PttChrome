@@ -188,7 +188,7 @@
 
   // blacklist drive sync
   "blacklist_driveSyncTitle": {
-    "message": "使用 Google Drive 存取黑名單:"
+    "message": "使用 Google Drive:"
   },
   "blacklist_driveAuthorize": {
     "message": "授權給 PttChrome 使用權限"
@@ -197,7 +197,13 @@
     "message": "從 Drive 讀取"
   },
   "blacklist_driveSave": {
-    "message": "儲存至 Drive"
+    "message": "備份至 Drive"
+  },
+  "blacklist_driveLoading": {
+    "message": "讀取中 ..."
+  },
+  "blacklist_driveDone": {
+    "message": "完成!"
   },
 
   // about page

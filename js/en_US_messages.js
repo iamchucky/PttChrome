@@ -200,7 +200,13 @@ locale.en_US = {
     "message": "Load from Drive"
   },
   "blacklist_driveSave": {
-    "message": "Save to Drive"
+    "message": "Backup to Drive"
+  },
+  "blacklist_driveLoading": {
+    "message": "Loading ..."
+  },
+  "blacklist_driveDone": {
+    "message": "Done!"
   },
 
   // about page

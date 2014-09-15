@@ -147,6 +147,8 @@ PttChromePref.prototype = {
     $('#blacklist_driveAuthorize').text(i18n('blacklist_driveAuthorize'));
     $('#blacklist_driveLoad').text(i18n('blacklist_driveLoad'));
     $('#blacklist_driveSave').text(i18n('blacklist_driveSave'));
+    $('#blacklist_driveDone').text(i18n('blacklist_driveDone'));
+    $('#blacklist_driveLoading').text(i18n('blacklist_driveLoading'));
 
     $('#blacklist_driveLoad').click(function(e) {
       if (self.blacklistFileId) {
