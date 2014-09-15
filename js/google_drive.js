@@ -135,7 +135,7 @@ GoogleDrive.prototype.printFile = function(fileId) {
   });
 };
 
-GoogleDrive.prototype.retrievePageOfFiles = function(request, result) {
+GoogleDrive.prototype.retrievePageOfFiles = function(callback, request, result) {
   var self = this;
   request.execute(function(resp) {
     result = result.concat(resp.items);
@@ -144,7 +144,7 @@ GoogleDrive.prototype.retrievePageOfFiles = function(request, result) {
       request = gapi.client.drive.files.list({
             'pageToken': nextPageToken
       });
-      self.retrievePageOfFiles(request, result);
+      self.retrievePageOfFiles(callback, request, result);
     } else {
       callback(result);
     }
@@ -155,7 +155,7 @@ GoogleDrive.prototype.listFilesInApplicationDataFolder = function(callback) {
   var initialRequest = gapi.client.drive.files.list({
     'q': '\'appfolder\' in parents'
   });
-  this.retrievePageOfFiles(initialRequest, []);
+  this.retrievePageOfFiles(callback, initialRequest, []);
 };
 
 /**
