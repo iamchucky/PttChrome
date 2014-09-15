@@ -15,12 +15,11 @@ function GoogleDrive(app) {
 GoogleDrive.prototype.checkAuth = function() {
   if (!gapi || !gapi.auth) {
     // if client library has not been loaded
-    window.setTimeout(this.checkAuth, 200);
+    window.setTimeout(this.checkAuth.bind(this), 200);
     return;
   }
-  var self = this;
   gapi.auth.authorize(
-      {'client_id': self.clientId, 'scope': self.permissionScopes.join(' '), 'immediate': true},
+      {'client_id': this.clientId, 'scope': this.permissionScopes.join(' '), 'immediate': true},
       this.handleAuthResult);
 };
 
@@ -66,7 +65,7 @@ GoogleDrive.prototype.handleAuthResult = function(authResult) {
     authorizeButton.style.display = '';
     loadButton.style.display = 'none';
     saveButton.style.display = 'none';
-    authorizeButton.onclick = self.handleAuthClick;
+    authorizeButton.onclick = self.handleAuthClick.bind(self);
   }
 };
 
@@ -184,9 +183,8 @@ GoogleDrive.prototype.downloadFile = function(file, callback) {
 };
 
 GoogleDrive.prototype.handleAuthClick = function(e) {
-  var self = this;
   gapi.auth.authorize(
-      {'client_id': self.clientId, 'scope': self.permissionScopes, 'immediate': false}, 
+      {'client_id': this.clientId, 'scope': this.permissionScopes, 'immediate': false}, 
       this.handleAuthResult);
   return false;
 }
