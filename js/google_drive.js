@@ -20,7 +20,7 @@ GoogleDrive.prototype.checkAuth = function() {
   }
   gapi.auth.authorize(
       {'client_id': this.clientId, 'scope': this.permissionScopes.join(' '), 'immediate': true},
-      this.handleAuthResult);
+      this.handleAuthResult.bind(this));
 };
 
 /**
@@ -185,6 +185,6 @@ GoogleDrive.prototype.downloadFile = function(file, callback) {
 GoogleDrive.prototype.handleAuthClick = function(e) {
   gapi.auth.authorize(
       {'client_id': this.clientId, 'scope': this.permissionScopes, 'immediate': false}, 
-      this.handleAuthResult);
+      this.handleAuthResult.bind(this));
   return false;
 }
