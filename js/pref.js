@@ -11,6 +11,7 @@ function PttChromePref(app, onInitializedCallback) {
   //this.loadDefault(onInitializedCallback);
   this.onInitializedCallback = onInitializedCallback;
   this.initCallbackCalled = false;
+  this.gdrive = new GoogleDrive(app);
 }
 
 PttChromePref.prototype = {
@@ -157,7 +158,7 @@ PttChromePref.prototype = {
         var request = gapi.client.drive.files.get({'fileId': self.blacklistFileId});
         request.execute(function(result) {
           if (result.downloadUrl) {
-            downloadFile(result, function(content) {
+            self.gdrive.downloadFile(result, function(content) {
               $('#blacklist_driveLoading').css('display', 'none');
               $('#blacklist_driveDone').css('display', '');
               if (content) {
@@ -195,13 +196,13 @@ PttChromePref.prototype = {
       var listStr = Object.keys(self.blacklistedUserIds).join('\n');
       $('#blacklist_driveLoading').css('display', '');
       $('#blacklist_driveDone').css('display', 'none');
-      updateFileInApplicationDataFolder(listStr, fileId, method, function(result) {
+      self.gdrive.updateFileInApplicationDataFolder(listStr, fileId, method, function(result) {
         $('#blacklist_driveLoading').css('display', 'none');
         $('#blacklist_driveDone').css('display', '');
         if (result.id) {
           self.blacklistFileId = result.id;
           document.getElementById('blacklist_driveLoad').style.display = '';
-          printFile(result.id);
+          self.gdrive.printFile(result.id);
         } else {
           console.log(result);
         }

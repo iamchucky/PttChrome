@@ -16,6 +16,12 @@
   handleGapiClientLoad();
 });
 
+/**
+  * Called when the client library is loaded.
+  */
+function handleGapiClientLoad() {
+  window.setTimeout(pttchrome.app.pref.gdrive.checkAuth, 1);
+}
 
 function setTimer(repeat, func, timelimit) {
   if(repeat) {
