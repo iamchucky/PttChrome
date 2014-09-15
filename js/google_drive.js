@@ -50,16 +50,16 @@ GoogleDrive.prototype.handleAuthResult = function(authResult) {
             self.app.pref.set('blacklistFileId', result.id);
             break;
           }
-        }
+        }*/
         
-        saveButton.style.display = '';
-        if (self.app.pref.get('blacklistFileId')) {
-          // got the file already
-          loadButton.style.display = '';
-        } else {
-          loadButton.style.display = 'none';
-        }
-      });*/
+      saveButton.style.display = '';
+      if (self.app.pref.get('blacklistFileId')) {
+        // got the file already
+        loadButton.style.display = '';
+      } else {
+        loadButton.style.display = 'none';
+      }
+      //});
     });
   } else {
     // No access token could be retrieved, force the authorization flow.
