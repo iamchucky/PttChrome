@@ -202,6 +202,7 @@ GoogleDrive.prototype.createPicker = function(callback) {
     .setDeveloperKey(this.apiKey)
     .setCallback(callback)
     .build();
+  picker.setVisible(true);
 }
 
 GoogleDrive.prototype.pickerCallback = function(data) {
