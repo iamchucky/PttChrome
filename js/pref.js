@@ -156,8 +156,10 @@ PttChromePref.prototype = {
         if (data.action == google.picker.Action.PICKED) {
           var fileId = data.docs[0].id;
           console.log('picked ' + fileId);
+
           $('#blacklist_driveLoading').css('display', '');
           $('#blacklist_driveDone').css('display', 'none');
+          // now get the file's content and load onto ui
           var request = gapi.client.drive.files.get({'fileId': fileId});
           request.execute(function(result) {
             if (result.downloadUrl || result.exportLinks) {
