@@ -194,6 +194,7 @@ GoogleDrive.prototype.createPicker = function(callback) {
   if (!callback) callback = this.pickerCallback;
   var picker = new google.picker.PickerBuilder()
     .enableFeature(google.picker.Feature.NAV_HIDDEN)
+    .hideTitleBar()
     .setAppId(this.clientId)
     .setOAuthToken(this.oauthToken)
     .addView(view)
@@ -201,6 +202,7 @@ GoogleDrive.prototype.createPicker = function(callback) {
     .setCallback(callback)
     .build();
   picker.setVisible(true);
+  picker.A.style.zIndex = 2000;
 }
 
 GoogleDrive.prototype.pickerCallback = function(data) {
