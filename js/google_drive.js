@@ -52,8 +52,6 @@ GoogleDrive.prototype.handleAuthResult = function(authResult) {
         } else {
           loadButton.style.display = 'none';
         }
-        self.createPicker();
-
       }});
     });
   } else {
