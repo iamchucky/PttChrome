@@ -167,7 +167,7 @@ GoogleDrive.prototype.downloadFile = function(file, callback) {
   var url = file.downloadUrl;
   if (!url) {
     if (file.exportLinks) {
-      url = file.exportLinks['text/plan'];
+      url = file.exportLinks['text/plain'];
     }
   }
 
