@@ -53,7 +53,7 @@ GoogleDrive.prototype.handleAuthResult = function(authResult) {
         } else {
           loadButton.style.display = 'none';
         }
-        this.oauthToken = authResult.access_token;
+        self.oauthToken = authResult.access_token;
       }});
     });
   } else {
