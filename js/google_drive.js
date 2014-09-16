@@ -17,7 +17,7 @@ function GoogleDrive(app) {
 * Check if the current user has authorized the application.
 */
 GoogleDrive.prototype.checkAuth = function() {
-  if (!gapi || !gapi.auth) {
+  if (!google || !gapi || !gapi.auth) {
     // if client library has not been loaded
     window.setTimeout(this.checkAuth.bind(this), 200);
     return;
@@ -44,25 +44,17 @@ GoogleDrive.prototype.handleAuthResult = function(authResult) {
     saveButton.style.display = 'none';
     // good to call api
     gapi.client.load('drive', 'v2', function() {
-      // optionally shows the loading complete icon
-      /*self.listFiles(function(results) {
-        for (var r in results) {
-          var result = results[r];
-          if (!result) continue;
-          if (result.downloadUrl && !result.explicitlyTrashed && result.title == 'PttChrome blacklist') {
-            self.app.pref.set('blacklistFileId', result.id);
-            break;
-          }
-        }*/
-        
-      saveButton.style.display = '';
-      if (self.app.pref.get('blacklistFileId')) {
-        // got the file already
-        loadButton.style.display = '';
-      } else {
-        loadButton.style.display = 'none';
-      }
-      //});
+      gapi.load('picker', {'callback': function() {
+        saveButton.style.display = '';
+        if (self.app.pref.get('blacklistFileId')) {
+          // got the file already
+          loadButton.style.display = '';
+        } else {
+          loadButton.style.display = 'none';
+        }
+        self.createPicker();
+
+      }});
     });
   } else {
     // No access token could be retrieved, force the authorization flow.
@@ -195,10 +187,6 @@ GoogleDrive.prototype.handleAuthClick = function(e) {
       {'client_id': this.clientId, 'scope': this.permissionScopes, 'immediate': false}, 
       this.handleAuthResult.bind(this));
   return false;
-}
-
-GoogleDrive.prototype.loadPicker = function() {
-  gapi.load('picker', {'callback': this.createPicker});
 }
 
 GoogleDrive.prototype.createPicker = function(callback) {
