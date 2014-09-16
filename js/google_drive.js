@@ -10,6 +10,7 @@ function GoogleDrive(app) {
       'https://www.googleapis.com/auth/drive.appdata',
       // Add other scopes needed by your application.
     ];
+  this.oauthToken = '';
 
 }
 
@@ -52,6 +53,7 @@ GoogleDrive.prototype.handleAuthResult = function(authResult) {
         } else {
           loadButton.style.display = 'none';
         }
+        this.oauthToken = authResult.access_token;
       }});
     });
   } else {
@@ -195,6 +197,7 @@ GoogleDrive.prototype.createPicker = function(callback) {
     .enableFeature(google.picker.Feature.NAV_HIDDEN)
     .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
     .setAppId(this.clientId)
+    .setOAuthToken(this.oauthToken)
     .addView(view)
     .addView(new google.picker.DocsUploadView())
     .setDeveloperKey(this.apiKey)
