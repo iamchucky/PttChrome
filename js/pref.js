@@ -189,6 +189,13 @@ PttChromePref.prototype = {
     });
 
     $('#blacklist_driveSave').click(function(e) {
+      self.gdrive.createPicker(function(data) {
+        if (data.action == google.picker.Action.PICKED) {
+          var fileId = data.docs[0].id;
+          console.log('picked ' + fileId);
+        }
+      });
+      return;
       // make sure the blacklistedUserIds is read
       self.readBlacklistValues();
       var fileId = '';

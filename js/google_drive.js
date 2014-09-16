@@ -193,7 +193,7 @@ GoogleDrive.prototype.createPicker = function(callback) {
   view.setMimeTypes("text/plain,application/vnd.google-apps.document");
   if (!callback) callback = this.pickerCallback;
   var picker = new google.picker.PickerBuilder()
-    .enableFeature(google.picker.Feature.NAV_HIDDEN)
+    //.enableFeature(google.picker.Feature.NAV_HIDDEN)
     .hideTitleBar()
     .setAppId(this.clientId)
     .setOAuthToken(this.oauthToken)
