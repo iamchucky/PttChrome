@@ -160,7 +160,7 @@ PttChromePref.prototype = {
           $('#blacklist_driveDone').css('display', 'none');
           var request = gapi.client.drive.files.get({'fileId': fileId});
           request.execute(function(result) {
-            if (result.downloadUrl) {
+            if (result.downloadUrl || result.exportLinks) {
               self.gdrive.downloadFile(result, function(content) {
                 $('#blacklist_driveLoading').css('display', 'none');
                 $('#blacklist_driveDone').css('display', '');
@@ -176,7 +176,7 @@ PttChromePref.prototype = {
                 } else console.log('no content');
               });
             } else {
-              console.log(resp);
+              console.log(result);
             }
           });
         }

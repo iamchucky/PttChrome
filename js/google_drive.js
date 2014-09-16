@@ -164,10 +164,17 @@ GoogleDrive.prototype.listFilesInApplicationDataFolder = function(callback) {
 * @param {Function} callback Function to call when the request is complete.
 */
 GoogleDrive.prototype.downloadFile = function(file, callback) {
-  if (file.downloadUrl) {
+  var url = file.downloadUrl;
+  if (!url) {
+    if (file.exportLinks) {
+      url = file.exportLinks['text/plan'];
+    }
+  }
+
+  if (url) {
     var accessToken = gapi.auth.getToken().access_token;
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', file.downloadUrl);
+    xhr.open('GET', url);
     xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
     xhr.onload = function() {
       callback(xhr.responseText);
