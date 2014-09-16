@@ -33,8 +33,7 @@ PttChromePref.prototype = {
       var val = this.values[i];
 
       // for blacklisted userids
-      if (i === 'blacklistedUserIds' ||
-          i === 'blacklistFileId') {
+      if (i === 'blacklistedUserIds') {
         continue;
       }
       
@@ -194,7 +193,7 @@ PttChromePref.prototype = {
       });
       return;
       // make sure the blacklistedUserIds is read
-      self.readBlacklistValues();
+      /*self.readBlacklistValues();
       var fileId = '';
       var method = 'POST';
 
@@ -224,7 +223,7 @@ PttChromePref.prototype = {
         } else {
           console.log(result);
         }
-      });
+      });*/
     });
 
   },
@@ -321,8 +320,7 @@ PttChromePref.prototype = {
     this.readBlacklistValues();
     var selectedVal;
     for (var i in this.values) {
-      if (i === 'blacklistedUserIds' ||
-          i === 'blacklistFileId') {
+      if (i === 'blacklistedUserIds') {
         continue;
       }
 

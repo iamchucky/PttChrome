@@ -30,7 +30,6 @@ var DEFAULT_PREFS = {
   // blacklist
   enableBlacklist : false,
   blacklistedUserIds  : '{}',
-  blacklistFileId: '',
 
 };
 
