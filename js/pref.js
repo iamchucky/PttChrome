@@ -156,36 +156,31 @@ PttChromePref.prototype = {
         if (data.action == google.picker.Action.PICKED) {
           var fileId = data.docs[0].id;
           console.log('picked ' + fileId);
+          $('#blacklist_driveLoading').css('display', '');
+          $('#blacklist_driveDone').css('display', 'none');
+          var request = gapi.client.drive.files.get({'fileId': fileId});
+          request.execute(function(result) {
+            if (result.downloadUrl) {
+              self.gdrive.downloadFile(result, function(content) {
+                $('#blacklist_driveLoading').css('display', 'none');
+                $('#blacklist_driveDone').css('display', '');
+                if (content) {
+                  var ids = content.split('\n');
+                  console.log('loaded ' + ids.length + ' ids from appfolder');
+                  // load the string blacklist into the dict
+                  self.blacklistedUserIds = {};
+                  for (var i = 0; i < ids.length; ++i) {
+                    self.blacklistedUserIds[ids[i]] = true;
+                  }
+                  self.refreshBlacklistOnUi();
+                } else console.log('no content');
+              });
+            } else {
+              console.log(resp);
+            }
+          });
         }
       });
-      /*
-      if (self.values.blacklistFileId) {
-        $('#blacklist_driveLoading').css('display', '');
-        $('#blacklist_driveDone').css('display', 'none');
-        var request = gapi.client.drive.files.get({'fileId': self.values.blacklistFileId});
-        request.execute(function(result) {
-          if (result.downloadUrl) {
-            self.gdrive.downloadFile(result, function(content) {
-              $('#blacklist_driveLoading').css('display', 'none');
-              $('#blacklist_driveDone').css('display', '');
-              if (content) {
-                var ids = content.split('\n');
-                console.log('loaded ' + ids.length + ' ids from appfolder');
-                // load the string blacklist into the dict
-                self.blacklistedUserIds = {};
-                for (var i = 0; i < ids.length; ++i) {
-                  self.blacklistedUserIds[ids[i]] = true;
-                }
-                self.refreshBlacklistOnUi();
-              } else console.log('no content');
-            });
-          } else {
-            console.log(resp);
-          }
-        });
-      } else {
-        console.log('no blacklist file created');
-      }*/
     });
 
     $('#blacklist_driveSave').click(function(e) {
