@@ -17,7 +17,7 @@ function GoogleDrive(app) {
 * Check if the current user has authorized the application.
 */
 GoogleDrive.prototype.checkAuth = function() {
-  if (!google || !gapi || !gapi.auth) {
+  if (!gapi || !gapi.auth) {
     // if client library has not been loaded
     window.setTimeout(this.checkAuth.bind(this), 200);
     return;
