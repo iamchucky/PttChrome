@@ -200,7 +200,6 @@ GoogleDrive.prototype.createPicker = function(callback) {
     .setOAuthToken(this.oauthToken)
     .addView(view)
     .addView(new google.picker.DocsUploadView())
-    .setDeveloperKey(this.apiKey)
     .setCallback(callback)
     .build();
   picker.setVisible(true);
