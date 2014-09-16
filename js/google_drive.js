@@ -2,7 +2,6 @@ function GoogleDrive(app) {
   this.app = app;
 
   this.clientId = '569657632946-i88sl1555v27jaji65nppshj7svopn2a.apps.googleusercontent.com';
-  this.apiKey = 'AIzaSyAO8bwODM1ceGs6n7Iye77u_0uisSie448';
   this.permissionScopes = [
       'https://www.googleapis.com/auth/drive',
       'https://www.googleapis.com/auth/drive.install',
@@ -195,11 +194,11 @@ GoogleDrive.prototype.createPicker = function(callback) {
   if (!callback) callback = this.pickerCallback;
   var picker = new google.picker.PickerBuilder()
     .enableFeature(google.picker.Feature.NAV_HIDDEN)
-    .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
     .setAppId(this.clientId)
     .setOAuthToken(this.oauthToken)
     .addView(view)
     .addView(new google.picker.DocsUploadView())
+    .setOrigin(window.location.protocol + '//' + window.location.host)
     .setCallback(callback)
     .build();
   picker.setVisible(true);
