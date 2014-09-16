@@ -4,6 +4,7 @@ function GoogleDrive(app) {
   this.clientId = '569657632946-i88sl1555v27jaji65nppshj7svopn2a.apps.googleusercontent.com';
   this.permissionScopes = [
       'https://www.googleapis.com/auth/drive',
+      'https://www.googleapis.com/auth/drive.install',
       'https://www.googleapis.com/auth/drive.appfolder',
       'https://www.googleapis.com/auth/drive.appdata',
       // Add other scopes needed by your application.
