@@ -5,8 +5,6 @@ function GoogleDrive(app) {
   this.permissionScopes = [
       'https://www.googleapis.com/auth/drive',
       'https://www.googleapis.com/auth/drive.install',
-      'https://www.googleapis.com/auth/drive.appfolder',
-      'https://www.googleapis.com/auth/drive.appdata',
       // Add other scopes needed by your application.
     ];
   this.oauthToken = '';
@@ -147,13 +145,6 @@ GoogleDrive.prototype.retrievePageOfFiles = function(callback, request, result) 
 
 GoogleDrive.prototype.listFiles = function(callback) {
   var initialRequest = gapi.client.drive.files.list();
-  this.retrievePageOfFiles(callback, initialRequest, []);
-};
-
-GoogleDrive.prototype.listFilesInApplicationDataFolder = function(callback) {
-  var initialRequest = gapi.client.drive.files.list({
-    'q': '\'appfolder\' in parents'
-  });
   this.retrievePageOfFiles(callback, initialRequest, []);
 };
 
