@@ -190,7 +190,7 @@ GoogleDrive.prototype.handleAuthClick = function(e) {
 
 GoogleDrive.prototype.createPicker = function(callback) {
   var view = new google.picker.View(google.picker.ViewId.DOCS);
-  view.setMimeTypes("text/plain");
+  view.setMimeTypes("text/plain,application/vnd.google-apps.document");
   if (!callback) callback = this.pickerCallback;
   var picker = new google.picker.PickerBuilder()
     .enableFeature(google.picker.Feature.NAV_HIDDEN)
@@ -198,7 +198,6 @@ GoogleDrive.prototype.createPicker = function(callback) {
     .setOAuthToken(this.oauthToken)
     .addView(view)
     .addView(new google.picker.DocsUploadView())
-    .setOrigin(window.location.protocol + '//' + window.location.host)
     .setCallback(callback)
     .build();
   picker.setVisible(true);
