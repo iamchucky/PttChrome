@@ -2,6 +2,7 @@ function GoogleDrive(app) {
   this.app = app;
 
   this.clientId = '569657632946-i88sl1555v27jaji65nppshj7svopn2a.apps.googleusercontent.com';
+  this.apiKey = 'AIzaSyAO8bwODM1ceGs6n7Iye77u_0uisSie448';
   this.permissionScopes = [
       'https://www.googleapis.com/auth/drive',
       'https://www.googleapis.com/auth/drive.install',
@@ -9,6 +10,7 @@ function GoogleDrive(app) {
       'https://www.googleapis.com/auth/drive.appdata',
       // Add other scopes needed by your application.
     ];
+
 }
 
 /**
@@ -193,4 +195,30 @@ GoogleDrive.prototype.handleAuthClick = function(e) {
       {'client_id': this.clientId, 'scope': this.permissionScopes, 'immediate': false}, 
       this.handleAuthResult.bind(this));
   return false;
+}
+
+GoogleDrive.prototype.loadPicker = function() {
+  gapi.load('picker', {'callback': this.createPicker});
+}
+
+GoogleDrive.prototype.createPicker = function(callback) {
+  var view = new google.picker.View(google.picker.ViewId.DOCS);
+  view.setMimeTypes("text/plain");
+  if (!callback) callback = this.pickerCallback;
+  var picker = new google.picker.PickerBuilder()
+    .enableFeature(google.picker.Feature.NAV_HIDDEN)
+    .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
+    .setAppId(this.clientId)
+    .addView(view)
+    .addView(new google.picker.DocsUploadView())
+    .setDeveloperKey(this.apiKey)
+    .setCallback(callback)
+    .build();
+}
+
+GoogleDrive.prototype.pickerCallback = function(data) {
+  if (data.action == google.picker.Action.PICKED) {
+    var fileId = data.docs[0].id;
+    console.log('picked ' + fileId);
+  }
 }

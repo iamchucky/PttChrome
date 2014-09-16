@@ -152,6 +152,13 @@ PttChromePref.prototype = {
     $('#blacklist_driveLoading').text(i18n('blacklist_driveLoading'));
 
     $('#blacklist_driveLoad').click(function(e) {
+      self.gdrive.createPicker(function(data) {
+        if (data.action == google.picker.Action.PICKED) {
+          var fileId = data.docs[0].id;
+          console.log('picked ' + fileId);
+        }
+      });
+      /*
       if (self.values.blacklistFileId) {
         $('#blacklist_driveLoading').css('display', '');
         $('#blacklist_driveDone').css('display', 'none');
@@ -178,7 +185,7 @@ PttChromePref.prototype = {
         });
       } else {
         console.log('no blacklist file created');
-      }
+      }*/
     });
 
     $('#blacklist_driveSave').click(function(e) {
