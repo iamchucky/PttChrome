@@ -44,12 +44,7 @@ GoogleDrive.prototype.handleAuthResult = function(authResult) {
     gapi.client.load('drive', 'v2', function() {
       gapi.load('picker', {'callback': function() {
         saveButton.style.display = '';
-        if (self.app.pref.get('blacklistFileId')) {
-          // got the file already
-          loadButton.style.display = '';
-        } else {
-          loadButton.style.display = 'none';
-        }
+        loadButton.style.display = '';
         self.oauthToken = authResult.access_token;
       }});
     });
