@@ -4,7 +4,6 @@ function GoogleDrive(app) {
   this.clientId = '569657632946-i88sl1555v27jaji65nppshj7svopn2a.apps.googleusercontent.com';
   this.permissionScopes = [
       'https://www.googleapis.com/auth/drive',
-      'https://www.googleapis.com/auth/drive.install',
       // Add other scopes needed by your application.
     ];
   this.oauthToken = '';
@@ -45,6 +44,7 @@ GoogleDrive.prototype.handleAuthResult = function(authResult) {
       gapi.load('picker', {'callback': function() {
         saveButton.style.display = '';
         loadButton.style.display = '';
+        $('#blacklist_driveLoading').css('display', 'none');
         self.oauthToken = authResult.access_token;
       }});
     });
@@ -53,6 +53,7 @@ GoogleDrive.prototype.handleAuthResult = function(authResult) {
     authorizeButton.style.display = '';
     loadButton.style.display = 'none';
     saveButton.style.display = 'none';
+    $('#blacklist_driveLoading').css('display', 'none');
     authorizeButton.onclick = self.handleAuthClick.bind(self);
   }
 };

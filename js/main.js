@@ -20,6 +20,7 @@
   * Called when the client library is loaded.
   */
 function handleGapiClientLoad() {
+  $('#blacklist_driveLoading').css('display', '');
   window.setTimeout(pttchrome.app.pref.gdrive.checkAuth.bind(pttchrome.app.pref.gdrive), 1);
 }
 
