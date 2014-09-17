@@ -209,7 +209,7 @@ locale.en_US = {
     "message": "Existing Document"
   },
   "blacklist_driveLoading": {
-    "message": "Loading ..."
+    "message": "Working ..."
   },
   "blacklist_driveDone": {
     "message": "Done!"

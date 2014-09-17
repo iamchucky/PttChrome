@@ -206,7 +206,7 @@
     "message": "現有文件"
   },
   "blacklist_driveLoading": {
-    "message": "讀取中 ..."
+    "message": "處理中 ..."
   },
   "blacklist_driveDone": {
     "message": "完成!"
