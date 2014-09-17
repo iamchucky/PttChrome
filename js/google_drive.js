@@ -176,6 +176,7 @@ GoogleDrive.prototype.downloadFile = function(file, callback) {
 };
 
 GoogleDrive.prototype.handleAuthClick = function(e) {
+  $('#blacklist_driveLoading').css('display', '');
   gapi.auth.authorize(
       {'client_id': this.clientId, 'scope': this.permissionScopes, 'immediate': false}, 
       this.handleAuthResult.bind(this));
