@@ -200,7 +200,13 @@ locale.en_US = {
     "message": "Load from Drive"
   },
   "blacklist_driveSave": {
-    "message": "Backup to Drive"
+    "message": "Backup to ... "
+  },
+  "blacklist_driveSaveNew": {
+    "message": "New Document"
+  },
+  "blacklist_driveSaveExisting": {
+    "message": "Existing Document"
   },
   "blacklist_driveLoading": {
     "message": "Loading ..."

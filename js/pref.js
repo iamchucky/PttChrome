@@ -146,7 +146,9 @@ PttChromePref.prototype = {
     $('#blacklist_driveSyncTitle').text(i18n('blacklist_driveSyncTitle'));
     $('#blacklist_driveAuthorize').text(i18n('blacklist_driveAuthorize'));
     $('#blacklist_driveLoad').text(i18n('blacklist_driveLoad'));
-    $('#blacklist_driveSave').text(i18n('blacklist_driveSave'));
+    $('#blacklist_driveSave').html(i18n('blacklist_driveSave') + '<span class="caret"></span>');
+    $('#blacklist_driveSaveNew').text(i18n('blacklist_driveSaveNew'));
+    $('#blacklist_driveSaveExisting').text(i18n('blacklist_driveSaveExisting'));
     $('#blacklist_driveDone').text(i18n('blacklist_driveDone'));
     $('#blacklist_driveLoading').text(i18n('blacklist_driveLoading'));
 
@@ -184,40 +186,42 @@ PttChromePref.prototype = {
       });
     });
 
-    $('#blacklist_driveSave').click(function(e) {
-      /*self.gdrive.createPicker(function(data) {
+    $('#blacklist_driveSaveExisting').click(function(e) {
+      // make sure the blacklistedUserIds is read
+      self.readBlacklistValues();
+      self.gdrive.createPicker(function(data) {
         if (data.action == google.picker.Action.PICKED) {
           var fileId = data.docs[0].id;
           console.log('picked ' + fileId);
+
+          var listStr = Object.keys(self.blacklistedUserIds).join('\n');
+          $('#blacklist_driveLoading').css('display', '');
+          $('#blacklist_driveDone').css('display', 'none');
+          self.gdrive.updateFile(listStr, fileId, 'PUT', function(result) {
+            $('#blacklist_driveLoading').css('display', 'none');
+            $('#blacklist_driveDone').css('display', '');
+            if (result.id) {
+              document.getElementById('blacklist_driveLoad').style.display = '';
+              self.gdrive.printFile(result.id);
+            } else {
+              console.log(result);
+            }
+          });
         }
       });
-      return;*/
+    });
+
+    $('#blacklist_driveSaveNew').click(function(e) {
       // make sure the blacklistedUserIds is read
       self.readBlacklistValues();
-      var fileId = '';
-      var method = 'POST';
-
-      if (self.values.blacklistFileId) {
-        // first time, create file
-        fileId = self.values.blacklistFileId;
-        method = 'PUT';
-      }
 
       var listStr = Object.keys(self.blacklistedUserIds).join('\n');
       $('#blacklist_driveLoading').css('display', '');
       $('#blacklist_driveDone').css('display', 'none');
-      self.gdrive.updateFile(listStr, fileId, method, function(result) {
+      self.gdrive.updateFile(listStr, '', 'POST', function(result) {
         $('#blacklist_driveLoading').css('display', 'none');
         $('#blacklist_driveDone').css('display', '');
         if (result.id) {
-          /*self.values.blacklistFileId = result.id;
-          // set blacklistFileId
-          var items = { 
-            values: {
-              blacklistFileId: self.values.blacklistFileId
-            }
-          };
-          self.setStorage(items);*/
           document.getElementById('blacklist_driveLoad').style.display = '';
           self.gdrive.printFile(result.id);
         } else {

@@ -197,7 +197,13 @@
     "message": "從 Drive 讀取"
   },
   "blacklist_driveSave": {
-    "message": "備份至 Drive"
+    "message": "備份至 ... "
+  },
+  "blacklist_driveSaveNew": {
+    "message": "新文件"
+  },
+  "blacklist_driveSaveExisting": {
+    "message": "現有文件"
   },
   "blacklist_driveLoading": {
     "message": "讀取中 ..."
