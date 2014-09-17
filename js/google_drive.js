@@ -71,8 +71,8 @@ GoogleDrive.prototype.updateFile = function(str, fileId, method, callback) {
 
   var contentType = 'text/plain';
   var metadata = {
-    'title': 'PttChrome blacklist',
-    'mimeType': contentType
+    'title': 'PttChrome blacklist'//,
+    //'mimeType': contentType
   };
 
   // convert from string to base64 encoded data.
@@ -82,7 +82,7 @@ GoogleDrive.prototype.updateFile = function(str, fileId, method, callback) {
     'Content-Type: application/json\r\n\r\n' +
     JSON.stringify(metadata) +
     delimiter +
-    'Content-Type: ' + contentType + '\r\n' +
+    //'Content-Type: ' + contentType + '\r\n' +
     'Content-Transfer-Encoding: base64\r\n' +
     '\r\n' +
     base64Data +
@@ -93,7 +93,7 @@ GoogleDrive.prototype.updateFile = function(str, fileId, method, callback) {
   var request = gapi.client.request({
     'path': '/upload/drive/v2/files' + fileId,
     'method': method,
-    'params': {'uploadType': 'multipart'},
+    'params': {'uploadType': 'multipart', 'convert': true},
     'headers': {
       'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
     },

@@ -185,15 +185,15 @@ PttChromePref.prototype = {
     });
 
     $('#blacklist_driveSave').click(function(e) {
-      self.gdrive.createPicker(function(data) {
+      /*self.gdrive.createPicker(function(data) {
         if (data.action == google.picker.Action.PICKED) {
           var fileId = data.docs[0].id;
           console.log('picked ' + fileId);
         }
       });
-      return;
+      return;*/
       // make sure the blacklistedUserIds is read
-      /*self.readBlacklistValues();
+      self.readBlacklistValues();
       var fileId = '';
       var method = 'POST';
 
@@ -210,20 +210,20 @@ PttChromePref.prototype = {
         $('#blacklist_driveLoading').css('display', 'none');
         $('#blacklist_driveDone').css('display', '');
         if (result.id) {
-          self.values.blacklistFileId = result.id;
+          /*self.values.blacklistFileId = result.id;
           // set blacklistFileId
           var items = { 
             values: {
               blacklistFileId: self.values.blacklistFileId
             }
           };
-          self.setStorage(items);
+          self.setStorage(items);*/
           document.getElementById('blacklist_driveLoad').style.display = '';
           self.gdrive.printFile(result.id);
         } else {
           console.log(result);
         }
-      });*/
+      });
     });
 
   },
