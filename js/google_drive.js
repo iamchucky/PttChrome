@@ -82,7 +82,7 @@ GoogleDrive.prototype.updateFile = function(str, fileId, method, callback) {
     'Content-Type: application/json\r\n\r\n' +
     JSON.stringify(metadata) +
     delimiter +
-    //'Content-Type: ' + contentType + '\r\n' +
+    'Content-Type: ' + contentType + '\r\n' +
     'Content-Transfer-Encoding: base64\r\n' +
     '\r\n' +
     base64Data +
