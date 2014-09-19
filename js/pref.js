@@ -36,6 +36,14 @@ PttChromePref.prototype = {
       if (i === 'blacklistedUserIds') {
         continue;
       }
+
+      if (i === 'deleteDupLogin') {
+        var yesNode = $('#opt_deleteDupLoginYes');
+        if (val) {
+          yesNode.click();
+        }
+        continue;
+      }
       
       // for the color selection box
       if (i === 'mouseBrowsingHighlightColor') {
@@ -325,6 +333,12 @@ PttChromePref.prototype = {
     var selectedVal;
     for (var i in this.values) {
       if (i === 'blacklistedUserIds') {
+        continue;
+      }
+
+      if (i === 'deleteDupLogin') {
+        var yesNode = $('#opt_deleteDupLoginYes');
+        this.values[i] = yesNode.prop('checked');
         continue;
       }
 

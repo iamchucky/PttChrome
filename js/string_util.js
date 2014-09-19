@@ -128,14 +128,20 @@ String.prototype.b2u = function() {
     return str;
 };
 
+String.prototype.parseDuplicatedLoginText = function() {
+  return (this.indexOf('注意: 您有其它連線已登入此帳號。') === 0);
+};
+
+String.prototype.parseDuplicatedLoginTextLastRow = function() {
+  return (this.indexOf('您想刪除其他重複登入的連線嗎？[Y/n] ') === 0);
+};
+
 String.prototype.parseReplyText = function() {
-  var str = this;
-  return (str.indexOf('▲ 回應至 (F)看板 (M)作者信箱 (B)二者皆是 (Q)取消？[F] ') === 0);
+  return (this.indexOf('▲ 回應至 (F)看板 (M)作者信箱 (B)二者皆是 (Q)取消？[F] ') === 0);
 };
 
 String.prototype.parsePushInitText = function() {
-  var str = this;
-  return (str.indexOf('您覺得這篇文章 ') === 0 || str.search(/→ \w+ *: +/) === 0);
+  return (this.indexOf('您覺得這篇文章 ') === 0 || this.search(/→ \w+ *: +/) === 0);
 };
 
 String.prototype.parseStatusRow = function() {

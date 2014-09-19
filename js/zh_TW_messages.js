@@ -99,6 +99,9 @@
   "options_enableEasyReading": {
     "message": "啟用文章好讀模式, 須重新整理 (測試階段)"
   },
+  "options_enableDeleteDupLogin": {
+    "message": "當被問到是否刪除其他重複登入的連線，回答:"
+  },
   "options_preferences": {
     "message": "設定"
   },
@@ -229,7 +232,7 @@
     "message": "版本"
   },
   "about_version": {
-    "message": "1.3-webapp6 9/19/2014"
+    "message": "1.3-webapp7 9/19/2014"
   },
   "about_new_title": {
     "message": "新功能"
@@ -244,7 +247,8 @@
       '更改了黑名單編輯頁面介面',
       '好讀模式只限於 ptt.cc 上使用',
       '黑名單可用 Google Drive 來讀取或備份',
-      '斷線提示用 443 端口連線'
+      '斷線提示用 443 端口連線',
+      '自動登入設定頁面可設定是否自動刪除其他重複連線'
     ]
   },
 

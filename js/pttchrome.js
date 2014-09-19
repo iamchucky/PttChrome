@@ -1062,6 +1062,12 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
       this.pref.enableBlacklist = pref.get(name);
       this.view.redraw(true);
       break;
+    case 'enableDeleteDupLogin':
+      this.buf.enableDeleteDupLogin = pref.get(name);
+      break;
+    case 'deleteDupLogin':
+      this.buf.deleteDupLogin = pref.get(name);
+      break;
     default:
       break;
     }

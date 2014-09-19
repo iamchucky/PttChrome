@@ -99,6 +99,9 @@ locale.en_US = {
   "options_enableEasyReading": {
     "message": "Enable easy reading article view, restart needed. (Experimental)"
   },
+  "options_enableDeleteDupLogin": {
+    "message": "When asked to disconnect other logged-in connections, answer:"
+  },
   "options_preferences": {
     "message": "Preferences"
   },
@@ -232,7 +235,7 @@ locale.en_US = {
     "message": "Version"
   },
   "about_version": {
-    "message": "1.3-webapp6 9/19/2014"
+    "message": "1.3-webapp7 9/19/2014"
   },
   "about_new_title": {
     "message": "What's new"
@@ -247,7 +250,8 @@ locale.en_US = {
       'Changed edit blacklist settings UI to textarea',
       'Limited easy reading mode to ptt.cc only',
       'Added features to load/backup blacklist with Google Drive',
-      'Suggest to try port 443 when disconnected'
+      'Suggest to try port 443 when disconnected',
+      'Settings to answer duplicated connection query in autologin settings'
     ]
   },
 

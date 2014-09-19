@@ -5,12 +5,14 @@ var DEFAULT_PREFS = {
   // general
   //closeQuery    : false,
   //dbcsDetect    : false,
-  openInPackagedApp   : false,
-  enablePicPreview    : true,
-  enableNotifications : true,
-  enableEasyReading   : false,
-  antiIdleTime        : 0,
-  lineWrap            : 78,
+  openInPackagedApp     : false,
+  enablePicPreview      : true,
+  enableNotifications   : true,
+  enableEasyReading     : false,
+  antiIdleTime          : 0,
+  lineWrap              : 78,
+  enableDeleteDupLogin  : false,
+  deleteDupLogin        : false,
 
   // mouse browsing
   useMouseBrowsing            : false,

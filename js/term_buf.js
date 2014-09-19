@@ -187,6 +187,8 @@ function TermBuf(cols, rows) {
   this.posChanged = false;
   this.pageState = 0;
   this.forceFullWidth = false;
+  this.enableDeleteDupLogin = false;
+  this.deleteDupLogin = false;
 
   this.startedEasyReading = false;
   this.easyReadingShowReplyText = false;
@@ -763,6 +765,21 @@ TermBuf.prototype = {
           return;
         }
         */
+      }
+
+      if (this.enableDeleteDupLogin) {
+        if (this.pageState == 0) {
+          var strToSend = '\r';
+          var lastRowText = this.getRowText(22, 0, this.cols);
+          var nextLastRowText = this.getRowText(21, 0, this.cols);
+          if (lastRowText.parseDuplicatedLoginTextLastRow() && 
+              nextLastRowText.parseDuplicatedLoginText()) {
+            if (!this.deleteDupLogin) {
+              strToSend = 'n' + strToSend;
+            }
+            this.view.conn.send(strToSend)
+          }
+        }
       }
 
       if (this.view.useEasyReadingMode) {
