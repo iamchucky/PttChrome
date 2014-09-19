@@ -4,7 +4,7 @@
 	<title>PttChrome</title>
 	  <link rel="icon" type="image/png" href="icon/logo.png" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="css/main.css" />
@@ -15,6 +15,7 @@
     <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/paramikojs_ssh.min.js"></script>
+    <script type="text/javascript" src="js/hammer.min.js"></script>
 
     <script type="text/javascript" src="https://apis.google.com/js/api.js"></script>
     <script type="text/javascript" src="https://apis.google.com/js/client.js"></script>
@@ -250,6 +251,8 @@
       <p id="connectionAlertText"></p>
       <p>
         <button id="connectionAlertReconnect" type"button" class="btn btn-danger"></button>
+        <span id="connectionAlertPortOption1" style="margin-left:5px;">or</span>
+        <span id="connectionAlertPortOption2" style="cursor:pointer;margin-left:5px;text-decoration:underline;"> Try with port 443 </span>
       </p>
     </div>
     <div id="welcomeJumbo">

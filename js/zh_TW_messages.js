@@ -257,6 +257,12 @@
   "alert_connectionReconnect": {
     "message": "重新連線 (ENTER)"
   },
+  "alert_connectionPortOption1": {
+    "message": "或"
+  },
+  "alert_connectionPortOption2": {
+    "message": "用443端口連線"
+  },
 
   // notifications
   "notification_said": {

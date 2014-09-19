@@ -191,6 +191,17 @@ pttchrome.App = function(onInitializedCallback, from) {
     self.pref.getStorage();
   });
 
+  this.hammertime = new Hammer(this.BBSWin);
+  document.body.ontouchmove = function() { return false; };
+  this.hammertime.on('pan', function(ev) {
+    if (ev.pointerType == 'touch') {
+      console.log(ev);
+    }
+  });
+  this.hammertime.get('pinch').set({ enable: true });
+  this.hammertime.on('pinch', function(ev) {
+    //console.log(ev);
+  });
 };
 
 pttchrome.App.prototype.setupAppConnection = function(callback) {
@@ -341,11 +352,22 @@ pttchrome.App.prototype.setupConnectionAlert = function() {
   $('#connectionAlertHeader').text(i18n('alert_connectionHeader'));
   $('#connectionAlertText').text(i18n('alert_connectionText'));
   $('#connectionAlertReconnect').text(i18n('alert_connectionReconnect'));
+  $('#connectionAlertPortOption1').text(i18n('alert_connectionPortOption1'));
+  $('#connectionAlertPortOption2').text(i18n('alert_connectionPortOption2'));
 
   var self = this;
   $('#connectionAlertReconnect').click(function(e) {
     self.connect(self.connectedUrl);
     $('#connectionAlert').hide();
+  });
+  $('#connectionAlertPortOption2').click(function(e) {
+    var splits = self.connectedUrl.split(/:/g);
+    var port = 443;
+    var site = 'ptt.cc';
+    if (splits.length > 0) {
+      site = splits[0];
+    }
+    window.location.replace('?site=' + site + ':'+ port);
   });
 };
 
