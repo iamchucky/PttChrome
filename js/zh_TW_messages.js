@@ -229,7 +229,7 @@
     "message": "版本"
   },
   "about_version": {
-    "message": "1.3-webapp5 9/17/2014"
+    "message": "1.3-webapp6 9/19/2014"
   },
   "about_new_title": {
     "message": "新功能"
@@ -243,7 +243,8 @@
       '修正了在好讀模式下推文無反應的問題',
       '更改了黑名單編輯頁面介面',
       '好讀模式只限於 ptt.cc 上使用',
-      '黑名單可用 Google Drive 來讀取或備份'
+      '黑名單可用 Google Drive 來讀取或備份',
+      '斷線提示用 443 端口連線'
     ]
   },
 

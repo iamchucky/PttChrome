@@ -232,7 +232,7 @@ locale.en_US = {
     "message": "Version"
   },
   "about_version": {
-    "message": "1.3-webapp5 9/17/2014"
+    "message": "1.3-webapp6 9/19/2014"
   },
   "about_new_title": {
     "message": "What's new"
@@ -246,7 +246,8 @@ locale.en_US = {
       'Fixed easy reading mode pushthread hangups',
       'Changed edit blacklist settings UI to textarea',
       'Limited easy reading mode to ptt.cc only',
-      'Added features to load/backup blacklist with Google Drive'
+      'Added features to load/backup blacklist with Google Drive',
+      'Suggest to try port 443 when disconnected'
     ]
   },
 
