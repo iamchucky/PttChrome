@@ -59,7 +59,7 @@ pttchrome.App = function(onInitializedCallback, from) {
   this.parser = new lib.AnsiParser(this.buf);
 
   //new pref - start
-  this.antiIdleStr = '^[[A^[[B';
+  this.antiIdleStr = '\x1b\x1b';
   this.antiIdleTime = 0;
   this.idleTime = 0;
   //new pref - end
