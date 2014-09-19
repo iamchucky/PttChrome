@@ -202,6 +202,27 @@ pttchrome.App = function(onInitializedCallback, from) {
   this.hammertime.on('pinch', function(ev) {
     //console.log(ev);
   });
+  this.touchStarted = false;
+  document.body.ontouchstart = function() {
+    self.touchStarted = true;
+    self.inputArea.blur();
+  };
+  this.hammertime.on('tap', function(ev) {
+    //console.log(ev);
+    ev.preventDefault();
+    ev.srcEvent.stopPropagation();
+    ev.srcEvent.preventDefault();
+    if (ev.pointerType != 'touch')  return; 
+    var highlightCopy = self.buf.highlightCursor;
+    self.buf.highlightCursor = false;
+    self.onMouse_move(ev.center.x, ev.center.y);
+    self.onMouse_click(ev.center.x, ev.center.y);
+    self.buf.nowHighlight = -1;
+    self.buf.highlightCursor = highlightCopy;
+    self.BBSWin.style.cursor = 'auto';
+    self.touchStarted = false;
+    self.inputArea.focus();
+  });
 };
 
 pttchrome.App.prototype.setupAppConnection = function(callback) {
@@ -343,6 +364,8 @@ pttchrome.App.prototype.setDblclickTimer = function() {
 };
 
 pttchrome.App.prototype.setInputAreaFocus = function() {
+  if (this.modalShown || this.touchStarted)
+    return;
   //this.DocInputArea.disabled="";
   this.inputArea.focus();
 };
@@ -1185,8 +1208,6 @@ pttchrome.App.prototype.mouse_up = function(e) {
   this.inputAreaFocusTimer = setTimer(false, function() {
     clearTimeout(_this.inputAreaFocusTimer);
     _this.inputAreaFocusTimer = null;
-    if (this.modalShown)
-      return;
     if (window.getSelection().isCollapsed)
       _this.setInputAreaFocus();
   }, 10);

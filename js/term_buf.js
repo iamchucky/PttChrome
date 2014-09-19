@@ -1226,157 +1226,155 @@ TermBuf.prototype = {
       }
     }
 
-    if ( this.useMouseBrowsing && !this.view.bbscore.modalShown ) {
-      switch( this.pageState ) {
-      case 0: //NORMAL
-        //SetCursor(m_ArrowCursor);
-        //m_CursorState = 0;
-        this.mouseCursor = 0;
-        break;
+    switch( this.pageState ) {
+    case 0: //NORMAL
+      //SetCursor(m_ArrowCursor);
+      //m_CursorState = 0;
+      this.mouseCursor = 0;
+      break;
 
-      case 4: //LIST
-        if (trow>1 && trow < 22) {              //m_pTermData->m_RowsPerPage-1
-          if ( tcol <= 6 ) {
-            this.mouseCursor = 1;
-            if (this.nowHighlight != -1)
-              this.clearHighlight();
-            //SetCursor(m_ExitCursor);m_CursorState=1;
-          } else if ( tcol >= 64 ) {            //m_pTermData->m_ColsPerPage-16
-            if ( trow > 12 )
-              this.mouseCursor = 3;
-            else
-              this.mouseCursor = 2;
-            if (this.nowHighlight != -1)
-              this.clearHighlight();
-          } else {
-            if (this.nowHighlight != trow) {
-              if (!this.isLineEmpty(trow)) {
-                this.mouseCursor = 6;
-                this.nowHighlight = trow;
-                if (this.highlightCursor) {
-                  var line = this.lines[this.nowHighlight];
-                  for (var i = 0; i < this.cols; ++i)
-                    line[i].needUpdate = true;
-                  this.updateCharAttr();
-                  this.view.redraw(false);
-                }
-              } else
-                this.mouseCursor = 11;
-            }
-          }
-        } else if ( trow == 1 || trow == 2 ) {
-          this.mouseCursor = 2;
-        } else if ( trow === 0 ) {
-          this.mouseCursor = 4;
-        } else { // if ( trow == 23)
-          this.mouseCursor = 5;
-        }
-        break;
-
-      case 2: //LIST
-        if (trow > 2 && trow < 23) {              //m_pTermData->m_RowsPerPage-1
-          if ( tcol <= 6 ) {
-            this.mouseCursor = 1;
-            if (this.nowHighlight != -1)
-              this.clearHighlight();
-            //SetCursor(m_ExitCursor);m_CursorState=1;
-          } else if ( tcol >= 64 ) {            //m_pTermData->m_ColsPerPage-16
-            if ( trow > 12 )
-              this.mouseCursor = 3;
-            else
-              this.mouseCursor = 2;
-            if (this.nowHighlight != -1)
-              this.clearHighlight();
-          } else {
-            if (this.nowHighlight != trow) {
-              if ( !this.isLineEmpty(trow)) {
-                this.mouseCursor = 6;
-                this.nowHighlight = trow;
-                if (this.highlightCursor) {
-                  var line = this.lines[this.nowHighlight];
-                  for (var i = 0; i < this.cols; ++i)
-                    line[i].needUpdate = true;
-                  this.updateCharAttr();
-                  this.view.redraw(false);
-                }
-              } else
-                this.mouseCursor = 11;
-            }
-          }
-        } else if ( trow == 1 || trow == 2 ) {
-          if ( tcol < 2 )//[
-            this.mouseCursor = 8;
-          else if ( tcol >75 )//]
-            this.mouseCursor = 9;
-          else
-            this.mouseCursor = 2;
-        } else if ( trow === 0 ) {
-          if ( tcol < 2 )//=
-            this.mouseCursor = 10;
-          else if ( tcol >75 )//]
-            this.mouseCursor = 9;
-          else
-            this.mouseCursor = 4;
-        } else { // if ( trow == 23)
-          if ( tcol < 2 )
-            this.mouseCursor = 12;
-          else if ( tcol >75 )
-            this.mouseCursor = 13;
-          else
-            this.mouseCursor = 5;
-        }
-        break;
-
-      case 3: //READING
-        if ( trow == 23) {
-          if ( tcol < 2 )//]
-            this.mouseCursor = 12;
-          else if ( tcol > 75 )
-            this.mouseCursor = 14;
-          else
-            this.mouseCursor = 5;
-        } else if ( trow === 0) {
-          if (tcol < 2)//=
-            this.mouseCursor = 10;
-          else if ( tcol >75 )//]
-            this.mouseCursor = 9;
-          else if ( tcol < 7 )
-            this.mouseCursor = 1;
-          else
-            this.mouseCursor = 2;
-        } else if ( trow == 1 || trow == 2) {
-          if (tcol < 2)//[
-            this.mouseCursor = 8;
-          else if ( tcol >75 )//]
-            this.mouseCursor = 9;
-          else if ( tcol < 7 )
-            this.mouseCursor = 1;
-          else
-            this.mouseCursor = 2;
-        } else if ( tcol < 7 )
+    case 4: //LIST
+      if (trow>1 && trow < 22) {              //m_pTermData->m_RowsPerPage-1
+        if ( tcol <= 6 ) {
           this.mouseCursor = 1;
-        else if ( trow < 12)
-          this.mouseCursor = 2;
-        else
-          this.mouseCursor = 3;
-        break;
-
-      case 1: //MENU
-        if ( trow>0 && trow < 23 ) {
-          if (tcol > 7)
-            this.mouseCursor = 7;
+          if (this.nowHighlight != -1)
+            this.clearHighlight();
+          //SetCursor(m_ExitCursor);m_CursorState=1;
+        } else if ( tcol >= 64 ) {            //m_pTermData->m_ColsPerPage-16
+          if ( trow > 12 )
+            this.mouseCursor = 3;
           else
-            this.mouseCursor = 1;
+            this.mouseCursor = 2;
+          if (this.nowHighlight != -1)
+            this.clearHighlight();
         } else {
-          this.mouseCursor = 0;
-          //SetCursor(m_ArrowCursor);m_CursorState=0;
+          if (this.nowHighlight != trow) {
+            if (!this.isLineEmpty(trow)) {
+              this.mouseCursor = 6;
+              this.nowHighlight = trow;
+              if (this.highlightCursor) {
+                var line = this.lines[this.nowHighlight];
+                for (var i = 0; i < this.cols; ++i)
+                  line[i].needUpdate = true;
+                this.updateCharAttr();
+                this.view.redraw(false);
+              }
+            } else
+              this.mouseCursor = 11;
+          }
         }
-        break;
-
-      default:
-        this.mouseCursor = 0;
-        break;
+      } else if ( trow == 1 || trow == 2 ) {
+        this.mouseCursor = 2;
+      } else if ( trow === 0 ) {
+        this.mouseCursor = 4;
+      } else { // if ( trow == 23)
+        this.mouseCursor = 5;
       }
+      break;
+
+    case 2: //LIST
+      if (trow > 2 && trow < 23) {              //m_pTermData->m_RowsPerPage-1
+        if ( tcol <= 6 ) {
+          this.mouseCursor = 1;
+          if (this.nowHighlight != -1)
+            this.clearHighlight();
+          //SetCursor(m_ExitCursor);m_CursorState=1;
+        } else if ( tcol >= 64 ) {            //m_pTermData->m_ColsPerPage-16
+          if ( trow > 12 )
+            this.mouseCursor = 3;
+          else
+            this.mouseCursor = 2;
+          if (this.nowHighlight != -1)
+            this.clearHighlight();
+        } else {
+          if (this.nowHighlight != trow) {
+            if ( !this.isLineEmpty(trow)) {
+              this.mouseCursor = 6;
+              this.nowHighlight = trow;
+              if (this.highlightCursor) {
+                var line = this.lines[this.nowHighlight];
+                for (var i = 0; i < this.cols; ++i)
+                  line[i].needUpdate = true;
+                this.updateCharAttr();
+                this.view.redraw(false);
+              }
+            } else
+              this.mouseCursor = 11;
+          }
+        }
+      } else if ( trow == 1 || trow == 2 ) {
+        if ( tcol < 2 )//[
+          this.mouseCursor = 8;
+        else if ( tcol >75 )//]
+          this.mouseCursor = 9;
+        else
+          this.mouseCursor = 2;
+      } else if ( trow === 0 ) {
+        if ( tcol < 2 )//=
+          this.mouseCursor = 10;
+        else if ( tcol >75 )//]
+          this.mouseCursor = 9;
+        else
+          this.mouseCursor = 4;
+      } else { // if ( trow == 23)
+        if ( tcol < 2 )
+          this.mouseCursor = 12;
+        else if ( tcol >75 )
+          this.mouseCursor = 13;
+        else
+          this.mouseCursor = 5;
+      }
+      break;
+
+    case 3: //READING
+      if ( trow == 23) {
+        if ( tcol < 2 )//]
+          this.mouseCursor = 12;
+        else if ( tcol > 75 )
+          this.mouseCursor = 14;
+        else
+          this.mouseCursor = 5;
+      } else if ( trow === 0) {
+        if (tcol < 2)//=
+          this.mouseCursor = 10;
+        else if ( tcol >75 )//]
+          this.mouseCursor = 9;
+        else if ( tcol < 7 )
+          this.mouseCursor = 1;
+        else
+          this.mouseCursor = 2;
+      } else if ( trow == 1 || trow == 2) {
+        if (tcol < 2)//[
+          this.mouseCursor = 8;
+        else if ( tcol >75 )//]
+          this.mouseCursor = 9;
+        else if ( tcol < 7 )
+          this.mouseCursor = 1;
+        else
+          this.mouseCursor = 2;
+      } else if ( tcol < 7 )
+        this.mouseCursor = 1;
+      else if ( trow < 12)
+        this.mouseCursor = 2;
+      else
+        this.mouseCursor = 3;
+      break;
+
+    case 1: //MENU
+      if ( trow>0 && trow < 23 ) {
+        if (tcol > 7)
+          this.mouseCursor = 7;
+        else
+          this.mouseCursor = 1;
+      } else {
+        this.mouseCursor = 0;
+        //SetCursor(m_ArrowCursor);m_CursorState=0;
+      }
+      break;
+
+    default:
+      this.mouseCursor = 0;
+      break;
     }
 
     this.BBSWin.style.cursor = mouseCursorMap[this.mouseCursor];
