@@ -11,7 +11,6 @@ chrome.app.runtime.onLaunched.addListener(function() {
     if ('openInPackagedApp' in items && items['openInPackagedApp']) {
 
       chrome.app.window.create('view.html', {
-        id: "mainwin",
         bounds: {
           width: 880,
           height: 530
@@ -221,9 +220,26 @@ chrome.runtime.onConnectExternal.addListener(function(port) {
         switch(stype) {
           case 'set':
             if (msg.data && msg.data.values)
-              chrome.storage.sync.set(msg.data.values);
-            if (msg.data && msg.data.logins)
-              chrome.storage.local.set(msg.data.logins);
+              chrome.storage.sync.set(msg.data.values, function() {
+                var lastError = chrome.runtime.lastError;
+                if (lastError) console.log(lastError);
+                if (msg.data && msg.data.logins) {
+                  chrome.storage.local.clear(function() {
+                    var err = chrome.runtime.lastError;
+                    if (err)
+                      console.log(err);
+                    else {
+                      var blacklist = { blacklistedUserIds: msg.data.values.blacklistedUserIds };
+                      if (lastError && lastError.message == 'QUOTA_BYTES_PER_ITEM quota exceeded') {
+                        msg.data.logins['blacklistedUserIds'] = msg.data.values.blacklistedUserIds;
+                        msg.data.values.blacklistedUserIds = '';
+                        chrome.storage.sync.set(msg.data.values);
+                      }
+                      chrome.storage.local.set(msg.data.logins);
+                    }
+                  });
+                }
+              });
             break;
           case 'get':
             chrome.storage.sync.get(null, function(items) {
@@ -239,9 +255,12 @@ chrome.runtime.onConnectExternal.addListener(function(port) {
                   localItems = JSON.parse(JSON.stringify(msg.defaults.logins));
                   chrome.storage.local.set(localItems);
                 }
+                if (localItems.blacklistedUserIds) {
+                  items['blacklistedUserIds'] = localItems.blacklistedUserIds;
+                }
                 var data = {
                   values: items,
-                  logins: localItems
+                  logins: { u: localItems.u, p: localItems.p }
                 };
                 port.postMessage({ action: 'onStorageDone', type: 'get', data: data });
               });
