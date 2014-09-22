@@ -76,16 +76,21 @@ PttChromePref.prototype = {
         continue;
       }
 
+      var popoverTooltips = '';
+      if (i == 'fontFace' || i == 'antiIdleTime') {
+        popoverTooltips = ' data-toggle="popover" data-trigger="focus" data-content="'+i18n('tooltip_'+i)+'"';
+      }
+
       switch(typeof(val)) {
         case 'number':
           $('#opt_'+i).html(
             '<label style="font-weight:normal;">'+i18n('options_'+i)+'</label>'+
-            '<input type="number" class="form-control" value="'+val+'">');
+            '<input type="number" class="form-control" value="'+val+'"'+popoverTooltips+'>');
           break;
         case 'string':
           $('#opt_'+i).html(
             '<label style="font-weight:normal;">'+i18n('options_'+i)+'</label>'+
-            '<input type="text" class="form-control" value="'+val+'">');
+            '<input type="text" class="form-control" value="'+val+'"'+popoverTooltips+'>');
           break;
         case 'boolean':
           $('#opt_'+i).html(
@@ -94,7 +99,13 @@ PttChromePref.prototype = {
         default:
           break;
       }
+
+      // init popovers
+      if (i == 'fontFace' || i == 'antiIdleTime') {
+        $('#opt_'+i+' input').popover();
+      }
     }
+
     // autologin
     $('#login_username').html(
       '<label style="font-weight:normal;">'+i18n('autologin_username')+'</label>'+

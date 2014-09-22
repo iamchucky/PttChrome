@@ -372,6 +372,14 @@ locale.en_US = {
   },
   "emoTitle_other": {
     "message": "Others"
+  },
+
+  // tooltips
+  "tooltip_antiIdleTime": {
+    "message": "Input 0 to disable this feature."
+  },
+  "tooltip_fontFace": {
+    "message": "Separate each font with a comma, start with the desired font and end with a generic font."
   }
 
 };

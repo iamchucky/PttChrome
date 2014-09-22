@@ -369,6 +369,14 @@
   },
   "emoTitle_other": {
     "message": "其他"
+  },
+
+  // tooltips
+  "tooltip_antiIdleTime": {
+    "message": "輸入 0 可停用這功能。"
+  },
+  "tooltip_fontFace": {
+    "message": "以逗號隔開，由欲套用的字型開始至較通用的字型。"
   }
 
 };
