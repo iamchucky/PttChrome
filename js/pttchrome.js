@@ -374,6 +374,11 @@ pttchrome.App.prototype.setInputAreaFocus = function() {
   this.inputArea.focus();
 };
 
+pttchrome.App.prototype.disableLiveHelper = function() {
+  this.setAutoPushthreadUpdate(-1);
+  $('#liveHelperEnable').removeClass('active');
+};
+
 pttchrome.App.prototype.setupLiveHelper = function() {
   $('#liveHelperEnable').text(i18n('liveHelperEnable'));
   $('#liveHelperSpan').text(i18n('liveHelperSpan'));
@@ -729,6 +734,10 @@ pttchrome.App.prototype.onMouse_click = function (cX, cY) {
     this.inputHelper.clickedOn = false;
     return;
   }
+
+  // disable auto update pushthread if any command is issued;
+  this.disableLiveHelper();
+
   switch (this.buf.mouseCursor) {
     case 1:
       if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
