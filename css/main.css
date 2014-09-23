@@ -99,6 +99,20 @@
   cursor: default;
 }
 
+#liveHelper {
+  position: absolute;
+  color: black;
+  width: 420px;
+  top: 0px;
+  left: 50%;
+  margin-left: -210px;
+  margin-top: 20px;
+  z-index: 100;
+  display: none;
+  -webkit-user-select: none;
+  cursor: default;
+}
+
 #picPreview {
   position: absolute;
   display: none;

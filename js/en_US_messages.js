@@ -57,7 +57,10 @@ locale.en_US = {
     "message": "Go to other site ..."
   },
   "cmenu_showInputHelper": {
-    "message": "Show input helper ..."
+    "message": "Input helper ..."
+  },
+  "cmenu_showLiveArticleHelper": {
+    "message": "Live article helper ..."
   },
   "cmenu_addBlacklistUserId": {
     "message": "Add blacklist user"
@@ -372,6 +375,17 @@ locale.en_US = {
   },
   "emoTitle_other": {
     "message": "Others"
+  },
+
+  // live helper
+  "liveHelperEnable": {
+    "message": "Enable"
+  },
+  "liveHelperSpan": {
+    "message": "pushthread refreshes every"
+  },
+  "liveHelperSpanSec": {
+    "message": "sec"
   },
 
   // tooltips

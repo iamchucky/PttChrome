@@ -57,7 +57,10 @@
     "message": "去其他站台 ..."
   },
   "cmenu_showInputHelper": {
-    "message": "開啟輸入小幫手 ..."
+    "message": "輸入小幫手 ..."
+  },
+  "cmenu_showLiveArticleHelper": {
+    "message": "Live 文小幫手 ..."
   },
   "cmenu_addBlacklistUserId": {
     "message": "在黑名單裡加入使用者"
@@ -369,6 +372,17 @@
   },
   "emoTitle_other": {
     "message": "其他"
+  },
+
+  // live helper
+  "liveHelperEnable": {
+    "message": "啟用"
+  },
+  "liveHelperSpan": {
+    "message": "推文每"
+  },
+  "liveHelperSpanSec": {
+    "message": "秒自動更新"
   },
 
   // tooltips

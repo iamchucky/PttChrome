@@ -176,8 +176,11 @@ pttchrome.App = function(onInitializedCallback, from) {
   this.dblclickTimer=null;
   this.mbTimer=null;
   this.timerEverySec=null;
+  this.pushthreadAutoUpdateCount = 0;
+  this.maxPushthreadAutoUpdateCount = -1;
   this.onWindowResize();
   this.setupConnectionAlert();
+  this.setupLiveHelper();
   this.setupOtherSiteInput();
   this.setupContextMenus();
   this.contextMenuShown = false;
@@ -281,6 +284,7 @@ pttchrome.App.prototype.onConnect = function() {
   this.timerEverySec = setTimer(true, function() {
     self.antiIdle();
     self.view.onBlink();
+    self.incrementCountToUpdatePushthread();
   }, 1000);
   this.view.resetCursorBlink();
 };
@@ -368,6 +372,39 @@ pttchrome.App.prototype.setInputAreaFocus = function() {
     return;
   //this.DocInputArea.disabled="";
   this.inputArea.focus();
+};
+
+pttchrome.App.prototype.setupLiveHelper = function() {
+  $('#liveHelperEnable').text(i18n('liveHelperEnable'));
+  $('#liveHelperSpan').text(i18n('liveHelperSpan'));
+  $('#liveHelperSpanSec').text(i18n('liveHelperSpanSec'));
+
+  var self = this;
+  $('#liveHelperEnable').click(function(e) {
+    var enableThis = !$(this).hasClass('active');
+    if (enableThis) {
+      var sec = $('#liveHelperSec').val();
+      self.setAutoPushthreadUpdate(sec);
+    } else {
+      self.setAutoPushthreadUpdate(-1);
+    }
+  });
+
+  $('#liveHelperSec').change(function(e) {
+    var sec = $(this).val();
+    if (sec < 1) {
+      sec = 1;
+      $(this).val(sec);
+    }
+    var enableThis = $('#liveHelperEnable').hasClass('active');
+    if (enableThis) {
+      self.setAutoPushthreadUpdate(sec);
+    }
+  });
+
+  $('#liveHelperClose').click(function(e) {
+    $('#liveHelper').hide();
+  });
 };
 
 pttchrome.App.prototype.setupConnectionAlert = function() {
@@ -513,6 +550,21 @@ pttchrome.App.prototype.doOpenUrlNewTab = function(a) {
 
 pttchrome.App.prototype.doGoToOtherSite = function() {
   $('#siteModal').modal('show');
+};
+
+pttchrome.App.prototype.incrementCountToUpdatePushthread = function(interval) {
+  if (this.maxPushthreadAutoUpdateCount == -1) {
+    this.pushthreadAutoUpdateCount = 0;
+    return;
+  }
+
+  if (++this.pushthreadAutoUpdateCount >= this.maxPushthreadAutoUpdateCount) {
+    this.pushthreadAutoUpdateCount = 0;
+    this.view.conn.send('qrG');
+  }
+};
+pttchrome.App.prototype.setAutoPushthreadUpdate = function(seconds) {
+  this.maxPushthreadAutoUpdateCount = seconds;
 };
 
 pttchrome.App.prototype.doAddBlacklistUserId = function(userid) {
@@ -1510,6 +1562,7 @@ pttchrome.App.prototype.setupContextMenus = function() {
   $('#cmenu_mouseBrowsing a').text(i18n('cmenu_mouseBrowsing'));
   $('#cmenu_goToOtherSite a').text(i18n('cmenu_goToOtherSite'));
   $('#cmenu_showInputHelper a').text(i18n('cmenu_showInputHelper'));
+  $('#cmenu_showLiveArticleHelper a').text(i18n('cmenu_showLiveArticleHelper'));
   $('#cmenu_addBlacklistUserId a').html(i18n('cmenu_addBlacklistUserId')+' <span id="cmenuAddBlacklistUserIdContent"></span>');
   $('#cmenu_removeBlacklistUserId a').html(i18n('cmenu_removeBlacklistUserId')+' <span id="cmenuRemoveBlacklistUserIdContent"></span>');
   $('#cmenu_settings a').text(i18n('cmenu_settings'));
@@ -1561,6 +1614,11 @@ pttchrome.App.prototype.setupContextMenus = function() {
   });
   $('#cmenu_showInputHelper').click(function(e) {
     self.inputHelper.showHelper();
+    e.stopPropagation();
+    hideContextMenu();
+  });
+  $('#cmenu_showLiveArticleHelper').click(function(e) {
+    $('#liveHelper').show();
     e.stopPropagation();
     hideContextMenu();
   });

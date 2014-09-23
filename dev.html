@@ -65,6 +65,7 @@
       <li id="cmenu_mouseBrowsing" class="cmenuItem contextNormal"><a></a></li>
       <li id="cmenu_goToOtherSite" class="cmenuItem contextNormal"><a></a></li>
       <li id="cmenu_showInputHelper" class="cmenuItem contextNormal"><a></a></li>
+      <li id="cmenu_showLiveArticleHelper" class="cmenuItem contextNormal"><a></a></li>
       <li id="cmenu_addBlacklistUserId" class="cmenuItem"><a></a></li>
       <li id="cmenu_removeBlacklistUserId" class="cmenuItem"><a></a></li>
       <li id="cmenu_divider2" class="divider contextNormal"></li>
@@ -184,10 +185,10 @@
                     </div>
                     <div class="btn-group" data-toggle="buttons" style="margin-left:20px;">
                       <label class="btn btn-default">
-                        <input type="radio" name=options" id="opt_deleteDupLoginYes"> Y
+                        <input type="radio" name="options" id="opt_deleteDupLoginYes"> Y
                       </label>
                       <label class="btn btn-default active">
-                        <input type="radio" name=options" id="opt_deleteDupLoginNo" checked> N
+                        <input type="radio" name="options" id="opt_deleteDupLoginNo" checked> N
                       </label>
                     </div>
                   </div>
@@ -277,6 +278,18 @@
     </div>
     <img id="picPreview" src='' style='max-height:80%; max-width:90%'></img>
     <img id="picLoading" src='icon/connecting.gif' style="display:none; position:absolute; z-index:2"></img>
+
+    <div id="liveHelper" class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body" style="height:60px;">
+          <button id="liveHelperClose" type="button" class="close"><span>&times;</span></button>
+          <button type="button" class="btn btn-default" style="float:left;margin-top:-6px" data-toggle="button" id="liveHelperEnable">Enable</button>
+          <span id="liveHelperSpan" style="margin-left:5px;margin-right:5px;float:left;">pushthread auto-update every</span>
+          <input id="liveHelperSec" type="number" style="float:left;margin-top:-6px;width:70px;" class="form-control" value="1"></input>
+          <span id="liveHelperSpanSec" style="margin-left:5px;float:left;">sec</span>
+        </div>
+      </div>
+    </div>
 
     <div id="inputHelper" class="modal-dialog">
       <div class="modal-content">
