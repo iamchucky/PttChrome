@@ -755,7 +755,7 @@ TermView.prototype = {
         e.stopPropagation();
         return;
       } else if (e.keyCode == 82) { // alt+r
-        this.bbscore.onLiveHelperEnableClicked();
+        this.bbscore.onLiveHelperEnableClicked(false);
         e.preventDefault();
         e.stopPropagation();
         return;
@@ -1492,6 +1492,18 @@ TermView.prototype = {
           e.stopPropagation();
           break;
 
+      }
+    } else if (!e.ctrlKey && e.altKey && !e.shiftKey) {
+      if (e.keyCode == 87) {// alt+w
+        conn.send('^W'.unescapeStr());
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      } else if (e.keyCode == 82) { // alt+r
+        this.bbscore.onLiveHelperEnableClicked(false);
+        e.preventDefault();
+        e.stopPropagation();
+        return;
       }
     } else if (e.ctrlKey && !e.altKey && !e.shiftKey) {
       // Control characters

@@ -381,9 +381,9 @@ pttchrome.App.prototype.setupLiveHelper = function() {
 
   var self = this;
   $('#liveHelperEnable').click(function(e) {
-    self.onLiveHelperEnableClicked();
+    self.onLiveHelperEnableClicked(true);
   });
-  $('#liveHelperEnable').tooltip({title:'Alt + r', placement:'right'});
+  $('#liveHelperEnable').tooltip({title:'Alt + r'});
 
   $('#liveHelperSec').change(function(e) {
     var sec = $(this).val();
@@ -402,20 +402,45 @@ pttchrome.App.prototype.setupLiveHelper = function() {
   });
 };
 
-pttchrome.App.prototype.onLiveHelperEnableClicked = function() {
+pttchrome.App.prototype.onLiveHelperEnableClicked = function(fromUi) {
   var enableThis = !$('#liveHelperEnable').hasClass('active');
   if (enableThis) {
+    // cancel easy reading mode first
+    this.switchToEasyReadingMode();
     var sec = $('#liveHelperSec').val();
     this.setAutoPushthreadUpdate(sec);
-    $('#liveHelperEnable').addClass('active');
+    if (!fromUi) {
+      $('#liveHelperEnable').addClass('active');
+    }
   } else {
-    this.disableLiveHelper();
+    this.disableLiveHelper(fromUi);
   }
 };
 
-pttchrome.App.prototype.disableLiveHelper = function() {
+pttchrome.App.prototype.disableLiveHelper = function(fromUi) {
   this.setAutoPushthreadUpdate(-1);
-  $('#liveHelperEnable').removeClass('active');
+  if (!fromUi) {
+    $('#liveHelperEnable').removeClass('active');
+  }
+};
+
+pttchrome.App.prototype.switchToEasyReadingMode = function(doSwitch) {
+  this.view.useEasyReadingMode = doSwitch;
+  this.buf.cancelPageDownAndResetPrevPageState();
+  if (doSwitch) {
+    if (this.buf.pageState == 3) this.view.conn.send('qr');
+  } else {
+    this.view.mainContainer.style.paddingBottom = '';
+    this.view.lastRowIndex = 22;
+    this.view.lastRowDiv.style.display = '';
+    this.view.replyRowDiv.style.display = '';
+    this.view.fbSharingDiv.style.display = '';
+    this.view.hideFbSharing = true;
+    // clear the deep cloned copy of lines
+    this.buf.pageLines = [];
+  }
+  // request the full screen
+  this.view.conn.send('^L'.unescapeStr());
 };
 
 pttchrome.App.prototype.setupConnectionAlert = function() {
@@ -571,7 +596,9 @@ pttchrome.App.prototype.incrementCountToUpdatePushthread = function(interval) {
 
   if (++this.pushthreadAutoUpdateCount >= this.maxPushthreadAutoUpdateCount) {
     this.pushthreadAutoUpdateCount = 0;
-    this.view.conn.send('qrG');
+    if (this.buf.pageState == 3) {
+      this.view.conn.send('qrG');
+    }
   }
 };
 pttchrome.App.prototype.setAutoPushthreadUpdate = function(seconds) {
