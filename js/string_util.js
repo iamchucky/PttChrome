@@ -146,7 +146,7 @@ String.prototype.parsePushInitText = function() {
 
 String.prototype.parseStatusRow = function() {
   var str = this;
-  var regex = new RegExp(/  瀏覽 第 (\d{1,3})(?:\/(\d{1,3}))? 頁 *\( *(\d{1,3})%\)  目前顯示: 第 0*(\d+)~0*(\d+) 行 *\(y\)回應\(X\/?%\)推文(?:\(h\)說明)? *\(←\)離開 /g);
+  var regex = new RegExp(/  瀏覽 第 (\d{1,3})(?:\/(\d{1,3}))? 頁 *\( *(\d{1,3})%\)  目前顯示: 第 0*(\d+)~0*(\d+) 行 *(?:\(y\)回應)?(?:\(X\/?%\)推文)?(?:\(h\)說明)? *\(←\/?q?\)離開 /g);
   var result = regex.exec(str);
   if (!result)
     return null;
