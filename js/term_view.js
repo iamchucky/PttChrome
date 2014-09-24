@@ -754,6 +754,11 @@ TermView.prototype = {
         e.preventDefault();
         e.stopPropagation();
         return;
+      } else if (e.keyCode == 82) { // alt+r
+        this.bbscore.onLiveHelperEnableClicked();
+        e.preventDefault();
+        e.stopPropagation();
+        return;
       }
     } else if (e.ctrlKey && !e.altKey && e.shiftKey) {
       switch(e.keyCode) {

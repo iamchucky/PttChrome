@@ -374,11 +374,6 @@ pttchrome.App.prototype.setInputAreaFocus = function() {
   this.inputArea.focus();
 };
 
-pttchrome.App.prototype.disableLiveHelper = function() {
-  this.setAutoPushthreadUpdate(-1);
-  $('#liveHelperEnable').removeClass('active');
-};
-
 pttchrome.App.prototype.setupLiveHelper = function() {
   $('#liveHelperEnable').text(i18n('liveHelperEnable'));
   $('#liveHelperSpan').text(i18n('liveHelperSpan'));
@@ -386,14 +381,9 @@ pttchrome.App.prototype.setupLiveHelper = function() {
 
   var self = this;
   $('#liveHelperEnable').click(function(e) {
-    var enableThis = !$(this).hasClass('active');
-    if (enableThis) {
-      var sec = $('#liveHelperSec').val();
-      self.setAutoPushthreadUpdate(sec);
-    } else {
-      self.setAutoPushthreadUpdate(-1);
-    }
+    self.onLiveHelperEnableClicked();
   });
+  $('#liveHelperEnable').tooltip({title:'Alt + r', placement:'right'});
 
   $('#liveHelperSec').change(function(e) {
     var sec = $(this).val();
@@ -410,6 +400,22 @@ pttchrome.App.prototype.setupLiveHelper = function() {
   $('#liveHelperClose').click(function(e) {
     $('#liveHelper').hide();
   });
+};
+
+pttchrome.App.prototype.onLiveHelperEnableClicked = function() {
+  var enableThis = !$('#liveHelperEnable').hasClass('active');
+  if (enableThis) {
+    var sec = $('#liveHelperSec').val();
+    this.setAutoPushthreadUpdate(sec);
+    $('#liveHelperEnable').addClass('active');
+  } else {
+    this.disableLiveHelper();
+  }
+};
+
+pttchrome.App.prototype.disableLiveHelper = function() {
+  this.setAutoPushthreadUpdate(-1);
+  $('#liveHelperEnable').removeClass('active');
 };
 
 pttchrome.App.prototype.setupConnectionAlert = function() {
