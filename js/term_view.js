@@ -153,7 +153,7 @@ function TermView(rowCount) {
 
   addEventListener('keydown', function(e) {
     // disable auto update pushthread if any command is issued;
-    self.bbscore.disableLiveHelper();
+    if (!e.altKey) self.bbscore.disableLiveHelper();
 
     if(e.keyCode > 15 && e.keyCode < 19)
       return; // Shift Ctrl Alt (19)

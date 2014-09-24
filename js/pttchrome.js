@@ -1143,7 +1143,7 @@ pttchrome.App.prototype.checkClass = function(cn) {
       cn.indexOf("closePP") >= 0 || cn.indexOf("picturePreview") >= 0 || 
       cn.indexOf("drag") >= 0    || cn.indexOf("floatWindowClientArea") >= 0 || 
       cn.indexOf("WinBtn") >= 0  || cn.indexOf("sBtn") >= 0 || 
-      cn.indexOf("nonspan") >= 0 );
+      cn.indexOf("nonspan") >= 0 || cn.indexOf("nomouse_command") >= 0);
 };
 
 pttchrome.App.prototype.mouse_click = function(e) {
