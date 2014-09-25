@@ -555,6 +555,7 @@ TermView.prototype = {
       if (lineChangedCount > fullUpdateRowThreshold) {
         if (!this.useEasyReadingMode) {
           this.mainContainer.innerHTML = this.htmlRowStrArray.join('');
+          this.buf.prevPageState = this.buf.pageState;
         } else {
           this.populateEasyReadingPage();
         }
@@ -568,6 +569,7 @@ TermView.prototype = {
             this.mainContainer.childNodes[changedRows[i]].innerHTML = changedLineHtmlStrs[i];
           }
         }
+        this.buf.prevPageState = this.buf.pageState;
       }
 
       if (this.enablePicPreview) {

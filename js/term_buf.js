@@ -782,6 +782,12 @@ TermBuf.prototype = {
         }
       }
 
+      // make sure to come back to easy reading mode
+      if (this.prevPageState == 2 && this.pageState == 3 && 
+          !this.view.useEasyReadingMode && this.view.bbscore.pref.values.enableEasyReading) {
+        this.view.useEasyReadingMode = true;
+      }
+
       if (this.view.useEasyReadingMode) {
         // dealing with page state jump to 0 because last row wasn't updated fully 
         if (this.pageState == 3) {
