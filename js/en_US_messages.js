@@ -238,7 +238,7 @@ locale.en_US = {
     "message": "Version"
   },
   "about_version": {
-    "message": "1.3-webapp9 9/25/2014"
+    "message": "1.4-webapp1 9/25/2014"
   },
   "about_new_title": {
     "message": "What's new"
@@ -246,11 +246,6 @@ locale.en_US = {
   "about_new_content": {
     "message": [
       'Added SSH connection to PTT, append ?ssh=true to the URL',
-      'Added the About page in the settings',
-      'Adjusted Input Helper UI',
-      'Easy reading mode now scrolls like webpage',
-      'Fixed easy reading mode pushthread hangups',
-      'Changed edit blacklist settings UI to textarea',
       'Limited easy reading mode to ptt.cc only',
       'Added features to load/backup blacklist with Google Drive',
       'Suggest to try port 443 when disconnected',
