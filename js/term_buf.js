@@ -768,7 +768,7 @@ TermBuf.prototype = {
       }
 
       if (this.enableDeleteDupLogin) {
-        if (this.pageState == 0) {
+        if (this.pageState === 0) {
           var strToSend = '\r';
           var lastRowText = this.getRowText(22, 0, this.cols);
           var nextLastRowText = this.getRowText(21, 0, this.cols);
@@ -777,7 +777,7 @@ TermBuf.prototype = {
             if (!this.deleteDupLogin) {
               strToSend = 'n' + strToSend;
             }
-            this.view.conn.send(strToSend)
+            this.view.conn.send(strToSend);
           }
         }
       }

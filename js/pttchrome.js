@@ -253,8 +253,8 @@ pttchrome.App.prototype.connect = function(url) {
     url = splits[0];
     port = parseInt(splits[1]);
   }
-  this.connectedUrl['url'] = url;
-  this.connectedUrl['port'] = port;
+  this.connectedUrl.url = url;
+  this.connectedUrl.port = port;
 
   if (!this.appConn.isConnected) {
     this.setupAppConnection(function() {
