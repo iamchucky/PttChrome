@@ -100,7 +100,7 @@
     "message": "啟用水球通知"
   },
   "options_enableEasyReading": {
-    "message": "啟用文章好讀模式, 須重新整理 (測試階段)"
+    "message": "啟用文章好讀模式"
   },
   "options_enableDeleteDupLogin": {
     "message": "當被問到是否刪除其他重複登入的連線，回答:"
@@ -235,7 +235,7 @@
     "message": "版本"
   },
   "about_version": {
-    "message": "1.3-webapp8 9/24/2014"
+    "message": "1.3-webapp9 9/25/2014"
   },
   "about_new_title": {
     "message": "新功能"
@@ -252,7 +252,8 @@
       '黑名單可用 Google Drive 來讀取或備份',
       '斷線提示用 443 端口連線',
       '自動登入設定頁面可設定是否自動刪除其他重複連線',
-      '右鍵選單新增 Live 文小幫手來自動更新推文, 也可用 Alt + r 來啟動'
+      '右鍵選單新增 Live 文小幫手來自動更新推文, 也可用 Alt + r 來啟動',
+      '設定中切換好讀模式不用再重新整理即可切換'
     ]
   },
 

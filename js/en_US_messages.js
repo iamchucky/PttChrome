@@ -100,7 +100,7 @@ locale.en_US = {
     "message": "Enable notifications when a message is received."
   },
   "options_enableEasyReading": {
-    "message": "Enable easy reading article view, restart needed. (Experimental)"
+    "message": "Enable easy reading article view."
   },
   "options_enableDeleteDupLogin": {
     "message": "When asked to disconnect other logged-in connections, answer:"
@@ -238,7 +238,7 @@ locale.en_US = {
     "message": "Version"
   },
   "about_version": {
-    "message": "1.3-webapp8 9/24/2014"
+    "message": "1.3-webapp9 9/25/2014"
   },
   "about_new_title": {
     "message": "What's new"
@@ -255,7 +255,8 @@ locale.en_US = {
       'Added features to load/backup blacklist with Google Drive',
       'Suggest to try port 443 when disconnected',
       'Settings to answer duplicated connection query in autologin settings',
-      'Added Live Article Helper in context menu to auto refresh pushthread, or use Alt + r'
+      'Added Live Article Helper in context menu to auto refresh pushthread, or use Alt + r',
+      'Switching easy reading mode in settings no longer require a restart'
     ]
   },
 

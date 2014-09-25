@@ -1158,10 +1158,10 @@ TermView.prototype = {
       this.titleTimer = null;
     }
     this.titleTimer = setTimer(true, function() {
-      if (document.title == app.connectedUrl) {
+      if (document.title == app.connectedUrl.site) {
         document.title = title + ' ' + app.waterball.message;
       } else {
-        document.title = app.connectedUrl;
+        document.title = app.connectedUrl.site;
       }
     }, 1500);
     var options = {

@@ -64,7 +64,7 @@ pttchrome.App = function(onInitializedCallback, from) {
   this.idleTime = 0;
   //new pref - end
   this.connectState = 0;
-  this.connectedUrl = '';
+  this.connectedUrl = { site:'ptt.cc', port:23 };
 
   // for picPreview
   this.curX = 0;
@@ -139,7 +139,7 @@ pttchrome.App = function(onInitializedCallback, from) {
     if (self.view.titleTimer) {
       self.view.titleTimer.cancel();
       self.view.titleTimer = null;
-      document.title = self.connectedUrl;
+      document.title = self.connectedUrl.site;
       self.view.notif.close();
     }
   }, false);
@@ -248,19 +248,13 @@ pttchrome.App.prototype.connect = function(url) {
   var self = this;
   var port = 23;
   var splits = url.split(/:/g);
-  this.connectedUrl = url;
-  document.title = this.connectedUrl;
+  document.title = url;
   if (splits.length == 2) {
     url = splits[0];
     port = parseInt(splits[1]);
   }
-
-  // use easy reading mode only on ptt.cc
-  if (url == 'ptt.cc') {
-    this.view.useEasyReadingMode = this.pref.get('enableEasyReading');
-  } else {
-    this.view.useEasyReadingMode = false;
-  }
+  this.connectedUrl['url'] = url;
+  this.connectedUrl['port'] = port;
 
   if (!this.appConn.isConnected) {
     this.setupAppConnection(function() {
@@ -453,15 +447,14 @@ pttchrome.App.prototype.setupConnectionAlert = function() {
 
   var self = this;
   $('#connectionAlertReconnect').click(function(e) {
-    self.connect(self.connectedUrl);
+    self.connect(self.connectedUrl.site);
     $('#connectionAlert').hide();
   });
   $('#connectionAlertPortOption2').click(function(e) {
-    var splits = self.connectedUrl.split(/:/g);
     var port = 443;
     var site = 'ptt.cc';
-    if (splits.length > 0) {
-      site = splits[0];
+    if (self.connectedUrl.site) {
+      site = self.connectedUrl.site;
     }
     window.location.replace('?site=' + site + ':'+ port);
   });
@@ -1122,6 +1115,13 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
       break;
     case 'enableNotifications':
       this.view.enableNotifications = pref.get(name);
+      break;
+    case 'enableEasyReading':
+      if (this.connectedUrl.site == 'ptt.cc') {
+        this.switchToEasyReadingMode(this.pref.get('enableEasyReading'));
+      } else {
+        this.view.useEasyReadingMode = false;
+      }
       break;
     case 'antiIdleTime':
       this.antiIdleTime = pref.get(name) * 1000;
