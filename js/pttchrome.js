@@ -423,6 +423,8 @@ pttchrome.App.prototype.switchToEasyReadingMode = function(doSwitch) {
   this.buf.cancelPageDownAndResetPrevPageState();
   if (doSwitch) {
     this.disableLiveHelper();
+    // clear the deep cloned copy of lines
+    this.buf.pageLines = [];
     if (this.buf.pageState == 3) this.view.conn.send('qr');
   } else {
     this.view.mainContainer.style.paddingBottom = '';

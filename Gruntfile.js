@@ -33,11 +33,12 @@ module.exports = function(grunt) {
           }
         },
         src: [
+          'js/google_drive.js',
           'js/app_conn.js', 
           'js/predefined_config.js', 
           'js/pref.js', 
-          'js/symbols.js',
           'js/emoticon.js',
+          'js/symbols.js',
           'js/input_helper.js',
           'js/ssh.js', 
           'js/telnet.js', 
@@ -59,11 +60,12 @@ module.exports = function(grunt) {
     },
     jshint: {
       files: [
+          'js/google_drive.js',
           'js/app_conn.js', 
           'js/predefined_config.js', 
           'js/pref.js', 
-          'js/symbols.js',
           'js/emoticon.js',
+          'js/symbols.js',
           'js/input_helper.js',
           'js/ssh.js', 
           'js/telnet.js', 

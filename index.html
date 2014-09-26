@@ -4,6 +4,7 @@
 	<title>PttChrome</title>
 	  <link rel="icon" type="image/png" href="icon/logo.png" />
 
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="css/pttchrome.min.css" />
@@ -13,6 +14,11 @@
     <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/paramikojs_ssh.min.js"></script>
+    <script type="text/javascript" src="js/hammer.min.js"></script>
+
+    <script type="text/javascript" src="https://apis.google.com/js/api.js"></script>
+    <script type="text/javascript" src="https://apis.google.com/js/client.js"></script>
+
     <script type="text/javascript" src="js/pttchrome.min.js"></script>
   </head>
 
@@ -38,6 +44,7 @@
       <li id="cmenu_mouseBrowsing" class="cmenuItem contextNormal"><a></a></li>
       <li id="cmenu_goToOtherSite" class="cmenuItem contextNormal"><a></a></li>
       <li id="cmenu_showInputHelper" class="cmenuItem contextNormal"><a></a></li>
+      <li id="cmenu_showLiveArticleHelper" class="cmenuItem contextNormal"><a></a></li>
       <li id="cmenu_addBlacklistUserId" class="cmenuItem"><a></a></li>
       <li id="cmenu_removeBlacklistUserId" class="cmenuItem"><a></a></li>
       <li id="cmenu_divider2" class="divider contextNormal"></li>
@@ -153,12 +160,38 @@
                       <div id="login_username" class="form-group"></div>
                       <div id="login_password" class="form-group"></div>
                     </div>
+                    <div id="opt_enableDeleteDupLogin" class="checkbox">
+                    </div>
+                    <div class="btn-group" data-toggle="buttons" style="margin-left:20px;">
+                      <label class="btn btn-default">
+                        <input type="radio" name="options" id="opt_deleteDupLoginYes"> Y
+                      </label>
+                      <label class="btn btn-default active">
+                        <input type="radio" name="options" id="opt_deleteDupLoginNo" checked> N
+                      </label>
+                    </div>
                   </div>
                 </div>
               </div>
 
               <div class="tab-pane" id="tabContentBlacklist">
                 <div id="opt_enableBlacklist" class="checkbox">
+                </div>
+
+                <div id="blacklist_driveSync" style="margin-bottom:10px">
+                  <span id="blacklist_driveSyncTitle" style="margin-right:5px">Use Google Drive:</span>
+                  <a id="blacklist_driveAuthorize" style="margin-top:-3px" class="btn btn-default">Authorize PttChrome</a>
+                  <a id="blacklist_driveLoad" style="margin-top:-3px" class="btn btn-default">Load</a>
+                  <div class="btn-group" style="margin-top:-3px">
+                    <button id="blacklist_driveSave" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                      <li><a id="blacklist_driveSaveNew" style="padding:3px 20px; cursor:pointer;">New Document</a></li>
+                      <li><a id="blacklist_driveSaveExisting" style="padding:3px 20px; cursor:pointer;">Existing Document</a></li>
+                    </ul>
+                  </div>
+                  <span id="blacklist_driveDone" style="margin-left:5px; display:none;">Done!</span>
+                  <span id="blacklist_driveLoading" style="margin-left:5px; display:none;">Loading ...</span>
                 </div>
 
                 <span id="opt_blacklistInstruction"></span>
@@ -208,6 +241,8 @@
       <p id="connectionAlertText"></p>
       <p>
         <button id="connectionAlertReconnect" type"button" class="btn btn-danger"></button>
+        <span id="connectionAlertPortOption1" style="margin-left:5px;">or</span>
+        <span id="connectionAlertPortOption2" style="cursor:pointer;margin-left:5px;text-decoration:underline;"> Try with port 443 </span>
       </p>
     </div>
     <div id="welcomeJumbo">
@@ -222,6 +257,18 @@
     </div>
     <img id="picPreview" src='' style='max-height:80%; max-width:90%'></img>
     <img id="picLoading" src='icon/connecting.gif' style="display:none; position:absolute; z-index:2"></img>
+
+    <div id="liveHelper" class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body nomouse_command" style="height:60px;">
+          <button id="liveHelperClose" type="button" class="close nomouse_command"><span>&times;</span></button>
+          <button type="button" class="btn btn-default nomouse_command" style="float:left;margin-top:-6px" data-toggle="button" id="liveHelperEnable">Enable</button>
+          <span id="liveHelperSpan" class="nomouse_command" style="margin-left:5px;margin-right:5px;float:left;">pushthread auto-update every</span>
+          <input id="liveHelperSec" type="number" style="float:left;margin-top:-6px;width:70px;" class="form-control nomouse_command" value="1"></input>
+          <span id="liveHelperSpanSec" class="nomouse_command" style="margin-left:5px;float:left;">sec</span>
+        </div>
+      </div>
+    </div>
 
     <div id="inputHelper" class="modal-dialog">
       <div class="modal-content">

@@ -101,7 +101,7 @@ GoogleDrive.prototype.updateFile = function(str, fileId, method, callback) {
     'body': multipartRequestBody});
   if (!callback) {
     callback = function(file) {
-      console.log(file)
+      console.log(file);
     };
   }
   request.execute(callback);
@@ -181,7 +181,7 @@ GoogleDrive.prototype.handleAuthClick = function(e) {
       {'client_id': this.clientId, 'scope': this.permissionScopes, 'immediate': false}, 
       this.handleAuthResult.bind(this));
   return false;
-}
+};
 
 GoogleDrive.prototype.createPicker = function(callback) {
   var view = new google.picker.View(google.picker.ViewId.DOCS);
@@ -200,11 +200,11 @@ GoogleDrive.prototype.createPicker = function(callback) {
   // bad hack to push the picker ui's z-index to front
   picker.A.style.zIndex = 2000;
   picker.ib.style.zIndex = 2000;
-}
+};
 
 GoogleDrive.prototype.pickerCallback = function(data) {
   if (data.action == google.picker.Action.PICKED) {
     var fileId = data.docs[0].id;
     console.log('picked ' + fileId);
   }
-}
+};
