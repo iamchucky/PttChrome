@@ -270,6 +270,7 @@ PttChromePref.prototype = {
       self.refreshBlacklistOnUi();
     });
     $('#prefModal').on('shown.bs.modal', function(e) {
+      self.app.disableLiveHelper();
       self.app.modalShown = true;
     });
     $('#prefModal').on('hidden.bs.modal', function(e) {
@@ -286,6 +287,7 @@ PttChromePref.prototype = {
         self.readValueFromUi();
       }
       self.saveAndDoneWithIt();
+      self.app.switchToEasyReadingMode(self.app.view.useEasyReadingMode);
     });
   },
 

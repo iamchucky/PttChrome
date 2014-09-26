@@ -400,6 +400,7 @@ pttchrome.App.prototype.onLiveHelperEnableClicked = function(fromUi) {
   var enableThis = !$('#liveHelperEnable').hasClass('active');
   if (enableThis) {
     // cancel easy reading mode first
+    this.view.useEasyReadingMode = false;
     this.switchToEasyReadingMode();
     var sec = $('#liveHelperSec').val();
     this.setAutoPushthreadUpdate(sec);
@@ -419,9 +420,9 @@ pttchrome.App.prototype.disableLiveHelper = function(fromUi) {
 };
 
 pttchrome.App.prototype.switchToEasyReadingMode = function(doSwitch) {
-  this.view.useEasyReadingMode = doSwitch;
   this.buf.cancelPageDownAndResetPrevPageState();
   if (doSwitch) {
+    this.disableLiveHelper();
     if (this.buf.pageState == 3) this.view.conn.send('qr');
   } else {
     this.view.mainContainer.style.paddingBottom = '';
@@ -1118,7 +1119,7 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
       break;
     case 'enableEasyReading':
       if (this.connectedUrl.site == 'ptt.cc') {
-        this.switchToEasyReadingMode(this.pref.get('enableEasyReading'));
+        this.view.useEasyReadingMode = this.pref.get('enableEasyReading');
       } else {
         this.view.useEasyReadingMode = false;
       }
