@@ -744,7 +744,7 @@ TermBuf.prototype = {
       if (this.view.bbscore.navigateTo.board !== null && !this.view.bbscore.navigationDone) {
         if (this.pageState == 1) {
           this.sendNavigateToBoardCmd();
-          if (this.view.bbscore.navigateTo.aid == null) {
+          if (this.view.bbscore.navigateTo.aid === null) {
             this.view.bbscore.navigationDone = true;
           }
         } else if (this.pageState == 2 && this.view.bbscore.navigateTo.aid !== null) {
