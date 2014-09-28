@@ -11,6 +11,7 @@ chrome.app.runtime.onLaunched.addListener(function() {
     if ('openInPackagedApp' in items && items['openInPackagedApp']) {
 
       chrome.app.window.create('view.html', {
+        id: "mainwin",
         bounds: {
           width: 880,
           height: 530
