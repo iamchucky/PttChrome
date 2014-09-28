@@ -238,7 +238,7 @@ locale.en_US = {
     "message": "Version"
   },
   "about_version": {
-    "message": "1.4-webapp1 9/26/2014"
+    "message": "1.4.1-webapp1 9/28/2014"
   },
   "about_new_title": {
     "message": "What's new"
