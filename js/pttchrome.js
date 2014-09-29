@@ -194,6 +194,7 @@ pttchrome.App = function(onInitializedCallback, from) {
     self.pref.getStorage();
   });
 
+  /*
   this.hammertime = new Hammer(this.BBSWin);
   document.body.ontouchmove = function() { return false; };
   this.hammertime.on('pan', function(ev) {
@@ -226,6 +227,7 @@ pttchrome.App = function(onInitializedCallback, from) {
     self.touchStarted = false;
     self.inputArea.focus();
   });
+  */
 };
 
 pttchrome.App.prototype.setupAppConnection = function(callback) {

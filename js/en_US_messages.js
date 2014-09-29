@@ -238,7 +238,7 @@ locale.en_US = {
     "message": "Version"
   },
   "about_version": {
-    "message": "1.4.1-webapp1 9/28/2014"
+    "message": "1.4.1-webapp2 9/29/2014"
   },
   "about_new_title": {
     "message": "What's new"
@@ -251,7 +251,8 @@ locale.en_US = {
       'Suggest to try port 443 when disconnected',
       'Settings to answer duplicated connection query in autologin settings',
       'Added Live Article Helper in context menu to auto refresh pushthread, or use Alt + r',
-      'Switching easy reading mode in settings no longer require a restart'
+      'Switching easy reading mode in settings no longer require a restart',
+      'Disabled hammerjs that caused mouse related issue on old Chrome verisons'
     ]
   },
 
