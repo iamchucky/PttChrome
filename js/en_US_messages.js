@@ -238,7 +238,7 @@ locale.en_US = {
     "message": "Version"
   },
   "about_version": {
-    "message": "1.4.1-webapp2 9/29/2014"
+    "message": "1.4.1-webapp3 10/10/2014"
   },
   "about_new_title": {
     "message": "What's new"
@@ -252,7 +252,8 @@ locale.en_US = {
       'Settings to answer duplicated connection query in autologin settings',
       'Added Live Article Helper in context menu to auto refresh pushthread, or use Alt + r',
       'Switching easy reading mode in settings no longer require a restart',
-      'Disabled hammerjs that caused mouse related issue on old Chrome verisons'
+      'Disabled hammerjs that caused mouse related issue on old Chrome verisons',
+      'Fixing bug with spacebar when in chinese input mode and easy reading mode'
     ]
   },
 
