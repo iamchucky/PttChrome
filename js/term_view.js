@@ -1309,6 +1309,16 @@ TermView.prototype = {
     var conn = this.conn;
     if (!e.ctrlKey && !e.altKey && !e.shiftKey) {
       switch (e.keyCode) {
+        case 32: // spacebar
+          if (this.mainDisplay.scrollTop >= this.mainContainer.clientHeight - this.chh * this.buf.rows) {
+            this.buf.cancelPageDownAndResetPrevPageState();
+            conn.send(' ');
+          } else {
+            this.mainDisplay.scrollTop += this.chh * this.easyReadingTurnPageLines;
+            e.preventDefault();
+            e.stopPropagation();
+          }
+          break;
         case 187: // =
           this.buf.cancelPageDownAndResetPrevPageState();
           conn.send('=');
