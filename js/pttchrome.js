@@ -81,6 +81,7 @@ pttchrome.App = function(onInitializedCallback, from) {
   this.mouseRightButtonDown = false;
 
   this.inputAreaFocusTimer = null;
+  this.alertBeforeUnload = false;
   this.modalShown = false;
 
   this.inputHelper = new InputHelper(this);
@@ -251,6 +252,7 @@ pttchrome.App.prototype.onConnect = function() {
     self.incrementCountToUpdatePushthread();
   }, 1000);
   this.view.resetCursorBlink();
+  this.regExitAlert();
 };
 
 pttchrome.App.prototype.onData = function(data) {
@@ -1078,10 +1080,7 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
       this.view.mouseWheelFunction3 = pref.get(name);
       break;
     case 'closeQuery':
-      if (pref.get(name))
-        this.regExitAlert();
-      else
-        this.unregExitAlert();
+      this.alertBeforeUnload = pref.get(name);
       break;
     case 'enablePicPreview':
       this.view.enablePicPreview = pref.get(name);
