@@ -159,8 +159,11 @@ function TermView(rowCount) {
       return; // Shift Ctrl Alt (19)
     if (self.bbscore.modalShown || self.bbscore.contextMenuShown)
       return;
-    if (document.getElementById('connectionAlert').style.display != 'none' && 
-      (e.keyCode == 13 || e.keyCode == 27)) {
+    if (document.getElementById('connectionAlert').style.display != 'none') {
+      if (e.keyCode == 13)
+        document.getElementById('connectionAlertReconnect').click();
+      if (e.keyCode == 27)
+        document.getElementById('connectionAlertExitAll').click();
       return;
     }
     self.onkeyDown(e);
@@ -171,11 +174,8 @@ function TermView(rowCount) {
       return; // Shift Ctrl Alt (19)
     if (self.bbscore.modalShown || self.bbscore.contextMenuShown)
       return;
-    if (document.getElementById('connectionAlert').style.display != 'none') {
-      if (e.keyCode == 13)
-        document.getElementById('connectionAlertReconnect').click();
-      if (e.keyCode == 27)
-        document.getElementById('connectionAlertExitAll').click();
+    if (document.getElementById('connectionAlert').style.display != 'none' && 
+      (e.keyCode == 13 || e.keyCode == 27)) {
       return;
     }
     if (self.useEasyReadingMode && self.buf.startedEasyReading && 
