@@ -94,6 +94,8 @@ pttchrome.App = function(onInitializedCallback, from) {
   this.waterball = { userId: '', message: '' };
   this.appFocused = true;
 
+  this.chromeVersion = parseInt(window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10);
+
   var self = this;
   this.CmdHandler.addEventListener("OverlayCommand", function(e) {
     self.overlayCommandListener(e);
@@ -194,40 +196,7 @@ pttchrome.App = function(onInitializedCallback, from) {
     self.pref.getStorage();
   });
 
-  /*
-  this.hammertime = new Hammer(this.BBSWin);
-  document.body.ontouchmove = function() { return false; };
-  this.hammertime.on('pan', function(ev) {
-    if (ev.pointerType == 'touch') {
-      console.log(ev);
-    }
-  });
-  this.hammertime.get('pinch').set({ enable: true });
-  this.hammertime.on('pinch', function(ev) {
-    //console.log(ev);
-  });
-  this.touchStarted = false;
-  document.body.ontouchstart = function() {
-    self.touchStarted = true;
-    self.inputArea.blur();
-  };
-  this.hammertime.on('tap', function(ev) {
-    //console.log(ev);
-    ev.preventDefault();
-    ev.srcEvent.stopPropagation();
-    ev.srcEvent.preventDefault();
-    if (ev.pointerType != 'touch')  return; 
-    var highlightCopy = self.buf.highlightCursor;
-    self.buf.highlightCursor = false;
-    self.onMouse_move(ev.center.x, ev.center.y);
-    self.onMouse_click(ev.center.x, ev.center.y);
-    self.buf.nowHighlight = -1;
-    self.buf.highlightCursor = highlightCopy;
-    self.BBSWin.style.cursor = 'auto';
-    self.touchStarted = false;
-    self.inputArea.focus();
-  });
-  */
+  this.touch = new pttchrome.TouchController(this);
 };
 
 pttchrome.App.prototype.setupAppConnection = function(callback) {
@@ -364,7 +333,7 @@ pttchrome.App.prototype.setDblclickTimer = function() {
 };
 
 pttchrome.App.prototype.setInputAreaFocus = function() {
-  if (this.modalShown || this.touchStarted)
+  if (this.modalShown || this.touch.touchStarted)
     return;
   //this.DocInputArea.disabled="";
   this.inputArea.focus();
@@ -1598,6 +1567,15 @@ pttchrome.App.prototype.setupContextMenus = function() {
   $(window).click(function() {
     hideContextMenu();
   });
+  if ('ontouchstart' in window) {
+    window.ontouchstart = function(e) {
+      if (e.target.parentNode.classList.length > 0 &&
+          e.target.parentNode.classList[0] == 'cmenuItem') {
+        return;
+      }
+      hideContextMenu();
+    };
+  }
 
   $('#cmenu_copy a').html(i18n('cmenu_copy')+'<span class="cmenuHotkey">Ctrl+C</span>');
   $('#cmenu_copyAnsi a').text(i18n('cmenu_copyAnsi'));
