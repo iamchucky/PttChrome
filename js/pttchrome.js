@@ -252,7 +252,7 @@ pttchrome.App.prototype.onConnect = function() {
     self.incrementCountToUpdatePushthread();
   }, 1000);
   this.view.resetCursorBlink();
-  this.regExitAlert();
+  if (this.alertBeforeUnload)   this.regExitAlert();
 };
 
 pttchrome.App.prototype.onData = function(data) {
