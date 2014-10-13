@@ -1145,6 +1145,11 @@ TermBuf.prototype = {
       this.pageState = 6;
       return;
     }
+    if (lastRowText.parseStatusRow()) {
+      //console.log('pageState = 3 (READING)');
+      this.pageState = 3; // READING
+      return;
+    }
 
     var firstRowText = this.getRowText(0, 0, this.cols);
 
@@ -1152,23 +1157,17 @@ TermBuf.prototype = {
       var main = firstRowText.indexOf('【主功能表】');
       var classList = firstRowText.indexOf('【分類看板】');
       var archiveList = firstRowText.indexOf('【精華文章】');
-      if (main === 0 || classList === 0 || archiveList === 0) {
+      if (main === 0 || classList === 0 || archiveList === 0 ||
+          lastRowText.parseListRow()) {
         //console.log('pageState = 1 (MENU)');
         this.pageState = 1; // MENU
-      } if (this.isUnicolor(2, 0, 70) && !this.isLineEmpty(1) && (this.cur_x < 19 || this.cur_y == 23)) {
+      } else if (this.isUnicolor(2, 0, 70) && !this.isLineEmpty(1) && (this.cur_x < 19 || this.cur_y == 23)) {
         //console.log('pageState = 2 (LIST)');
         this.pageState = 2; // LIST
       }
-    } else {
-      if ( this.isUnicolor(23, 28, 53) && this.cur_y == 23 && this.cur_x == 79) {
-        if (lastRowText.parseStatusRow()) {
-          //console.log('pageState = 3 (READING)');
-          this.pageState = 3; // READING
-        } else {
-          //console.log('pageState = 5 (PASS)');
-          this.pageState = 5; // some ansi drawing screen to pass
-        }
-      }
+    } else if ( this.isUnicolor(23, 28, 53) && this.cur_y == 23 && this.cur_x == 79) {
+      //console.log('pageState = 5 (PASS)');
+      this.pageState = 5; // some ansi drawing screen to pass
     }
     if (this.pageState != 1 && this.isLineEmpty(23)) {
       //console.log('pageState = 0 (NORMAL)');

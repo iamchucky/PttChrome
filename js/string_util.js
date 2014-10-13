@@ -164,6 +164,15 @@ String.prototype.parseStatusRow = function() {
   return null;
 };
 
+String.prototype.parseListRow = function() {
+  var str = this;
+  var regex = new RegExp(/\[\d{1,2}\/\d{1,2} +星期. +\d{1,2}:\d{1,2}\] \[ .{3} \] +線上\d+人, 我是\w+ +\[呼叫器\](?:關閉|打開) /g);
+  var result = regex.exec(str);
+  if (!result)
+    return false;
+  return true;
+};
+
 String.prototype.parseWaterball = function() {
   var str = this;
   var regex = new RegExp(/\x1b\[1;33;46m\u2605(\w+)\x1b\[0;1;37;45m (.+) \x1b\[m\x1b\[K/g);
