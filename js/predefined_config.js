@@ -18,7 +18,7 @@ var DEFAULT_PREFS = {
   useMouseBrowsing            : false,
   mouseBrowsingHighlight      : true,
   mouseBrowsingHighlightColor : 2,
-  mouseLeftFunction           : false,
+  mouseLeftFunction           : 0,
   mouseMiddleFunction         : 0,
   mouseWheelFunction1         : 1,
   mouseWheelFunction2         : 2,
@@ -36,6 +36,7 @@ var DEFAULT_PREFS = {
 };
 
 var PREF_OPTIONS = {
+  mouseLeftFunction : [ 'options_none', 'options_enterKey', 'options_rightKey' ],
   mouseMiddleFunction : [ 'options_none', 'options_enterKey', 'options_leftKey' ],
   mouseWheelFunction1 : [ 'options_none', 'options_upDown' , 'options_pageUpDown', 'options_threadLastNext' ],
   mouseWheelFunction2 : [ 'options_none', 'options_upDown' , 'options_pageUpDown', 'options_threadLastNext' ],

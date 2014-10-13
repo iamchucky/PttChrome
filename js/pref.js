@@ -71,6 +71,9 @@ PttChromePref.prototype = {
         }
         htmlStr += '</select>';
         $(optName).html(htmlStr);
+        if (typeof(val) == 'boolean') {
+          val = val ? 1:0;
+        }
         $(optName+' select').val(val);
 
         continue;

@@ -926,6 +926,18 @@ pttchrome.App.prototype.overlayCommandListener = function (e) {
             this.conn.send('\r');
           }
           break;
+        case "doRight":
+          if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
+            if (this.view.mainDisplay.scrollTop >= this.view.mainContainer.clientHeight - this.view.chh * this.buf.rows) {
+              this.buf.cancelPageDownAndResetPrevPageState();
+              this.conn.send('\1b[C');
+            } else {
+              this.view.mainDisplay.scrollTop += this.view.chh * this.view.easyReadingTurnPageLines;
+            }
+          } else {
+            this.conn.send('\x1b[C');
+          }
+          break;
         case "reloadTabIconDelay":
           this.doReloadTabIcon(100);
           break;
@@ -1066,6 +1078,9 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
       break;
     case 'mouseLeftFunction':
       this.view.leftButtonFunction = pref.get(name);
+      if (typeof(this.view.leftButtonFunction) == 'boolean') {
+        this.view.leftButtonFunction = this.view.leftButtonFunction ? 1:0;
+      }
       break;
     case 'mouseMiddleFunction':
       this.view.middleButtonFunction = pref.get(name);
@@ -1184,9 +1199,15 @@ pttchrome.App.prototype.mouse_click = function(e) {
           this.setInputAreaFocus();
         }
       } else if (this.view.leftButtonFunction) {
-        this.setBBSCmd('doEnter', this.CmdHandler);
-        e.preventDefault();
-        this.setInputAreaFocus();
+        if (this.view.leftButtonFunction == 1) {
+          this.setBBSCmd('doEnter', this.CmdHandler);
+          e.preventDefault();
+          this.setInputAreaFocus();
+        } else if (this.view.leftButtonFunction == 2) {
+          this.setBBSCmd('doRight', this.CmdHandler);
+          e.preventDefault();
+          this.setInputAreaFocus();
+        }
       }
     }
   } else if (e.button == 1) { //middle button

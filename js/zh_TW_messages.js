@@ -145,7 +145,7 @@
     "message": "底色"
   },
   "options_mouseLeftFunction": {
-    "message": "滑鼠左鍵送出 ENTER"
+    "message": "滑鼠左鍵"
   },
   "options_mouseMiddleFunction": {
     "message": "滑鼠中鍵"
@@ -164,6 +164,9 @@
   },
   "options_leftKey": {
     "message": "送出左方向鍵"
+  },
+  "options_rightKey": {
+    "message": "送出右方向鍵"
   },
   "options_enterKey": {
     "message": "送出ENTER鍵"
@@ -238,7 +241,7 @@
     "message": "版本"
   },
   "about_version": {
-    "message": "1.4.1-webapp5 10/12/2014"
+    "message": "1.4.1-webapp6 10/12/2014"
   },
   "about_new_title": {
     "message": "新功能"
@@ -255,7 +258,8 @@
       '暫時停用 hammerjs 避免在舊的 Chrome 造成滑鼠圈選的問題',
       '修正中文輸入法時好讀模式的空白鍵的問題',
       '修正 ssh 連線 kex 的問題',
-      '加入了關閉分頁先詢問的選項'
+      '加入了關閉分頁先詢問的選項',
+      '加入了滑鼠左鍵送出右方向鍵的選項'
     ]
   },
 

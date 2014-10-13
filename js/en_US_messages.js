@@ -148,7 +148,7 @@ locale.en_US = {
     "message": "Color"
   },
   "options_mouseLeftFunction": {
-    "message": "Mouse left click send ENTER"
+    "message": "Mouse left button"
   },
   "options_mouseMiddleFunction": {
     "message": "Mouse middle button"
@@ -167,6 +167,9 @@ locale.en_US = {
   },
   "options_leftKey": {
     "message": "Sends LEFT key"
+  },
+  "options_rightKey": {
+    "message": "Sends RIGHT key"
   },
   "options_enterKey": {
     "message": "Sends ENTER key"
@@ -241,7 +244,7 @@ locale.en_US = {
     "message": "Version"
   },
   "about_version": {
-    "message": "1.4.1-webapp5 10/12/2014"
+    "message": "1.4.1-webapp6 10/12/2014"
   },
   "about_new_title": {
     "message": "What's new"
@@ -258,7 +261,8 @@ locale.en_US = {
       'Disabled hammerjs that caused mouse related issue on old Chrome verisons',
       'Fixing bug with spacebar when in chinese input mode and easy reading mode',
       'Fixing ssh connection problem with kex',
-      'Added option to ask before closing'
+      'Added option to ask before closing',
+      'Added setting to send right arrow key to left mouse button'
     ]
   },
 
