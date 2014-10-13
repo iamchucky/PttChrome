@@ -93,6 +93,9 @@
   "options_openInPackagedApp": {
     "message": "'批' 圖示會在獨立視窗開啟 PttChrome"
   },
+  "options_closeQuery": {
+    "message": "關閉分頁時先詢問"
+  },
   "options_enablePicPreview": {
     "message": "當滑鼠在圖片連結上時顯示圖片預覽"
   },
@@ -235,7 +238,7 @@
     "message": "版本"
   },
   "about_version": {
-    "message": "1.4.1-webapp4 10/12/2014"
+    "message": "1.4.1-webapp5 10/12/2014"
   },
   "about_new_title": {
     "message": "新功能"
@@ -251,7 +254,8 @@
       '設定中切換好讀模式不用再重新整理即可切換',
       '暫時停用 hammerjs 避免在舊的 Chrome 造成滑鼠圈選的問題',
       '修正中文輸入法時好讀模式的空白鍵的問題',
-      '修正 ssh 連線 kex 的問題'
+      '修正 ssh 連線 kex 的問題',
+      '加入了關閉分頁先詢問的選項'
     ]
   },
 

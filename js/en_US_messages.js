@@ -93,6 +93,9 @@ locale.en_US = {
   "options_openInPackagedApp": {
     "message": "Launch PttChrome in packaged app."
   },
+  "options_closeQuery": {
+    "message": "Ask before closing tab."
+  },
   "options_enablePicPreview": {
     "message": "Enable preview when hover on image URLs."
   },
@@ -238,7 +241,7 @@ locale.en_US = {
     "message": "Version"
   },
   "about_version": {
-    "message": "1.4.1-webapp4 10/12/2014"
+    "message": "1.4.1-webapp5 10/12/2014"
   },
   "about_new_title": {
     "message": "What's new"
@@ -254,7 +257,8 @@ locale.en_US = {
       'Switching easy reading mode in settings no longer require a restart',
       'Disabled hammerjs that caused mouse related issue on old Chrome verisons',
       'Fixing bug with spacebar when in chinese input mode and easy reading mode',
-      'Fixing ssh connection problem with kex'
+      'Fixing ssh connection problem with kex',
+      'Added option to ask before closing'
     ]
   },
 

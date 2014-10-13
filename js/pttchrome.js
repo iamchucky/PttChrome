@@ -81,7 +81,6 @@ pttchrome.App = function(onInitializedCallback, from) {
   this.mouseRightButtonDown = false;
 
   this.inputAreaFocusTimer = null;
-  this.alertBeforeUnload = false;
   this.modalShown = false;
 
   this.inputHelper = new InputHelper(this);
@@ -1680,24 +1679,17 @@ pttchrome.App.prototype.context_menu = function(e) {
   }
 };
 
-pttchrome.App.prototype.window_beforeunload = function(e) {
-  //e.returnValue = confirm('Are you sure you want to leave '+document.title+'?');
-  e.returnValue = true;
-  return document.title;
-};
-
 pttchrome.App.prototype.regExitAlert = function() {
-  this.unregExitAlert();
-  this.alertBeforeUnload = true;
-  window.addEventListener('beforeunload', this.window_beforeunload, false);
+  if (!window.onbeforeunload && window.location.origin.indexOf('http://localhost') !== 0) {
+    window.onbeforeunload = function() {
+      return 'Connected to '+document.title;
+    }
+  }
 };
 
 pttchrome.App.prototype.unregExitAlert = function() {
   // clear alert for closing tab
-  if (this.alertBeforeUnload) {
-    this.alertBeforeUnload = false;
-    window.removeEventListener('beforeunload', this.window_beforeunload, false);
-  }
+  window.onbeforeunload = null;
 };
 
 pttchrome.App.prototype.setBBSCmd = function(cmd, cmdhandler) {

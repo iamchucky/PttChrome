@@ -3,7 +3,7 @@ var PREFS_NAV = ['general', 'autologin', 'blacklist', 'about'];
 var DEFAULT_PREFS = {
 
   // general
-  //closeQuery    : false,
+  closeQuery            : false,
   //dbcsDetect    : false,
   openInPackagedApp     : false,
   enablePicPreview      : true,
