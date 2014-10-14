@@ -105,6 +105,9 @@ locale.en_US = {
   "options_enableEasyReading": {
     "message": "Enable easy reading article view."
   },
+  "options_endTurnsOnLiveUpdate": {
+    "message": "Press END turns on pushthread live update."
+  },
   "options_enableDeleteDupLogin": {
     "message": "When asked to disconnect other logged-in connections, answer:"
   },
@@ -244,7 +247,7 @@ locale.en_US = {
     "message": "Version"
   },
   "about_version": {
-    "message": "1.4.1-webapp6 10/12/2014"
+    "message": "1.4.1-webapp7 10/14/2014"
   },
   "about_new_title": {
     "message": "What's new"
@@ -262,7 +265,8 @@ locale.en_US = {
       'Fixing bug with spacebar when in chinese input mode and easy reading mode',
       'Fixing ssh connection problem with kex',
       'Added option to ask before closing',
-      'Added setting to send right arrow key to left mouse button'
+      'Added setting to send right arrow key to left mouse button',
+      'Added option to turn on live update with END'
     ]
   },
 

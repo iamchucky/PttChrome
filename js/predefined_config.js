@@ -9,6 +9,7 @@ var DEFAULT_PREFS = {
   enablePicPreview      : true,
   enableNotifications   : true,
   enableEasyReading     : false,
+  endTurnsOnLiveUpdate  : false,
   antiIdleTime          : 0,
   lineWrap              : 78,
   enableDeleteDupLogin  : false,

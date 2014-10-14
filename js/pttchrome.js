@@ -94,6 +94,7 @@ pttchrome.App = function(onInitializedCallback, from) {
   this.waterball = { userId: '', message: '' };
   this.appFocused = true;
 
+  this.endTurnsOnLiveUpdate = false;
   this.chromeVersion = parseInt(window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10);
 
   var self = this;
@@ -397,7 +398,7 @@ pttchrome.App.prototype.switchToEasyReadingMode = function(doSwitch) {
     this.disableLiveHelper();
     // clear the deep cloned copy of lines
     this.buf.pageLines = [];
-    if (this.buf.pageState == 3) this.view.conn.send('qr');
+    if (this.buf.pageState == 3) this.view.conn.send('\x1b[D\x1b[C'); //this.view.conn.send('qr');
   } else {
     this.view.mainContainer.style.paddingBottom = '';
     this.view.lastRowIndex = 22;
@@ -564,8 +565,9 @@ pttchrome.App.prototype.incrementCountToUpdatePushthread = function(interval) {
 
   if (++this.pushthreadAutoUpdateCount >= this.maxPushthreadAutoUpdateCount) {
     this.pushthreadAutoUpdateCount = 0;
-    if (this.buf.pageState == 3) {
-      this.view.conn.send('qrG');
+    if (this.buf.pageState == 3 || this.buf.pageState == 2) {
+      //this.view.conn.send('qrG');
+      this.view.conn.send('\x1b[D\x1b[C\x1b[4~');
     }
   }
 };
@@ -1096,6 +1098,9 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
       break;
     case 'closeQuery':
       this.alertBeforeUnload = pref.get(name);
+      break;
+    case 'endTurnsOnLiveUpdate':
+      this.endTurnsOnLiveUpdate = pref.get(name);
       break;
     case 'enablePicPreview':
       this.view.enablePicPreview = pref.get(name);

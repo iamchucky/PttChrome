@@ -660,7 +660,12 @@ TermView.prototype = {
         conn.send('\x1b[6~');
         break;
       case 35: //End
-        conn.send('\x1b[4~');
+        if ((this.bbscore.buf.pageState == 2 || this.bbscore.buf.pageState == 3) &&
+            this.bbscore.endTurnsOnLiveUpdate) {
+          this.bbscore.onLiveHelperEnableClicked(false);
+        } else {
+          conn.send('\x1b[4~');
+        }
         break;
       case 36: //Home
         conn.send('\x1b[1~');
@@ -1402,7 +1407,11 @@ TermView.prototype = {
           this.mainDisplay.scrollTop += this.chh * this.easyReadingTurnPageLines;
           break;
         case 35: //End
-          this.mainDisplay.scrollTop = this.mainContainer.clientHeight;
+          if (this.bbscore.endTurnsOnLiveUpdate) {
+            this.bbscore.onLiveHelperEnableClicked(false);
+          } else {
+            this.mainDisplay.scrollTop = this.mainContainer.clientHeight;
+          }
           break;
         case 36: //Home
           this.mainDisplay.scrollTop = 0;

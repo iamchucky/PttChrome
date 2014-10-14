@@ -105,6 +105,9 @@
   "options_enableEasyReading": {
     "message": "啟用文章好讀模式"
   },
+  "options_endTurnsOnLiveUpdate": {
+    "message": "END 啟用推文即時更新 (如 Alt + r)"
+  },
   "options_enableDeleteDupLogin": {
     "message": "當被問到是否刪除其他重複登入的連線，回答:"
   },
@@ -241,7 +244,7 @@
     "message": "版本"
   },
   "about_version": {
-    "message": "1.4.1-webapp6 10/12/2014"
+    "message": "1.4.1-webapp7 10/14/2014"
   },
   "about_new_title": {
     "message": "新功能"
@@ -259,7 +262,8 @@
       '修正中文輸入法時好讀模式的空白鍵的問題',
       '修正 ssh 連線 kex 的問題',
       '加入了關閉分頁先詢問的選項',
-      '加入了滑鼠左鍵送出右方向鍵的選項'
+      '加入了滑鼠左鍵送出右方向鍵的選項',
+      '加入了 END 啟用即時更新的選項'
     ]
   },
 
