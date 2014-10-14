@@ -38,7 +38,7 @@ var DEFAULT_PREFS = {
 
 var PREF_OPTIONS = {
   mouseLeftFunction : [ 'options_none', 'options_enterKey', 'options_rightKey' ],
-  mouseMiddleFunction : [ 'options_none', 'options_enterKey', 'options_leftKey' ],
+  mouseMiddleFunction : [ 'options_none', 'options_enterKey', 'options_leftKey', 'options_doPaste' ],
   mouseWheelFunction1 : [ 'options_none', 'options_upDown' , 'options_pageUpDown', 'options_threadLastNext' ],
   mouseWheelFunction2 : [ 'options_none', 'options_upDown' , 'options_pageUpDown', 'options_threadLastNext' ],
   mouseWheelFunction3 : [ 'options_none', 'options_upDown' , 'options_pageUpDown', 'options_threadLastNext' ],

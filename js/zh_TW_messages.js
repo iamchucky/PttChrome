@@ -165,6 +165,9 @@
   "options_none": {
     "message": "無動作"
   },
+  "options_doPaste": {
+    "message": "執行 '貼上'"
+  },
   "options_leftKey": {
     "message": "送出左方向鍵"
   },
@@ -244,7 +247,7 @@
     "message": "版本"
   },
   "about_version": {
-    "message": "1.4.1-webapp7 10/14/2014"
+    "message": "1.4.1-webapp8 10/14/2014"
   },
   "about_new_title": {
     "message": "新功能"
@@ -263,7 +266,8 @@
       '修正 ssh 連線 kex 的問題',
       '加入了關閉分頁先詢問的選項',
       '加入了滑鼠左鍵送出右方向鍵的選項',
-      '加入了 END 啟用即時更新的選項'
+      '加入了 END 啟用即時更新的選項',
+      '滑鼠中鍵可以設定執行貼上功能'
     ]
   },
 

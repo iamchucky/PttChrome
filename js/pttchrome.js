@@ -1232,6 +1232,9 @@ pttchrome.App.prototype.middleMouse_down = function(e) {
     } else if (this.view.middleButtonFunction == 2) {
       this.conn.send('\x1b[D');
       return false;
+    } else if (this.view.middleButtonFunction == 3) {
+      this.doPaste();
+      return false;
     }
   }
 };

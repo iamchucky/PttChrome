@@ -168,6 +168,9 @@ locale.en_US = {
   "options_none": {
     "message": "No action"
   },
+  "options_doPaste": {
+    "message": "Perform 'Paste'"
+  },
   "options_leftKey": {
     "message": "Sends LEFT key"
   },
@@ -247,7 +250,7 @@ locale.en_US = {
     "message": "Version"
   },
   "about_version": {
-    "message": "1.4.1-webapp7 10/14/2014"
+    "message": "1.4.1-webapp8 10/14/2014"
   },
   "about_new_title": {
     "message": "What's new"
@@ -266,7 +269,8 @@ locale.en_US = {
       'Fixing ssh connection problem with kex',
       'Added option to ask before closing',
       'Added setting to send right arrow key to left mouse button',
-      'Added option to turn on live update with END'
+      'Added option to turn on live update with END',
+      'Middle mouse button click has new option to do paste'
     ]
   },
 
