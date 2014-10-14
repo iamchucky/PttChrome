@@ -108,6 +108,9 @@ locale.en_US = {
   "options_endTurnsOnLiveUpdate": {
     "message": "Press END turns on pushthread live update."
   },
+  "options_copyOnSelect": {
+    "message": "Copy text when selected."
+  },
   "options_enableDeleteDupLogin": {
     "message": "When asked to disconnect other logged-in connections, answer:"
   },
@@ -250,7 +253,7 @@ locale.en_US = {
     "message": "Version"
   },
   "about_version": {
-    "message": "1.4.1-webapp8 10/14/2014"
+    "message": "1.4.1-webapp9 10/14/2014"
   },
   "about_new_title": {
     "message": "What's new"
@@ -270,7 +273,8 @@ locale.en_US = {
       'Added option to ask before closing',
       'Added setting to send right arrow key to left mouse button',
       'Added option to turn on live update with END',
-      'Middle mouse button click has new option to do paste'
+      'Middle mouse button click has new option to do paste',
+      'Added option to enable copy on select'
     ]
   },
 

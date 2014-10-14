@@ -108,6 +108,9 @@
   "options_endTurnsOnLiveUpdate": {
     "message": "END 啟用推文即時更新 (如 Alt + r)"
   },
+  "options_copyOnSelect": {
+    "message": "選取文字時自動複製文字"
+  },
   "options_enableDeleteDupLogin": {
     "message": "當被問到是否刪除其他重複登入的連線，回答:"
   },
@@ -247,7 +250,7 @@
     "message": "版本"
   },
   "about_version": {
-    "message": "1.4.1-webapp8 10/14/2014"
+    "message": "1.4.1-webapp9 10/14/2014"
   },
   "about_new_title": {
     "message": "新功能"
@@ -267,7 +270,8 @@
       '加入了關閉分頁先詢問的選項',
       '加入了滑鼠左鍵送出右方向鍵的選項',
       '加入了 END 啟用即時更新的選項',
-      '滑鼠中鍵可以設定執行貼上功能'
+      '滑鼠中鍵可以設定執行貼上功能',
+      '加入了選取自動複製文字的選項'
     ]
   },
 

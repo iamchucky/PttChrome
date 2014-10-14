@@ -95,6 +95,7 @@ pttchrome.App = function(onInitializedCallback, from) {
   this.appFocused = true;
 
   this.endTurnsOnLiveUpdate = false;
+  this.copyOnSelect = false;
   this.chromeVersion = parseInt(window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10);
 
   var self = this;
@@ -1096,6 +1097,9 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
     case 'mouseWheelFunction3':
       this.view.mouseWheelFunction3 = pref.get(name);
       break;
+    case 'copyOnSelect':
+      this.copyOnSelect = pref.get(name);
+      break;
     case 'closeQuery':
       this.alertBeforeUnload = pref.get(name);
       break;
@@ -1300,6 +1304,9 @@ pttchrome.App.prototype.mouse_up = function(e) {
           e.preventDefault();
       }
     } else { //something has be select
+      if (this.copyOnSelect) {
+        this.doCopy(window.getSelection().toString().replace(/\u00a0/g, " "));
+      }
     }
   } else {
     this.setInputAreaFocus();

@@ -10,6 +10,7 @@ var DEFAULT_PREFS = {
   enableNotifications   : true,
   enableEasyReading     : false,
   endTurnsOnLiveUpdate  : false,
+  copyOnSelect          : false,
   antiIdleTime          : 0,
   lineWrap              : 78,
   enableDeleteDupLogin  : false,
