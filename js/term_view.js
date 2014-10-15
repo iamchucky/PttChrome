@@ -1192,7 +1192,8 @@ TermView.prototype = {
         }
         var rowOffset = this.buf.pageLines.length-1;
         var beginIndex = 1;
-        if (result.pageIndex == result.pageTotal && result.pagePercent == 100) { // at last page
+        if ((result.pageIndex == result.pageTotal && result.pagePercent == 100) || 
+            result.rowIndexStart != this.lastRowIndex) { // at last page
           beginIndex = this.lastRowIndex + 1 - result.rowIndexStart;
           rowOffset -= beginIndex-1;
         }
@@ -1211,6 +1212,11 @@ TermView.prototype = {
       this.mainContainer.style.paddingBottom = '';
       this.lastRowIndex = 22;
       if (this.buf.pageState == 3) {
+        var lastRowText = this.buf.getRowText(23, 0, this.buf.cols);
+        var result = lastRowText.parseStatusRow();
+        if (result) {
+          this.lastRowIndex = result.rowIndexEnd;
+        }
         this.mainContainer.innerHTML = this.htmlRowStrArray.slice(0, -1).join('');
         this.lastRowDiv.innerHTML = this.lastRowDivContent;
         this.lastRowDiv.style.display = 'block';
