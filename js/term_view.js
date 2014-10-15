@@ -1186,14 +1186,19 @@ TermView.prototype = {
       var lastRowText = this.buf.getRowText(23, 0, this.buf.cols);
       var result = lastRowText.parseStatusRow();
       if (result) {
-        for (var i = 0; i < this.htmlRowStrArray.length; ++i) {
-          this.htmlRowStrArray[i] = this.htmlRowStrArray[i].replace(/ srow="\d+">/g, ' srow="'+(result.rowIndexStart+i)+'">');
-        }
         // row index start with 4 or below will cause duplicated first row of next page
         if (result.rowIndexStart < 5) {
           result.rowIndexStart -= 1;
         }
-        var beginIndex = this.lastRowIndex + 1 - result.rowIndexStart;
+        var rowOffset = this.buf.pageLines.length-1;
+        var beginIndex = 1;
+        if (result.pageIndex == result.pageTotal && result.pagePercent == 100) { // at last page
+          beginIndex = this.lastRowIndex + 1 - result.rowIndexStart;
+          rowOffset -= beginIndex-1;
+        }
+        for (var i = 0; i < this.htmlRowStrArray.length; ++i) {
+          this.htmlRowStrArray[i] = this.htmlRowStrArray[i].replace(/ srow="\d+">/g, ' srow="'+(rowOffset+i)+'">');
+        }
         this.mainContainer.innerHTML += this.htmlRowStrArray.slice(beginIndex, -1).join('');
         this.lastRowIndex = result.rowIndexEnd;
         this.findPttWebUrlAndInitFbSharing();
