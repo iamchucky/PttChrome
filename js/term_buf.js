@@ -203,6 +203,7 @@ function TermBuf(cols, rows) {
   this.linesY = new Array(0);
 
   this.pageLines = [];
+  this.pageWrappedLines = [];
 
   this.outputhtmls = new Array(rows);
   this.lineChangeds = new Array(rows);
@@ -1043,6 +1044,21 @@ TermBuf.prototype = {
     } else {
       return false;
     }
+  },
+
+  isTextWrappedRow: function(row) {
+    // determine whether it is wrapped by looking for the ending "\"
+    var rowText = this.getRowText(row, 0, this.cols);
+    var slashIndex = rowText.lastIndexOf('\\');
+    if (slashIndex > 0 ) {
+      var col = rowText.substr(0, slashIndex).u2b().length;
+      if (col != 77 && col != 78) return false;
+      // check the color
+      var ch = this.lines[row][col];
+      if (ch.fg == 7 && ch.bg === 0 && ch.bright)
+        return true;
+    }
+    return false;
   },
 
   loadFile: function(toClipboard) {

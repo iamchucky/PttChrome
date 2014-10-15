@@ -272,3 +272,7 @@ String.prototype.trimBoth = function() {
 String.prototype.repeat = function( num ) {
   return new Array( num + 1 ).join( this );
 };
+
+String.prototype.endsWith = function(suffix) {
+  return this.indexOf(suffix, this.length - suffix.length) !== -1;
+};

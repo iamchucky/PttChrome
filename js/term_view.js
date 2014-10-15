@@ -59,7 +59,7 @@ function TermView(rowCount) {
   this.curRow = 0;
   this.curCol = 0;
 
-  this.lastRowIndex = 0;
+  this.actualRowIndex = 0;
 
   //this.DBDetection = false;
   this.blinkShow = false;
@@ -1193,15 +1193,24 @@ TermView.prototype = {
         var rowOffset = this.buf.pageLines.length-1;
         var beginIndex = 1;
         if ((result.pageIndex == result.pageTotal && result.pagePercent == 100) || 
-            result.rowIndexStart != this.lastRowIndex) { // at last page
-          beginIndex = this.lastRowIndex + 1 - result.rowIndexStart;
+            result.rowIndexStart != this.actualRowIndex) { // at last page
+          // find num of rows between actualRowIndex and rowIndexStart
+          var numRows = 0;
+          for (var i = result.rowIndexStart; i < this.actualRowIndex + 1; ++i) {
+            numRows += this.buf.pageWrappedLines[i];
+          }
+          beginIndex = numRows;
           rowOffset -= beginIndex-1;
         }
-        for (var i = 0; i < this.htmlRowStrArray.length; ++i) {
-          this.htmlRowStrArray[i] = this.htmlRowStrArray[i].replace(/ srow="\d+">/g, ' srow="'+(rowOffset+i)+'">');
+        for (var i = beginIndex; i < this.htmlRowStrArray.length-1; ++i) {
+          if (i > 0 && this.buf.isTextWrappedRow(i-1)) {
+            this.buf.pageWrappedLines[this.actualRowIndex] += 1;
+          } else {
+            this.buf.pageWrappedLines[++this.actualRowIndex] = 1;
+          }
+          this.htmlRowStrArray[i] = this.htmlRowStrArray[i].replace(/ srow="\d+">/g, ' arow="'+this.actualRowIndex+'" srow="'+(rowOffset+i)+'">');
         }
         this.mainContainer.innerHTML += this.htmlRowStrArray.slice(beginIndex, -1).join('');
-        this.lastRowIndex = result.rowIndexEnd;
         this.findPttWebUrlAndInitFbSharing();
         this.embedPicAndVideo();
         // deep clone lines for selection (getRowText and get ansi color)
@@ -1210,12 +1219,17 @@ TermView.prototype = {
       this.buf.prevPageState = 3;
     } else {
       this.mainContainer.style.paddingBottom = '';
-      this.lastRowIndex = 22;
+      this.actualRowIndex = 0;
+      this.buf.pageWrappedLines = [];
       if (this.buf.pageState == 3) {
         var lastRowText = this.buf.getRowText(23, 0, this.buf.cols);
-        var result = lastRowText.parseStatusRow();
-        if (result) {
-          this.lastRowIndex = result.rowIndexEnd;
+        for (var i = 0; i < this.htmlRowStrArray.length-1; ++i) {
+          if (i == 4 || i > 0 && this.buf.isTextWrappedRow(i-1)) {
+            this.buf.pageWrappedLines[this.actualRowIndex] += 1;
+          } else {
+            this.buf.pageWrappedLines[++this.actualRowIndex] = 1;
+          }
+          this.htmlRowStrArray[i] = this.htmlRowStrArray[i].replace(/ srow=/g, ' arow="'+this.actualRowIndex+'" srow=');
         }
         this.mainContainer.innerHTML = this.htmlRowStrArray.slice(0, -1).join('');
         this.lastRowDiv.innerHTML = this.lastRowDivContent;
