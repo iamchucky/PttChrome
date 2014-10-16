@@ -197,6 +197,7 @@ function TermBuf(cols, rows) {
   this.sendCommandAfterUpdate = '';
   this.ignoreOneUpdate = false;
   this.prevPageState = 0;
+  this.autoWrapLineDisplay = false; // the default from PTT is false
 
   this.lines = new Array(rows);
   this.linesX = new Array(0);
@@ -789,6 +790,10 @@ TermBuf.prototype = {
       if (this.view.useEasyReadingMode) {
         // dealing with page state jump to 0 because last row wasn't updated fully 
         if (this.pageState == 3) {
+          if (!this.autoWrapLineDisplay) {
+            this.sendToggleAutoWrapLineDisplayCmd();
+            return;
+          }
           this.startedEasyReading = true;
         } else {
           this.easyReadingShowReplyText = false;
@@ -1436,6 +1441,13 @@ TermBuf.prototype = {
       this.view.redraw(false);
     }
     this.mouseCursor = 0;
+  },
+
+  // send to toggle the diplay of auto wrapped line '\'
+  sendToggleAutoWrapLineDisplayCmd: function() {
+    this.autoWrapLineDisplay = !this.autoWrapLineDisplay;
+    this.cancelPageDownAndResetPrevPageState();
+    this.view.conn.send('om\r\x1b[D\x1b[C');
   },
 
   sendNavigateToBoardCmd: function() {
