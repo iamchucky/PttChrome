@@ -1205,10 +1205,14 @@ TermView.prototype = {
         for (var i = beginIndex; i < this.htmlRowStrArray.length-1; ++i) {
           if (i > 0 && this.buf.isTextWrappedRow(i-1)) {
             this.buf.pageWrappedLines[this.actualRowIndex] += 1;
+            // if the second row is the wrapped line from first row 
+            if (i == beginIndex) {
+              beginIndex++;
+            }
           } else {
             this.buf.pageWrappedLines[++this.actualRowIndex] = 1;
           }
-          this.htmlRowStrArray[i] = this.htmlRowStrArray[i].replace(/ srow="\d+">/g, ' arow="'+this.actualRowIndex+'" srow="'+(rowOffset+i)+'">');
+          this.htmlRowStrArray[i] = this.htmlRowStrArray[i].replace(/(?: arow="\d+")* srow="\d+">/g, ' arow="'+this.actualRowIndex+'" srow="'+(rowOffset+i)+'">');
         }
         this.mainContainer.innerHTML += this.htmlRowStrArray.slice(beginIndex, -1).join('');
         this.findPttWebUrlAndInitFbSharing();
