@@ -1192,8 +1192,10 @@ TermView.prototype = {
         }
         var rowOffset = this.buf.pageLines.length-1;
         var beginIndex = 1;
+        var atLastPage = false;
         if ((result.pageIndex == result.pageTotal && result.pagePercent == 100) || 
             result.rowIndexStart != this.actualRowIndex) { // at last page
+          atLastPage = result.rowIndexStart != this.actualRowIndex;
           // find num of rows between actualRowIndex and rowIndexStart
           var numRows = 0;
           for (var i = result.rowIndexStart; i < this.actualRowIndex + 1; ++i) {
@@ -1202,11 +1204,12 @@ TermView.prototype = {
           beginIndex = numRows;
           rowOffset -= beginIndex-1;
         }
+
         for (var i = beginIndex; i < this.htmlRowStrArray.length-1; ++i) {
           if (i > 0 && this.buf.isTextWrappedRow(i-1)) {
             this.buf.pageWrappedLines[this.actualRowIndex] += 1;
             // if the second row is the wrapped line from first row 
-            if (i == beginIndex) {
+            if (!atLastPage && i == beginIndex) {
               beginIndex++;
             }
           } else {
