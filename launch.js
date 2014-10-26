@@ -24,7 +24,17 @@ chrome.app.runtime.onLaunched.addListener(function() {
       });
 
     } else { // if not in or false, this is the default
-      window.open('http://iamchucky.github.io/PttChrome/');
+      var url = 'http://iamchucky.github.io/PttChrome/';
+      if (!clipHelper) {
+        createClipboardHelper(function() {
+          clipHelper.contentWindow.openWindow(url);
+        });
+      } else {
+        clipHelper.contentWindow.openWindow(url);
+      }
+      // directly calling window.open will cause 'aw, snap' bug
+      // so use clipboard_helper to open window instead
+      //window.open('http://iamchucky.github.io/PttChrome/');
     }
   });
 });
