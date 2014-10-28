@@ -933,7 +933,7 @@ pttchrome.App.prototype.overlayCommandListener = function (e) {
           if (this.view.useEasyReadingMode && this.buf.startedEasyReading) {
             if (this.view.mainDisplay.scrollTop >= this.view.mainContainer.clientHeight - this.view.chh * this.buf.rows) {
               this.buf.cancelPageDownAndResetPrevPageState();
-              this.conn.send('\1b[C');
+              this.conn.send('\x1b[C');
             } else {
               this.view.mainDisplay.scrollTop += this.view.chh * this.view.easyReadingTurnPageLines;
             }
@@ -1718,7 +1718,7 @@ pttchrome.App.prototype.regExitAlert = function() {
   if (!window.onbeforeunload && window.location.origin.indexOf('http://localhost') !== 0) {
     window.onbeforeunload = function() {
       return 'Connected to '+document.title;
-    }
+    };
   }
 };
 

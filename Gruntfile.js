@@ -33,6 +33,8 @@ module.exports = function(grunt) {
           }
         },
         src: [
+          'js/pttchrome.js', 
+          'js/touch_controller.js',
           'js/google_drive.js',
           'js/app_conn.js', 
           'js/predefined_config.js', 
@@ -48,7 +50,6 @@ module.exports = function(grunt) {
           'js/term_view.js', 
           'js/ansi_parser.js',
           'js/symbol_table.js', 
-          'js/pttchrome.js', 
           'js/string_util.js',
           'js/i18n.js',
           'js/en_US_messages.js',
@@ -60,6 +61,8 @@ module.exports = function(grunt) {
     },
     jshint: {
       files: [
+          'js/pttchrome.js', 
+          'js/touch_controller.js',
           'js/google_drive.js',
           'js/app_conn.js', 
           'js/predefined_config.js', 
@@ -75,7 +78,6 @@ module.exports = function(grunt) {
           'js/term_view.js', 
           'js/ansi_parser.js',
           'js/symbol_table.js', 
-          'js/pttchrome.js', 
           'js/string_util.js',
           'js/i18n.js',
           'js/en_US_messages.js',
