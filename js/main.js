@@ -2,19 +2,18 @@
   var site = getQueryVariable('site');
   var from = getQueryVariable('from');
   setupI18n();
-  if (typeof(chrome) == 'undefined' && window.location.hash == '#fromIcon') {
+  if (typeof(chrome) == 'undefined') {
     // don't seem to be using chrome, show msg
-    var idsToFill = [
-      'hintTitle', 'hintContent1', 'hintContent2', 'hintContent3',
-      'hintContent4', 'hintContent5'
-    ];
-
-    for (var i = 0; i < idsToFill.length; ++i) {
-      $('#'+idsToFill[i]).text(i18n(idsToFill[i]));
-    }
-    $('#fromIconHint').show();
+    $('#getAppBtn').off();
+    $('#getAppBtn').click(function() {
+      window.open('https://chrome.google.com/webstore/detail/pttchrome/hhnlfapopmaimdlldbknjdgekpgffmbo', '_self');
+    });
+    $('#getAppBtn').text(i18n('getAppBtn'));
+    console.log('app is not running or installed');
+    $('#welcomeJumbo').show();
     return;
   }
+
   pttchrome.app = new pttchrome.App(function(app) {
     app.setInputAreaFocus();
     if (!site) {
