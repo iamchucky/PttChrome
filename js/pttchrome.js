@@ -96,7 +96,10 @@ pttchrome.App = function(onInitializedCallback, from) {
 
   this.endTurnsOnLiveUpdate = false;
   this.copyOnSelect = false;
-  this.chromeVersion = parseInt(window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10);
+  var version = window.navigator.appVersion.match(/Chrome\/(\d+)\./);
+  if (version && version.length > 1) {
+    this.chromeVersion = parseInt(version[1], 10);
+  }
 
   var self = this;
   this.CmdHandler.addEventListener("OverlayCommand", function(e) {

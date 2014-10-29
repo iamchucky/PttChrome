@@ -301,7 +301,7 @@ locale.en_US = {
   },
 
   "getAppBtn": {
-    "message": "Get PttChrome from chrome web store"
+    "message": "Get from Chrome Web Store"
   },
   "input_sitePlaceholder": {
     "message": "input URL here and then press ENTER"

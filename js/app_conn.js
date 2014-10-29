@@ -26,6 +26,11 @@ lib.AppConnection = function(spec) {
 lib.AppConnection.prototype.checkChromeApp = function(callback) {
   var appId = this.appId;
   var self = this;
+  if (typeof(chrome) == 'undefined') {
+    // don't seem to be using chrome, show msg
+    self.showJumbo();
+    return;
+  }
   if (!chrome.runtime) {
     self.showJumbo();
     return;
@@ -43,6 +48,10 @@ lib.AppConnection.prototype.showJumbo = function() {
   var self = this;
   $('#getAppBtn').off();
   $('#getAppBtn').click(function() {
+    if (typeof(chrome) == 'undefined') {
+      window.open('https://chrome.google.com/webstore/detail/pttchrome/'+self.appId, '_self');
+      return;
+    }
     // turn it on when it works
     chrome.webstore.install(undefined, function() {
       // successfully installed

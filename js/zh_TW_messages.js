@@ -298,7 +298,7 @@
   },
 
   "getAppBtn": {
-    "message": "來去Chrome線上應用程式商店下載PttChrome"
+    "message": "從 Chrome 程式商店下載"
   },
   "input_sitePlaceholder": {
     "message": "在此輸入站台地址後按 ENTER"
