@@ -26,11 +26,6 @@ lib.AppConnection = function(spec) {
 lib.AppConnection.prototype.checkChromeApp = function(callback) {
   var appId = this.appId;
   var self = this;
-  if (typeof(chrome) == 'undefined') {
-    // don't seem to be using chrome, show msg
-    self.showJumbo();
-    return;
-  }
   if (!chrome.runtime) {
     self.showJumbo();
     return;

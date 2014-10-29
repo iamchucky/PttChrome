@@ -178,10 +178,40 @@
   background-size: cover;
 }
 
+#smallLogo {
+  width: 128px;
+  height: 128px;
+  float: left;
+  background-image: url('../icon_128.png');
+}
+
 #getAppBtn {
   width: 360px;
   font-weight: 900;
   margin-top: -5px;
+}
+
+#fromIconHint {
+  display: none;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+
+  background-image: -webkit-radial-gradient(center center, circle cover, #352e24, #1a160d);
+  background-image: -ms-radial-gradient(center center, circle cover, #352e24, #1a160d);
+  background-image: -moz-radial-gradient(center center, circle cover, #352e24, #1a160d);
+  background-image: radial-gradient(center center, circle cover, #352e24, #1a160d);
+}
+
+#fromIconHintContainer {
+  position: fixed;
+  margin-top: 50px;
+  left: 50%;
+  margin-left: -310px;
+  width: 720px;
+  height: 384px;
+
+  font-family: "微軟正黑體", "Microsoft JhengHei", Tahoma , Verdana , Arial , sans-serif;
 }
 
 #sideMenus {

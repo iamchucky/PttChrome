@@ -303,6 +303,25 @@ locale.en_US = {
   "getAppBtn": {
     "message": "Get from Chrome Web Store"
   },
+  "hintTitle": {
+    "message": "Hmmmm ..."
+  },
+  "hintContent1": {
+    "message": "\"批\" icon launches PttChrome with your default web browser"
+  },
+  "hintContent2": {
+    "message": "Your default web browser is not Google Chrome"
+  },
+  "hintContent3": {
+    "message": "Please set Google Chrome as your default web browser"
+  },
+  "hintContent4": {
+    "message": "OR"
+  },
+  "hintContent5": {
+    "message": "Add http://iamchucky.github.io/PttChrome/ to Chrome bookmarks and launch PttChrome from the bookmark"
+  },
+
   "input_sitePlaceholder": {
     "message": "input URL here and then press ENTER"
   },

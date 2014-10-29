@@ -300,6 +300,25 @@
   "getAppBtn": {
     "message": "從 Chrome 程式商店下載"
   },
+  "hintTitle": {
+    "message": "哎呀！"
+  },
+  "hintContent1": {
+    "message": "點選 \"批\" 圖示會使用預設瀏覽器開啓 PttChrome"
+  },
+  "hintContent2": {
+    "message": "您的預設瀏覽器並不是 Google Chrome"
+  },
+  "hintContent3": {
+    "message": "請將預設瀏覽器改為 Google Chrome"
+  },
+  "hintContent4": {
+    "message": "或是"
+  },
+  "hintContent5": {
+    "message": "把 http://iamchucky.github.io/PttChrome/ 加入 Chrome 書籤並由書籤開啓 PttChrome"
+  },
+
   "input_sitePlaceholder": {
     "message": "在此輸入站台地址後按 ENTER"
   },
