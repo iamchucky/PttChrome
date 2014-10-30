@@ -201,7 +201,10 @@ pttchrome.App = function(onInitializedCallback, from) {
     self.pref.getStorage();
   });
 
-  this.touch = new pttchrome.TouchController(this);
+  // init touch only if chrome is higher than version 36
+  if (this.chromeVersion && this.chromeVersion >= 37) {
+    this.touch = new pttchrome.TouchController(this);
+  }
 };
 
 pttchrome.App.prototype.setupAppConnection = function(callback) {
@@ -339,7 +342,7 @@ pttchrome.App.prototype.setDblclickTimer = function() {
 };
 
 pttchrome.App.prototype.setInputAreaFocus = function() {
-  if (this.modalShown || this.touch.touchStarted)
+  if (this.modalShown || (this.touch && this.touch.touchStarted))
     return;
   //this.DocInputArea.disabled="";
   this.inputArea.focus();
