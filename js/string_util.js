@@ -141,7 +141,9 @@ String.prototype.parseReplyText = function() {
 };
 
 String.prototype.parsePushInitText = function() {
-  return (this.indexOf('您覺得這篇文章 ') === 0 || this.search(/→ \w+ *: +/) === 0);
+  return (this.indexOf('您覺得這篇文章 ') === 0 || 
+      this.search(/→ \w+ *: +/) === 0 ||
+      this.indexOf('很抱歉, 本板不開放回覆文章，要改回信給作者嗎？ [y/N]:') === 0);
 };
 
 String.prototype.parseStatusRow = function() {
