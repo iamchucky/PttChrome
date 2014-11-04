@@ -56,6 +56,9 @@ lib.AppConnection.prototype.showJumbo = function() {
   });
   console.log('app is not running or installed');
   $('#getAppBtn').text(i18n('getAppBtn'));
+  for (var i = 1; i < 5; ++i) {
+    $('#alreadyInstalledHint'+i).text(i18n('alreadyInstalledHint'+i));
+  }
   $('#welcomeJumbo').show();
 };
 

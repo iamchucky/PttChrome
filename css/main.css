@@ -124,6 +124,7 @@
   height: 100%;
   position: fixed;
   display: none;
+  overflow-y: auto;
 
   background-image: -webkit-radial-gradient(center center, circle cover, #352e24, #1a160d);
   background-image: -ms-radial-gradient(center center, circle cover, #352e24, #1a160d);
@@ -132,12 +133,12 @@
 }
 
 #welcomeBanner {
-  position: fixed;
+  position: relative;
   margin-top: 50px;
   left: 50%;
   margin-left: -397px;
   width: 810px;
-  height: 384px;
+  height: 650px;
 
   font-family: "微軟正黑體", "Microsoft JhengHei", Tahoma , Verdana , Arial , sans-serif;
 }

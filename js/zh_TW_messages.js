@@ -300,6 +300,18 @@
   "getAppBtn": {
     "message": "從 Chrome 程式商店下載"
   },
+  "alreadyInstalledHint1": {
+    "message": "已經有安裝 PttChrome 了嗎？"
+  },
+  "alreadyInstalledHint2": {
+    "message": "請將預設瀏覽器改為 Google Chrome 後由 \"批\" 圖示開啟 PttChrome"
+  },
+  "alreadyInstalledHint3": {
+    "message": "或是"
+  },
+  "alreadyInstalledHint4": {
+    "message": "把 http://iamchucky.github.io/PttChrome/ 加入 Chrome 書籤並由書籤開啓 PttChrome"
+  },
 
   "input_sitePlaceholder": {
     "message": "在此輸入站台地址後按 ENTER"
