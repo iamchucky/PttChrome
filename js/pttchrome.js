@@ -1474,16 +1474,18 @@ pttchrome.App.prototype.setupContextMenus = function() {
       if (srow === undefined || srow === null)
         srow = target.parent().attr('srow');
       srow = parseInt(srow);
-      var rowText = '';
-      if (self.view.useEasyReadingMode && self.buf.pageState == 3) {
-        rowText = self.buf.getRowText(srow, 0, self.buf.cols, self.buf.pageLines);
-      } else {
-        rowText = self.buf.getRowText(srow, 0, self.buf.cols);
-      }
-      if (self.buf.pageState == 3) {
-        contextOnUserId = rowText.parsePushthreadForUserId();
-      } else if (self.buf.pageState == 2) {
-        contextOnUserId = rowText.parseThreadForUserId();
+      if (!isNaN(srow)) {
+        var rowText = '';
+        if (self.view.useEasyReadingMode && self.buf.pageState == 3) {
+          rowText = self.buf.getRowText(srow, 0, self.buf.cols, self.buf.pageLines);
+        } else {
+          rowText = self.buf.getRowText(srow, 0, self.buf.cols);
+        }
+        if (self.buf.pageState == 3) {
+          contextOnUserId = rowText.parsePushthreadForUserId();
+        } else if (self.buf.pageState == 2) {
+          contextOnUserId = rowText.parseThreadForUserId();
+        }
       }
     }
 
