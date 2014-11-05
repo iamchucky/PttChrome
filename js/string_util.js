@@ -147,6 +147,10 @@ String.prototype.parsePushInitText = function() {
       this.indexOf('很抱歉, 本板不開放回覆文章，要改回信給作者嗎？ [y/N]:') === 0);
 };
 
+String.prototype.parseReqNotMetText = function() {
+  return (this.indexOf(' ◆ 未達看板發文限制:') === 0);
+};
+
 String.prototype.parseStatusRow = function() {
   var str = this;
   var regex = new RegExp(/  瀏覽 第 (\d{1,3})(?:\/(\d{1,3}))? 頁 *\( *(\d{1,3})%\)  目前顯示: 第 0*(\d+)~0*(\d+) 行 *(?:\(y\)回應)?(?:\(X\/?%\)推文)?(?:\(h\)說明)? *\(←\/?q?\)離開 /g);

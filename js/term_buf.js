@@ -788,6 +788,7 @@ TermBuf.prototype = {
       }
 
       if (this.view.useEasyReadingMode) {
+        var lastRowText = this.getRowText(23, 0, this.cols);
         // dealing with page state jump to 0 because last row wasn't updated fully 
         if (this.pageState == 3) {
           if (!this.autoWrapLineDisplay) {
@@ -795,6 +796,8 @@ TermBuf.prototype = {
             return;
           }
           this.startedEasyReading = true;
+        } else if (this.startedEasyReading && lastRowText.parseReqNotMetText()) {
+          this.easyReadingShowPushInitText = true;
         } else {
           this.easyReadingShowReplyText = false;
           this.easyReadingShowPushInitText = false;
@@ -806,7 +809,6 @@ TermBuf.prototype = {
               this.ignoreOneUpdate = false;
               return;
             }
-            var lastRowText = this.getRowText(23, 0, this.cols);
             var result = lastRowText.parseStatusRow();
             if (result) {
               var lastRowFirstCh = this.lines[23][0];
@@ -819,7 +821,7 @@ TermBuf.prototype = {
                   this.sendCommandAfterUpdate = '\x1b[6~';
                 }
               }
-            } else {
+            } else if (!this.easyReadingShowPushInitText) { // only if not showing last row text
               this.pageState = 5;
               this.startedEasyReading = false;
             }
