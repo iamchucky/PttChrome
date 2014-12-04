@@ -668,12 +668,6 @@ pttchrome.App.prototype.updateTabIcon = function(aStatus) {
     case 'disconnect':
       icon =  'icon/logo_disconnect.png';
       break;
-    case 'newmessage':  // Not used yet
-      icon =  'icon/connect.png';
-      break;
-    case 'connecting':  // Not used yet
-      icon =  'icon/connecting.gif';
-      break;
     default:
       break;
   }
