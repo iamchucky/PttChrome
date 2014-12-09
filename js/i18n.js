@@ -15,6 +15,10 @@ function setupI18n(callback) {
 
 function getLang() {
   var lang = navigator.language || navigator.userLanguage;
+  if (lang.length == 5) {
+    // chrome 40+ uses lower case country code
+    lang = lang.substr(0,3) + lang.substr(3,5).toUpperCase();
+  }
   if (lang === '' || !(lang == 'en-US' || lang == 'zh-TW')) {
     lang = 'en-US';
   }
