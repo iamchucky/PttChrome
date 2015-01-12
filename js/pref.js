@@ -7,9 +7,7 @@ function PttChromePref(app, onInitializedCallback) {
   this.enableBlacklist = false;
   this.blacklistedUserIds = {};
 
-  this.quickSearches = [
-    { name: 'goo.gl', url: 'http://goo.gl/%s' }
-  ];
+  this.quickSearches = [];
 
   //this.loadDefault(onInitializedCallback);
   this.onInitializedCallback = onInitializedCallback;
@@ -36,8 +34,13 @@ PttChromePref.prototype = {
       $('#opt_'+i).empty();
       var val = this.values[i];
 
-      // for blacklisted userids
+      // for blacklisted userids 
       if (i === 'blacklistedUserIds') {
+        continue;
+      }
+      if (i === 'quickSearchList') {
+        this.setupQuickSearchUiList();
+        this.setupQuickSearchUiHandlers();
         continue;
       }
 
@@ -287,6 +290,7 @@ PttChromePref.prototype = {
         self.clearStorage();
         self.values = JSON.parse(JSON.stringify(DEFAULT_PREFS));
         self.blacklistedUserIds = {};
+        self.quickSearches = JSON.parse(DEFAULT_PREFS.quickSearchList);
         self.logins = ['',''];
         self.updateSettingsToUi();
         self.app.view.redraw(true);
@@ -472,6 +476,10 @@ PttChromePref.prototype = {
       if (i === 'blacklistedUserIds') {
         continue;
       }
+      if (i === 'quickSearchList') {
+        this.values[i] = JSON.stringify(this.quickSearches);
+        continue;
+      }
 
       if (i === 'deleteDupLogin') {
         var yesNode = $('#opt_deleteDupLoginYes');
@@ -555,9 +563,16 @@ PttChromePref.prototype = {
       for (var i in DEFAULT_PREFS) {
         if (!(i in msg.data.values) || msg.data.values[i] === null) {
           this.values[i] = DEFAULT_PREFS[i];
+          if (i === 'quickSearchList') {
+            this.quickSearches = JSON.parse(this.values[i]);
+          }
         } else {
           if (i === 'blacklistedUserIds') {
             this.blacklistedUserIds = JSON.parse(msg.data.values[i]);
+          } else if (i === 'quickSearchList') {
+            var val = msg.data.values[i];
+            this.quickSearches = JSON.parse(val);
+            this.values[i] = val;
           } else {
             this.values[i] = msg.data.values[i];
           }
