@@ -319,20 +319,33 @@ PttChromePref.prototype = {
     $('#ext_quickSearchList').html(quickSearchListHtml);
   },
 
+  validateQuickSearchInput: function(node) {
+    var val = node.val();
+    if (val == '') {
+      node.addClass('has-error');
+      return;
+    }
+    var isQuery = node.hasClass('qSearchItemQuery') || node.parent().hasClass('qSearchItemQuery');
+    if (isQuery && val.indexOf('%s') < 0) {
+      node.addClass('has-error');
+    } else {
+      node.removeClass('has-error');
+    }
+  },
+
   setupQuickSearchUiHandlers: function() {
     var self = this;
     $('#ext_quickSearchList li input').on('input', function(e) {
       var node = $(this);
-      var val = node.val();
-      if (val == '') {
-        node.addClass('has-error');
-        return;
-      }
-      var isQuery = node.hasClass('qSearchItemQuery') || node.parent().hasClass('qSearchItemQuery');
-      if (isQuery && val.indexOf('%s') < 0) {
-        node.addClass('has-error');
+      if (node.parent().is('li')) {
+        // is at the add new node, check if other node is also empty
+        var inputs = node.parent().find('input');
+        for (var i = 0; i < inputs.length; ++i) {
+          node = $(inputs[i]);
+          self.validateQuickSearchInput(node);
+        }
       } else {
-        node.removeClass('has-error');
+        self.validateQuickSearchInput(node);
       }
     });
 
@@ -372,10 +385,11 @@ PttChromePref.prototype = {
         return;
       }
 
-      if ($(this).find('.has-error').length) {
+      var parent = $(this).parent();
+      if (parent.find('.has-error').length) {
         return;
       }
-      var parent = $(this).parent();
+
       if ($(this).is('input') && parent.is('li')) {
         // focus out from add new
       } else {
