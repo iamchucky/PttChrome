@@ -85,6 +85,9 @@
   "options_blacklist": {
     "message": "黑名單"
   },
+  "options_extensions": {
+    "message": "額外功能"
+  },
   "options_about": {
     "message": "關於"
   },
@@ -231,6 +234,17 @@
   },
   "blacklist_driveDone": {
     "message": "完成!"
+  },
+
+  // extensions
+  "ext_quickSearch": {
+    "message": "快速搜尋"
+  },
+  "ext_addQuickSearchNamePlaceholder": {
+    "message": "新增搜尋引擎"
+  },
+  "ext_addQuickSearchQueryPlaceholder": {
+    "message": "網址以 %s 取代網址中的搜尋字詞"
   },
 
   // about page

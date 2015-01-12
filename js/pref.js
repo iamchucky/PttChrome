@@ -7,6 +7,10 @@ function PttChromePref(app, onInitializedCallback) {
   this.enableBlacklist = false;
   this.blacklistedUserIds = {};
 
+  this.quickSearches = [
+    { name: 'goo.gl', url: 'http://goo.gl/%s' }
+  ];
+
   //this.loadDefault(onInitializedCallback);
   this.onInitializedCallback = onInitializedCallback;
   this.initCallbackCalled = false;
@@ -155,6 +159,8 @@ PttChromePref.prototype = {
     // blacklist
     $('#opt_blacklistInstruction').text(i18n('options_blacklistInstruction'));
 
+    this.setupExtensionsPage();
+
     this.setupAboutPage();
     
     $('#opt_tabs a').click(function(e) {
@@ -292,6 +298,107 @@ PttChromePref.prototype = {
       self.saveAndDoneWithIt();
       self.app.switchToEasyReadingMode(self.app.view.useEasyReadingMode);
     });
+  },
+
+  setupQuickSearchUiList: function() {
+    var self = this;
+    $('#ext_quickSearch').text(i18n('ext_quickSearch'));
+    var addNewSearchHtml = '<input type="text" class="form-control qSearchItemName" placeholder="' + i18n('ext_addQuickSearchNamePlaceholder') + '" /><input type="text" class="form-control qSearchItemQuery" placeholder="' + i18n('ext_addQuickSearchQueryPlaceholder') + '" />';
+    var buttonCloseHtml = '<button type="button" class="close">&times;</button>';
+    var buttonAddHtml = '<button type="button" class="close" data="add">&#43;</button>';
+    var quickSearchListHtml = '';
+
+    for (var i = 0; i < this.quickSearches.length; ++i) {
+      var qSearch = this.quickSearches[i];
+      quickSearchListHtml += '<li class="list-group-item">';
+      quickSearchListHtml += '<div class="qSearchItemName"><span>'+qSearch.name+'</span><input type="text" class="form-control" value="'+qSearch.name+'" /></div>';
+      quickSearchListHtml += '<div class="qSearchItemQuery"><span>'+qSearch.url+'</span><input type="text" class="form-control" value="'+qSearch.url+'" /></div>';
+      quickSearchListHtml += buttonCloseHtml + '</li>';
+    }
+    quickSearchListHtml += '<li class="list-group-item">' + addNewSearchHtml + buttonAddHtml + '</li>';
+    $('#ext_quickSearchList').html(quickSearchListHtml);
+  },
+
+  setupQuickSearchUiHandlers: function() {
+    var self = this;
+    $('#ext_quickSearchList li input').on('input', function(e) {
+      var node = $(this);
+      var val = node.val();
+      if (val == '') {
+        node.addClass('has-error');
+        return;
+      }
+      var isQuery = node.hasClass('qSearchItemQuery') || node.parent().hasClass('qSearchItemQuery');
+      if (isQuery && val.indexOf('%s') < 0) {
+        node.addClass('has-error');
+      } else {
+        node.removeClass('has-error');
+      }
+    });
+
+    $('#ext_quickSearchList li button').click(function(e) {
+      if ($(this).attr('data') == 'add') {
+        var parent = $(this.parentNode);
+        var nameNode = parent.find('input.qSearchItemName');
+        var queryNode = parent.find('input.qSearchItemQuery');
+        // validate input
+        if (nameNode.hasClass('has-error') || queryNode.hasClass('has-error')) {
+          return;
+        }
+
+        // add
+        var nameVal = nameNode.val();
+        var queryVal = queryNode.val();
+        self.quickSearches.push({ name: nameVal, url: queryVal });
+        self.setupQuickSearchUiList();
+        self.setupQuickSearchUiHandlers();
+      } else {
+        // update quickSearches then remove
+        var ind = $('#ext_quickSearchList li').index(this.parentNode);
+        if (ind > -1) {
+          self.quickSearches.splice(ind, 1);
+        }
+        $(this).parent().remove();
+      }
+    });
+
+    $('#ext_quickSearchList li div').click(function(e) {
+      $(this).parent().addClass('editMode');
+      var inputToSelect = $(this).find('input');
+      inputToSelect[0].select();
+    }).focusout(function(e) {
+      if (e.relatedTarget && e.relatedTarget.parentNode && 
+          this.parentNode == e.relatedTarget.parentNode.parentNode) {
+        return;
+      }
+
+      if ($(this).find('.has-error').length) {
+        return;
+      }
+      var parent = $(this).parent();
+      if ($(this).is('input') && parent.is('li')) {
+        // focus out from add new
+      } else {
+        parent.removeClass('editMode');
+        // update on span
+        var nameVal = parent.find('.qSearchItemName input').val();
+        var queryVal = parent.find('.qSearchItemQuery input').val();
+        parent.find('.qSearchItemName span').text(nameVal);
+        parent.find('.qSearchItemQuery span').text(queryVal);
+
+        // save this now
+        var ind = $('#ext_quickSearchList li').index(this.parentNode);
+        if (ind > -1) {
+          self.quickSearches[ind] = { name: nameVal, url: queryVal };
+          // update the context menu as well
+        }
+      }
+    });
+  },
+
+  setupExtensionsPage: function() {
+    this.setupQuickSearchUiList();
+    this.setupQuickSearchUiHandlers();
   },
 
   setupAboutPage: function() {

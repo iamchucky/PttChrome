@@ -1,3 +1,53 @@
+#ext_quickSearchList > .list-group-item {
+  height: 56px;
+}
+
+#ext_quickSearchList .qSearchItemName {
+  float: left;
+  width: 28%;
+}
+#ext_quickSearchList .editMode div span {
+  display: none;
+}
+#ext_quickSearchList .editMode div input {
+  display: block;
+}
+#ext_quickSearchList div span {
+  display: block;
+}
+#ext_quickSearchList div input {
+  display: none;
+}
+
+#ext_quickSearchList .qSearchItemQuery {
+  margin-left: 5px;
+  float: left;
+  width: 65%;
+}
+#ext_quickSearchList .qSearchItemQuery > span,
+#ext_quickSearchList .qSearchItemName > span {
+  height: 34px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#ext_quickSearchList .qSearchItemName input,
+#ext_quickSearchList .qSearchItemQuery input {
+  width: 100%;
+}
+
+#ext_quickSearchList input.has-error {
+  background-color: #f2dede;
+}
+
+#ext_quickSearchList > li:hover{
+  background-color: #f5f5f5;
+}
+
 #colorHelperInstruction {
   font-size: 12px;
 }

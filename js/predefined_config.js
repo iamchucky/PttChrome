@@ -1,5 +1,5 @@
 ﻿var PREFS_CATEGORIES = ['mouseBrowsing', 'appearance'];
-var PREFS_NAV = ['general', 'autologin', 'blacklist', 'about'];
+var PREFS_NAV = ['general', 'autologin', 'blacklist', 'extensions', 'about'];
 var DEFAULT_PREFS = {
 
   // general

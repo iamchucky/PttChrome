@@ -85,6 +85,9 @@ locale.en_US = {
   "options_blacklist": {
     "message": "Blacklist"
   },
+  "options_extensions": {
+    "message": "Extensions"
+  },
   "options_about": {
     "message": "About"
   },
@@ -234,6 +237,17 @@ locale.en_US = {
   },
   "blacklist_driveDone": {
     "message": "Done!"
+  },
+
+  // extensions
+  "ext_quickSearch": {
+    "message": "Quick Search"
+  },
+  "ext_addQuickSearchNamePlaceholder": {
+    "message": "Add search engine"
+  },
+  "ext_addQuickSearchQueryPlaceholder": {
+    "message": "URL with %s in place of query"
   },
 
   // about page
