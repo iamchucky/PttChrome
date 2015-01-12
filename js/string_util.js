@@ -1,58 +1,35 @@
-// An alternative to the function with  e v a l ();
 // Only support caret notations (^C, ^H, ^U, ^[, ^?, ...)
-// and hexadecimal notation (\x1b, \x7f, ...)
 // If you want to show \ and ^, use \\ and \^ respectively
 String.prototype.unescapeStr = function() {
   var result = '';
-  for(var i=0; i<this.length; ++i) {
-    switch(this.charAt(i)) {
-    case '\\':
-      if(i == this.length-1) { // independent \ at the end of the string
-        result += '\\';
-        break;
-      }
-      switch(this.charAt(i+1)) {
-      case '\\':
-        result += '\\\\';
-        ++i;
-        break;
-      case '^':
-        result += '^';
-        ++i;
-        break;
-      case 'x':
-        if(i > this.length - 4) {
-            result += '\\';
-            break;
-        }
-        var code = parseInt(this.substr(i+2, 2), 16);
-        result += String.fromCharCode(code);
-        i += 3;
-        break;
-      default:
-        result += '\\';
-      }
+
+  for (var i = 0; i < this.length; ++i) {
+    var curChar = this.charAt(i);
+    var nextChar = this.charAt(i+1);
+    
+    if (i == this.length - 1) {
+      result += curChar;
       break;
-    case '^':
-      if (i == this.length-1) { // independent ^ at the end of the string
-        result += '^';
-        break;
-      }
-      if('@' <= this.charAt(i+1) && this.charAt(i+1) <= '_') {
+    }
+
+    if (curChar == '\\' && (nextChar == '\\' || nextChar == '^')) {
+      result += nextChar;
+    } else if (curChar == '^') {
+      if ('@' <= nextChar && nextChar <= '_') {
         var code = this.charCodeAt(i+1) - 64;
         result += String.fromCharCode(code);
         i++;
-      } else if(this.charAt(i+1) == '?') {
+      } else if (nextChar == '?') {
         result += '\x7f';
         i++;
       } else {
         result += '^';
       }
-      break;
-    default:
-      result += this.charAt(i);
+    } else {
+      result += curChar;
     }
   }
+
   return result;
 };
 
@@ -71,17 +48,17 @@ String.prototype.wrapText = function(maxLen, enterChar) {
 
   var result = '';
   var len = 0;
-  for(var i=0; i<splited.length; ++i) {
+  for (var i = 0; i < splited.length; ++i) {
     // Convert special characters to spaces with the same width
     // and then we can get the width by the length of the converted string
     var grouplen = splited[i].replace(/[^\x00-\x7f]/g,"  ")
-                              .replace(/\t/,"    ")
-                              .replace(/\r|\n/,"")
-                              .length;
+                             .replace(/\t/,"    ")
+                             .replace(/\r|\n/,"")
+                             .length;
 
-    if(splited[i] == '\r' || splited[i] == '\n')
+    if (splited[i] == '\r' || splited[i] == '\n')
       len = 0;
-    if(len + grouplen > maxLen) {
+    if (len + grouplen > maxLen) {
       result += enterChar;
       len = 0;
     }

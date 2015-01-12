@@ -1011,12 +1011,6 @@ pttchrome.App.prototype.overlayCommandListener = function (e) {
           if (this.picViewerMgr)
             this.picViewerMgr.openPicture(param);
           break;
-        case "doLoadFile":
-          this.buf.loadFile();
-          break;
-        case "doSaveFile":
-          this.buf.saveFile();
-          break;
         case "checkPrefExist":
           this.doSiteSettingCheck(250);
           break;
