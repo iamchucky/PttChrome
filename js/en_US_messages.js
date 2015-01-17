@@ -292,7 +292,7 @@ locale.en_US = {
       'Added option to turn on live update with END',
       'Middle mouse button click has new option to do paste',
       'Added option to enable copy on select',
-      'Added Quick Search in settings and context menu'
+      'Added Quick Search in settings and context menu (thanks to abccbaandy)'
     ]
   },
 
