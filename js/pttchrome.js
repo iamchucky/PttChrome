@@ -1659,73 +1659,56 @@ pttchrome.App.prototype.setupContextMenus = function() {
   $('#cmenu_removeBlacklistUserId a').html(i18n('cmenu_removeBlacklistUserId')+' <span id="cmenuRemoveBlacklistUserIdContent"></span>');
   $('#cmenu_settings a').text(i18n('cmenu_settings'));
 
-  $('#cmenu_copy').click(function(e) {
-    self.doCopy(selectedText);
-    e.stopPropagation();
-    hideContextMenu();
-  });
-  $('#cmenu_copyAnsi').click(function(e) {
-    self.doCopyAnsi();
-    e.stopPropagation();
-    hideContextMenu();
-  });
-  $('#cmenu_paste').click(function(e) {
-    self.doPaste();
-    e.stopPropagation();
-    hideContextMenu();
-  });
-  $('#cmenu_selectAll').click(function(e) {
-    self.doSelectAll();
-    e.stopPropagation();
-    hideContextMenu();
-  });
-  $('#cmenu_searchGoogle').click(function(e) {
-    self.doSearchGoogle(selectedText);
-    e.stopPropagation();
-    hideContextMenu();
-  });
-  $('#cmenu_openUrlNewTab').click(function(e) {
-    self.doOpenUrlNewTab(aElement);
-    e.stopPropagation();
-    hideContextMenu();
-  });
-  $('#cmenu_copyLinkUrl').click(function(e) {
-    self.doCopy(contextOnUrl);
-    e.stopPropagation();
-    hideContextMenu();
-  });
-  $('#cmenu_mouseBrowsing').click(function(e) {
-    self.switchMouseBrowsing();
-    e.stopPropagation();
-    hideContextMenu();
-  });
-  $('#cmenu_goToOtherSite').click(function(e) {
-    self.doGoToOtherSite();
-    e.stopPropagation();
-    hideContextMenu();
-  });
-  $('#cmenu_showInputHelper').click(function(e) {
-    self.inputHelper.showHelper();
-    e.stopPropagation();
-    hideContextMenu();
-  });
-  $('#cmenu_showLiveArticleHelper').click(function(e) {
-    $('#liveHelper').show();
-    e.stopPropagation();
-    hideContextMenu();
-  });
-  $('#cmenu_addBlacklistUserId').click(function(e) {
-    self.doAddBlacklistUserId(contextOnUserId);
-    e.stopPropagation();
-    hideContextMenu();
-  });
-  $('#cmenu_removeBlacklistUserId').click(function(e) {
-    self.doRemoveBlacklistUserId(contextOnUserId);
-    e.stopPropagation();
-    hideContextMenu();
-  });
-  $('#cmenu_settings').click(function(e) {
-    self.doSettings();
+  var contextMenuItemOnClickHandler = {
+    'cmenu_copy': function() { 
+      self.doCopy(selectedText); 
+    },
+    'cmenu_copyAnsi': function() { 
+      self.doCopyAnsi(); 
+    },
+    'cmenu_paste': function() { 
+      self.doPaste(); 
+    },
+    'cmenu_selectAll': function() { 
+      self.doSelectAll(); 
+    },
+    'cmenu_searchGoogle': function() { 
+      self.doSearchGoogle(selectedText); 
+    },
+    'cmenu_openUrlNewTab': function() { 
+      self.doOpenUrlNewTab(aElement); 
+    },
+    'cmenu_copyLinkUrl': function() {
+      self.doCopy(contextOnUrl); 
+    },
+    'cmenu_mouseBrowsing': function() { 
+      self.switchMouseBrowsing(); 
+    },
+    'cmenu_goToOtherSite': function() { 
+      self.doGoToOtherSite(); 
+    },
+    'cmenu_showInputHelper': function() { 
+      self.inputHelper.showHelper(); 
+    },
+    'cmenu_showLiveArticleHelper': function() { 
+      $('#liveHelper').show(); 
+    },
+    'cmenu_addBlacklistUserId': function() { 
+      self.doAddBlacklistUserId(contextOnUserId); 
+    },
+    'cmenu_removeBlacklistUserId': function() { 
+      self.doRemoveBlacklistUserId(contextOnUserId); 
+    },
+    'cmenu_settings': function() { 
+      self.doSettings(); 
+    }
+  };
+
+  $('.cmenuItem').click(function(e) {
+    var id = $(this).attr('id');
+    if (id in contextMenuItemOnClickHandler) {
+      contextMenuItemOnClickHandler[id]();
+    }
     e.stopPropagation();
     hideContextMenu();
   });
