@@ -458,6 +458,8 @@
   left:0px;
   overflow:hidden;
   z-index:1;
+
+  -webkit-user-select: none;
 }
 
 .main, #easyReadingLastRow, #easyReadingReplyRow {
