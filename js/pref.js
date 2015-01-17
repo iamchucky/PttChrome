@@ -325,7 +325,7 @@ PttChromePref.prototype = {
 
   validateQuickSearchInput: function(node) {
     var val = node.val();
-    if (val == '') {
+    if (val === '') {
       node.addClass('has-error');
       return;
     }

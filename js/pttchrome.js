@@ -1419,7 +1419,7 @@ pttchrome.App.prototype.mouse_scroll = function(e) {
 
 pttchrome.App.prototype.showQuickSearchMenus = function(selectedText, hideContextMenu) {
   var self = this;
-  if (this.pref.quickSearches.length == 0) return;
+  if (this.pref.quickSearches.length === 0) return;
 
   var menuSelector = '#quickSearchMenus';
   var menuHtml = '';
@@ -1432,7 +1432,7 @@ pttchrome.App.prototype.showQuickSearchMenus = function(selectedText, hideContex
   $('#quickSearchMenus a').off();
   $('#quickSearchMenus a').click(function(e) {
     var url = $(this).data('url');
-    url = url.replace('\%s', selectedText);
+    url = url.replace('%s', selectedText);
     window.open(url);
     e.stopPropagation();
     hideContextMenu();

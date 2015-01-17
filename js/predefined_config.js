@@ -36,7 +36,7 @@ var DEFAULT_PREFS = {
   blacklistedUserIds  : '{}',
 
   // quickSearch
-  quickSearchList: '[{"name":"goo.gl","url":"http://goo.gl/\%s"}]'
+  quickSearchList: '[{"name":"goo.gl","url":"http://goo.gl/%s"}]'
 };
 
 var PREF_OPTIONS = {
