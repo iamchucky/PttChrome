@@ -358,14 +358,15 @@ PttChromePref.prototype = {
         var parent = $(this.parentNode);
         var nameNode = parent.find('input.qSearchItemName');
         var queryNode = parent.find('input.qSearchItemQuery');
+        var nameVal = nameNode.val();
+        var queryVal = queryNode.val();
         // validate input
-        if (nameNode.hasClass('has-error') || queryNode.hasClass('has-error')) {
+        if (nameNode.hasClass('has-error') || queryNode.hasClass('has-error') ||
+            nameVal() === '' || queryVal() === '') {
           return;
         }
 
         // add
-        var nameVal = nameNode.val();
-        var queryVal = queryNode.val();
         self.quickSearches.push({ name: nameVal, url: queryVal });
         self.setupQuickSearchUiList();
         self.setupQuickSearchUiHandlers();
