@@ -1417,7 +1417,7 @@ pttchrome.App.prototype.mouse_scroll = function(e) {
   }
 };
 
-pttchrome.App.prototype.showQuickSearchMenus = function(selectedText, hideContextMenu) {
+pttchrome.App.prototype.showQuickSearchMenus = function(e, selectedText, hideContextMenu) {
   var self = this;
   if (this.pref.quickSearches.length === 0) return;
 
@@ -1437,6 +1437,19 @@ pttchrome.App.prototype.showQuickSearchMenus = function(selectedText, hideContex
     e.stopPropagation();
     hideContextMenu();
   });
+
+  var pageHeight = $(window).height();
+  var pageWidth = $(window).width();
+  if (e.pageY > pageHeight/2) {
+    $(menuSelector).addClass('cmenuGoesUp');
+  } else {
+    $(menuSelector).removeClass('cmenuGoesUp');
+  }
+  if (e.pageX > pageWidth * 0.8) {
+    $(menuSelector).addClass('cmenuGoesLeft');
+  } else {
+    $(menuSelector).removeClass('cmenuGoesLeft');
+  }
 };
 
 pttchrome.App.prototype.setupContextMenus = function() {
@@ -1524,7 +1537,7 @@ pttchrome.App.prototype.setupContextMenus = function() {
         }
         $('#cmenuSearchContent').text("'"+clipedText+"'");
         if (self.pref.quickSearches.length > 0) {
-          self.showQuickSearchMenus(selectedText, function() {
+          self.showQuickSearchMenus(e, selectedText, function() {
             hideContextMenu();
           });
           $('.contextQuickSearch').show();

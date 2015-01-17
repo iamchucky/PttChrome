@@ -287,6 +287,18 @@
 #cmenu_quickSearch {
   position: relative;
 }
+.cmenuGoesUp {
+  top: initial !important;
+  bottom: 0px;
+  margin-top: 0px !important;
+  margin-bottom: -5px;
+}
+.cmenuGoesLeft {
+  right: 100%;
+  left: initial !important;
+  margin-left: 0px !important;
+  margin-right: -5px;
+}
 
 #quickSearchMenus {
   left: 100%;
