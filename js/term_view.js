@@ -1047,7 +1047,7 @@ TermView.prototype = {
     var rowCol = { row: 0, col: 0 };
     var parent = elem.parentNode;
     var parentType = parent.getAttribute('type');
-    if (parentType == null) {
+    if (parentType === null) {
       // if i am outside of bbswin, pick the first elem
       elem = $('#mainContainer')[0].childNodes[0].childNodes[0];
       parent = elem.parentNode;
