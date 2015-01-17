@@ -1544,7 +1544,7 @@ pttchrome.App.prototype.setupContextMenus = function() {
         $('#cmenu_addBlacklistUserId').show();
         $('#cmenu_removeBlacklistUserId').hide();
       }
-      $('#cmenu_divider2').show();
+      $('#cmenu_divider3').show();
     } else {
       $('#cmenu_addBlacklistUserId').hide();
       $('#cmenu_removeBlacklistUserId').hide();
