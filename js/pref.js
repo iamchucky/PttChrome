@@ -362,7 +362,7 @@ PttChromePref.prototype = {
         var queryVal = queryNode.val();
         // validate input
         if (nameNode.hasClass('has-error') || queryNode.hasClass('has-error') ||
-            nameVal() === '' || queryVal() === '') {
+            nameVal === '' || queryVal === '') {
           return;
         }
 
