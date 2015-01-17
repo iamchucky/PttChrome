@@ -44,6 +44,9 @@
   "cmenu_searchGoogle": {
     "message": "在 Google 上搜尋"
   },
+  "cmenu_quickSearch": {
+    "message": "快速搜尋"
+  },
   "cmenu_openUrlNewTab": {
     "message": "在新分頁中開啟連結"
   },
@@ -264,7 +267,7 @@
     "message": "版本"
   },
   "about_version": {
-    "message": "1.4.* webapp9 10/14/2014"
+    "message": "1.4.* webapp10 1/17/2015"
   },
   "about_new_title": {
     "message": "新功能"
@@ -285,7 +288,8 @@
       '加入了滑鼠左鍵送出右方向鍵的選項',
       '加入了 END 啟用即時更新的選項',
       '滑鼠中鍵可以設定執行貼上功能',
-      '加入了選取自動複製文字的選項'
+      '加入了選取自動複製文字的選項',
+      '新增了快速搜尋的功能'
     ]
   },
 

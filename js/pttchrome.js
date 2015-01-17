@@ -1417,6 +1417,28 @@ pttchrome.App.prototype.mouse_scroll = function(e) {
   }
 };
 
+pttchrome.App.prototype.showQuickSearchMenus = function(selectedText, hideContextMenu) {
+  var self = this;
+  if (this.pref.quickSearches.length == 0) return;
+
+  var menuSelector = '#quickSearchMenus';
+  var menuHtml = '';
+  for (var i = 0; i < this.pref.quickSearches.length; ++i) {
+    var q = this.pref.quickSearches[i];
+    menuHtml += '<li class="cmenuItem"><a data-url="'+q.url+'">'+q.name+'</a></li>';
+  }
+  $(menuSelector).html(menuHtml);
+  
+  $('#quickSearchMenus a').off();
+  $('#quickSearchMenus a').click(function(e) {
+    var url = $(this).data('url');
+    url = url.replace('\%s', selectedText);
+    window.open(url);
+    e.stopPropagation();
+    hideContextMenu();
+  });
+};
+
 pttchrome.App.prototype.setupContextMenus = function() {
   var self = this;
   var menuSelector = '#contextMenus';
@@ -1481,11 +1503,13 @@ pttchrome.App.prototype.setupContextMenus = function() {
     selectedText = window.getSelection().toString().replace(/\u00a0/g, " ");
 
     if (contextOnUrl) {
+      $('.contextQuickSearch').hide();
       $('.contextUrl').show();
       $('.contextSel').hide();
       $('.contextNormal').hide();
     } else {
       if (window.getSelection().isCollapsed) { 
+        $('.contextQuickSearch').hide();
         $('.contextUrl').hide();
         $('.contextSel').hide();
         $('.contextNormal').show();
@@ -1494,7 +1518,19 @@ pttchrome.App.prototype.setupContextMenus = function() {
         $('.contextUrl').hide();
         $('.contextSel').show();
         $('.contextNormal').hide();
-        $('#cmenuSearchContent').text("'"+selectedText+"'");
+        var clipedText = selectedText;
+        if (clipedText.length > 15) {
+          clipedText = clipedText.substr(0, 15) + ' ... ';
+        }
+        $('#cmenuSearchContent').text("'"+clipedText+"'");
+        if (self.pref.quickSearches.length > 0) {
+          self.showQuickSearchMenus(selectedText, function() {
+            hideContextMenu();
+          });
+          $('.contextQuickSearch').show();
+        } else {
+          $('.contextQuickSearch').hide();
+        }
       }
     }
 
@@ -1612,6 +1648,7 @@ pttchrome.App.prototype.setupContextMenus = function() {
   $('#cmenu_paste a').html(i18n('cmenu_paste')+'<span class="cmenuHotkey">Ctrl+Shift+V</span>');
   $('#cmenu_selectAll a').html(i18n('cmenu_selectAll')+'<span class="cmenuHotkey">Ctrl+A</span>');
   $('#cmenu_searchGoogle a').html(i18n('cmenu_searchGoogle')+' <span id="cmenuSearchContent"></span>');
+  $('#cmenu_quickSearch a').html(i18n('cmenu_quickSearch')+' <span style="float:right;">&#9658;</span>');
   $('#cmenu_openUrlNewTab a').text(i18n('cmenu_openUrlNewTab'));
   $('#cmenu_copyLinkUrl a').text(i18n('cmenu_copyLinkUrl'));
   $('#cmenu_mouseBrowsing a').text(i18n('cmenu_mouseBrowsing'));

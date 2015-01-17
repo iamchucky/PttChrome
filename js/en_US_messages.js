@@ -44,6 +44,9 @@ locale.en_US = {
   "cmenu_searchGoogle": {
     "message": "Search Google for"
   },
+  "cmenu_quickSearch": {
+    "message": "Quick Search"
+  },
   "cmenu_openUrlNewTab": {
     "message": "Open link in new tab"
   },
@@ -267,7 +270,7 @@ locale.en_US = {
     "message": "Version"
   },
   "about_version": {
-    "message": "1.4.* webapp9 10/14/2014"
+    "message": "1.4.* webapp10 1/17/2015"
   },
   "about_new_title": {
     "message": "What's new"
@@ -288,7 +291,8 @@ locale.en_US = {
       'Added setting to send right arrow key to left mouse button',
       'Added option to turn on live update with END',
       'Middle mouse button click has new option to do paste',
-      'Added option to enable copy on select'
+      'Added option to enable copy on select',
+      'Added Quick Search in settings and context menu'
     ]
   },
 

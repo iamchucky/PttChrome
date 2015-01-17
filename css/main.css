@@ -284,6 +284,24 @@
   color: white;
 }
 
+#cmenu_quickSearch {
+  position: relative;
+}
+
+#quickSearchMenus {
+  left: 100%;
+  top: 0px;
+  margin-top: -5px;
+  margin-left: -5px;
+}
+
+#cmenu_quickSearch > ul {
+  display: none;
+}
+#cmenu_quickSearch:hover > ul {
+  display: block;
+}
+
 .cmenuHotkey {
   float: right;
   font-size: 14px;
