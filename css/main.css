@@ -1,3 +1,12 @@
+@font-face {
+  font-family: SymMingLiu;
+  src: url('../fonts/symmingliu.woff');
+}
+@font-face {
+  font-family: DFHeiLightB5;
+  src: url('../fonts/DFHeiLightB5.woff');
+}
+
 #ext_quickSearchList > .list-group-item {
   height: 56px;
 }
