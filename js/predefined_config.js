@@ -28,7 +28,7 @@ var DEFAULT_PREFS = {
 
   // displays
   fontFitWindowWidth: false,
-  fontFace          : 'MingLiu,SymMingLiu,monospace',
+  fontFace          : 'MingLiu,MingLiUNoGlyph,monospace',
   bbsMargin         : 0,
 
   // blacklist

@@ -254,6 +254,7 @@ TermView.prototype = {
 
   setFontFace: function(fontFace) {
     this.fontFace = fontFace;
+    this.input.style.setProperty('font-family', this.fontFace, 'important');
     this.mainDisplay.style.setProperty('font-family', this.fontFace, 'important');
     this.lastRowDiv.style.setProperty('font-family', this.fontFace, 'important');
     this.replyRowDiv.style.setProperty('font-family', this.fontFace, 'important');

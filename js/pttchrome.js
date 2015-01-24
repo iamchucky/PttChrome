@@ -539,7 +539,7 @@ pttchrome.App.prototype.onPasteDone = function(content) {
 };
 
 pttchrome.App.prototype.onSymFont = function(content) {
-  var css = '@font-face { font-family: "symmingliu"; src: url('+content.data+'); }';
+  var css = '@font-face { font-family: MingLiUNoGlyph; src: url('+content.data+'); }';
   var style = document.createElement('style');
   style.type = 'text/css';
   style.innerHTML = css;
