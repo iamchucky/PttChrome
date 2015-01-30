@@ -1048,12 +1048,13 @@ TermView.prototype = {
     var rowCol = { row: 0, col: 0 };
     var parent = elem.parentNode;
     var parentType = parent.getAttribute('type');
-    if (parentType === null) {
+    // TODO this was to fix context menu not showing up, but breaks copy ansi
+    /*if (parentType === null) {
       // if i am outside of bbswin, pick the first elem
       elem = $('#mainContainer')[0].childNodes[0].childNodes[0];
       parent = elem.parentNode;
       parentType = parent.getAttribute('type');
-    }
+    }*/
 
     while (!(parentType == 'bbsrow' || parentType == 'highlight' || parent.tagName == 'A')) {
       parent = parent.parentNode; 
