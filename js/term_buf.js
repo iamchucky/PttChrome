@@ -1082,9 +1082,10 @@ TermBuf.prototype = {
       return;
     }
     if (lastRowText.parseStatusRow()) {
-      //console.log('pageState = 3 (READING)');
-      this.pageState = 3; // READING
-      return;
+      if (this.prevPageState == 3 || !(this.isUnicolor(0, 79, 0) && this.lines[0][0].getBg() === 0)) {
+        this.pageState = 3; // READING
+        return;
+      }
     }
 
     var firstRowText = this.getRowText(0, 0, this.cols);
