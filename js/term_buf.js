@@ -783,7 +783,9 @@ TermBuf.prototype = {
 
       // make sure to come back to easy reading mode
       if (this.prevPageState == 2 && this.pageState == 3 && 
-          !this.view.useEasyReadingMode && this.view.bbscore.pref.values.enableEasyReading) {
+          !this.view.useEasyReadingMode && 
+          this.view.bbscore.pref.values.enableEasyReading &&
+          this.view.bbscore.connectedUrl.site == 'ptt.cc') {
         this.view.useEasyReadingMode = true;
       }
 
@@ -1082,10 +1084,8 @@ TermBuf.prototype = {
       return;
     }
     if (lastRowText.parseStatusRow()) {
-      if (this.prevPageState == 3 || !(this.isUnicolor(0, 79, 0) && this.lines[0][0].getBg() === 0)) {
-        this.pageState = 3; // READING
-        return;
-      }
+      this.pageState = 3; // READING
+      return;
     }
 
     var firstRowText = this.getRowText(0, 0, this.cols);

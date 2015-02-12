@@ -50,7 +50,7 @@ function TermView(rowCount) {
   this.curBlink = false;
   this.openSpan = false;
 
-  this.useEasyReadingMode = true;
+  this.useEasyReadingMode = false;
   this.easyReadingTurnPageLines = 22;
   this.easyReadingKeyDownKeyCode = 0;
 

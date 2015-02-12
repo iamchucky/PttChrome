@@ -1107,11 +1107,11 @@ pttchrome.App.prototype.onPrefChange = function(pref, name) {
       this.view.enableNotifications = pref.get(name);
       break;
     case 'enableEasyReading':
-      if (this.connectedUrl.site == 'ptt.cc') {
+      /*if (this.connectedUrl.site == 'ptt.cc') {
         this.view.useEasyReadingMode = this.pref.get('enableEasyReading');
       } else {
         this.view.useEasyReadingMode = false;
-      }
+      }*/
       break;
     case 'antiIdleTime':
       this.antiIdleTime = pref.get(name) * 1000;
