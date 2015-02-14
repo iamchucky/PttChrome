@@ -787,6 +787,8 @@ TermBuf.prototype = {
           this.view.bbscore.pref.values.enableEasyReading &&
           this.view.bbscore.connectedUrl.site == 'ptt.cc') {
         this.view.useEasyReadingMode = true;
+      } else if (!this.view.bbscore.pref.values.enableEasyReading) {
+        this.view.useEasyReadingMode = false;
       }
 
       if (this.view.useEasyReadingMode) {
