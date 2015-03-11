@@ -739,7 +739,19 @@ TermBuf.prototype = {
 
       this.setPageState();
       if (this.useMouseBrowsing) {
-        this.resetMousePos();
+        // clear highlight and reset cursor on page change
+        // without the redraw being called here
+        if (this.highlightCursor) {
+          var rows = this.rows;
+          var lines = this.lines;
+          if (this.nowHighlight != -1) {
+            var line = lines[this.nowHighlight];
+            for (var i = 0; i < this.cols; ++i)
+              line[i].needUpdate = true;
+          }
+        }
+        this.nowHighlight = -1;
+        this.mouseCursor = 0;
       }
 
       // support for url specified navigation
@@ -1339,8 +1351,9 @@ TermBuf.prototype = {
   },
 
   resetMousePos: function() {
-    if (this.useMouseBrowsing)
+    if (this.useMouseBrowsing) {
       this.onMouse_move(this.tempMouseCol, this.tempMouseRow, true);
+    }
   },
 
   clearHighlight: function(){
