@@ -800,8 +800,6 @@ TermView.prototype = {
       } else if (charCode == 3) { //copy
         if (!window.getSelection().isCollapsed) //no anything be select
           return;
-      } else if(charCode == 5) { //e
-        sendCode = false;
       }
 
       if (sendCode)
