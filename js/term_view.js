@@ -195,7 +195,7 @@ function TermView(rowCount) {
       return;
     if (self.useEasyReadingMode && self.buf.startedEasyReading && 
         !self.buf.easyReadingShowReplyText && !self.buf.easyReadingShowPushInitText &&
-        self.easyReadingKeyDownKeyCode == 229) { // only use on chinese IME
+        self.easyReadingKeyDownKeyCode == 229 && e.target.value != 'X') { // only use on chinese IME
       e.target.value = '';
       return;
     }
