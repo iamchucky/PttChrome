@@ -790,3 +790,7 @@ span {
   from { -webkit-transform: rotate(0deg); }
   to { -webkit-transform: rotate(360deg); }
 }
+
+.modal-backdrop {
+  z-index: 1 !important;
+}

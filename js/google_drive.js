@@ -19,9 +19,20 @@ GoogleDrive.prototype.checkAuth = function() {
     window.setTimeout(this.checkAuth.bind(this), 200);
     return;
   }
+
+  this.authorize(this.handleAuthResult.bind(this), true);
+};
+
+GoogleDrive.prototype.authorize = function(callback, immediate) {
+  var self = this;
   gapi.auth.authorize(
-      {'client_id': this.clientId, 'scope': this.permissionScopes.join(' '), 'immediate': true},
-      this.handleAuthResult.bind(this));
+      {'client_id': this.clientId, 'scope': this.permissionScopes.join(' '), 'immediate': immediate},
+      function(authResult) {
+        if (authResult && !authResult.error) {
+          self.oauthToken = authResult.access_token;
+        }
+        callback(authResult);
+      });
 };
 
 /**
@@ -45,7 +56,6 @@ GoogleDrive.prototype.handleAuthResult = function(authResult) {
         saveButton.style.display = '';
         loadButton.style.display = '';
         $('#blacklist_driveLoading').css('display', 'none');
-        self.oauthToken = authResult.access_token;
       }});
     });
   } else {
@@ -66,45 +76,47 @@ GoogleDrive.prototype.handleAuthResult = function(authResult) {
 * @param {Function} callback Function to call when the request is complete.
 */
 GoogleDrive.prototype.updateFile = function(str, fileId, method, callback) {
-  const boundary = '-------314159265358979323846';
-  const delimiter = "\r\n--" + boundary + "\r\n";
-  const close_delim = "\r\n--" + boundary + "--";
+  this.authorize(function() {
+    const boundary = '-------314159265358979323846';
+    const delimiter = "\r\n--" + boundary + "\r\n";
+    const close_delim = "\r\n--" + boundary + "--";
 
-  var contentType = 'text/plain';
-  var metadata = {
-    'title': 'PttChrome blacklist'//,
-    //'mimeType': contentType
-  };
-
-  // convert from string to base64 encoded data.
-  var base64Data = btoa(str);
-  var multipartRequestBody =
-    delimiter +
-    'Content-Type: application/json\r\n\r\n' +
-    JSON.stringify(metadata) +
-    delimiter +
-    'Content-Type: ' + contentType + '\r\n' +
-    'Content-Transfer-Encoding: base64\r\n' +
-    '\r\n' +
-    base64Data +
-    close_delim;
-
-  if (fileId) fileId = '/' + fileId;
-
-  var request = gapi.client.request({
-    'path': '/upload/drive/v2/files' + fileId,
-    'method': method,
-    'params': {'uploadType': 'multipart', 'convert': true},
-    'headers': {
-      'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
-    },
-    'body': multipartRequestBody});
-  if (!callback) {
-    callback = function(file) {
-      console.log(file);
+    var contentType = 'text/plain';
+    var metadata = {
+      'title': 'PttChrome blacklist'//,
+      //'mimeType': contentType
     };
-  }
-  request.execute(callback);
+
+    // convert from string to base64 encoded data.
+    var base64Data = btoa(str);
+    var multipartRequestBody =
+      delimiter +
+      'Content-Type: application/json\r\n\r\n' +
+      JSON.stringify(metadata) +
+      delimiter +
+      'Content-Type: ' + contentType + '\r\n' +
+      'Content-Transfer-Encoding: base64\r\n' +
+      '\r\n' +
+      base64Data +
+      close_delim;
+
+    if (fileId) fileId = '/' + fileId;
+
+    var request = gapi.client.request({
+      'path': '/upload/drive/v2/files' + fileId,
+      'method': method,
+      'params': {'uploadType': 'multipart', 'convert': true},
+      'headers': {
+        'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
+      },
+      'body': multipartRequestBody});
+    if (!callback) {
+      callback = function(file) {
+        console.log(file);
+      };
+    }
+    request.execute(callback);
+  }, true);
 };
 
 /**
@@ -177,9 +189,7 @@ GoogleDrive.prototype.downloadFile = function(file, callback) {
 
 GoogleDrive.prototype.handleAuthClick = function(e) {
   $('#blacklist_driveLoading').css('display', '');
-  gapi.auth.authorize(
-      {'client_id': this.clientId, 'scope': this.permissionScopes, 'immediate': false}, 
-      this.handleAuthResult.bind(this));
+  this.authorize(this.handleAuthResult.bind(this), false);
   return false;
 };
 
@@ -187,19 +197,23 @@ GoogleDrive.prototype.createPicker = function(callback) {
   var view = new google.picker.View(google.picker.ViewId.DOCS);
   view.setMimeTypes("text/plain,application/vnd.google-apps.document");
   if (!callback) callback = this.pickerCallback;
-  var picker = new google.picker.PickerBuilder()
-    //.enableFeature(google.picker.Feature.NAV_HIDDEN)
-    .hideTitleBar()
-    .setAppId(this.clientId)
-    .setOAuthToken(this.oauthToken)
-    .addView(view)
-    .addView(new google.picker.DocsUploadView())
-    .setCallback(callback)
-    .build();
-  picker.setVisible(true);
-  // bad hack to push the picker ui's z-index to front
-  picker.A.style.zIndex = 2000;
-  picker.ib.style.zIndex = 2000;
+  var self = this;
+  // call authroize to make sure the token is up-to-date
+  this.authorize(function() {
+    var picker = new google.picker.PickerBuilder()
+      //.enableFeature(google.picker.Feature.NAV_HIDDEN)
+      .hideTitleBar()
+      .setAppId(self.clientId)
+      .setOAuthToken(self.oauthToken)
+      .addView(view)
+      .addView(new google.picker.DocsUploadView())
+      .setCallback(callback)
+      .build();
+    picker.setVisible(true);
+    // bad hack to push the picker ui's z-index to front
+    picker.A.style.zIndex = 2000;
+    picker.ib.style.zIndex = 2000;
+  }, true);
 };
 
 GoogleDrive.prototype.pickerCallback = function(data) {

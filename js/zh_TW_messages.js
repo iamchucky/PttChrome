@@ -267,7 +267,7 @@
     "message": "版本"
   },
   "about_version": {
-    "message": "1.4.* webapp10 1/17/2015"
+    "message": "webapp11 5/25/2015"
   },
   "about_new_title": {
     "message": "新功能"
