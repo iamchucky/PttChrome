@@ -25,7 +25,7 @@ chrome.app.runtime.onLaunched.addListener(function() {
 
     } else { // if not in or false, this is the default
       chrome.browser.openTab({ 
-        url: 'http://iamchucky.github.io/PttChrome/'
+        url: 'http://iamchucky.github.io/PttChrome/index.html'
       });
     }
   });
