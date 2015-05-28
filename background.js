@@ -136,10 +136,11 @@ SocketClient.prototype.send = function(arrayBuffer) {
 
 SocketClient.prototype.disconnect = function() {
   var self = this;
-  chrome.sockets.tcp.disconnect(this.socketId);
-  chrome.sockets.tcp.close(this.socketId, function() {
-    delete socketOnRead[self.socketId];
-    delete socketOnReadError[self.socketId];
+  chrome.sockets.tcp.disconnect(this.socketId, function() {
+    chrome.sockets.tcp.close(this.socketId, function() {
+      delete socketOnRead[self.socketId];
+      delete socketOnReadError[self.socketId];
+    });
   });
 };
 
