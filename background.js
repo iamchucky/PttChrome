@@ -1,10 +1,3 @@
-/**
- * Listens for the app launching then creates the window
- *
- * @see http://developer.chrome.com/apps/app.runtime.html
- * @see http://developer.chrome.com/apps/app.window.html
- */
-
 var webview = null;
 chrome.app.runtime.onLaunched.addListener(function() {
   chrome.storage.sync.get(null, function(items) {
@@ -68,6 +61,9 @@ function doPaste() {
   return result;
 }
 ///
+
+var socketOnRead = {};
+var socketOnReadError = {};
 function SocketClient(spec) {
   this.host = spec.host;
   this.port = spec.port;
@@ -80,90 +76,101 @@ function SocketClient(spec) {
     sent: spec.onSent               // Called when client sends data to server.
   };
   this.socketId = null;
-  this.isConnected = false;
 }
 
 SocketClient.prototype.connect = function() {
-  chrome.socket.create('tcp', {}, this._onCreate.bind(this));
+  var self = this;
+  chrome.sockets.tcp.create({}, function(createInfo) {
+    // onCreate
+
+    self.socketId = createInfo.socketId;
+    if (self.socketId > 0) {
+
+      chrome.sockets.tcp.connect(self.socketId, self.host, self.port, function(resultCode) {
+          if (resultCode < 0) {
+            return console.log('socket connect error');
+          }
+
+          // onConnectComplete
+          // set keepalive with 10 mins delay
+          chrome.sockets.tcp.setKeepAlive(self.socketId, true, 600, function(result) {
+            if (result < 0) {
+              return console.log('socket set keepalive error');
+            }
+
+            socketOnRead[self.socketId] = self._onDataRead.bind(self);
+            socketOnReadError[self.socketId] = self._onDataReadError.bind(self);
+            if (self.callbacks.connect) {
+              //console.log('connect complete');
+              self.callbacks.connect();
+            }
+          });
+
+        });
+    } else {
+      //error('Unable to create socket');
+    }
+  });
 };
 
 SocketClient.prototype.send = function(arrayBuffer) {
-  chrome.socket.write(this.socketId, arrayBuffer, this._onWriteComplete.bind(this));
+  var self = this;
+  chrome.sockets.tcp.send(this.socketId, arrayBuffer, function(sendInfo) {
+    //this.log("bytesWritten = " + sendInfo.bytesSent);
+    if(sendInfo.resultCode == 0) {
+      // write successfully
+      if (self.callbacks.sent) {
+        self.callbacks.sent();
+      }
+    } else if (sendInfo.resultCode == -15) {
+      // socket is closed
+      console.log('socket '+self.socketId+' is closed');
+      self.disconnect();
+      self.callbacks.disconnect();
+    } else if (sendInfo.resultCode < 0) {
+      // other errors
+      console.log('socket '+self.socketId+' reports resultCode '+sendInfo.resultCode);
+    }
+  });
 };
 
 SocketClient.prototype.disconnect = function() {
-  chrome.socket.disconnect(this.socketId);
-  chrome.socket.destroy(this.socketId);
-  this.isConnected = false;
+  chrome.sockets.tcp.disconnect(this.socketId);
+  delete socketOnRead[this.socketId];
+  delete socketOnReadError[this.socketId];
 };
 
-SocketClient.prototype._onCreate = function(createInfo) {
-  this.socketId = createInfo.socketId;
-  if (this.socketId > 0) {
-    chrome.socket.connect(
-        this.socketId, this.host, this.port, 
-        this._onConnectComplete.bind(this));
-    this.isConnected = true;
-  } else {
-    //error('Unable to create socket');
-  }
-};
+SocketClient.prototype._onDataRead = function(data) {
+  if (!this.callbacks.recv) return;
 
-SocketClient.prototype._onConnectComplete = function(resultCode) {
-  // set keepalive with 5 mins delay
-  var self = this;
-  chrome.socket.setKeepAlive(this.socketId, true, 300, function(result) {
-    if (result < 0) {
-      return console.log('socket set keepalive error');
-    }
-
-    // Start polling for reads.
-    chrome.socket.read(self.socketId, self._onDataRead.bind(self));
-    if (self.callbacks.connect) {
-      //console.log('connect complete');
-      self.callbacks.connect();
-    }
-  });
-
-  //log('onConnectComplete');
-};
-
-SocketClient.prototype._onDataRead = function(readInfo) {
   // Call received callback if there's data in the response.
-  var msecBetweenReads = 10;
-  var self = this;
-  if (readInfo.resultCode > 0 && this.callbacks.recv) {
-    var str = String.fromCharCode.apply(null, new Uint8Array(readInfo.data));
-    this.callbacks.recv(str);
-    setTimeout(function() {
-      chrome.socket.read(self.socketId, self._onDataRead.bind(self));
-    }, msecBetweenReads);
-  } else if (readInfo.resultCode == -15) {
-    //socket is closed
-    console.log('socket is closed');
-    this.disconnect();
-    this.callbacks.disconnect();
-  } else {
-    // other errors
-  }
+  var str = String.fromCharCode.apply(null, new Uint8Array(data));
+  this.callbacks.recv(str);
 };
-SocketClient.prototype._onWriteComplete = function(writeInfo) {
-  //this.log("bytesWritten = " + writeInfo.bytesWritten);
-  if(writeInfo.bytesWritten > 0) {
-    // write successfully
-    if (this.callbacks.sent) {
-      this.callbacks.sent();
-    }
-  } else if (writeInfo.bytesWritten == -15) {
-    // socket is closed
-    console.log('socket is closed');
+
+SocketClient.prototype._onDataReadError = function(resultCode) {
+  if (resultCode == -15) {
+    console.log('socket '+this.socketId+' is closed');
     this.disconnect();
-    this.callbacks.disconnect();
+    if (this.callbacks.disconnect) {
+      this.callbacks.disconnect();
+    }
   } else {
-    // other errors
+    console.log('socket returned code '+resultCode);
   }
 };
 
+chrome.sockets.tcp.onReceive.addListener(function(resultInfo) {
+  if (socketOnRead[resultInfo.socketId]) {
+    socketOnRead[resultInfo.socketId](resultInfo.data);
+  }
+});
+
+chrome.sockets.tcp.onReceiveError.addListener(function(resultInfo) {
+  if (socketOnReadError[resultInfo.socketId]) {
+    socketOnReadError[resultInfo.socketId](resultInfo.resultCode);
+  }
+});
 
 // used for only checking status
 chrome.runtime.onMessageExternal.addListener(function(request, sender, sendResponse) {
@@ -173,29 +180,30 @@ chrome.runtime.onMessageExternal.addListener(function(request, sender, sendRespo
   }
 });
 
-var avaliblePorts = [];
 chrome.runtime.onConnectExternal.addListener(function(port) {
   port.onMessage.addListener(function(msg) {
     switch(msg.action) {
       case 'connect':
-        var onConnect = function() {
-          port.postMessage({ action: "connected" });
-        };
-        var onDisconnect = function() {
-          port.postMessage({action: "disconnected" });
-          port.so = null;
-        };
-        var onReceive = function(str) {
-          port.postMessage({action: "onReceive", data: str});
-        };
         var so = new SocketClient({
             host: msg.host,
             port: msg.port,
-            onConnect: onConnect,
-            onDisconnect: onDisconnect,
-            onReceive: onReceive,
+
+            onConnect: function() {
+              port.postMessage({ action: "connected" });
+            },
+
+            onDisconnect: function() {
+              port.postMessage({action: "disconnected" });
+              port.so = null;
+            },
+
+            onReceive: function(str) {
+              port.postMessage({action: "onReceive", data: str});
+            },
+
             onSent: null
           });
+
         port.so = so;
         so.connect();
         break;
