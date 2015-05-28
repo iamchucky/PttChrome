@@ -135,9 +135,12 @@ SocketClient.prototype.send = function(arrayBuffer) {
 };
 
 SocketClient.prototype.disconnect = function() {
+  var self = this;
   chrome.sockets.tcp.disconnect(this.socketId);
-  delete socketOnRead[this.socketId];
-  delete socketOnReadError[this.socketId];
+  chrome.sockets.tcp.close(this.socketId, function() {
+    delete socketOnRead[self.socketId];
+    delete socketOnReadError[self.socketId];
+  });
 };
 
 SocketClient.prototype._onDataRead = function(data) {
