@@ -284,8 +284,12 @@ pttchrome.App.prototype.onData = function(data) {
 
 pttchrome.App.prototype.onClose = function() {
   dumpLog(DUMP_TYPE_LOG, "pttchrome onClose");
-  this.timerEverySec.cancel();
-  this.view.cursorBlinkTimer.cancel();
+  if (this.timerEverySec) {
+    this.timerEverySec.cancel();
+  }
+  if (this.view.cursorBlinkTimer) {
+    this.view.cursorBlinkTimer.cancel();
+  }
   this.conn.isConnected = false;
 
   this.cancelMbTimer();
