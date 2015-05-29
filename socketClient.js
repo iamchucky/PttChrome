@@ -25,6 +25,10 @@ SocketClient.prototype.connect = function() {
 
       chrome.sockets.tcp.connect(self.socketId, self.host, self.port, function(resultCode) {
         if (resultCode < 0) {
+          if (self.callbacks.disconnect) {
+            self.callbacks.disconnect();
+          }
+          chrome.sockets.tcp.close(self.socketId);
           return console.log('socket connect error');
         }
 
@@ -32,7 +36,8 @@ SocketClient.prototype.connect = function() {
         // set keepalive with 10 mins delay
         chrome.sockets.tcp.setKeepAlive(self.socketId, true, 600, function(result) {
           if (result < 0) {
-            return console.log('socket set keepalive error');
+            // still connect without keepalive
+            console.log('socket set keepalive error');
           }
 
           socketOnRead[self.socketId] = self._onDataRead.bind(self);
@@ -74,7 +79,7 @@ SocketClient.prototype.send = function(arrayBuffer) {
 SocketClient.prototype.disconnect = function() {
   var self = this;
   chrome.sockets.tcp.disconnect(this.socketId, function() {
-    chrome.sockets.tcp.close(this.socketId, function() {
+    chrome.sockets.tcp.close(self.socketId, function() {
       delete socketOnRead[self.socketId];
       delete socketOnReadError[self.socketId];
     });
