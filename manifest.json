@@ -27,16 +27,13 @@
     "matches": ["*://iamchucky.github.io/*", "*://localhost/*"]
   },
 
-  "sockets": {
-    "tcp": {
-      "connect": "*:*"
-    }
-  },
-
   "permissions": [
     "webview",
     "clipboardRead",
     "clipboardWrite",
+    {"socket": [
+      "tcp-connect:*:*"
+    ]},
     "storage",
     "browser"
   ]

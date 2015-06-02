@@ -62,18 +62,6 @@ function doPaste() {
 }
 ///
 
-chrome.sockets.tcp.onReceive.addListener(function(resultInfo) {
-  if (socketOnRead[resultInfo.socketId]) {
-    socketOnRead[resultInfo.socketId](resultInfo.data);
-  }
-});
-
-chrome.sockets.tcp.onReceiveError.addListener(function(resultInfo) {
-  if (socketOnReadError[resultInfo.socketId]) {
-    socketOnReadError[resultInfo.socketId](resultInfo.resultCode);
-  }
-});
-
 // used for only checking status
 chrome.runtime.onMessageExternal.addListener(function(request, sender, sendResponse) {
   if (request.action && request.action == "status") {
@@ -88,7 +76,7 @@ var messageHandler = {
     var so = new SocketClient({
         host: msg.host,
         port: msg.port,
-        setKeepAlive: msg.setKeepAlive,
+        setKeepAlive: parseInt(msg.keepAlive),
 
         onConnect: function() {
           port.postMessage({ action: "connected" });
