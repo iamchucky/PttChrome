@@ -4,6 +4,12 @@ var socketOnReadError = {};
 function SocketClient(spec) {
   this.host = spec.host;
   this.port = spec.port;
+  if (spec.setKeepAlive) {
+    this.setKeepAlive = spec.setKeepAlive;
+  } else {
+    this.setKeepAlive = 0;
+  }
+  this.enableKeepAlive = (spec.setKeepAlive !== undefined);
 
   // Callback functions.
   this.callbacks = {
@@ -34,7 +40,7 @@ SocketClient.prototype.connect = function() {
 
         // onConnectComplete
         // set keepalive with 5 mins delay
-        chrome.sockets.tcp.setKeepAlive(self.socketId, true, 300, function(result) {
+        chrome.sockets.tcp.setKeepAlive(self.socketId, self.enableKeepAlive, self.setKeepAlive, function(result) {
           if (result < 0) {
             // still connect without keepalive
             console.log('socket set keepalive error');

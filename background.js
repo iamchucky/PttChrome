@@ -88,6 +88,7 @@ var messageHandler = {
     var so = new SocketClient({
         host: msg.host,
         port: msg.port,
+        setKeepAlive: msg.setKeepAlive,
 
         onConnect: function() {
           port.postMessage({ action: "connected" });
