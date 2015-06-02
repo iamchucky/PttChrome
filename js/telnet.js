@@ -42,6 +42,7 @@ function TelnetConnection(app) {
 
   this.host = 'ptt.cc';
   this.port = 23;
+  this.keepAlive = null;
 
   this.state = STATE_DATA;
   this.iac_sb = '';
@@ -75,7 +76,7 @@ TelnetConnection.prototype.connect = function(host, port) {
 
   //this.initialAutoLogin();
   this.isConnected = false;
-  this.app.appConn.connectTcp(this.host, this.port);
+  this.app.appConn.connectTcp(this.host, this.port, this.keepAlive);
 };
 
 TelnetConnection.prototype.onDataAvailable = function(str) {

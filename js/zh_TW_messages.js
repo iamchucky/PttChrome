@@ -267,13 +267,14 @@
     "message": "版本"
   },
   "about_version": {
-    "message": "webapp11 5/25/2015"
+    "message": "webapp12 6/2/2015"
   },
   "about_new_title": {
     "message": "新功能"
   },
   "about_new_content": {
     "message": [
+      '網址設定 keepAlive 參數, 只要在網址後面加上 ?keepAlive=[幾秒]',
       '加入了 SSH 連到 PTT 的功能, 只要在網址後面加上 ?ssh=true',
       '好讀模式只限於 ptt.cc 上使用',
       '黑名單可用 Google Drive 來讀取或備份',

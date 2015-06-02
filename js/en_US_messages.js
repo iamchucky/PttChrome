@@ -270,13 +270,14 @@ locale.en_US = {
     "message": "Version"
   },
   "about_version": {
-    "message": "webapp11 5/25/2015"
+    "message": "webapp12 6/2/2015"
   },
   "about_new_title": {
     "message": "What's new"
   },
   "about_new_content": {
     "message": [
+      'Allow setting keepAlive from url, append ?keepAlive=[SECONDS] to the URL',
       'Added SSH connection to PTT, append ?ssh=true to the URL',
       'Limited easy reading mode to ptt.cc only',
       'Added features to load/backup blacklist with Google Drive',

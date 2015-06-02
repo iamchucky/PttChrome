@@ -4,9 +4,6 @@ if (typeof lib != 'undefined')
 var lib = {};
 
 lib.AppConnection = function(spec) {
-  this.host = spec.host;
-  this.port = spec.port;
-  
   // Callback functions.
   this.callbacks = {
     connect: spec.onConnect,        // Called when socket is connected.
@@ -102,14 +99,15 @@ lib.AppConnection.prototype.connect = function(callback) {
   });
 };
 
-lib.AppConnection.prototype.connectTcp = function(host, port) {
+lib.AppConnection.prototype.connectTcp = function(host, port, keepAlive) {
   if (!this.isConnected) {
     return;
   }
   this.appPort.postMessage({
     action: "connect",
     host: host,
-    port: port
+    port: port,
+    keepAlive: keepAlive
   });
 };
 

@@ -1,6 +1,7 @@
 ﻿$(document).ready(function() {
   var site = getQueryVariable('site');
   var from = getQueryVariable('from');
+  var keepAlive = getQueryVariable('keepAlive');
   setupI18n();
   if (typeof(chrome) == 'undefined') {
     // don't seem to be using chrome, show msg
@@ -26,7 +27,7 @@
     $('#BBSWindow').show();
     //$('#sideMenus').show();
     app.onWindowResize();
-  }, from);
+  }, { from: from, keepAlive: keepAlive });
   // calls the gapi onload
   handleGapiClientLoad();
 });

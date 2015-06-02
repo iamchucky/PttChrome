@@ -3,6 +3,8 @@ function SecureShellConnection(app) {
 
   this.host = 'ptt.cc';
   this.port = 22;
+  this.keepAlive = null;
+
   this.login = 'bbs';
   this.password = '';
 
@@ -81,7 +83,7 @@ SecureShellConnection.prototype.connect = function(host, port) {
       write, auth_success, this.host, this.port, 
       this.login, this.password, null, this.privatekey);
 
-  this.app.appConn.connectTcp(this.host, this.port);
+  this.app.appConn.connectTcp(this.host, this.port, this.keepAlive);
 };
 
 SecureShellConnection.prototype.onDataAvailable = function(str) {

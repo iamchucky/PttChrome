@@ -2,7 +2,7 @@
 
 var pttchrome = {};
 
-pttchrome.App = function(onInitializedCallback, from) {
+pttchrome.App = function(onInitializedCallback, options) {
 
   this.CmdHandler = document.getElementById('cmdHandler');
   this.CmdHandler.setAttribute('useMouseBrowsing', '1');
@@ -47,6 +47,8 @@ pttchrome.App = function(onInitializedCallback, from) {
   } else {
     this.conn = new TelnetConnection(this);
   }
+  this.conn.keepAlive = options.keepAlive;
+
   this.view = new TermView(24);
   this.buf = new TermBuf(80, 24);
   this.buf.setView(this.view);
@@ -168,7 +170,7 @@ pttchrome.App = function(onInitializedCallback, from) {
     }
   });
 
-  this.isFromApp = (from === 'app');
+  this.isFromApp = (options.from === 'app');
   window.addEventListener('message', function(e) {
     var msg = e.data;
     if (self.isFromApp && msg.action === 'newwindow' && self.appConn && self.appConn.isConnected) {
@@ -210,8 +212,6 @@ pttchrome.App = function(onInitializedCallback, from) {
 pttchrome.App.prototype.setupAppConnection = function(callback) {
   var self = this;
   this.appConn = new lib.AppConnection({
-    host: self.conn.host,
-    port: self.conn.port,
     onConnect: self.onConnect.bind(self),
     onDisconnect: self.onClose.bind(self),
     onReceive: self.conn.onDataAvailable.bind(self.conn),
