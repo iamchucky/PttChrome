@@ -37,22 +37,33 @@ SocketClient.prototype.connect = function() {
 
         // onConnectComplete
         // set keepalive with 5 mins delay
-        chrome.socket.setKeepAlive(self.socketId, self.enableKeepAlive, self.setKeepAlive, function(result) {
-          if (self.enableKeepAlive) {
+        if (self.enableKeepAlive) {
+
+          chrome.socket.setKeepAlive(self.socketId, self.enableKeepAlive, self.setKeepAlive, function(result) {
             console.log('set keepalive with '+self.setKeepAlive+' sec delay');
-          }
 
-          if (result < 0) {
-            // still connect without keepalive
-            console.log('socket set keepalive error');
-          }
+            if (result < 0) {
+              // still connect without keepalive
+              console.log('socket set keepalive error');
+            }
 
+            chrome.socket.read(self.socketId, self._onDataRead.bind(self));
+            if (self.callbacks.connect) {
+              //console.log('connect complete');
+              self.callbacks.connect();
+            }
+          });
+
+        } else {
+
+          // skip set keepalive completely if not enabling
           chrome.socket.read(self.socketId, self._onDataRead.bind(self));
           if (self.callbacks.connect) {
             //console.log('connect complete');
             self.callbacks.connect();
           }
-        });
+
+        }
 
       });
     } else {
