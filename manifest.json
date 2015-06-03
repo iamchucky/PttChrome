@@ -23,6 +23,12 @@
     }
   },
 
+  "sockets": {
+    "tcp": {
+      "connect": "*:*"
+    }
+  },
+
   "externally_connectable": {
     "matches": ["*://iamchucky.github.io/*", "*://localhost/*"]
   },
@@ -31,9 +37,6 @@
     "webview",
     "clipboardRead",
     "clipboardWrite",
-    {"socket": [
-      "tcp-connect:*:*"
-    ]},
     "storage",
     "browser"
   ]
