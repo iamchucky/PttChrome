@@ -115,7 +115,9 @@ String.prototype.parseDuplicatedLoginTextLastRow = function() {
 
 String.prototype.parseReplyText = function() {
   return (this.indexOf('▲ 回應至 (F)看板 (M)作者信箱 (B)二者皆是 (Q)取消？[F] ') === 0 ||
-      this.indexOf('▲ 無法回應至看板。 改回應至 (M)作者信箱 (Q)取消？[Q]') === 0);
+      this.indexOf('▲ 無法回應至看板。 改回應至 (M)作者信箱 (Q)取消？[Q]') === 0 ||
+      this.indexOf('把這篇文章收入到暫存檔？[y/N]') === 0 ||
+      this.indexOf('請選擇暫存檔 (0-9)[0]:') === 0);
 };
 
 String.prototype.parsePushInitText = function() {
