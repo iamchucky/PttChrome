@@ -20,6 +20,11 @@
     <script type="text/javascript" src="https://apis.google.com/js/client.js"></script>
 
     <script type="text/javascript" src="js/pttchrome.min.js"></script>
+    <script type="text/javascript">
+      if (window.location.protocol != "https:") {
+        window.location.href = "https:" + window.location.href.substring(window.location.protocol.length);
+      }
+    </script>
   </head>
 
   <body>
