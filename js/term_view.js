@@ -1152,12 +1152,11 @@ TermView.prototype = {
       if (found_flickr) {
         var flickrBase58Id = found_flickr[1];
         var flickrPhotoId = base58_decode(flickrBase58Id);
-        elem.setAttribute('data-base58-id', flickrBase58Id);
-        elem.setAttribute('data-photo-id', flickrPhotoId);
+        elem.setAttribute('data-flickr-photo-id', flickrPhotoId);
 
         return function(e) {
-          var currBase58 = self.picPreview.getAttribute('data-base58-id');
-          if (flickrBase58Id === currBase58) {
+          var currPhotoId = self.picPreview.getAttribute('data-flickr-photo-id');
+          if (flickrPhotoId == currPhotoId) {
             self.picPreview.style.display = 'block';
             self.picPreviewShouldShown = true;
           } else {
@@ -1170,6 +1169,7 @@ TermView.prototype = {
                 var src = "https://farm"+p.farm+".staticflickr.com/"+p.server+"/"+p.id+"_"+p.secret+".jpg";
                 if (self.picPreviewAjaxLoading) {
                   setPicPreviewSrc(src);
+                  self.picPreview.setAttribute('data-flickr-photo-id', p.id);
                 }
                 self.picPreviewAjaxLoading = false;
               }
@@ -1355,7 +1355,7 @@ TermView.prototype = {
       if (data.photo) {
         var p = data.photo;
         var src = "https://farm"+p.farm+".staticflickr.com/"+p.server+"/"+p.id+"_"+p.secret+".jpg";
-        var theANodes = $('a[data-photo-id="'+p.id+'"]');
+        var theANodes = $('a[data-flickr-photo-id="'+p.id+'"]');
         var imgNode = document.createElement('img');
         imgNode.setAttribute('class', 'easyReadingImg');
         imgNode.setAttribute('src', src);
