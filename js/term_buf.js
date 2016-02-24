@@ -641,8 +641,10 @@ TermBuf.prototype = {
     if(n>=this.rows) // scroll more than 1 page = clear
       this.clear(2);
     else if(n >= scrollEnd-scrollStart+1) {
-      for(row=scrollStart; row <= scrollEnd; ++row) {
-        for(col=0; col< cols; ++col) {
+      var lines = this.lines;
+      var cols = this.cols;
+      for(var row=scrollStart; row <= scrollEnd; ++row) {
+        for(var col=0; col< cols; ++col) {
           lines[row][col].copyFrom(this.newChar);
           lines[row][col].needUpdate=true;
         }
