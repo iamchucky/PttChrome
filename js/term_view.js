@@ -1351,7 +1351,7 @@ TermView.prototype = {
   },
 
   embedPicAndVideo: function() {
-    var aNodes = $(".main a[type='p'], .main a[href^='http://imgur.com/'], .main a[href^='https://flic.kr/']").not("a[href^='http://imgur.com/a/']");
+    var aNodes = $(".main a[type='p'], .main a[href^='http://imgur.com/'], .main a[href^='https://flic.kr/'], .main a[href^='https://www.flickr.com/photos/']").not("a[href^='http://imgur.com/a/']");
     var getPhotoInfoCallback = function(data){
       if (data.photo) {
         var p = data.photo;
@@ -1372,13 +1372,14 @@ TermView.prototype = {
         continue;
       }
       var href = aNode.getAttribute('href');
-      var found_flickr = href.match('flic\.kr\/p\/\(\\w\+\)');
+      var found_flickr = href.match('flic\.kr\/p\/\(\\w\+\)|flickr\.com\/photos\/[\\w@]\+\/\(\\d\+\)');
       if (found_flickr) {
         var flickrBase58Id = found_flickr[1];
-        var flickrPhotoId = base58_decode(flickrBase58Id);
+        var flickrPhotoId = flickrBase58Id ? base58_decode(flickrBase58Id) : found_flickr[2];
         var flickrApi = "https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=c8c95356e465b8d7398ff2847152740e&photo_id="+flickrPhotoId+"&format=json&jsoncallback=?";
         $.getJSON(flickrApi, getPhotoInfoCallback);
-      } else {
+      } else if (href.indexOf('flickr.com/photos/') < 0) {
+        // handle with non-photo flickr urls, such as albums or sets, and straight image links, imgur urls. 
         var type = aNode.getAttribute('type');
         var src = (type == 'p') ? href : (href.indexOf('imgur.com') > 0) ? href.replace('http://imgur.com', 'http://i.imgur.com') + '.jpg' : '';
         if (src) {
