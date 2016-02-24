@@ -1136,7 +1136,7 @@ TermView.prototype = {
 
   setupPicPreviewOnHover: function() {
     var self = this;
-    var aNodes = $(".main a[href^='http://ppt.cc/'], .main a[type='p'], .main a[href^='http://imgur.com/'], .main a[href^='https://flic.kr/p/']").not("a[href^='http://imgur.com/a/']");
+    var aNodes = $(".main a[href^='http://ppt.cc/'], .main a[type='p'], .main a[href^='http://imgur.com/'], .main a[href^='https://flic.kr/p/'], .main a[href^='https://www.flickr.com/photos/']").not("a[href^='http://imgur.com/a/']");
     var onover = function(elem) {
       var setPicPreviewSrc = function(src) {
         var currSrc = self.picPreview.getAttribute('src');
@@ -1148,10 +1148,10 @@ TermView.prototype = {
         }
         self.picPreviewShouldShown = true;
       };
-      var found_flickr = elem.getAttribute('href').match('flic\.kr\/p\/\(\\w\+\)');
+      var found_flickr = elem.getAttribute('href').match('flic\.kr\/p\/\(\\w\+\)|flickr\.com\/photos\/[\\w@]\+\/\(\\d\+\)');
       if (found_flickr) {
         var flickrBase58Id = found_flickr[1];
-        var flickrPhotoId = base58_decode(flickrBase58Id);
+        var flickrPhotoId = flickrBase58Id ? base58_decode(flickrBase58Id) : found_flickr[2];
         elem.setAttribute('data-flickr-photo-id', flickrPhotoId);
 
         return function(e) {
@@ -1176,7 +1176,8 @@ TermView.prototype = {
             });
           }
         };
-      } else {
+      } else if (elem.getAttribute('href').indexOf('flickr.com/photos/') < 0) {  
+        // handle with non-photo flickr urls, such as albums or sets, and straight image links, imgur urls. 
         return function(e) {
           var href = elem.getAttribute('href');
           var type = elem.getAttribute('type');
