@@ -126,6 +126,7 @@ function TermView(rowCount) {
   this.setFontFace('MingLiu,monospace');
 
   this.picPreviewShouldShown = false;
+  this.picPreviewAjaxLoading = false;
 
   var self = this;
   this.input.addEventListener('compositionstart', function(e) {
@@ -1135,12 +1136,9 @@ TermView.prototype = {
 
   setupPicPreviewOnHover: function() {
     var self = this;
-    var aNodes = $(".main a[href^='http://ppt.cc/'], .main a[type='p'], .main a[href^='http://imgur.com/']").not("a[href^='http://imgur.com/a/']");
+    var aNodes = $(".main a[href^='http://ppt.cc/'], .main a[type='p'], .main a[href^='http://imgur.com/'], .main a[href^='https://flic.kr/p/']").not("a[href^='http://imgur.com/a/']");
     var onover = function(elem) {
-      return function(e) {
-        var href = elem.getAttribute('href');
-        var type = elem.getAttribute('type');
-        var src = (type == 'p') ? href : (href.indexOf('imgur.com') > 0) ? href.replace('http://imgur.com', 'http://i.imgur.com') + '.jpg' : href + '@.jpg';
+      var setPicPreviewSrc = function(src) {
         var currSrc = self.picPreview.getAttribute('src');
         if (src !== currSrc) {
           self.picLoading.style.display = 'block';
@@ -1149,10 +1147,73 @@ TermView.prototype = {
           self.picPreview.style.display = 'block';
         }
         self.picPreviewShouldShown = true;
-      };
+      }
+      var found_flickr = elem.getAttribute('href').match('flic\.kr\/p\/\(\\w\+\)');
+      if (found_flickr) {
+        function base58_decode( snipcode )
+        {
+            var alphabet = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ' ;
+            var num = snipcode.length ;
+            var decoded = 0 ;
+            var multi = 1 ;
+            for ( var i = (num-1) ; i >= 0 ; i-- )
+            {
+                decoded = decoded + multi * alphabet.indexOf( snipcode[i] ) ;
+                multi = multi * alphabet.length ;
+            }
+            return decoded;
+        }
+
+        var flickrBase58Id = found_flickr[1];
+        var flickrPhotoId = base58_decode(flickrBase58Id);
+        elem.setAttribute('data-base58-id', flickrBase58Id);
+        //console.log("flickr shorten url. base58 = " + flickrBase58Id + '   id = ' + flickrPhotoId);
+
+        return function(e) {
+          var currBase58 = self.picPreview.getAttribute('data-base58-id');
+          if (flickrBase58Id === currBase58) {
+            self.picPreview.style.display = 'block';
+            self.picPreviewShouldShown = true;
+          } else {
+            self.picPreviewAjaxLoading = true;
+            self.picLoading.style.display = 'block';
+            var flickrApi = "https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=c8c95356e465b8d7398ff2847152740e&photo_id="+flickrPhotoId+"&format=json&jsoncallback=?";
+            $.getJSON(flickrApi, function(data){
+              //console.log(data);
+              if (data.photo) {
+                var p = data.photo;
+                var src = "https://farm"+p.farm+".staticflickr.com/"+p.server+"/"+p.id+"_"+p.secret+".jpg";
+                //console.log("src = " + src);
+                if (self.picPreviewAjaxLoading) {
+                  setPicPreviewSrc(src);
+                }
+                self.picPreviewAjaxLoading = false;
+              }
+            });
+          }
+        }
+      } else {
+        return function(e) {
+          var href = elem.getAttribute('href');
+          var type = elem.getAttribute('type');
+          var src = (type == 'p') ? href : (href.indexOf('imgur.com') > 0) ? href.replace('http://imgur.com', 'http://i.imgur.com') + '.jpg' : href + '@.jpg';
+          /*
+          var currSrc = self.picPreview.getAttribute('src');
+          if (src !== currSrc) {
+            self.picLoading.style.display = 'block';
+            self.picPreview.setAttribute('src', src);
+          } else {
+            self.picPreview.style.display = 'block';
+          }
+          self.picPreviewShouldShown = true;
+          */
+          setPicPreviewSrc(src);
+        };
+      }
     };
     var onout = function(e) {
       self.picPreviewShouldShown = false;
+      self.picPreviewAjaxLoading = false;
       self.picPreview.style.display = 'none';
       self.picLoading.style.display = 'none';
     };
