@@ -1360,8 +1360,11 @@ TermView.prototype = {
         var imgNode = document.createElement('img');
         imgNode.setAttribute('class', 'easyReadingImg');
         imgNode.setAttribute('src', src);
+        imgNode.setAttribute('data-flickr-photo-id', p.id);
         imgNode.style.webkitTransform = 'scale('+Math.floor(1/this.scaleX*100)/100+','+Math.floor(1/this.scaleY*100)/100+')';
-        theANodes.parent().append(imgNode);
+        // 因為無法指定 append 的行數，但畫面可能出現重複的 url，加過一次後，把 id 存起來，避免重複 append
+        var hasFlickrPhotoIdSelector = ':has(img[data-flickr-photo-id="'+p.id+'"])';
+        theANodes.parent().not(hasFlickrPhotoIdSelector).append(imgNode);
         theANodes.attr('view_shown', 'true');
       }
     };
