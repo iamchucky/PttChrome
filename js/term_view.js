@@ -1345,7 +1345,14 @@ TermView.prototype = {
         var imgurAlbumId = isImgurAlbum[1];
         var imgurAlbumApi = 'https://api.imgur.com/3/album/'+imgurAlbumId;
         aNode.setAttribute('data-imgur-aubum-id', imgurAlbumId);
-        $.getJSON(imgurAlbumApi, getImgurAlbumInfoCallback);
+        $.ajax({
+          url: imgurAlbumApi,
+          type: 'GET',
+          dataType: 'json',
+          success: getImgurAlbumInfoCallback,
+          error: function() { console.log("ajax error"); },
+          beforeSend: function(xhr) { xhr.setRequestHeader('Authorization', 'Client-ID 66f9b381f0785a5'); } // need to send auth header to access public resources
+        });
       } else {
         var type = aNode.getAttribute('type');
         var src = (type == 'p') ? href : (href.indexOf('imgur.com') > 0) ? href.replace('http://imgur.com', 'http://i.imgur.com') + '.jpg' : '';
