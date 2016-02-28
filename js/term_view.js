@@ -1135,7 +1135,7 @@ TermView.prototype = {
 
   setupPicPreviewOnHover: function() {
     var self = this;
-    var aNodes = document.querySelectorAll(".main a[href^='http://ppt.cc/'], .main a[type='p'], .main a[href^='http://imgur.com/']");
+    var aNodes = $(".main a[href^='http://ppt.cc/'], .main a[type='p'], .main a[href^='http://imgur.com/']").not("a[href^='http://imgur.com/a/']");
     var onover = function(elem) {
       return function(e) {
         var href = elem.getAttribute('href');
@@ -1316,23 +1316,56 @@ TermView.prototype = {
 
   embedPicAndVideo: function() {
     var aNodes = document.querySelectorAll(".main a[type='p'], .main a[href^='http://imgur.com/']");
+    var getImgurAlbumInfoCallback = function(data){
+      var images = data.data.images;
+      var albumId = data.data.id;
+      images.forEach(function(i){
+        var theANodes = $('a[data-imgur-aubum-id="'+albumId+'"]');
+        var src = i.link;
+        var imgNode = document.createElement('img');
+        imgNode.setAttribute('class', 'easyReadingImg');
+        imgNode.setAttribute('src', src);
+        imgNode.setAttribute('data-imgur-photo-id', i.id);
+        imgNode.style.webkitTransform = 'scale('+Math.floor(1/this.scaleX*100)/100+','+Math.floor(1/this.scaleY*100)/100+')';
+        // 因為無法指定 append 的行數，但畫面可能出現重複的 url，加過一次後，把 id 存起來，避免重複 append
+        var hasImgurImageIdSelector = ':has(img[data-imgur-photo-id="'+i.id+'"])';
+        theANodes.parent().not(hasImgurImageIdSelector).append(imgNode);
+        theANodes.attr('view_shown', 'true');
+      });
+    };
+
     for (var i = 0; i < aNodes.length; ++i) {
       var aNode = aNodes[i];
       if (aNode.getAttribute('view_shown')) {
         continue;
       }
       var href = aNode.getAttribute('href');
-      var type = aNode.getAttribute('type');
-      var src = (type == 'p') ? href : (href.indexOf('imgur.com') > 0) ? href.replace('http://imgur.com', 'http://i.imgur.com') + '.jpg' : '';
-      if (src) {
-        var imgNode = document.createElement('img');
-        imgNode.setAttribute('class', 'easyReadingImg');
-        imgNode.setAttribute('src', src);
-        imgNode.style.webkitTransform = 'scale('+Math.floor(1/this.scaleX*100)/100+','+Math.floor(1/this.scaleY*100)/100+')';
-        aNode.parentNode.appendChild(imgNode);
-      }
+      var isImgurAlbum = href.match('imgur\.com\/a\/\(\\w\+\)');
+      if (isImgurAlbum) {
+        var imgurAlbumId = isImgurAlbum[1];
+        var imgurAlbumApi = 'https://api.imgur.com/3/album/'+imgurAlbumId;
+        aNode.setAttribute('data-imgur-aubum-id', imgurAlbumId);
+        $.ajax({
+          url: imgurAlbumApi,
+          type: 'GET',
+          dataType: 'json',
+          success: getImgurAlbumInfoCallback,
+          error: function() { console.log("ajax error"); },
+          beforeSend: function(xhr) { xhr.setRequestHeader('Authorization', 'Client-ID 66f9b381f0785a5'); } // need to send auth header to access public resources
+        });
+      } else {
+        var type = aNode.getAttribute('type');
+        var src = (type == 'p') ? href : (href.indexOf('imgur.com') > 0) ? href.replace('http://imgur.com', 'http://i.imgur.com') + '.jpg' : '';
+        if (src) {
+          var imgNode = document.createElement('img');
+          imgNode.setAttribute('class', 'easyReadingImg');
+          imgNode.setAttribute('src', src);
+          imgNode.style.webkitTransform = 'scale('+Math.floor(1/this.scaleX*100)/100+','+Math.floor(1/this.scaleY*100)/100+')';
+          aNode.parentNode.appendChild(imgNode);
+        }
 
-      aNode.setAttribute('view_shown', 'true');
+        aNode.setAttribute('view_shown', 'true');
+      }
     }
 
     var vNodes = document.querySelectorAll(".main a");
