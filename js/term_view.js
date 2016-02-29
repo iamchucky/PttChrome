@@ -1135,7 +1135,7 @@ TermView.prototype = {
 
   setupPicPreviewOnHover: function() {
     var self = this;
-    var aNodes = document.querySelectorAll(".main a[href^='http://ppt.cc/'], .main a[type='p'], .main a[href^='http://imgur.com/']");
+    var aNodes = $(".main a[href^='http://ppt.cc/'], .main a[type='p'], .main a[href^='http://imgur.com/']").not("a[href^='http://imgur.com/a/']");
     var onover = function(elem) {
       return function(e) {
         var href = elem.getAttribute('href');
@@ -1315,7 +1315,7 @@ TermView.prototype = {
   },
 
   embedPicAndVideo: function() {
-    var aNodes = document.querySelectorAll(".main a[type='p'], .main a[href^='http://imgur.com/']");
+    var aNodes = $(".main a[type='p'], .main a[href^='http://imgur.com/']").not("a[href^='http://imgur.com/a/']");
     for (var i = 0; i < aNodes.length; ++i) {
       var aNode = aNodes[i];
       if (aNode.getAttribute('view_shown')) {
