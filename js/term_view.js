@@ -1351,7 +1351,7 @@ TermView.prototype = {
   },
 
   embedPicAndVideo: function() {
-    var aNodes = $(".main a[type='p'], .main a[href^='http://imgur.com/'], .main a[href^='https://flic.kr/'], .main a[href^='https://www.flickr.com/photos/']").not("a[href^='http://imgur.com/a/']");
+    var aNodes = $(".main a[type='p'], .main a[href^='http://imgur.com/'], .main a[href^='https://flic.kr/'], .main a[href^='https://www.flickr.com/photos/']");
     var getPhotoInfoCallback = function(data){
       if (data.photo) {
         var p = data.photo;
@@ -1368,6 +1368,23 @@ TermView.prototype = {
         theANodes.attr('view_shown', 'true');
       }
     };
+    var getImgurAlbumInfoCallback = function(data){
+      var images = data.data.images;
+      var albumId = data.data.id;
+      images.forEach(function(i){
+        var theANodes = $('a[data-imgur-aubum-id="'+albumId+'"]');
+        var src = i.link;
+        var imgNode = document.createElement('img');
+        imgNode.setAttribute('class', 'easyReadingImg');
+        imgNode.setAttribute('src', src);
+        imgNode.setAttribute('data-imgur-photo-id', i.id);
+        imgNode.style.webkitTransform = 'scale('+Math.floor(1/this.scaleX*100)/100+','+Math.floor(1/this.scaleY*100)/100+')';
+        // 因為無法指定 append 的行數，但畫面可能出現重複的 url，加過一次後，把 id 存起來，避免重複 append
+        var hasImgurImageIdSelector = ':has(img[data-imgur-photo-id="'+i.id+'"])';
+        theANodes.parent().not(hasImgurImageIdSelector).append(imgNode);
+        theANodes.attr('view_shown', 'true');
+      });
+    };
 
     for (var i = 0; i < aNodes.length; ++i) {
       var aNode = aNodes[i];
@@ -1382,18 +1399,33 @@ TermView.prototype = {
         var flickrApi = "https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=c8c95356e465b8d7398ff2847152740e&photo_id="+flickrPhotoId+"&format=json&jsoncallback=?";
         $.getJSON(flickrApi, getPhotoInfoCallback);
       } else if (href.indexOf('flickr.com/photos/') < 0) {
-        // handle with non-photo flickr urls, such as albums or sets, and straight image links, imgur urls. 
-        var type = aNode.getAttribute('type');
-        var src = (type == 'p') ? href : (href.indexOf('imgur.com') > 0) ? href.replace('http://imgur.com', 'http://i.imgur.com') + '.jpg' : '';
-        if (src) {
-          var imgNode = document.createElement('img');
-          imgNode.setAttribute('class', 'easyReadingImg');
-          imgNode.setAttribute('src', src);
-          imgNode.style.webkitTransform = 'scale('+Math.floor(1/this.scaleX*100)/100+','+Math.floor(1/this.scaleY*100)/100+')';
-          aNode.parentNode.appendChild(imgNode);
-        }
+        // handle with non-photo flickr urls, such as albums or sets, and straight image links, imgur urls.
+        var isImgurAlbum = href.match('imgur\.com\/a\/\(\\w\+\)');
+        if (isImgurAlbum) {
+          var imgurAlbumId = isImgurAlbum[1];
+          var imgurAlbumApi = 'https://api.imgur.com/3/album/'+imgurAlbumId;
+          aNode.setAttribute('data-imgur-aubum-id', imgurAlbumId);
+          $.ajax({
+            url: imgurAlbumApi,
+            type: 'GET',
+            dataType: 'json',
+            success: getImgurAlbumInfoCallback,
+            error: function() { console.log("ajax error"); },
+            beforeSend: function(xhr) { xhr.setRequestHeader('Authorization', 'Client-ID 66f9b381f0785a5'); } // need to send auth header to access public resources
+          });
+        } else {
+          var type = aNode.getAttribute('type');
+          var src = (type == 'p') ? href : (href.indexOf('imgur.com') > 0) ? href.replace('http://imgur.com', 'http://i.imgur.com') + '.jpg' : '';
+          if (src) {
+            var imgNode = document.createElement('img');
+            imgNode.setAttribute('class', 'easyReadingImg');
+            imgNode.setAttribute('src', src);
+            imgNode.style.webkitTransform = 'scale('+Math.floor(1/this.scaleX*100)/100+','+Math.floor(1/this.scaleY*100)/100+')';
+            aNode.parentNode.appendChild(imgNode);
+          }
 
-        aNode.setAttribute('view_shown', 'true');
+          aNode.setAttribute('view_shown', 'true');
+        }
       }
     }
 
