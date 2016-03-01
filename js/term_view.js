@@ -1385,6 +1385,7 @@ TermView.prototype = {
         theANodes.attr('view_shown', 'true');
       });
     };
+    var setAuthorizationHeaderForImgurApi = function(xhr) { xhr.setRequestHeader('Authorization', 'Client-ID 66f9b381f0785a5'); };
 
     for (var i = 0; i < aNodes.length; ++i) {
       var aNode = aNodes[i];
@@ -1410,8 +1411,7 @@ TermView.prototype = {
             type: 'GET',
             dataType: 'json',
             success: getImgurAlbumInfoCallback,
-            error: function() { console.log("ajax error"); },
-            beforeSend: function(xhr) { xhr.setRequestHeader('Authorization', 'Client-ID 66f9b381f0785a5'); } // need to send auth header to access public resources
+            beforeSend: setAuthorizationHeaderForImgurApi // need to send auth header to access public resources
           });
         } else {
           var type = aNode.getAttribute('type');
