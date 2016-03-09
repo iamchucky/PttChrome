@@ -592,11 +592,9 @@ TermView.prototype = {
     this.resetCursorBlink();
     var conn = this.conn;
     if (isPasting) {
-      /*
       text = text.replace(/\r\n/g, '\r');
       text = text.replace(/\n/g, '\r');
       text = text.replace(/\r/g, this.EnterChar);
-      */
 
       if(text.indexOf('\x1b') < 0 && conn.lineWrap > 0) {
         text = text.wrapText(conn.lineWrap, this.EnterChar);
