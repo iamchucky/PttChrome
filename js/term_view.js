@@ -14,7 +14,7 @@ function TermView(rowCount) {
   this.hotkeyForSelectAll = false;
   this.highlightBG = 2;
   this.charset = 'big5';
-  this.EnterChar = '\r';
+  this.EnterChar = '\n';
   this.dropToPaste = false;
   this.ctrlPicturePreview = false;
   this.picturePreviewInfo = false;
