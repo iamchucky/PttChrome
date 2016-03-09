@@ -14,7 +14,7 @@ function TermView(rowCount) {
   this.hotkeyForSelectAll = false;
   this.highlightBG = 2;
   this.charset = 'big5';
-  this.EnterChar = '\n';
+  this.EnterChar = '\r';
   this.dropToPaste = false;
   this.ctrlPicturePreview = false;
   this.picturePreviewInfo = false;
@@ -592,9 +592,11 @@ TermView.prototype = {
     this.resetCursorBlink();
     var conn = this.conn;
     if (isPasting) {
+      /*
       text = text.replace(/\r\n/g, '\r');
       text = text.replace(/\n/g, '\r');
       text = text.replace(/\r/g, this.EnterChar);
+      */
 
       if(text.indexOf('\x1b') < 0 && conn.lineWrap > 0) {
         text = text.wrapText(conn.lineWrap, this.EnterChar);
