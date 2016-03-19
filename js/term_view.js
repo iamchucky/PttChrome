@@ -1136,7 +1136,7 @@ TermView.prototype = {
 
   setupPicPreviewOnHover: function() {
     var self = this;
-    var aNodes = $(".main a[href^='http://ppt.cc/'], .main a[type='p'], .main a[href^='http://imgur.com/'], .main a[href^='https://flic.kr/p/'], .main a[href^='https://www.flickr.com/photos/']").not("a[href^='http://imgur.com/a/']");
+    var aNodes = $(".main a[href^='http://ppt.cc/'], .main a[type='p'], .main a[href^='http://imgur.com/'], .main a[href^='https://imgur.com/'], .main a[href^='https://flic.kr/p/'], .main a[href^='https://www.flickr.com/photos/']").not("a[href^='http://imgur.com/a/'], a[href^='https://imgur.com/a/']");
     var onover = function(elem) {
       var setPicPreviewSrc = function(src) {
         var currSrc = self.picPreview.getAttribute('src');
@@ -1181,7 +1181,7 @@ TermView.prototype = {
         return function(e) {
           var href = elem.getAttribute('href');
           var type = elem.getAttribute('type');
-          var src = (type == 'p') ? href : (href.indexOf('imgur.com') > 0) ? href.replace('http://imgur.com', 'http://i.imgur.com') + '.jpg' : href + '@.jpg';
+          var src = (type == 'p') ? href : (href.indexOf('imgur.com') > 0) ? href.replace(/(http(s)?):\/\/imgur.com/, "$1://i.imgur.com") + '.jpg' : href + '@.jpg';
           setPicPreviewSrc(src);
         };
       }
@@ -1351,7 +1351,7 @@ TermView.prototype = {
   },
 
   embedPicAndVideo: function() {
-    var aNodes = $(".main a[type='p'], .main a[href^='http://imgur.com/'], .main a[href^='https://flic.kr/'], .main a[href^='https://www.flickr.com/photos/']").not("a[href^='http://imgur.com/a/']");
+    var aNodes = $(".main a[type='p'], .main a[href^='http://imgur.com/'], .main a[href^='https://imgur.com/'], .main a[href^='https://flic.kr/'], .main a[href^='https://www.flickr.com/photos/']").not("a[href^='http://imgur.com/a/']");
     var getPhotoInfoCallback = function(data){
       if (data.photo) {
         var p = data.photo;
@@ -1384,7 +1384,7 @@ TermView.prototype = {
       } else if (href.indexOf('flickr.com/photos/') < 0) {
         // handle with non-photo flickr urls, such as albums or sets, and straight image links, imgur urls. 
         var type = aNode.getAttribute('type');
-        var src = (type == 'p') ? href : (href.indexOf('imgur.com') > 0) ? href.replace('http://imgur.com', 'http://i.imgur.com') + '.jpg' : '';
+        var src = (type == 'p') ? href : (href.indexOf('imgur.com') > 0) ? href.replace(/(http(s)?):\/\/imgur.com/, "$1://i.imgur.com") + '.jpg' : '';
         if (src) {
           var imgNode = document.createElement('img');
           imgNode.setAttribute('class', 'easyReadingImg');
