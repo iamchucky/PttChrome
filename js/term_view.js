@@ -1136,7 +1136,8 @@ TermView.prototype = {
 
   setupPicPreviewOnHover: function() {
     var self = this;
-    var aNodes = $(".main a[href^='http://ppt.cc/'], .main a[type='p'], .main a[href^='http://imgur.com/'], .main a[href^='https://imgur.com/'], .main a[href^='https://flic.kr/p/'], .main a[href^='https://www.flickr.com/photos/']").not("a[href^='http://imgur.com/a/'], a[href^='https://imgur.com/a/']");
+    var aNodes = $(".main a[href^='http://ppt.cc/'], .main a[type='p'], .main a[href^='http://imgur.com/'], .main a[href^='https://imgur.com/'], .main a[href^='https://flic.kr/p/'], .main a[href^='https://www.flickr.com/photos/']")
+                  .not("a[href^='http://imgur.com/a/'], a[href^='https://imgur.com/a/'], a[href^='http://imgur.com/gallery/'], a[href^='https://imgur.com/gallery/']");
     var onover = function(elem) {
       var setPicPreviewSrc = function(src) {
         var currSrc = self.picPreview.getAttribute('src');
@@ -1351,7 +1352,7 @@ TermView.prototype = {
   },
 
   embedPicAndVideo: function() {
-    var aNodes = $(".main a[type='p'], .main a[href^='http://imgur.com/'], .main a[href^='https://imgur.com/'], .main a[href^='https://flic.kr/'], .main a[href^='https://www.flickr.com/photos/']").not("a[href^='http://imgur.com/a/']");
+    var aNodes = $(".main a[type='p'], .main a[href^='http://imgur.com/'], .main a[href^='https://imgur.com/'], .main a[href^='https://flic.kr/'], .main a[href^='https://www.flickr.com/photos/']");
     var getPhotoInfoCallback = function(data){
       if (data.photo) {
         var p = data.photo;
@@ -1401,7 +1402,7 @@ TermView.prototype = {
         $.getJSON(flickrApi, getPhotoInfoCallback);
       } else if (href.indexOf('flickr.com/photos/') < 0) {
         // handle with non-photo flickr urls, such as albums or sets, and straight image links, imgur urls.
-        var isImgurAlbum = href.match('imgur\.com\/a\/\(\\w\+\)');
+        var isImgurAlbum = href.match('imgur\.com\/a|gallery\/\(\\w\+\)');
         if (isImgurAlbum) {
           var imgurAlbumId = isImgurAlbum[1];
           var imgurAlbumApi = 'https://api.imgur.com/3/album/'+imgurAlbumId;
