@@ -1402,9 +1402,9 @@ TermView.prototype = {
         $.getJSON(flickrApi, getPhotoInfoCallback);
       } else if (href.indexOf('flickr.com/photos/') < 0) {
         // handle with non-photo flickr urls, such as albums or sets, and straight image links, imgur urls.
-        var isImgurAlbum = href.match('imgur\.com\/a|gallery\/\(\\w\+\)');
+        var isImgurAlbum = href.match('imgur\.com\/\(a|gallery\)\/\(\\w\+\)');
         if (isImgurAlbum) {
-          var imgurAlbumId = isImgurAlbum[1];
+          var imgurAlbumId = isImgurAlbum[2];
           var imgurAlbumApi = 'https://api.imgur.com/3/album/'+imgurAlbumId;
           aNode.setAttribute('data-imgur-aubum-id', imgurAlbumId);
           $.ajax({
