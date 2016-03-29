@@ -443,7 +443,19 @@ pttchrome.App.prototype.setupConnectionAlert = function() {
     if (self.connectedUrl.site) {
       site = self.connectedUrl.site;
     }
-    window.location.replace('?site=' + site + ':'+ port);
+
+    if (self.isFromApp) {
+      /*
+       * fixing a problem url won't open tab in packaged app mode:
+       * - this used to happen only when user click on "try 443 port" after a
+       * disconnection.
+       * - it seems to related with the window.location.replace method
+       */
+
+      self.connect(site + ':' + port);
+    } else {
+      window.location.replace('?site=' + site + ':'+ port);
+    }
   });
 };
 
