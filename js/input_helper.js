@@ -43,8 +43,8 @@ InputHelper.prototype.setupUi = function() {
 
 InputHelper.prototype.onMouseDrag = function(e) {
   window.getSelection().removeAllRanges();
-  this.nodeOffsetTop += e.webkitMovementY;
-  this.nodeOffsetLeft += e.webkitMovementX;
+  this.nodeOffsetTop += e.movementY;
+  this.nodeOffsetLeft += e.movementX;
   this.node.style.cssText += 'top:'+this.nodeOffsetTop+'px;left:'+this.nodeOffsetLeft+'px;';
 };
 
