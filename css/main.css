@@ -527,6 +527,7 @@ a:link,a:visited,a:active,a:hover {
   display:block;
   color:#C0C0C0;
   white-space: pre;
+  overflow: hidden;
 }
 
 #easyReadingLastRow, #easyReadingReplyRow {
