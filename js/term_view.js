@@ -137,7 +137,10 @@ function TermView(rowCount) {
   this.input.addEventListener('compositionend', function(e) {
     self.onCompositionEnd(e);
     self.bbscore.setInputAreaFocus();
-    self.onInput(e);
+    if (self.bbscore.chromeVersion >= 53) {
+      // need to call onInput for Chrome 53+ because it doesn't fire input after this
+      self.onInput(e);
+    }
   }, false);
 
   this.input.addEventListener('compositionupdate', function(e) {

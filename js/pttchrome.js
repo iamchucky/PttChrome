@@ -98,9 +98,9 @@ pttchrome.App = function(onInitializedCallback, options) {
 
   this.endTurnsOnLiveUpdate = false;
   this.copyOnSelect = false;
-  var version = window.navigator.appVersion.match(/Chrome\/(\d+)\./);
-  if (version && version.length > 1) {
-    this.chromeVersion = parseInt(version[1], 10);
+  var version = window.navigator.userAgent.match(/Chrom(e|ium)\/(\d+)\./);
+  if (version && version.length > 2) {
+    this.chromeVersion = parseInt(version[2], 10);
   }
 
   var self = this;
