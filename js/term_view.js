@@ -137,6 +137,7 @@ function TermView(rowCount) {
   this.input.addEventListener('compositionend', function(e) {
     self.onCompositionEnd(e);
     self.bbscore.setInputAreaFocus();
+    self.onInput(e);
   }, false);
 
   this.input.addEventListener('compositionupdate', function(e) {
@@ -190,20 +191,7 @@ function TermView(rowCount) {
   }, false);
 
   this.input.addEventListener('input', function(e) {
-    if (self.bbscore.modalShown || self.bbscore.contextMenuShown)
-      return;
-    if (self.isComposition)
-      return;
-    if (self.useEasyReadingMode && self.buf.startedEasyReading && 
-        !self.buf.easyReadingShowReplyText && !self.buf.easyReadingShowPushInitText &&
-        self.easyReadingKeyDownKeyCode == 229 && e.target.value != 'X') { // only use on chinese IME
-      e.target.value = '';
-      return;
-    }
-    if (e.target.value) {
-      self.onTextInput(e.target.value);
-    }
-    e.target.value='';
+    self.onInput(e);
   }, false);
 
 
@@ -587,6 +575,22 @@ TermView.prototype = {
 
   },
 
+  onInput: function(e) {
+    if (this.bbscore.modalShown || this.bbscore.contextMenuShown)
+      return;
+    if (this.isComposition)
+      return;
+    if (this.useEasyReadingMode && this.buf.startedEasyReading && 
+        !this.buf.easyReadingShowReplyText && !this.buf.easyReadingShowPushInitText &&
+        this.easyReadingKeyDownKeyCode == 229 && e.target.value != 'X') { // only use on chinese IME
+      e.target.value = '';
+      return;
+    }
+    if (e.target.value) {
+      this.onTextInput(e.target.value);
+    }
+    e.target.value='';
+  },
 
   onTextInput: function(text, isPasting) {
     this.resetCursorBlink();
