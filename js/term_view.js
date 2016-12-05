@@ -144,16 +144,6 @@ function TermView(rowCount) {
   }, false);
 
   this.input.addEventListener('compositionupdate', function(e) {
-    // change width according to input
-    var wordCounts = e.data.u2b().length;
-    // chh / 2 - 2 because border of 1
-    var oneWordWidth = (self.chh/2-2);
-    var width = oneWordWidth*wordCounts;
-    self.input.style.width  = width + 'px';
-    var bounds = self.innerBounds;
-    if (parseInt(self.input.style.left) + width + oneWordWidth*2 >= bounds.width) {
-      self.input.style.left = bounds.width - width - oneWordWidth*2 + 'px';
-    }
   }, false);
 
   addEventListener('keydown', function(e) {
@@ -581,8 +571,13 @@ TermView.prototype = {
   onInput: function(e) {
     if (this.bbscore.modalShown || this.bbscore.contextMenuShown)
       return;
-    if (this.isComposition)
+    if (this.isComposition) {
+      // beginning chrome 55, we no longer can update input buffer width on compositionupdate
+      // so we update it on input event
+      this.updateInputBufferWidth();
       return;
+    }
+
     if (this.useEasyReadingMode && this.buf.startedEasyReading && 
         !this.buf.easyReadingShowReplyText && !this.buf.easyReadingShowPushInitText &&
         this.easyReadingKeyDownKeyCode == 229 && e.target.value != 'X') { // only use on chinese IME
@@ -993,6 +988,19 @@ TermView.prototype = {
         this.input.style.left = pos[0] +'px';
 
       //this.input.style.left = pos[0] +'px';
+    }
+  },
+
+  updateInputBufferWidth: function() {
+    // change width according to input
+    var wordCounts = this.input.value.u2b().length;
+    // chh / 2 - 2 because border of 1
+    var oneWordWidth = (this.chh/2-2);
+    var width = oneWordWidth*wordCounts;
+    this.input.style.width  = width + 'px';
+    var bounds = this.innerBounds;
+    if (parseInt(this.input.style.left) + width + oneWordWidth*2 >= bounds.width) {
+      this.input.style.left = bounds.width - width - oneWordWidth*2 + 'px';
     }
   },
 
