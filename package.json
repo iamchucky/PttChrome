@@ -1,0 +1,41 @@
+{
+  "name": "pttchrome",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@types/chrome": "0.0.40",
+    "@types/core-js": "^0.9.35",
+    "copy-webpack-plugin": "^4.0.1",
+    "css-loader": "^0.26.1",
+    "file-loader": "^0.10.0",
+    "html-loader": "^0.4.4",
+    "json-loader": "^0.5.4",
+    "raw-loader": "^0.5.1",
+    "rxjs": "5.1.0",
+    "ts-loader": "2.0.0",
+    "tslint": "4.4.2",
+    "tslint-loader": "^3.3.0",
+    "typescript": "2.1.6",
+    "webpack": "2.2.1",
+    "webpack-dev-server": "^2.3.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "WEBPACK_ENV=production webpack --progress --hide-modules",
+    "dev": "webpack-dev-server --history-api-fallback --content-base ./src --open"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iamchucky/PttChrome.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "GPLv2",
+  "bugs": {
+    "url": "https://github.com/iamchucky/PttChrome/issues"
+  },
+  "homepage": "https://github.com/iamchucky/PttChrome#readme"
+}
