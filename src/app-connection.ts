@@ -32,24 +32,21 @@ export class AppConnection {
   appPort: chrome.runtime.Port;
   events = new BehaviorSubject(null);
 
-  connectAppPort() {
-    return new Promise<boolean>((resolve, reject) => {
-      this.checkChromeApp().then(() => {
-        this.appPort = chrome.runtime.connect(this.appId);
-        this.appPort.onMessage.addListener((msg: Message) => {
-          const eventType = eventActions[msg.action];
-          if (eventType) {
-            this.events.next(new eventType(msg));
-          }
-        });
+  async connectAppPort() {
+    await this.checkChromeApp();
 
-        this.appPort.onDisconnect.addListener(port => {
-          this.events.next(new DisconnectedEvent(null));
-        });
-        this.connected = true;
-        resolve();
-      });
+    this.appPort = chrome.runtime.connect(this.appId);
+    this.appPort.onMessage.addListener((msg: Message) => {
+      const eventType = eventActions[msg.action];
+      if (eventType) {
+        this.events.next(new eventType(msg));
+      }
     });
+
+    this.appPort.onDisconnect.addListener(port => {
+      this.events.next(new DisconnectedEvent(null));
+    });
+    this.connected = true;
   }
 
   connectTcp(host: string, port: number, keepAlive: any) {
@@ -83,13 +80,13 @@ export class AppConnection {
     }
   }
 
-  checkChromeApp() {
-    return new Promise<any>((resolve, reject) => {
-      if (!chrome.runtime) {
-        // show message about not on chrome
-        return reject();
-      }
+  async checkChromeApp() {
+    if (!chrome.runtime) {
+      // show message about not on chrome
+      return false;
+    }
 
+    return new Promise<any>((resolve, reject) => {
       chrome.runtime.sendMessage(this.appId, { action: 'status' }, (res) => {
         if (!res) return reject();
         resolve();

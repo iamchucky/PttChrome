@@ -6,11 +6,6 @@ import { TelnetConnection } from './telnet';
 import { TermModel } from './term-model';
 import { TermView } from './term-view';
 
-document.addEventListener('DOMContentLoaded', () => {
-  const app = new App();
-  app.init();
-});
-
 interface ConnectedSite {
   site: string;
   port: number;
@@ -35,7 +30,7 @@ export class App {
     blacklistedUserIds: ['']
   };
 
-  init() {
+  async init() {
     this.page = new Page();
     this.view = new TermView(this);
     this.view.init();
@@ -45,9 +40,9 @@ export class App {
     this.appConn = new AppConnection();
     this.conn = new TelnetConnection(this);
 
-    this.appConn.connectAppPort().then(() => {
-      this.connect('ptt.cc');
-    });
+    await this.appConn.connectAppPort();
+
+    this.connect('ptt.cc');
   }
 
   connect(url: string) {

@@ -1,0 +1,119 @@
+$color-0: #000000;
+$color-1: #800000;
+$color-2: #008000;
+$color-3: #808000;
+$color-4: #000080;
+$color-5: #800080;
+$color-6: #008080;
+$color-7: #c0c0c0;
+$color-8: #808080;
+$color-9: #ff0000;
+$color-10: #00ff00;
+$color-11: #ffff00;
+$color-12: #0000ff;
+$color-13: #ff00ff;
+$color-14: #00ffff;
+$color-15: #ffffff;
+
+.y {
+  position: relative;
+}
+.y:hover {
+  color: inherit;
+}
+.y:after {
+  content: attr(href);
+  border-bottom: #FF5E00 solid 0.05em;
+  color: transparent;
+  position: absolute;
+  left: 0;
+  top: -0.1em;
+}
+.y:hover:after {
+  border-bottom: #FF5E00 solid 0.1em;
+}
+
+@function color($i, $transparentZero) {
+  @if ($i == 0 and $transparentZero) {
+    @return transparent;
+  }
+  $colors: (
+    $color-0,
+    $color-1,
+    $color-2,
+    $color-3,
+    $color-4,
+    $color-5,
+    $color-6,
+    $color-7,
+    $color-8,
+    $color-9,
+    $color-10,
+    $color-11,
+    $color-12,
+    $color-13,
+    $color-14,
+    $color-15
+  );
+  @return nth($colors, $i);
+}
+
+.o {
+  position: relative;
+  display: inline-block;
+}
+.o:after {
+  content: attr(t);
+  position: absolute;
+  left: 0px;
+  width: 50%;
+  overflow: hidden;
+  user-select: none;
+  pointer-events: none;
+}
+.qq {
+  color: RGBA(0,0,0,0);
+}
+
+@for $i from 0 through 15 {
+  $color-i-trans: color($i+1,true);
+  $color-i: color($i+1,false);
+
+  .qq#{$i} {
+    color: RGBA(0,0,0,0);
+    background-color: $color-i-trans;
+  }
+
+  .q#{$i} {
+    color: $color-i;
+  }
+
+  .b#{$i} {
+    background-color: $color-i-trans;
+  }
+
+  @for $j from 0 through 15 {
+    $color-j-trans: color($j+1,true);
+
+    .b#{$i}b#{$j} {
+      background: -webkit-linear-gradient(
+        left,
+        $color-i-trans 50%,
+        $color-j-trans 50%);
+    }
+  }
+
+  .trans-fix .b#{$i} {
+    box-shadow:0 0 5px 5px $color-i-trans inset;
+  }
+
+  .w#{$i}:after {
+    color: $color-i;
+    text-shadow:
+      $color-i 0 0 0px,
+      $color-i 0 0 0px,
+      $color-i 0 0 0px,
+      $color-i 0 0 0px,
+      $color-i 0 0 0px;
+  }
+}

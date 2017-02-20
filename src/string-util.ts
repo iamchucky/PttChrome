@@ -1,21 +1,22 @@
-import { u2bTable } from './u2b-table';
-import { b2uTable } from './b2u-table';
+const u2bTable = require<{ [key: string]: string }>('./data/u2b.json');
+const b2uTable = require<{ [key: string]: string }>('./data/b2u.json');
 
 export class StringUtil {
   static u2b(str: string) {
     let data = '';
     const strLen = str.length;
     for (let i = 0; i < strLen; ++i) {
-      if (str.charAt(i) < '\x80') {
-        data += str.charAt(i);
+      const c = str.charAt(i);
+      if (c < '\x80') {
+        data += c;
         continue;
       }
-      let charCodeStr = str.charCodeAt(i).toString(16).toUpperCase();
-      charCodeStr = 'x' + ('000' + charCodeStr).substr(-4);
-      if (u2bTable[charCodeStr])
-        data += u2bTable[charCodeStr];
-      else // Not a big5 char
+      const b5 = u2bTable[c];
+      if (b5) {
+        data += b5;
+      } else { // Not a big5 char
         data += '\xFF\xFD';
+      }
     }
     return data;
   }
@@ -28,10 +29,11 @@ export class StringUtil {
         data += str.charAt(i);
         continue;
       }
-      const b5index = 'x' + str.charCodeAt(i).toString(16).toUpperCase() +
-                            str.charCodeAt(i + 1).toString(16).toUpperCase();
-      if (b2uTable[b5index]) {
-        data += b2uTable[b5index];
+      const b5index = String.fromCharCode(str.charCodeAt(i)) +
+                      String.fromCharCode(str.charCodeAt(i + 1));
+      const unicode = b2uTable[b5index];
+      if (unicode) {
+        data += unicode;
         ++i;
       } else { // Not a big5 char
         data += str.charAt(i);
