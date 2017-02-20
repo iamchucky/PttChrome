@@ -1,5 +1,5 @@
-const u2bTable = require<{ [key: string]: string }>('./data/u2b.json');
-const b2uTable = require<{ [key: string]: string }>('./data/b2u.json');
+const u2bTable = require<{ [key: string]: string }>('../data/u2b.json');
+const b2uTable = require<{ [key: string]: string }>('../data/b2u.json');
 
 export class StringUtil {
   static u2b(str: string) {
