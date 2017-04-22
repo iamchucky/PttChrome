@@ -14,10 +14,10 @@ export class TermModel {
   disableLinefeed = false;
 
   char: TermChar = new TermChar(' ');
+  cursor: Cursor = { x: 0, y: 0 };
 
   private changed = false;
   private positionChanged = false;
-  private cursor: Cursor = { x: 0, y: 0 };
   private savedCursor: Cursor = { x: -1, y: -1 };
   private scrollStart = 0;
   private scrollEnd = this.rows - 1;
@@ -177,6 +177,15 @@ export class TermModel {
     if (this.savedCursor.x < 0 || this.savedCursor.y < 0) return;
     this.cursor.x = this.savedCursor.x;
     this.cursor.y = this.savedCursor.y;
+  }
+
+  checkLeftDBCS() {
+    return this.cursor.x > 1 && this.checkDBCS(-2);
+  }
+
+  checkDBCS(offset = 0) {
+    const c = this.cursor;
+    return this.lines[c.y].chars[c.x + offset].isLeadByte;
   }
 
   private updateCharAttr() {
@@ -355,7 +364,7 @@ export class TermModel {
     const n = this.paramsUseFirstOrZero(params);
 
     let start = 0, end = this.cols; // erase all
-    if (n === 0) { // erase to rigth
+    if (n === 0 || !n) { // erase to right
       start = this.cursor.x;
     } else if (n === 1) { // erase to left
       end = this.cursor.x;

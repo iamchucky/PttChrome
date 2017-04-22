@@ -1,7 +1,7 @@
 import { Page } from './page';
 import { App } from './app';
 import { TermLine } from './term-line';
-import { TermChar } from './term-char';
+import { TermChar, termColorsInv } from './term-char';
 import { StringUtil } from './string-util';
 import { symbolTable } from './symbol-table';
 
@@ -34,10 +34,22 @@ export class TermView {
     for (let i = 0; i < this.rows; ++i) {
       html += `<div class="term-row" srow="${i}"></div>`;
     }
-    this.page.app.innerHTML = `<div id="terminal">${html}</div>`;
+    this.page.app.innerHTML = `
+      <div id="terminal-container">
+        <div id="terminal">${html}</div>
+        <div id="cursor"></div>
+        <input id="ime-input"
+               type="text"
+               autocomplete="off"
+               autofocus/>
+      </div>
+    `;
 
     this.innerBounds = this.page.windowInnerBounds;
-    this.firstGridOffset = this.page.firstGridOffsets;
+    this.firstGridOffset = this.page.getGridOffsets();
+    window.addEventListener('resize', e => {
+      this.resize();
+    });
     this.resize();
   }
 
@@ -113,7 +125,18 @@ export class TermView {
   }
 
   updateCursorPos() {
-
+    const cursorPos = this.cursor;
+    const rowOffset = this.page.getGridOffsets(cursorPos.y);
+    const xOffset = this.chw * cursorPos.x;
+    let color = 'white';
+    if (this.model) {
+      color =
+        termColorsInv[this.model.lines[cursorPos.y].chars[cursorPos.x].bg];
+    }
+    Object.assign(this.page.cursor.style, {
+      transform: `translate(${rowOffset.left + xOffset}px, ${rowOffset.top}px)`,
+      color
+    });
   }
 
   resize() {
@@ -169,6 +192,7 @@ export class TermView {
           this.handleDBCS(ch, col, line);
         }
         col = col + 1;
+        line.chars[col].html = '';
       } else { // NOT LeadByte
         ch.html = this.createNormalChar(ch, ch.ch, ch.fg, ch.bg);
       }
@@ -400,30 +424,17 @@ export class TermView {
     const innerBounds = this.innerBounds;
     this.chw = cw;
     this.chh = ch;
+    this.page.fontSize = ch;
     const fontSize = this.chh + 'px';
     const mainWidth = this.chw * this.cols + 10 + 'px';
 
-    const term = this.page.term;
-    term.style.fontSize = fontSize;
-    term.style.lineHeight = fontSize;
     // this.bbsCursor.style.fontSize = fontSize;
     // this.bbsCursor.style.lineHeight = fontSize;
-    term.style.overflowX = 'hidden';
-    term.style.overflowY = 'auto';
-    term.style.textAlign = 'left';
-    term.style.width = mainWidth;
-
-    // this.lastRowDiv.style.fontSize = fontSize;
-    // this.lastRowDiv.style.width = mainWidth;
-
-    // this.replyRowDiv.style.fontSize = fontSize;
-    // this.replyRowDiv.style.width = mainWidth;
     let marginTop = this.page.containerMargin;
     if (this.page.verticalAlignCenter &&
         this.chh * this.rows < innerBounds.height) {
       marginTop += (innerBounds.height - this.chh * this.rows) / 2;
     }
-    term.style.marginTop =  marginTop + 'px';
     if (this.page.fontFitWindowWidth) {
       this.scale.x =
         Math.floor(innerBounds.width / (this.chw * this.cols + 10) * 100) / 100;
@@ -453,29 +464,24 @@ export class TermView {
     //   // this.lastRowDiv.style.webkitTransformOriginY = '';
     //   // this.replyRowDiv.style.webkitTransformOriginY = '';
     // }
-    term.style.webkitTransform = scaleCss;
     // this.lastRowDiv.style.webkitTransform = scaleCss;
     // this.replyRowDiv.style.webkitTransform = scaleCss;
 
     // this.firstGridOffset = this.bbscore.getFirstGridOffsets();
-
+    const newTermStyle = {
+      overflowX: 'hidden',
+      overflowY: 'auto',
+      textAlign: 'left',
+      width: mainWidth,
+      webkitTransform: scaleCss,
+      marginTop: `${marginTop}px`
+    };
+    Object.assign(this.page.termContainer.style, {
+      fontSize, lineHeight: fontSize
+    });
+    Object.assign(this.page.term.style, newTermStyle);
     this.updateCursorPos();
     // this.updateFbSharingPos();
-  }
-
-  private handleBlacklistRow(row: number) {
-    if (!this.app.config.enableBlacklist) return;
-
-    // const rowText = this.model.getRowText(row, 0, this.cols);
-    // let userId = '';
-    // if (this.model.pageState === 3) {
-    //   userId = rowText.parsePushthreadForUserId();
-    // } else if (this.model.pageState === 2) {
-    //   userId = rowText.parseThreadForUserId();
-    // }
-    // if (userId in this.app.config.blacklistedUserIds) {
-    //   return { userId };
-    // }
   }
 
   private setCurrAttr(fg: number, bg: number, blink: boolean) {
@@ -498,5 +504,9 @@ export class TermView {
 
   private get page() {
     return this.app.page;
+  }
+
+  private get cursor() {
+    return (this.app.model && this.app.model.cursor) || { x: 0, y: 0 };
   }
 }

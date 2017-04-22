@@ -5,6 +5,7 @@ import { Page } from './page';
 import { TelnetConnection } from './telnet';
 import { TermModel } from './term-model';
 import { TermView } from './term-view';
+import { InputHandler } from './input-handler';
 
 interface ConnectedSite {
   site: string;
@@ -19,6 +20,7 @@ export class App {
   model: TermModel;
   parser: AnsiParser;
   page: Page;
+  inputHandler: InputHandler;
 
   connectedSite: ConnectedSite;
   idleTime = 0;
@@ -43,6 +45,9 @@ export class App {
     await this.appConn.connectAppPort();
 
     this.connect('ptt.cc');
+    this.inputHandler = new InputHandler(this);
+    this.inputHandler.registerInputEvents();
+    this.page.blinkCursor();
   }
 
   connect(url: string) {

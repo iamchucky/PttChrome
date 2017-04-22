@@ -80,4 +80,38 @@ export class StringUtil {
     else
       return char;
   }
+
+  // Only support caret notations (^C, ^H, ^U, ^[, ^?, ...)
+  // If you want to show \ and ^, use \\ and \^ respectively
+  static unescapeStr(str: string) {
+    let result = '';
+
+    for (let i = 0; i < this.length; ++i) {
+      const curChar = str.charAt(i);
+      const nextChar = str.charAt(i + 1);
+
+      if (i === this.length - 1) {
+        result += curChar;
+        break;
+      }
+
+      if (curChar === '\\' && (nextChar === '\\' || nextChar === '^')) {
+        result += nextChar;
+      } else if (curChar === '^') {
+        if ('@' <= nextChar && nextChar <= '_') {
+          result += String.fromCharCode(str.charCodeAt(i + 1) - 64);
+          i++;
+        } else if (nextChar === '?') {
+          result += '\x7f';
+          i++;
+        } else {
+          result += '^';
+        }
+      } else {
+        result += curChar;
+      }
+    }
+
+    return result;
+  }
 }

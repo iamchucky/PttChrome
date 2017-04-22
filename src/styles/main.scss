@@ -20,12 +20,16 @@
   user-select: none;
 }
 
-#terminal {
+#terminal-container {
+  position: relative;
   font-family: MingLiu, monospace;
   font-size: 26px;
   line-height: 100%;
-  height: 24em;
   margin: 0;
+}
+
+#terminal {
+  height: 24em;
   user-select: text;
   background-color: $color-0;
 
@@ -39,9 +43,47 @@
   }
 }
 
+#cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 0;
+  font-weight: bold;
+
+  &:after {
+    content: "_";
+  }
+
+  &.blinking {
+    animation: blink-opacity 2s infinite;
+  }
+}
+
+#ime-input {
+  box-sizing: content-box;
+  color: initial;
+  border: none;
+  width: 200px;
+  height: 24px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  // transform: translate(-10000px, -100000px);
+  z-index: 2;
+  resize: none;
+  font-family: inherit !important;
+}
+
 body {
   color: $color-7;
   background-color: $color-0;
   margin: 0;
   overflow: hidden;
+}
+
+@keyframes blink-opacity {
+  0%   { opacity: 1; }
+  49%  { opacity: 1; }
+  50%  { opacity: 0; }
+  100% { opacity: 0; }
 }
