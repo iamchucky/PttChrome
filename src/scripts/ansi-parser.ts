@@ -1,6 +1,6 @@
 import { App } from './app';
 
-enum STATE { TEXT, ESC, CSI, C1 };
+enum STATE { TEXT, ESC, CSI, C1 }
 
 export class AnsiParser {
   private state: STATE = STATE.TEXT;

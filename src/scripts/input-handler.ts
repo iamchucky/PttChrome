@@ -1,13 +1,14 @@
 import { App } from './app';
+import { Page } from './page';
 import { StringUtil } from './string-util';
 
 export class InputHandler {
-  private isComposing = false;
+  isComposing = false;
 
   constructor(private app: App) {}
 
   registerInputEvents() {
-    const input = this.app.page.input;
+    const input = Page.input;
     input.addEventListener('input', e => {
       // beginning chrome 55, we no longer can update input buffer width on
       // compositionupdate, so we update it on input event
@@ -16,12 +17,13 @@ export class InputHandler {
         this.app.conn.convSend(input.value);
       }
       input.value = '';
-      this.app.page.restartBlinkCursor();
+      Page.restartBlinkCursor();
     });
 
     input.addEventListener('compositionstart', e => {
       this.isComposing = true;
-      this.app.page.focusInput();
+      this.updateInputPos();
+      Page.focusInput();
     });
 
     input.addEventListener('compositionend', e => {
@@ -30,12 +32,13 @@ export class InputHandler {
         this.app.conn.convSend(input.value);
       }
       input.value = '';
-      this.app.page.focusInput();
+      this.resetInputPos();
+      Page.focusInput();
     });
 
     input.addEventListener('keydown', e => {
       if (e.keyCode > 15 && e.keyCode < 19) return; // Shift Ctrl Alt (19)
-      this.app.page.restartBlinkCursor();
+      Page.restartBlinkCursor();
 
       const conn = this.app.conn;
       let charCode = null;
@@ -167,16 +170,29 @@ export class InputHandler {
 
     input.addEventListener('keyup', e => {
       if (e.keyCode > 15 && e.keyCode < 19) return; // Shift Ctrl Alt (19)
-      this.app.page.focusInput();
+      Page.focusInput();
+    });
+
+    input.addEventListener('focus', () => {
+      Page.app.classList.add('focused');
+    });
+    input.addEventListener('blur', () => {
+      Page.app.classList.remove('focused');
     });
   }
 
   updateInputWidth() {
-
+    const wordCounts = StringUtil.u2b(Page.input.value).length;
+    const oneWordWidth = Page.fontSize / 2;
+    Page.input.style.width = `${oneWordWidth * wordCounts}px`;
   }
 
   updateInputPos() {
-
+    const offset = this.app.view.getCursorOffset();
+    Page.input.style.transform = `translate(${offset.left}px,${offset.top}px)`;
+  }
+  resetInputPos() {
+    Page.input.style.transform = 'translate(-10000px,-10000px)';
   }
 
   send(str: string, left = false) {

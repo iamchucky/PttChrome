@@ -1,7 +1,6 @@
 import { App } from './app';
 import { TermChar, TermCharAttr } from './term-char';
 import { TermLine } from './term-line';
-import { StringUtil } from './string-util';
 
 interface Cursor {
   x: number;
@@ -483,7 +482,7 @@ export class TermModel {
 
     this.updateHandle = setTimeout(() => {
       this.doUpdate();
-    }, force ? 1 : 30);
+    }, force ? 1 : 16); // 16 ms for 60 fps
   }
 
   private doUpdate() {

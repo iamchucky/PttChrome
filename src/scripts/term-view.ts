@@ -24,7 +24,7 @@ export class TermView {
   };
 
   private innerBounds = { width: 0, height: 0 };
-  private firstGridOffset = { top: 0, left: 0 };
+  private firstRowOffset = { top: 0, left: 0 };
   private scale = { x: 1, y: 1 };
 
   constructor(private app: App) {}
@@ -34,7 +34,7 @@ export class TermView {
     for (let i = 0; i < this.rows; ++i) {
       html += `<div class="term-row" srow="${i}"></div>`;
     }
-    this.page.app.innerHTML = `
+    Page.app.innerHTML = `
       <div id="terminal-container">
         <div id="terminal">${html}</div>
         <div id="cursor"></div>
@@ -45,8 +45,8 @@ export class TermView {
       </div>
     `;
 
-    this.innerBounds = this.page.windowInnerBounds;
-    this.firstGridOffset = this.page.getGridOffsets();
+    this.innerBounds = Page.windowInnerBounds;
+    this.firstRowOffset = Page.getRowOffset();
     window.addEventListener('resize', e => {
       this.resize();
     });
@@ -106,10 +106,10 @@ export class TermView {
 
     if (anyLineUpdated) {
       if (lineChangedCount > fullUpdateRowThreshold) {
-        this.page.term.innerHTML = this.model.lines.map(l => l.html).join('');
+        Page.term.innerHTML = this.model.lines.map(l => l.html).join('');
       } else {
         changedRows.forEach(r => {
-          this.page.term.children[r].innerHTML = this.model.lines[r].html;
+          Page.term.children[r].innerHTML = this.model.lines[r].html;
         });
       }
       // this.buf.prevPageState = this.buf.pageState;
@@ -126,21 +126,29 @@ export class TermView {
 
   updateCursorPos() {
     const cursorPos = this.cursor;
-    const rowOffset = this.page.getGridOffsets(cursorPos.y);
-    const xOffset = this.chw * cursorPos.x;
     let color = 'white';
     if (this.model) {
       color =
         termColorsInv[this.model.lines[cursorPos.y].chars[cursorPos.x].bg];
     }
-    Object.assign(this.page.cursor.style, {
-      transform: `translate(${rowOffset.left + xOffset}px, ${rowOffset.top}px)`,
+    const offset = this.getCursorOffset();
+    Object.assign(Page.cursor.style, {
+      transform: `translate(${offset.left}px, ${offset.top}px)`,
       color
     });
   }
 
+  getCursorOffset() {
+    const cursorPos = this.cursor;
+    const xOffset = this.chw * cursorPos.x;
+    return {
+      top: this.chh * cursorPos.y,
+      left: this.firstRowOffset.left + xOffset
+    };
+  }
+
   resize() {
-    this.innerBounds = this.page.windowInnerBounds;
+    this.innerBounds = Page.windowInnerBounds;
 
     const cols = this.cols;
     const rows = this.rows;
@@ -167,10 +175,15 @@ export class TermView {
     nowchw = i;
     this.setTermFontSize(nowchw, nowchh);
 
-    const forceWidthEls = this.page.forceWidthEls;
+    const forceWidthEls = Page.forceWidthEls;
     const len = forceWidthEls.length;
     for (let i = 0; i < len; ++i) {
       forceWidthEls[i].style.width = nowchh + 'px';
+    }
+
+    const inputHandler = this.app.inputHandler;
+    if (inputHandler && inputHandler.isComposing) {
+      inputHandler.updateInputPos();
     }
   }
 
@@ -424,18 +437,18 @@ export class TermView {
     const innerBounds = this.innerBounds;
     this.chw = cw;
     this.chh = ch;
-    this.page.fontSize = ch;
+    Page.fontSize = ch;
     const fontSize = this.chh + 'px';
     const mainWidth = this.chw * this.cols + 10 + 'px';
 
     // this.bbsCursor.style.fontSize = fontSize;
     // this.bbsCursor.style.lineHeight = fontSize;
-    let marginTop = this.page.containerMargin;
-    if (this.page.verticalAlignCenter &&
+    let marginTop = Page.containerMargin;
+    if (Page.verticalAlignCenter &&
         this.chh * this.rows < innerBounds.height) {
       marginTop += (innerBounds.height - this.chh * this.rows) / 2;
     }
-    if (this.page.fontFitWindowWidth) {
+    if (Page.fontFitWindowWidth) {
       this.scale.x =
         Math.floor(innerBounds.width / (this.chw * this.cols + 10) * 100) / 100;
       this.scale.y =
@@ -451,7 +464,7 @@ export class TermView {
     //   // this.mainDisplay.style.transform = 'scaleX('+this.scaleX+')';
     //   scaleCss = `scale(${this.scale.x},${this.scale.y})`;
     //   let transOrigin = 'left';
-    //   if (this.page.horizontalAlignCenter) {
+    //   if (Page.horizontalAlignCenter) {
     //     transOrigin = 'center';
     //   }
     //   term.style.webkitTransformOriginX = transOrigin;
@@ -476,10 +489,11 @@ export class TermView {
       webkitTransform: scaleCss,
       marginTop: `${marginTop}px`
     };
-    Object.assign(this.page.termContainer.style, {
+    Object.assign(Page.termContainer.style, {
       fontSize, lineHeight: fontSize
     });
-    Object.assign(this.page.term.style, newTermStyle);
+    Object.assign(Page.term.style, newTermStyle);
+    this.firstRowOffset = Page.getRowOffset();
     this.updateCursorPos();
     // this.updateFbSharingPos();
   }
@@ -500,10 +514,6 @@ export class TermView {
 
   private get model() {
     return this.app.model;
-  }
-
-  private get page() {
-    return this.app.page;
   }
 
   private get cursor() {

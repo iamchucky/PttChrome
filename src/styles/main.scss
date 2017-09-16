@@ -22,7 +22,7 @@
 
 #terminal-container {
   position: relative;
-  font-family: MingLiu, monospace;
+  font-family: MingLiu, SymMingLiu, monospace;
   font-size: 26px;
   line-height: 100%;
   margin: 0;
@@ -60,18 +60,20 @@
 }
 
 #ime-input {
-  box-sizing: content-box;
+  box-sizing: border-box;
   color: initial;
   border: none;
   width: 200px;
-  height: 24px;
+  height: 1em;
+  font-size: inherit;
   position: absolute;
   left: 0px;
   top: 0px;
-  // transform: translate(-10000px, -100000px);
+  transform: translate(-10000px, -100000px);
   z-index: 2;
   resize: none;
-  font-family: inherit !important;
+  font-family: inherit;
+  outline: none;
 }
 
 body {

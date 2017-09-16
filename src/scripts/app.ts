@@ -19,7 +19,6 @@ export class App {
   view: TermView;
   model: TermModel;
   parser: AnsiParser;
-  page: Page;
   inputHandler: InputHandler;
 
   connectedSite: ConnectedSite;
@@ -33,7 +32,6 @@ export class App {
   };
 
   async init() {
-    this.page = new Page();
     this.view = new TermView(this);
     this.view.init();
 
@@ -47,7 +45,8 @@ export class App {
     this.connect('ptt.cc');
     this.inputHandler = new InputHandler(this);
     this.inputHandler.registerInputEvents();
-    this.page.blinkCursor();
+    Page.blinkCursor();
+    Page.registerListeners();
   }
 
   connect(url: string) {

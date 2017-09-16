@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
+const env = require('yargs').argv.env;
 
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
@@ -39,7 +40,7 @@ const config = {
   ]
 }
 
-if (!(process.env.WEBPACK_ENV === 'production')) {
+if (env !== 'prod') {
   config.devtool = 'source-map';
   config.plugins = config.plugins.concat([
     new webpack.DefinePlugin({
@@ -55,12 +56,13 @@ if (!(process.env.WEBPACK_ENV === 'production')) {
         warnings: false
       },
       comments: false,
-      sourceMap: true
+      sourceMap: false
     }),
     new webpack.DefinePlugin({
       'WEBPACK_ENV': '"production"'
     }),
-    new CopyWebpackPlugin([{ from: './src/index.html' }], {})
+    new CopyWebpackPlugin([{ from: './src/index.html' }], {}),
+    new webpack.optimize.ModuleConcatenationPlugin()
   ]);
 }
 
