@@ -37,7 +37,35 @@ const config = {
   },
   plugins: [
     new ExtractTextPlugin("styles.css")
-  ]
+  ],
+  devServer: {
+    stats: {
+      assets: true,
+      cached: false,
+      cachedAssets: false,
+      children: false,
+      chunks: false,
+      chunkModules: true,
+      chunkOrigins: false,
+      colors: true,
+      depth: false,
+      entrypoints: false,
+      errors: true,
+      errorDetails: true,
+      hash: false,
+      maxModules: 0,
+      modules: false,
+      performance: true,
+      providedExports: false,
+      publicPath: false,
+      reasons: false,
+      source: false,
+      timings: true,
+      usedExports: false,
+      version: false,
+      warnings: true
+    }
+  }
 }
 
 if (env !== 'prod') {
@@ -48,7 +76,6 @@ if (env !== 'prod') {
     })
   ]);
 } else {
-  config.devtool = 'hidden-source-map';
   config.plugins = config.plugins.concat([
     new webpack.optimize.UglifyJsPlugin({
       compress: {
