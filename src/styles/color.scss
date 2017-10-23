@@ -55,7 +55,7 @@ $color-15: #ffffff;
     $color-14,
     $color-15
   );
-  @return nth($colors, $i);
+  @return nth($colors, $i + 1);
 }
 
 .o {
@@ -76,8 +76,8 @@ $color-15: #ffffff;
 }
 
 @for $i from 0 through 15 {
-  $color-i-trans: color($i+1,true);
-  $color-i: color($i+1,false);
+  $color-i-trans: color($i, true);
+  $color-i: color($i, false);
 
   .qq#{$i} {
     color: RGBA(0,0,0,0);
@@ -93,7 +93,7 @@ $color-15: #ffffff;
   }
 
   @for $j from 0 through 15 {
-    $color-j-trans: color($j+1,true);
+    $color-j-trans: color($j, true);
 
     .b#{$i}b#{$j} {
       background: -webkit-linear-gradient(
