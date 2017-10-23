@@ -160,25 +160,20 @@ export class TermView {
     if (width === 0 || height === 0) return;
     width -= 10; // for scroll bar
 
-    let o_h, o_w, i = 4;
-    let nowchh = this.chh;
-    let nowchw = this.chw;
-    do {
-      ++i;
-      nowchh = i * 2;
-      nowchw = i;
-      o_h = (nowchh) * 24;
-      o_w = nowchw * 80;
-    } while (o_h <= height && o_w <= width);
-    --i;
-    nowchh = i * 2;
-    nowchw = i;
-    this.setTermFontSize(nowchw, nowchh);
+    let halfFontSize = 4;
+    const resizedHeight = () => (halfFontSize * 2) * this.app.config.rows;
+    const resizedWidth = () => halfFontSize * this.app.config.cols;
+    while (resizedHeight() <= height && resizedWidth() <= width) {
+      halfFontSize++;
+    }
+    halfFontSize--;
+    const fontSize = halfFontSize * 2;
+    this.setTermFontSize(halfFontSize, fontSize);
 
     const forceWidthEls = Page.forceWidthEls;
     const len = forceWidthEls.length;
     for (let i = 0; i < len; ++i) {
-      forceWidthEls[i].style.width = nowchh + 'px';
+      forceWidthEls[i].style.width = fontSize + 'px';
     }
 
     const inputHandler = this.app.inputHandler;

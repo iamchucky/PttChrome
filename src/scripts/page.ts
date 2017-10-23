@@ -8,7 +8,7 @@ function $all(selector: string) {
 
 export class Page {
   static fontSize = 14;
-  static containerMargin = 10;
+  static containerMargin = 0;
   static verticalAlignCenter = true;
   static horizontalAlignCenter = true;
   static fontFitWindowWidth = false;

@@ -39,14 +39,14 @@ export class App {
     this.parser = new AnsiParser(this);
     this.appConn = new AppConnection();
     this.conn = new TelnetConnection(this);
+    this.inputHandler = new InputHandler(this);
+    this.inputHandler.registerInputEvents();
+    Page.registerListeners();
 
     await this.appConn.connectAppPort();
 
     this.connect('ptt.cc');
-    this.inputHandler = new InputHandler(this);
-    this.inputHandler.registerInputEvents();
     Page.blinkCursor();
-    Page.registerListeners();
   }
 
   connect(url: string) {
