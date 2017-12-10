@@ -241,6 +241,9 @@ locale.en_US = {
   "blacklist_driveDone": {
     "message": "Done!"
   },
+  "blacklist_privacyPolicy": {
+    "message": "Privacy Policy"
+  },
 
   // extensions
   "ext_quickSearch": {

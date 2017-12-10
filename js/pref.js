@@ -34,7 +34,7 @@ PttChromePref.prototype = {
       $('#opt_'+i).empty();
       var val = this.values[i];
 
-      // for blacklisted userids 
+      // for blacklisted userids
       if (i === 'blacklistedUserIds') {
         continue;
       }
@@ -51,7 +51,7 @@ PttChromePref.prototype = {
         }
         continue;
       }
-      
+
       // for the color selection box
       if (i === 'mouseBrowsingHighlightColor') {
         var qName = '#opt_'+i;
@@ -165,7 +165,7 @@ PttChromePref.prototype = {
     this.setupExtensionsPage();
 
     this.setupAboutPage();
-    
+
     $('#opt_tabs a').click(function(e) {
       e.preventDefault();
 
@@ -182,6 +182,7 @@ PttChromePref.prototype = {
     $('#blacklist_driveSaveExisting').text(i18n('blacklist_driveSaveExisting'));
     $('#blacklist_driveDone').text(i18n('blacklist_driveDone'));
     $('#blacklist_driveLoading').text(i18n('blacklist_driveLoading'));
+    $('#blacklist_privacyPolicy').text(i18n('blacklist_privacyPolicy'));
 
     $('#blacklist_driveLoad').click(function(e) {
       self.gdrive.createPicker(function(data) {
@@ -385,7 +386,7 @@ PttChromePref.prototype = {
       var inputToSelect = $(this).find('input');
       inputToSelect[0].select();
     }).focusout(function(e) {
-      if (e.relatedTarget && e.relatedTarget.parentNode && 
+      if (e.relatedTarget && e.relatedTarget.parentNode &&
           this.parentNode == e.relatedTarget.parentNode.parentNode) {
         return;
       }
@@ -422,7 +423,7 @@ PttChromePref.prototype = {
 
   setupAboutPage: function() {
     var contents = [
-        'review', 'feedback', 'fbpage', 
+        'review', 'feedback', 'fbpage',
         'promote',
         'version_title', 'version',
         'new_title'
@@ -615,7 +616,7 @@ PttChromePref.prototype = {
 
   setBlacklistStorage: function() {
     if (this.app.appConn.isConnected) {
-      var items = { 
+      var items = {
         values: {
           blacklistedUserIds: this.values.blacklistedUserIds
         }

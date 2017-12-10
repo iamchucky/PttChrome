@@ -238,6 +238,9 @@
   "blacklist_driveDone": {
     "message": "完成!"
   },
+  "blacklist_privacyPolicy": {
+    "message": "隱私權政策"
+  },
 
   // extensions
   "ext_quickSearch": {
