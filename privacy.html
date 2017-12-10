@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>PttChrome Privacy Policy</title>
+    <link rel="icon" type="image/png" href="icon/logo.png" />
+
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link type="text/css" rel="stylesheet" href="css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="css/hljs-github.min.css"/>
+    <script src="js/markdown.js"></script>
+    <script>
+      fetch('https://raw.githubusercontent.com/iamchucky/PttChrome/master/PRIVACY.md')
+        .then(response => response.text())
+        .then(text => {
+          const markdownBody = document.getElementById('markdown-body');
+          markdownBody.innerHTML = markdown.toHTML(text);
+        });
+    </script>
+  </head>
+  <body>
+    <article id="markdown-body" class="markdown-body"></article>
+  </body>
+</html>
