@@ -119,10 +119,12 @@ PttChromePref.prototype = {
     // autologin
     $('#login_username').html(
       '<label style="font-weight:normal;">'+i18n('autologin_username')+'</label>'+
-      '<input type="text" class="form-control" value="'+this.logins[0]+'">');
+      '<input type="text" class="form-control">');
     $('#login_password').html(
       '<label style="font-weight:normal;">'+i18n('autologin_password')+'</label>'+
-      '<input type="password" class="form-control" value="'+this.logins[1]+'">');
+      '<input type="text" class="form-control" style="text-security:disc; -webkit-text-security:disc;">');
+    $('#login_username > input').val(this.logins[0]);
+    $('#login_password > input').val(this.logins[1]);
   },
 
   setupSettingsUi: function() {
