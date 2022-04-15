@@ -42,7 +42,7 @@ pttchrome.App = function(onInitializedCallback, options) {
   this.pref = null;
 
   var useSSH = getQueryVariable('ssh');
-  if (useSSH == 'true') {
+  if (useSSH == 'true' || options.ssh) {
     this.conn = new SecureShellConnection(this);
   } else {
     this.conn = new TelnetConnection(this);

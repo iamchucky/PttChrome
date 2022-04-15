@@ -27,7 +27,7 @@
     $('#BBSWindow').show();
     //$('#sideMenus').show();
     app.onWindowResize();
-  }, { from: from, keepAlive: keepAlive });
+  }, { from: from, keepAlive: keepAlive, ssh: !site || site === 'ptt.cc' });
   // calls the gapi onload
   handleGapiClientLoad();
 });
