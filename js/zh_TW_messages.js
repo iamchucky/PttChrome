@@ -270,7 +270,7 @@
     "message": "版本"
   },
   "about_version": {
-    "message": "webapp12 6/2/2015"
+    "message": "webapp13 4/15/2022"
   },
   "about_new_title": {
     "message": "新功能"
@@ -293,7 +293,8 @@
       '加入了 END 啟用即時更新的選項',
       '滑鼠中鍵可以設定執行貼上功能',
       '加入了選取自動複製文字的選項',
-      '新增了快速搜尋的功能 (感謝abccbaandy)'
+      '新增了快速搜尋的功能 (感謝abccbaandy)',
+      '只使用 SSH 連到 ptt.cc'
     ]
   },
 

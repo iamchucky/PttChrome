@@ -273,7 +273,7 @@ locale.en_US = {
     "message": "Version"
   },
   "about_version": {
-    "message": "webapp12 6/2/2015"
+    "message": "webapp13 4/15/2022"
   },
   "about_new_title": {
     "message": "What's new"
@@ -296,7 +296,8 @@ locale.en_US = {
       'Added option to turn on live update with END',
       'Middle mouse button click has new option to do paste',
       'Added option to enable copy on select',
-      'Added Quick Search in settings and context menu (thanks to abccbaandy)'
+      'Added Quick Search in settings and context menu (thanks to abccbaandy)',
+      'Always use SSH to connect to ptt.cc'
     ]
   },
 
