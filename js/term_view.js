@@ -508,7 +508,7 @@ TermView.prototype = {
           } else if (this.buf.pageState == 2) {
             userid = rowText.parseThreadForUserId();
           }
-          if (userid in this.bbscore.pref.blacklistedUserIds) {
+          if (userid != null && userid in this.bbscore.pref.blacklistedUserIds) {
             shouldFade = true;
           }
         }
