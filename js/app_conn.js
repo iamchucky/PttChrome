@@ -41,7 +41,7 @@ lib.AppConnection.prototype.showJumbo = function() {
   $('#getAppBtn').off();
   $('#getAppBtn').click(function() {
     if (typeof(chrome) == 'undefined') {
-      window.open('https://chrome.google.com/webstore/detail/pttchrome/'+self.appId, '_self');
+      window.open('https://chromewebstore.google.com/detail/pttchrome/'+self.appId, '_self');
       return;
     }
     // turn it on when it works

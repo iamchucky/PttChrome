@@ -7,7 +7,7 @@
     // don't seem to be using chrome, show msg
     $('#getAppBtn').off();
     $('#getAppBtn').click(function() {
-      window.open('https://chrome.google.com/webstore/detail/pttchrome/hhnlfapopmaimdlldbknjdgekpgffmbo', '_self');
+      window.open('https://chromewebstore.google.com/detail/pttchrome/hhnlfapopmaimdlldbknjdgekpgffmbo', '_self');
     });
     console.log('app is not running or installed');
     $('#getAppBtn').text(i18n('getAppBtn'));
